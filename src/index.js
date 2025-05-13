@@ -1,8 +1,8 @@
-import Button from './components/KunBtn/src/components/KunBtn.vue';
+import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 
-export { Button };
+export { KunBtn };
 export default {
   install(app) {
-    app.component('KunBtn', Button);
+    app.component('KunBtn', KunBtn);
   },
 };
