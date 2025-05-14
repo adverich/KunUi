@@ -64,8 +64,10 @@
     </div>
 
     <!-- ACCIONES -->
-    <div class="flex items-center gap-2 justify-end ml-auto">
-      <slot name="actions" />
+    <div class="flex items-center gap-2 flex-1 justify-end">
+        <div class="flex items-center gap-2 ml-auto">
+            <slot name="actions" />
+        </div>
     </div>
   </header>
 </template>
