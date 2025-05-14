@@ -43,6 +43,7 @@
       "import": "./dist/kun-ui.es.js",
       "require": "./dist/kun-ui.umd.js"
     },
+    "./components/*": "./dist/components/*",
     "./dist/adverich-kun-ui.css": "./dist/adverich-kun-ui.css"
   },
   "engines": {
