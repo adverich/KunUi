@@ -3,8 +3,8 @@
   "version": "0.1.17",
   "type": "module",
   "description": "Una librería de componentes Vue.js con Tailwind CSS",
-  "main": "dist/kun-ui.umd.js",
-  "module": "dist/kun-ui.es.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "files": [
     "dist"
   ],
@@ -40,11 +40,11 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/kun-ui.es.js",
-      "require": "./dist/kun-ui.umd.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     },
-    "./components/*": "./dist/components/*",
-    "./dist/adverich-kun-ui.css": "./dist/adverich-kun-ui.css"
+    "./dist/adverich-kun-ui.css": "./dist/adverich-kun-ui.css",
+    "./components/*": "./dist/components/*"
   },
   "engines": {
     "node": ">=18.0.0"
