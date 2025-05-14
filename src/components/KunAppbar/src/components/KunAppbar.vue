@@ -69,7 +69,7 @@
 
 <script setup>
 import { computed,h } from 'vue'
-import KunAppbarTitle from './KunAppbarTitle.vue'
+import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 const props = defineProps({
@@ -113,12 +113,6 @@ const props = defineProps({
   drawerIcon: {
     type: [String, Object, Function],
     default: null // Si se deja null, usa el ícono por defecto
-  }
-})
-
-defineOptions({
-  components: {
-    KunAppbarTitle
   }
 })
 
