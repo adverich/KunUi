@@ -8,32 +8,31 @@
       bordered ? 'border-b border-gray-200' : '',
     ]"
   >
-    <!-- IZQUIERDA -->
-    <div class="flex items-center gap-2 flex-1 min-w-0">
-        <slot name="appbarButton">
-            <button
-                v-if="showDrawerButton"
-                class="p-2 rounded-md hover:bg-white/10 transition"
-                @click="$emit('toggle-drawer')"
-            >
-                <KunIcon
-                    v-if="!drawerIcon"
-                    :icon="defaultDrawerSvg"
-                    class="text-white"
-                    size="text-lg"
-                />
-                <KunIcon
-                    v-else
-                    :icon="drawerIcon"
-                    class="text-white"
-                    size="text-lg"
-                />
-            </button>
-        </slot>
+    <!-- IZQUIERDA: Drawer + prepend -->
+    <div class="flex items-center gap-2">
+      <slot name="appbarButton">
+        <button
+          v-if="showDrawerButton"
+          class="p-2 rounded-md hover:bg-white/10 transition"
+          @click="$emit('toggle-drawer')"
+        >
+          <KunIcon
+            v-if="!drawerIcon"
+            :icon="defaultDrawerSvg"
+            class="text-white"
+            size="text-lg"
+          />
+          <KunIcon
+            v-else
+            :icon="drawerIcon"
+            class="text-white"
+            size="text-lg"
+          />
+        </button>
+      </slot>
 
       <slot name="prepend" />
 
-      <!-- TÍTULO IZQUIERDO -->
       <KunAppbarTitle
         v-if="title && titlePosition === 'left'"
         :title="title"
@@ -43,8 +42,11 @@
       />
     </div>
 
-    <!-- TÍTULO CENTRADO -->
-    <div v-if="title && titlePosition === 'center'" class="absolute left-1/2 -translate-x-1/2">
+    <!-- CENTRO -->
+    <div
+      v-if="title && titlePosition === 'center'"
+      class="flex-1 flex justify-center"
+    >
       <KunAppbarTitle
         :title="title"
         :titleImage="titleImage"
@@ -53,8 +55,11 @@
       />
     </div>
 
-    <!-- TÍTULO A LA DERECHA -->
-    <div v-if="title && titlePosition === 'right'" class="flex-1 flex justify-end">
+    <!-- DERECHA -->
+    <div
+      v-if="title && titlePosition === 'right'"
+      class="flex-1 flex justify-end"
+    >
       <KunAppbarTitle
         :title="title"
         :titleImage="titleImage"
@@ -64,16 +69,14 @@
     </div>
 
     <!-- ACCIONES -->
-    <div class="flex items-center gap-2 flex-1 justify-end">
-        <div class="flex items-center gap-2 ml-auto">
-            <slot name="actions" />
-        </div>
+    <div class="flex items-center gap-2">
+      <slot name="actions" />
     </div>
   </header>
 </template>
 
 <script setup>
-import { computed,h } from 'vue'
+import { computed, h } from 'vue'
 import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
@@ -89,7 +92,7 @@ const props = defineProps({
   titleImage: {
     type: String,
     default: ''
-    },
+  },
   titleSize: {
     type: String,
     default: 'text-base'
@@ -121,7 +124,7 @@ const props = defineProps({
   },
   drawerIcon: {
     type: [String, Object, Function],
-    default: null // Si se deja null, usa el ícono por defecto
+    default: null
   }
 })
 
@@ -137,7 +140,11 @@ const heightClass = computed(() => {
 })
 
 const elevationClass = computed(() => {
-  return props.elevation === 'none' ? '' : `shadow-${props.elevation}`
+  // En Tailwind, clases como shadow-md deben estar explícitas
+  const allowed = ['sm', 'md', 'lg', 'xl', '2xl']
+  return props.elevation === 'none' || !allowed.includes(props.elevation)
+    ? ''
+    : `shadow-${props.elevation}`
 })
 
 const defaultDrawerSvg = {
@@ -155,7 +162,7 @@ const defaultDrawerSvg = {
         'stroke-width': '2',
         d: 'M4 6h16M4 12h16M4 18h16'
       })
-    ]);
+    ])
   }
 }
 </script>
