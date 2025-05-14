@@ -7,7 +7,7 @@
     </div>
 
     <div class="flex justify-center py-4">
-      <KunBtn text="hola alta" bgColor="bg-red-900" />
+      <KunBtn text="Quienes Somos" bgColor="bg-red-900" size="xxs" />
     </div>
 
   </div>
