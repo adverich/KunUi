@@ -41,8 +41,10 @@
   "exports": {
     ".": {
       "import": "./dist/kun-ui.es.js",
-      "require": "./dist/kun-ui.umd.js"
-    }
+      "require": "./dist/kun-ui.umd.js",
+      "style": "./dist/adverich-kun-ui.css"
+    },
+    "./dist/adverich-kun-ui.css": "./dist/adverich-kun-ui.css"
   },
   "engines": {
     "node": ">=18.0.0"
