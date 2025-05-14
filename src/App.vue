@@ -6,8 +6,8 @@
       </h1>
     </div>
 
-    <div class="flex justify-center py-8">
-      <KunBtn text="hola" bgColor="bg-red-900"/>
+    <div class="flex justify-center py-4">
+      <KunBtn text="hola alta" bgColor="bg-red-900" />
     </div>
 
   </div>

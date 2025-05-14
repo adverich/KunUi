@@ -1,8 +1,7 @@
 <template>
     <button type="button" class="flex justify-center align-center items-center" 
         :class="[width, buttonSize(size), textColor, fontWeight, bgColor, bgColorHover, bgColorFocus, focusRing, focusOutline, 
-        focusRingColor, rounded, textAlign,
-        disabled ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2']"
+        focusRingColor, rounded, textAlign, disabled ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2']"
         :disabled="disabled"
     > 
         <slot>
@@ -82,6 +81,9 @@ const xxl = 'px-4 py-4 text-base';
 
 const buttonSize = (size) => {
     switch (size) {
+        case "xxs":
+            return xxs;
+
         case "xs":
             return xs;
 
@@ -96,6 +98,9 @@ const buttonSize = (size) => {
 
         case "xl":
             return xl;
+
+        case "xxl":
+            return xxl;
     }
 };
 </script>

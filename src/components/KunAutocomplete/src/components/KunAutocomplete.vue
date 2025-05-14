@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps } from 'vue';
+import { defineEmits, defineProps, defineModel, ref, watchEffect } from 'vue';
 import inputProps from '../composables/KunAutocompleteProps';
 import { useAutocomplete } from '../composables/useAutocomplete';
 const props = defineProps(inputProps);
