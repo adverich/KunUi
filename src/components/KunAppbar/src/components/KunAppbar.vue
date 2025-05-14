@@ -1,12 +1,7 @@
 <template>
   <header
     class="flex items-center px-4 w-full"
-    :class="[
-      heightClass,
-      bgColor,
-      elevationClass,
-      bordered ? 'border-b border-gray-200' : '',
-    ]"
+    :class="[heightClass, bgColor, elevationClass, bordered ? 'border-b border-gray-200' : '']"
   >
     <!-- IZQUIERDA: Drawer + prepend -->
     <div class="flex items-center gap-2">
@@ -16,18 +11,15 @@
           class="p-2 rounded-md hover:bg-white/10 transition"
           @click="$emit('toggle-drawer')"
         >
-          <KunIcon
-            v-if="!drawerIcon"
-            :icon="defaultDrawerSvg"
-            class="text-white"
-            size="text-lg"
-          />
-          <KunIcon
-            v-else
-            :icon="drawerIcon"
-            class="text-white"
-            size="text-lg"
-          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
       </slot>
 
@@ -43,10 +35,7 @@
     </div>
 
     <!-- CENTRO -->
-    <div
-      v-if="title && titlePosition === 'center'"
-      class="flex-1 flex justify-center"
-    >
+    <div v-if="title && titlePosition === 'center'" class="flex-1 flex justify-center">
       <KunAppbarTitle
         :title="title"
         :titleImage="titleImage"
@@ -56,10 +45,7 @@
     </div>
 
     <!-- DERECHA -->
-    <div
-      v-if="title && titlePosition === 'right'"
-      class="flex-1 flex justify-end"
-    >
+    <div v-if="title && titlePosition === 'right'" class="flex-1 flex justify-end">
       <KunAppbarTitle
         :title="title"
         :titleImage="titleImage"
@@ -69,16 +55,15 @@
     </div>
 
     <!-- ACCIONES -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 ml-auto">
       <slot name="actions" />
     </div>
   </header>
 </template>
 
 <script setup>
-import { computed, h } from 'vue'
+import { computed } from 'vue'
 import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue'
-import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 const props = defineProps({
   bgColor: {
@@ -103,16 +88,16 @@ const props = defineProps({
   },
   titlePosition: {
     type: String,
-    default: 'center', // 'left', 'center', 'right'
+    default: 'center',
     validator: val => ['left', 'center', 'right'].includes(val)
   },
   density: {
     type: String,
-    default: 'default' // 'default', 'comfortable', 'compact'
+    default: 'default'
   },
   elevation: {
     type: String,
-    default: 'md' // 'none', 'sm', 'md', 'lg', etc.
+    default: 'md'
   },
   bordered: {
     type: Boolean,
@@ -121,10 +106,6 @@ const props = defineProps({
   showDrawerButton: {
     type: Boolean,
     default: true
-  },
-  drawerIcon: {
-    type: [String, Object, Function],
-    default: null
   }
 })
 
@@ -140,29 +121,9 @@ const heightClass = computed(() => {
 })
 
 const elevationClass = computed(() => {
-  // En Tailwind, clases como shadow-md deben estar explícitas
   const allowed = ['sm', 'md', 'lg', 'xl', '2xl']
   return props.elevation === 'none' || !allowed.includes(props.elevation)
     ? ''
     : `shadow-${props.elevation}`
 })
-
-const defaultDrawerSvg = {
-  render() {
-    return h('svg', {
-      xmlns: 'http://www.w3.org/2000/svg',
-      class: 'h-5 w-5',
-      fill: 'none',
-      viewBox: '0 0 24 24',
-      stroke: 'currentColor'
-    }, [
-      h('path', {
-        'stroke-linecap': 'round',
-        'stroke-linejoin': 'round',
-        'stroke-width': '2',
-        d: 'M4 6h16M4 12h16M4 18h16'
-      })
-    ])
-  }
-}
 </script>
