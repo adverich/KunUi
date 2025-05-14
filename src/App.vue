@@ -1,19 +1,20 @@
 <template>
   <div class="flex flex-col">
-    <div>
-      <h1 class="text-3xl font-bold underline text-center">
-        Kun UI!
-      </h1>
-    </div>
+    <KunAppbar title="Kun UI!" titleSize="text-4xl" @toggle-drawer="doSomething" >
+
+    </KunAppbar>
 
     <div class="flex justify-center py-4">
-      <KunBtn text="Quienes Somos" bgColor="bg-red-900" size="xxs" />
+      <KunBtn text="Quienes Somos" />
     </div>
 
   </div>
 </template>
 
 <script setup>
+import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
-
+function doSomething(){
+  console.log('ola')
+}
 </script>

@@ -1,41 +1,152 @@
 <template>
-    <div class="flex py-1 px-2 h-14 items-center" :class="[bgColor]">
-        <!-- Espacio a la izquierda -->
-        <div class="flex-1">
-            <div class="flex items-center">
-                <slot name="appbarButton"></slot>
-                <slot name="prepend"></slot>
-            </div>
-        </div>
+  <header
+    class="flex items-center px-4 w-full"
+    :class="[
+      heightClass,
+      bgColor,
+      elevationClass,
+      bordered ? 'border-b border-gray-200' : '',
+    ]"
+  >
+    <!-- IZQUIERDA -->
+    <div class="flex items-center gap-2 flex-1 min-w-0">
+        <slot name="appbarButton">
+            <button
+                v-if="showDrawerButton"
+                class="p-2 rounded-md hover:bg-white/10 transition"
+                @click="$emit('toggle-drawer')"
+            >
+                <KunIcon
+                    v-if="!drawerIcon"
+                    :icon="defaultDrawerSvg"
+                    class="text-white"
+                    size="text-lg"
+                />
+                <KunIcon
+                    v-else
+                    :icon="drawerIcon"
+                    class="text-white"
+                    size="text-lg"
+                />
+            </button>
+        </slot>
 
-            <!-- Contenido del slot principal -->
-            <!-- <slot></slot> -->
+      <slot name="prepend" />
 
-        <!-- Título centrado -->
-        <KunAppbarTitle v-if="title" :title="title" />
-
-        <!-- Espacio a la derecha -->
-        <div class="flex-1">
-            <div class="w-full flex justify-end">
-                <slot name="append"></slot>
-            </div>
-        </div>
+      <!-- TÍTULO IZQUIERDO -->
+      <KunAppbarTitle
+        v-if="title && titlePosition === 'left'"
+        :title="title"
+        :textSize="titleSize"
+        :fontWeight="titleWeight"
+      />
     </div>
+
+    <!-- TÍTULO CENTRADO -->
+    <div v-if="title && titlePosition === 'center'" class="absolute left-1/2 -translate-x-1/2">
+      <KunAppbarTitle
+        :title="title"
+        :textSize="titleSize"
+        :fontWeight="titleWeight"
+      />
+    </div>
+
+    <!-- TÍTULO A LA DERECHA -->
+    <div v-if="title && titlePosition === 'right'" class="flex-1 flex justify-end">
+      <KunAppbarTitle
+        :title="title"
+        :textSize="titleSize"
+        :fontWeight="titleWeight"
+      />
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="flex items-center gap-2 flex-1 justify-end">
+      <slot name="actions" />
+    </div>
+  </header>
 </template>
 
 <script setup>
+import { computed,h } from 'vue'
+import KunAppbarTitle from './KunAppbarTitle.vue'
+import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
+
 const props = defineProps({
-    density: {
-        type: String,
-        default: ''
-    },
-    bgColor: {
-        type: String,
-        default: 'bg-appbar'
-    },
-    title: {
-        type: String,
-        default: ''
-    },
+  bgColor: {
+    type: String,
+    default: 'bg-green-700'
+  },
+  title: {
+    type: String,
+    default: ''
+  },
+  titleSize: {
+    type: String,
+    default: 'text-base'
+  },
+  titleWeight: {
+    type: String,
+    default: 'font-medium'
+  },
+  titlePosition: {
+    type: String,
+    default: 'center', // 'left', 'center', 'right'
+    validator: val => ['left', 'center', 'right'].includes(val)
+  },
+  density: {
+    type: String,
+    default: 'default' // 'default', 'comfortable', 'compact'
+  },
+  elevation: {
+    type: String,
+    default: 'md' // 'none', 'sm', 'md', 'lg', etc.
+  },
+  bordered: {
+    type: Boolean,
+    default: false
+  },
+  showDrawerButton: {
+    type: Boolean,
+    default: true
+  },
+  drawerIcon: {
+    type: [String, Object, Function],
+    default: null // Si se deja null, usa el ícono por defecto
+  }
 })
+
+const heightClass = computed(() => {
+  switch (props.density) {
+    case 'comfortable':
+      return 'h-12 py-1'
+    case 'compact':
+      return 'h-10 py-0.5'
+    default:
+      return 'h-14 py-2'
+  }
+})
+
+const elevationClass = computed(() => {
+  return props.elevation === 'none' ? '' : `shadow-${props.elevation}`
+})
+
+const defaultDrawerSvg = {
+  render() {
+    return h('svg', {
+      xmlns: 'http://www.w3.org/2000/svg',
+      class: 'h-5 w-5',
+      fill: 'none',
+      viewBox: '0 0 24 24',
+      stroke: 'currentColor'
+    }, [
+      h('path', {
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round',
+        'stroke-width': '2',
+        d: 'M4 6h16M4 12h16M4 18h16'
+      })
+    ]);
+  }
+}
 </script>

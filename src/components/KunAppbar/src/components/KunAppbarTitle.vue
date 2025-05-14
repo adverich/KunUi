@@ -1,27 +1,19 @@
 <template>
-    <div class="min-w-max flex flex-row items-center" :class="textSize, fontWeight">
-        {{ title }}
-    </div>
+  <div class="flex items-center min-w-0 truncate" :class="[textSize, fontWeight]">
+    {{ title }}
+  </div>
 </template>
 
 <script setup>
 const props = defineProps({
-    title: {
-        type: String,
-        default: ''
-    },
-    textSize:{
-        type: String,
-        default: 'text-sm'
-    },
-    fontWeight:{
-        type: String,
-        default: 'font-medium'
-    }
+  title: String,
+  textSize: {
+    type: String,
+    default: 'text-base'
+  },
+  fontWeight: {
+    type: String,
+    default: 'font-medium'
+  }
 })
-
-// font-mono
-// font-sans
-// font-serif
-
 </script>
