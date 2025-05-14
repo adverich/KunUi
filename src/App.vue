@@ -6,12 +6,14 @@
       </h1>
     </div>
 
-    <div class="flex mt-4 items-center justify-center align-middle">
-        <Icon icon="mdi:bell" :inline="true" :horizontalFlip="true" />
+    <div class="flex justify-center py-8">
+      <KunBtn text="hola" bgColor="bg-red-900"/>
     </div>
+
   </div>
 </template>
 
 <script setup>
+import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 
 </script>
