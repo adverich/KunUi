@@ -19,6 +19,8 @@ export default defineConfig({
         globals: {
           vue: 'Vue',
         },
+        preserveModules: true, // 🔥 MUY IMPORTANTE
+        preserveModulesRoot: 'src', // 🔥 para que no se pierda la estructura de rutas
       },
     },
   },
