@@ -1,7 +1,10 @@
 <template>
   <div class="flex flex-col">
-    <KunAppbar title="Kun UI!" titleSize="text-4xl" @toggle-drawer="doSomething" >
+    <KunAppbar :showDrawerButton="false">
 
+      <template #actions>
+        <KunBtn text="Holitas" />  
+      </template>
     </KunAppbar>
 
     <div class="flex justify-center py-4">

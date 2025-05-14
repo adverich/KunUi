@@ -37,6 +37,7 @@
       <KunAppbarTitle
         v-if="title && titlePosition === 'left'"
         :title="title"
+        :titleImage="titleImage"
         :textSize="titleSize"
         :fontWeight="titleWeight"
       />
@@ -46,6 +47,7 @@
     <div v-if="title && titlePosition === 'center'" class="absolute left-1/2 -translate-x-1/2">
       <KunAppbarTitle
         :title="title"
+        :titleImage="titleImage"
         :textSize="titleSize"
         :fontWeight="titleWeight"
       />
@@ -55,6 +57,7 @@
     <div v-if="title && titlePosition === 'right'" class="flex-1 flex justify-end">
       <KunAppbarTitle
         :title="title"
+        :titleImage="titleImage"
         :textSize="titleSize"
         :fontWeight="titleWeight"
       />
@@ -81,6 +84,10 @@ const props = defineProps({
     type: String,
     default: ''
   },
+  titleImage: {
+    type: String,
+    default: ''
+    },
   titleSize: {
     type: String,
     default: 'text-base'
