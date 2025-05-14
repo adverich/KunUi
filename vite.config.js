@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import path from 'path'
+import path from "path";
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -12,7 +12,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/index.js'),
       name: 'KunUI',
-      formats: ['es', 'umd'], // Asegúrate de que ambos formatos estén incluidos
+      formats: ['es'],
       fileName: (format) => `kun-ui.${format}.js`,
     },
     rollupOptions: {
@@ -21,7 +21,7 @@ export default defineConfig({
         globals: {
           vue: 'Vue',
         },
-        preserveModules: true,
+        preserveModules: true,  // Mantén esta opción
         preserveModulesRoot: 'src',
         entryFileNames: '[name].js',
       },
@@ -30,6 +30,7 @@ export default defineConfig({
   resolve: {
     dedupe: ['vue']
   },
+
   server: {
     host: true,
     cors: true,
