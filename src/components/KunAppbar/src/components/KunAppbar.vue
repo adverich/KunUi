@@ -116,6 +116,12 @@ const props = defineProps({
   }
 })
 
+defineOptions({
+  components: {
+    KunAppbarTitle
+  }
+})
+
 const heightClass = computed(() => {
   switch (props.density) {
     case 'comfortable':
