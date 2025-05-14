@@ -64,7 +64,7 @@
     </div>
 
     <!-- ACCIONES -->
-    <div class="flex items-center gap-2 flex-1 justify-end">
+    <div class="flex items-center gap-2">
       <slot name="actions" />
     </div>
   </header>

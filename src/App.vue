@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <KunAppbar :showDrawerButton="false">
+    <KunAppbar :showDrawerButton="false" title="khe">
 
       <template #actions>
         <KunBtn text="Holitas" />  
