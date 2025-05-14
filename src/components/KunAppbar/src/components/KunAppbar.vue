@@ -64,7 +64,7 @@
     </div>
 
     <!-- ACCIONES -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 justify-end ml-auto">
       <slot name="actions" />
     </div>
   </header>
