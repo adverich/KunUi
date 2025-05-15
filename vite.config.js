@@ -25,6 +25,7 @@ export default defineConfig({
         preserveModulesRoot: 'src',
         entryFileNames: '[name].js',
       },
+      cssCodeSplit: true,
     },
   },
   resolve: {
