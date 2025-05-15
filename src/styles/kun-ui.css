@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* === Kun UI Safe Classes === */
+/* Tamaños del botón */
+@layer components {
+    .btn-xxs {
+        @apply px-1 py-1 text-xs;
+    }
+
+    .btn-xs {
+        @apply px-2 py-2 text-xs;
+    }
+
+    .btn-sm {
+        @apply px-1 py-1 text-sm;
+    }
+
+    .btn-md {
+        @apply px-2 py-2 text-sm;
+    }
+
+    .btn-lg {
+        @apply px-3 py-3 text-sm;
+    }
+
+    .btn-xl {
+        @apply px-3 py-3 text-base;
+    }
+
+    .btn-xxl {
+        @apply px-4 py-4 text-base;
+    }
+
+    /* Colores comúnmente usados */
+    .bg-button {
+        @apply bg-blue-500;
+    }
+
+    .bg-red-800 {
+        @apply bg-red-800;
+    }
+
+    .bg-red-900 {
+        @apply bg-red-900;
+    }
+
+    .text-font-color {
+        @apply text-gray-800;
+    }
+
+    .text-white {
+        @apply text-white;
+    }
+
+    /* Estados */
+    .hover-opacity {
+        @apply hover:opacity-90;
+    }
+
+    .focus-opacity {
+        @apply focus:opacity-100;
+    }
+
+    .focus-outline {
+        @apply focus:outline-none;
+    }
+
+    .focus-ring-1 {
+        @apply focus:ring-1;
+    }
+
+    .focus-ring-blue {
+        @apply focus:ring-blue-300;
+    }
+
+    /* Otros */
+    .rounded-full {
+        @apply rounded-full;
+    }
+
+    .text-center {
+        @apply text-center;
+    }
+
+    .font-medium {
+        @apply font-medium;
+    }
+
+    .opacity-disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+
+    .cursor-pointer {
+        @apply cursor-pointer;
+    }
+}

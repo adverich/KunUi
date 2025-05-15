@@ -1,7 +1,7 @@
 <template>
   <header
     class="flex items-center px-4 w-full"
-    :class="[heightClass, bgColor, elevationClass, bordered ? 'border-b border-gray-200' : '']"
+    :class="[heightClass, bgColor, elevationClass, bordered ? 'border-b border-red-600' : '']"
   >
     <!-- IZQUIERDA: Drawer + prepend -->
     <div class="flex items-center gap-2">
