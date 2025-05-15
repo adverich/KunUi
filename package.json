@@ -41,6 +41,7 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
+    "./dist/adverich-kun-ui.css": "./dist/adverich-kun-ui.css",
     "./components/*": "./dist/components/*"
   },
   "engines": {
