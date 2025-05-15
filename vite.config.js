@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite'
 import path from "path";
 import vue from '@vitejs/plugin-vue'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
     vue(),
+    tailwindcss(),
   ],
   build: {
     lib: {
@@ -23,7 +25,6 @@ export default defineConfig({
         preserveModulesRoot: 'src',
         entryFileNames: '[name].js',
       },
-      cssCodeSplit: true,
     },
   },
   resolve: {
