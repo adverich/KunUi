@@ -12,6 +12,7 @@ import KunCurrency from './components/KunCurrency/src/components/KunCurrency.vue
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import KunList from './components/KunList/src/components/KunList.vue';
 import KunSpacer from './components/KunSpacer/src/components/KunSpacer.vue';
+import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
 
@@ -28,6 +29,7 @@ const components = {
   KunIcon,
   KunList,
   KunSpacer,
+  KunSwitch,
   KunTextField,
   KunToolbar,
 };
@@ -45,6 +47,7 @@ export {
   KunIcon,
   KunList,
   KunSpacer,
+  KunSwitch,
   KunTextField,
   KunToolbar,
 };
