@@ -68,7 +68,7 @@ import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitl
 const props = defineProps({
   bgColor: {
     type: String,
-    default: 'bg-green-700'
+    default: 'bg-transparent'
   },
   title: {
     type: String,

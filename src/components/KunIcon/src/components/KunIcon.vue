@@ -1,5 +1,6 @@
 <template>
   <span
+    class="flex items-center"
     :class="[color, size, disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer']"
     @click="handleClick"
   >
@@ -20,7 +21,7 @@ import { computed } from 'vue';
 const props = defineProps({
   icon: {
     type: [String, Object, Function],
-    required: true
+    required: false
   },
   aliases: {
     type: Object,
