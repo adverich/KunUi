@@ -12,7 +12,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/index.js'),
       name: 'KunUI',
-      formats: ['es'],
+      formats: ['es', 'cjs'],
       fileName: (format) => `kun-ui.${format}.js`,
     },
     rollupOptions: {
@@ -24,6 +24,7 @@ export default defineConfig({
         preserveModules: true,  // Mantén esta opción
         preserveModulesRoot: 'src',
         entryFileNames: '[name].js',
+        cssCodeSplit: true,
       },
     },
   },
