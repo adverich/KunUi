@@ -59,7 +59,9 @@ const props = defineProps({
     validator: (v) => ['default', 'tonal', 'plain', 'outline', 'soft'].includes(v)
   },
   disabled: { type: Boolean, default: false },
-  loading: { type: Boolean, default: false }
+  loading: { type: Boolean, default: false },
+  bgColor: { type: String, default: null },
+  textColor: { type: String, default: null }
 })
 
 const buttonSize = (size) => {
@@ -75,6 +77,10 @@ const buttonSize = (size) => {
 }
 
 const variantClasses = computed(() => {
+  if (props.bgColor || props.textColor) {
+    return `${props.bgColor ?? ''} ${props.textColor ?? ''}`
+  }
+
   switch (props.variant) {
     case 'default':
       return 'bg-green-700 text-white'
