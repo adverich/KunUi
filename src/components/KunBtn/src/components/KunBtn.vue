@@ -60,8 +60,8 @@ const props = defineProps({
   },
   disabled: { type: Boolean, default: false },
   loading: { type: Boolean, default: false },
-  bgColor: { type: String, default: null },
-  textColor: { type: String, default: null }
+  bgColor: { type: String, default: 'bg-indigo-600' },
+  textColor: { type: String, default: 'text-white' }
 })
 
 const buttonSize = (size) => {
@@ -76,34 +76,23 @@ const buttonSize = (size) => {
   }
 }
 
-const variantBaseClasses = computed(() => {
+const variantClasses = computed(() => {
+  const bg = props.bgColor || 'bg-indigo-600'
+  const text = props.textColor || 'text-white'
+
   switch (props.variant) {
     case 'default':
-      return 'bg-green-700 text-white'
+      return `${bg} ${text} shadow hover:brightness-90 transition`
     case 'tonal':
-      return 'bg-green-100 text-green-800'
+      return `${bg} ${text} bg-opacity-20 hover:bg-opacity-30 transition`
     case 'plain':
-      return 'bg-transparent'
+      return `bg-transparent ${text} hover:bg-gray-100 transition`
     case 'outline':
-      return 'bg-transparent border hover:bg-green-50'
+      return `bg-transparent border ${bg} ${text} border-opacity-80 hover:bg-opacity-10 transition`
     case 'soft':
-      return 'bg-green-200 text-green-900'
+      return `${bg} ${text} shadow-md bg-opacity-30 hover:bg-opacity-40 transition`
     default:
-      return ''
+      return `${bg} ${text}`
   }
-})
-
-const colorClasses = computed(() => {
-  // Usamos rojo seco de ejemplo o lo que pase el usuario
-  const bg = props.bgColor ?? ''
-  const text = props.textColor ?? ''
-
-  // Si no hay props, los colores los da la variante
-  // Pero para variante outline que no tiene bg ni text definidos en base, se usan props
-  return [bg, text].filter(Boolean).join(' ')
-})
-
-const variantClasses = computed(() => {
-  return [variantBaseClasses.value, colorClasses.value].filter(Boolean).join(' ')
 })
 </script>
