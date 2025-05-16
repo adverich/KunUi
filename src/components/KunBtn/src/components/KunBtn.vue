@@ -76,24 +76,34 @@ const buttonSize = (size) => {
   }
 }
 
-const variantClasses = computed(() => {
-  if (props.bgColor || props.textColor) {
-    return `${props.bgColor ?? ''} ${props.textColor ?? ''}`
-  }
-
+const variantBaseClasses = computed(() => {
   switch (props.variant) {
     case 'default':
       return 'bg-green-700 text-white'
     case 'tonal':
       return 'bg-green-100 text-green-800'
     case 'plain':
-      return 'bg-transparent text-green-700 hover:bg-green-50'
+      return 'bg-transparent'
     case 'outline':
-      return 'bg-transparent text-green-700 border border-green-700 hover:bg-green-50'
+      return 'bg-transparent border hover:bg-green-50'
     case 'soft':
       return 'bg-green-200 text-green-900'
     default:
       return ''
   }
+})
+
+const colorClasses = computed(() => {
+  // Usamos rojo seco de ejemplo o lo que pase el usuario
+  const bg = props.bgColor ?? ''
+  const text = props.textColor ?? ''
+
+  // Si no hay props, los colores los da la variante
+  // Pero para variante outline que no tiene bg ni text definidos en base, se usan props
+  return [bg, text].filter(Boolean).join(' ')
+})
+
+const variantClasses = computed(() => {
+  return [variantBaseClasses.value, colorClasses.value].filter(Boolean).join(' ')
 })
 </script>
