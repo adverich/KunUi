@@ -49,5 +49,8 @@
   },
   "sideEffects": [
     "*.css"
-  ]
+  ],
+  "dependencies": {
+    "vue-router": "^4.5.1"
+  }
 }

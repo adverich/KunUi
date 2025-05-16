@@ -1,26 +1,28 @@
 <template>
-<button
-  type="button"
-  class="flex items-center justify-center break-keep transition-all"
-  :class="[
-    minWidth,
-    buttonSize(size),
-    fontWeight,
-    variantClasses,
-    rounded,
-    textAlign,
-    'whitespace-nowrap',
-    loading || disabled
-      ? 'opacity-50 cursor-not-allowed'
-      : 'hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[.98] transition duration-100 ease-in-out cursor-pointer'
-  ]"
-  :disabled="loading || disabled"
->
+  <component
+    :is="componentTag"
+    v-bind="componentAttrs"
+    class="flex items-center justify-center break-keep transition-all"
+    :class="[
+      minWidth,
+      buttonSize(size),
+      fontWeight,
+      variantClasses,
+      rounded,
+      textAlign,
+      'whitespace-nowrap',
+      loading || disabled
+        ? 'opacity-50 cursor-not-allowed'
+        : 'hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[.98] transition duration-100 ease-in-out cursor-pointer'
+    ]"
+    :disabled="isButton && (loading || disabled)"
+  >
     <!-- Custom loader slot -->
     <template v-if="loading">
       <slot name="loader">
-        <!-- Default loader -->
-        <span class="mr-2 h-5 w-5 border-[3px] border-current opacity-100 border-opacity-100 border-t-transparent rounded-full animate-spin" ></span>
+        <span
+          class="mr-2 h-5 w-5 border-[3px] border-current opacity-100 border-opacity-100 border-t-transparent rounded-full animate-spin"
+        ></span>
       </slot>
     </template>
 
@@ -40,11 +42,12 @@
     <span v-if="!loading && $slots.append" class="ml-2 flex items-center">
       <slot name="append" />
     </span>
-  </button>
+  </component>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const props = defineProps({
   text: { type: String, default: null },
@@ -61,7 +64,37 @@ const props = defineProps({
   disabled: { type: Boolean, default: false },
   loading: { type: Boolean, default: false },
   bgColor: { type: String, default: 'bg-indigo-600' },
-  textColor: { type: String, default: 'text-white' }
+  textColor: { type: String, default: 'text-white' },
+  to: [String, Object],
+  href: String,
+})
+
+const isLink = computed(() => !!props.to || !!props.href)
+const isButton = computed(() => !isLink.value)
+
+const componentTag = computed(() => {
+  if (props.href) return 'a'
+  if (props.to) return RouterLink
+  return 'button'
+})
+
+const componentAttrs = computed(() => {
+  if (props.href) {
+    return {
+      href: props.href,
+      target: props.target ?? '_self',
+    }
+  }
+  if (props.to) {
+    return {
+      to: props.to,
+      replace: props.replace,
+    }
+  }
+  return {
+    type: 'button',
+    disabled: props.loading || props.disabled,
+  }
 })
 
 const buttonSize = (size) => {
