@@ -51,7 +51,11 @@ import { RouterLink } from 'vue-router'
 
 const props = defineProps({
   text: { type: String, default: null },
-  size: { type: String, default: 'md' },
+  size: {
+    type: String,
+    default: 'md',
+    validator: (v) => ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'].includes(v)
+  },
   minWidth: { type: String, default: 'min-w-[6rem]' },
   fontWeight: { type: String, default: 'font-medium' },
   rounded: { type: String, default: 'rounded-lg' },
@@ -67,6 +71,8 @@ const props = defineProps({
   textColor: { type: String, default: 'text-white' },
   to: [String, Object],
   href: String,
+  replace: { type: Boolean, default: false },
+  target: { type: String, default: null },
 })
 
 const isLink = computed(() => !!props.to || !!props.href)
@@ -83,6 +89,7 @@ const componentAttrs = computed(() => {
     return {
       href: props.href,
       target: props.target ?? '_self',
+      rel: props.target === '_blank' ? 'noopener noreferrer' : null,
     }
   }
   if (props.to) {

@@ -16,10 +16,11 @@ export default defineConfig({
       fileName: (format) => `kun-ui.${format}.js`,
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', 'vue-router'],
       output: {
         globals: {
           vue: 'Vue',
+          'vue-router': 'VueRouter',
         },
         preserveModules: true,  // Mantén esta opción
         preserveModulesRoot: 'src',
