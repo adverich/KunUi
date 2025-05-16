@@ -1,15 +1,18 @@
 export default {
+  modelValue: {
+    type: [String, Number], default: ''
+  },
   type: {
     type: String,
+    default: 'text',
+  },
+  placeholder: {
+    type: null,
     default: 'text',
   },
   locale: {
     type: String,
     default: 'ar-ES',
-  },
-  precision: {
-    type: Number,
-    default: 2,
   },
   prefix: {
     type: String,
@@ -19,12 +22,18 @@ export default {
     type: String,
     default: '',
   },
-  resize: {
-    type: Boolean,
-    default: false,
-  },
-  rounded:{
+  rounded: {
     type: String,
     default: 'rounded'
-  }
+  },
+  error: {
+    type: Boolean,
+    default: false
+  },
+  errorMessage: {
+    type: String, default: ''
+  },
+  rules: {
+    type: Array, default: () => []
+  },
 };
