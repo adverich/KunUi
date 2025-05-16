@@ -1,18 +1,7 @@
-<script>
-export default {
-    props: {
-        height: {
-            type: [Number, String],
-            default: '100%', // Valor por defecto de la altura en píxeles
-        },
-        width: {
-            type: [Number, String],
-            default: '100%', // Valor por defecto del ancho
-        },
-    },
-};
+<script setup>
+defineOptions({ name: 'KunSpacer' })
 </script>
 
 <template>
-    <div :style="{ height: height, width: width }"></div>
+  <div class="flex-grow" />
 </template>

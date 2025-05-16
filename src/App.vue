@@ -3,7 +3,7 @@
     <KunAppbar :showDrawerButton="false" title="khe">
 
       <template #actions>
-        <KunBtn text="Holitas" />  
+        <KunBtn text="Holitas" />
       </template>
     </KunAppbar>
 
