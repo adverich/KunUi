@@ -2,7 +2,7 @@
   <component
     :is="componentTag"
     v-bind="componentAttrs"
-    class="flex items-center justify-center break-keep transition-all"
+    class="inline-flex items-center justify-center break-keep transition-all"
     :class="[
       minWidth,
       buttonSize(size),
