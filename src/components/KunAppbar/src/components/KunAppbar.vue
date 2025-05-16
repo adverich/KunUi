@@ -3,7 +3,7 @@
     class="flex items-center px-4 w-full"
     :class="[heightClass, bgColor, elevationClass, bordered ? 'border-b border-gray-200' : '']"
   >
-    <!-- IZQUIERDA: Drawer + prepend -->
+    <!-- IZQUIERDA: Drawer + prepend + title (left) -->
     <div class="flex items-center gap-2">
       <slot name="appbarButton">
         <button
@@ -25,37 +25,35 @@
 
       <slot name="prepend" />
 
-      <KunAppbarTitle
-        v-if="title && titlePosition === 'left'"
-        :title="title"
-        :titleImage="titleImage"
-        :textSize="titleSize"
-        :fontWeight="titleWeight"
-      />
+      <!-- Custom title slot LEFT -->
+      <template v-if="titlePosition === 'left'">
+        <slot name="title">
+          <KunAppbarTitle
+            v-if="title"
+            :title="title"
+            :titleImage="titleImage"
+            :textSize="titleSize"
+            :fontWeight="titleWeight"
+          />
+        </slot>
+      </template>
     </div>
 
     <!-- CENTRO -->
-    <div v-if="title && titlePosition === 'center'" class="flex-1 flex justify-center">
-      <KunAppbarTitle
-        :title="title"
-        :titleImage="titleImage"
-        :textSize="titleSize"
-        :fontWeight="titleWeight"
-      />
+    <div v-if="titlePosition === 'center'" class="flex-1 flex justify-center">
+      <slot name="title">
+        <KunAppbarTitle
+          v-if="title"
+          :title="title"
+          :titleImage="titleImage"
+          :textSize="titleSize"
+          :fontWeight="titleWeight"
+        />
+      </slot>
     </div>
 
-    <!-- DERECHA -->
-    <div v-if="title && titlePosition === 'right'" class="flex-1 flex justify-end">
-      <KunAppbarTitle
-        :title="title"
-        :titleImage="titleImage"
-        :textSize="titleSize"
-        :fontWeight="titleWeight"
-      />
-    </div>
-
-    <!-- ACCIONES -->
-    <div class="flex items-center gap-2 justify-end">
+    <!-- ACCIONES SIEMPRE A LA DERECHA -->
+    <div class="flex items-center gap-2 justify-end ml-auto">
       <slot name="actions" />
     </div>
   </header>
