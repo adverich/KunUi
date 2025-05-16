@@ -9,6 +9,7 @@ import KunBudge from './components/KunBudge/src/components/KunBudge.vue';
 import KunCard from './components/KunCard/src/components/KunCard.vue';
 import KunCardText from './components/KunCardText/src/components/KunCardText.vue';
 import KunCurrency from './components/KunCurrency/src/components/KunCurrency.vue';
+import KunDivider from './components/KunDivider/src/components/KunDivider.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import KunList from './components/KunList/src/components/KunList.vue';
 import KunSpacer from './components/KunSpacer/src/components/KunSpacer.vue';
@@ -26,6 +27,7 @@ const components = {
   KunCard,
   KunCardText,
   KunCurrency,
+  KunDivider,
   KunIcon,
   KunList,
   KunSpacer,
@@ -44,6 +46,7 @@ export {
   KunCard,
   KunCardText,
   KunCurrency,
+  KunDivider,
   KunIcon,
   KunList,
   KunSpacer,
