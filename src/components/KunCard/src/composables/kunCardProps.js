@@ -13,7 +13,7 @@ export const kunCardProps = {
     },
     bgColor: {
         type: String,
-        default: 'bg-white'
+        default: 'bg-transparent'
     },
     flat: {
         type: Boolean,
