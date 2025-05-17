@@ -25,6 +25,7 @@
 </template>
 
 <script setup>
+import { defineProps } from 'vue'
 import { useCard } from '../composables/useCard'
 import { kunCardProps } from '../composables/kunCardProps'
 

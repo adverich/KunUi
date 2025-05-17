@@ -29,6 +29,7 @@
 </template>
 
 <script setup>
+import { defineProps } from 'vue'
 import { useCardTitle } from '../composables/useCardTitle'
 import { kunCardTitleProps } from '../composables/kunCardTitleProps'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'

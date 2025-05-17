@@ -5,6 +5,7 @@
 </template>
 
 <script setup>
+import { defineProps } from 'vue'
 import { useCardActions } from '../composables/useCardActions'
 import { kunCardActionsProps } from '../composables/kunCardActionsProps'
 

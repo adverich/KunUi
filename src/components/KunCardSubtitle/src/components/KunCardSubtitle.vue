@@ -5,9 +5,9 @@
 </template>
 
 <script setup>
+import { defineProps } from 'vue'
 import { useCardSubtitle } from '../composables/useCardSubtitle'
 import { kunCardSubtitleProps } from '../composables/kunCardSubtitleProps'
-import { defineProps } from 'vue'
 
 const props = defineProps(kunCardSubtitleProps)
 

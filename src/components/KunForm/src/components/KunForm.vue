@@ -1,15 +1,12 @@
 <template>
-  <form
-    @submit.prevent="handleSubmit"
-    novalidate
-    :class="`flex flex-col w-full ${props.gap} ${props.padding} ${props.maxWidth}`"
-  >
+  <form @submit.prevent="handleSubmit" novalidate
+    :class="`flex flex-col w-full ${props.gap} ${props.padding} ${props.maxWidth}`">
     <slot />
   </form>
 </template>
 
 <script setup>
-import { ref, provide } from 'vue';
+import { ref, provide, defineProps } from 'vue';
 
 const props = defineProps({
   gap: {

@@ -24,9 +24,9 @@
 </template>
 
 <script setup>
+import { defineEmits, defineProps } from 'vue'
 import { useSliderProps } from '../composables/useSliderProps'
 import { useSlider } from '../composables/useSlider'
-import { defineEmits, defineProps } from 'vue'
 
 const emit = defineEmits(['update:modelValue'])
 const props = defineProps(useSliderProps())
