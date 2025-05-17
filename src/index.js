@@ -12,6 +12,7 @@ import KunCardItem from './components/KunCardItem/src/components/KunCardItem.vue
 import KunCardSubtitle from './components/KunCardSubtitle/src/components/KunCardSubtitle.vue';
 import KunCardText from './components/KunCardText/src/components/KunCardText.vue';
 import KunCardTitle from './components/KunCardTitle/src/components/KunCardTitle.vue';
+import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunContainer from './components/KunContainer/src/components/KunContainer.vue';
 import KunCurrency from './components/KunCurrency/src/components/KunCurrency.vue';
@@ -40,6 +41,7 @@ const components = {
   KunCardSubtitle,
   KunCardText,
   KunCardTitle,
+  KunChip,
   KunCol,
   KunContainer,
   KunCurrency,
@@ -69,6 +71,7 @@ export {
   KunCardSubtitle,
   KunCardText,
   KunCardTitle,
+  KunChip,
   KunCol,
   KunContainer,
   KunCurrency,
