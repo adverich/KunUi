@@ -25,6 +25,8 @@
           <path d="M12 2L2 21h20L12 2z" />
         </svg>
       </KunIcon>
+
+      <KunLoaderCircular />
     </div>
 
   </div>
@@ -36,6 +38,8 @@ import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
+import KunLoaderCircular from './components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
+
 
 function doSomething(){
   console.log('ola')
