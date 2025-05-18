@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps } from 'vue'
+import { defineEmits } from 'vue'
 import { useSliderProps } from '../composables/useSliderProps'
 import { useSlider } from '../composables/useSlider'
 

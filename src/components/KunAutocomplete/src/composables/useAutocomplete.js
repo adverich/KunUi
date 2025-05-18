@@ -1,12 +1,14 @@
-import { computed, ref } from 'vue';
-import { isArray, isObject } from '../utils/helpers';
+// src/composables/useAutocomplete.js
+import { ref, computed, onMounted } from 'vue';
+import { isObject, isArray } from '../utils/helpers';
 
-export function useAutocomplete(props, emits, modelValue, items) {
+export function useAutocomplete(props, emits, modelValue, items, itemsPerIntersection) {
     const selectedItem = ref(null);
     const textFieldRef = ref(null);
     const listRef = ref(null);
     const menuModel = ref(false);
     const search = ref("");
+    const intersectObserved = ref(false);
 
     const isSearcheableKeysEmpty = computed(() => !!!props.searchableKeys.length);
     const isClearOnSelect = computed(() => props.clearOnSelect);
@@ -14,16 +16,23 @@ export function useAutocomplete(props, emits, modelValue, items) {
     const isFocusOnSelect = computed(() => props.focusOnSelect);
     const isCloseOnSelect = computed(() => props.closeOnSelect);
 
+    const getItemText = (obj, string) => {
+        return string.split('.').reduce((acc, key) => {
+            return acc && acc[key] !== undefined ? acc[key] : null;
+        }, obj);
+    };
+
     function setSelectedItemValue() {
         if (isArray(modelValue.value)) {
             if (modelValue.value.length) {
-                selectedItem.value = items.value.filter((i) =>
-                    isObject(i)
+                selectedItem.value = items.value.filter((i) => {
+                    let itmText = getItemText(i, props.itemTitle);
+                    return isObject(i)
                         ? modelValue.value.some((itm) =>
-                            itm[props.itemTitle].includes(i[props.itemTitle])
+                            getItemText(itm, props.itemTitle).includes(itmText)
                         )
                         : modelValue.value.some((itm) => itm.includes(i))
-                );
+                })
             } else {
                 selectedItem.value = [];
             }
@@ -77,6 +86,12 @@ export function useAutocomplete(props, emits, modelValue, items) {
 
                 const getSelectedKeyValue = [item].reduce((acc, curr) => {
                     let result = props.searchableKeys.map((key) => {
+                        if (key.includes(".")) {
+                            const propsArr = key.split('.');
+                            return propsArr.reduce((obj, prop) => {
+                                return obj && obj[prop];  // Accede a la propiedad actual
+                            }, curr);
+                        }
                         return curr[key];
                     });
                     return result;
@@ -123,6 +138,15 @@ export function useAutocomplete(props, emits, modelValue, items) {
                         .map((i) => item[i])
                         .join(" - ");
                 }
+                if (value.includes(".")) {
+                    // Verificamos si el texto es un string separado por puntos
+                    const parts = value.split(".");
+                    let result = item;
+                    for (const part of parts) {
+                        result = result[part]
+                    }
+                    return result;
+                }
                 if (!props.returnObject && typeof item[value] === "number") {
                     return item[value].toString();
                 }
@@ -151,6 +175,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
 
     function getSelectedItem(item) {
         let result = item[0];
+
         if (!props.multiple) {
             selectedItem.value = item[0];
             if (props.returnObject) {
@@ -185,7 +210,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
                 }
                 modelValue.value = selectedItem.value;
             } else {
-                removeFromArray(result);
+                if (result) removeFromArray(result);
                 modelValue.value = selectedItem.value;
             }
         }
@@ -197,9 +222,11 @@ export function useAutocomplete(props, emits, modelValue, items) {
 
     function checkIfValueExist(result) {
         if (selectedItem.value === null) return false;
+        if (!result) return true;
+
         return selectedItem.value.some((i) =>
-            props.returnObject
-                ? i[props.itemValue] === result[props.itemValue]
+            props.returnObject ?
+                i[props.itemValue] === result[props.itemValue]
                 : i === result[props.itemValue]
         );
     }
@@ -217,16 +244,22 @@ export function useAutocomplete(props, emits, modelValue, items) {
         }
     }
 
+    function lightReset() {
+        resetCurrentBatchStep();
+        isClearSearchOnSelect.value ? (search.value = "") : "";
+        isFocusOnSelect.value ? textFieldRef.value.focus() : "";
+    }
+
     function openMenu(e) {
-        if (e.key !== "Tab") {
+        if (isAlphanumeric(e.key)) {
             menuModel.value = true;
         }
     }
 
-    function closeMenu(e) {
-        if (isClearOnSelect.value) {
-            menuModel.value = false;
-        }
+    function isAlphanumeric(key) {
+        // Expresión regular para letras (a-z, A-Z) y números (0-9)
+        const regex = /^[a-zA-Z0-9]$/;
+        return regex.test(key);
     }
 
     function focusOnMenu() {
@@ -234,6 +267,15 @@ export function useAutocomplete(props, emits, modelValue, items) {
         if (!listRef.value) return;
         listRef.value.focus();
     }
+
+    function onMenuKeydown(event) {
+        const key = event.key;
+        // Verificar si es una tecla alfanumérica
+        if (isAlphanumeric(key) || key === "Backspace") {
+            // Hacer focus en VTextField
+            textFieldRef.value.focus();
+        }
+    };
 
     // FUNCION PARA EMITIR EVENTO DE CREACION DE NUEVO ITEM
     function createItem() {
@@ -256,7 +298,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
             selectedItem.value = {};
         }
         if (typeof modelValue.value === "number" && modelValue.value) {
-            selectedItem.value = 0;
+            selectedItem.value = null;
         }
         if (typeof modelValue.value === "string" && modelValue.value) {
             selectedItem.value = '';
@@ -267,15 +309,54 @@ export function useAutocomplete(props, emits, modelValue, items) {
         modelValue.value = selectedItem.value;
     }
 
-    function isDisabled(item) {
+    function checkDisabled(item) {
         if (!item.disabledItem) return false;
         if (item.disabledItem) return true;
     }
 
+
+    // Autocomplete infinite scroll logic.
+    // Next branch to iterate
+    const nextBatch = ref(null);
+
+    // Current batch size, default is itemsPerIntersection value.
+    const currentBatchStep = ref(itemsPerIntersection.value);
+
+    // Calculate max batches available.
+    const maxIterableBatches = computed(() =>
+        Math.ceil(items.value / itemsPerIntersection.value)
+    );
+
+    // Indicates if the last batch has been loaded.
+    const lastBatchReached = computed(() => maxIterableBatches.length >= currentBatchStep.value);
+
+    // Total ITEMS
+    const totalItems = computed(() => items.value.length);
+
+    // Indicates if we are still on the first default batch step.
+    const isFirstBatch = computed(
+        () => itemsPerIntersection.value === currentBatchStep.value
+    );
+
+    function resetCurrentBatchStep() {
+        currentBatchStep.value = itemsPerIntersection.value;
+    }
+
+    function handleIntersect() {
+        if (isFirstBatch.value && lastBatchReached.value) return;
+        if (lastBatchReached.value) return;
+
+        currentBatchStep.value += itemsPerIntersection.value;
+        nextBatch.value = currentBatchStep.value + itemsPerIntersection.value;
+
+        return items.value.slice(0, nextBatch.value);
+    }
+
     return {
-        selectedItem, textFieldRef, listRef, menuModel, search,
-        isCloseOnSelect, isClearOnSelect,
+        selectedItem, textFieldRef, listRef, menuModel, search, isCloseOnSelect, isClearOnSelect, getItemText,
         setSelectedItemValue, placeholder, filteredItems, textArr, itemToString, getSelectedItem,
-        openMenu, closeMenu, focusOnMenu, createItem, removeItem, clearSelection, isDisabled
+        checkIfValueExist, removeFromArray, lightReset, openMenu, focusOnMenu, onMenuKeydown, createItem,
+        removeItem, clearSelection, checkDisabled,
+        handleIntersect, intersectObserved
     };
 }

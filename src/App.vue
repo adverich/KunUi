@@ -1,48 +1,55 @@
 <template>
-  <div class="flex flex-col">
-    <KunAppbar title="HOLA MUNDO">
+  <li class="kun-list-group">
+    <!-- Título del grupo -->
+    <div
+      :class="[
+        'kun-list-group-title',
+        'px-4 py-2 cursor-pointer flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md',
+        { 'bg-gray-100 dark:bg-gray-700': isOpen }
+      ]"
+      @click="toggle"
+    >
+      <slot name="activator">{{ props.title }}</slot>
 
-      <template #actions>
-        <KunBtn text="Holitas" />
-      </template>
-    </KunAppbar>
-
-    <div class="flex justify-center py-4">
-      <KunSwitch
-        v-model="enabled"
-        size="xxl"        
+      <!-- Icono de flecha (expandir/colapsar) -->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 transition-transform duration-200"
+        :class="{ 'rotate-180': !isOpen }"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
       >
-        <template #on-icon>
-          🌙
-        </template>
-        <template #off-icon>
-          💡
-        </template>
-      </KunSwitch>
-
-      <KunIcon class="bg-blue-900" size="text-xl" color="text-red-500">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-          <path d="M12 2L2 21h20L12 2z" />
-        </svg>
-      </KunIcon>
-
-      <KunLoaderCircular />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
     </div>
 
-  </div>
+    <!-- Contenido del grupo (items) -->
+    <div v-show="isOpen" class="kun-list-group-items pl-4 border-l-2 border-gray-200 dark:border-gray-700 mt-1">
+      <ul role="list" class="space-y-1">
+        <slot />
+      </ul>
+    </div>
+  </li>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
-import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
-import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
-import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
-import KunLoaderCircular from './components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
+import { ref } from 'vue'
 
+const props = defineProps({
+  title: {
+    type: [String, Number],
+    default: ''
+  },
+  open: {
+    type: Boolean,
+    default: false
+  }
+})
 
-function doSomething(){
-  console.log('ola')
+const isOpen = ref(props.open)
+
+function toggle() {
+  isOpen.value = !isOpen.value
 }
-const enabled = ref(false)
 </script>

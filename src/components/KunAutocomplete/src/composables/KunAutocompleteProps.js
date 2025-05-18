@@ -1,4 +1,4 @@
-export default {
+export const KunAutocompleteProps = {
   label: {
     type: String,
   },
@@ -29,6 +29,10 @@ export default {
     default: [],
   },
 
+  focusOnRender: {
+    type: Boolean,
+    default: false,
+  },
   focusOnSelect: {
     type: Boolean,
     default: false,
@@ -105,5 +109,9 @@ export default {
   attach: {
     type: Boolean,
     default: false
+  },
+  rules: {
+    type: Array,
+    default: () => [],
   }
 };

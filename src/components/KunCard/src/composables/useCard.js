@@ -6,6 +6,7 @@ export function useCard(props) {
             props.bgColor,
             props.flat ? 'shadow-none' : `shadow-md`,
             props.rounded === true ? 'rounded-lg' : props.rounded ? `rounded-${props.rounded}` : '',
+            props.outlined ? `border ${props.outlineColor}` : '',
             props.class
         ].filter(Boolean)
     })

@@ -5,7 +5,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
 import { useCardItem } from '../composables/useCardItem'
 import { kunCardItemProps } from '../composables/kunCardItemProps'
 

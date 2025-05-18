@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineEmits } from 'vue'
 import { useChip } from '../composables/useChip'
 import { kunChipProps } from '../composables/kunChipProps'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
