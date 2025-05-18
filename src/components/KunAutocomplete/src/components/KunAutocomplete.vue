@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { watchEffect } from 'vue';
+import { ref, onMounted, onUnmounted, watch, watchEffect } from 'vue';
 import { isArray } from '../utils/helpers';
 import { useAutocomplete } from '../composables/useAutocomplete'; // Asegúrate de que la ruta sea correcta
 import { useIntersect } from '../composables/useIntersect';
