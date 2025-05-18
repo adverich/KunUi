@@ -1,3 +1,5 @@
+import { watch } from 'vue';
+
 export function useIntersect(handleIntersect, rootMargin = '0px', intersectObserved, menuModel, intersectRef) {
     const options = {
         root: null,
