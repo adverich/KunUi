@@ -3,7 +3,14 @@
     <div class="w-full bg-blue-200 flex flex-col justify-center items-center gap-4 py-8" style="overflow: hidden;">
       <div class="w-1/2 flex flex-col justrify-center text-center">
         <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
-          item-text="name" :max-height="200" label="Seleccionar sucursal" :searchable-keys="['name']" />
+          item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
+      </div>
+
+      <div class="w-1/2 flex flex-col justrify-center text-center mt-6">
+        <KunTextField label="Etiqueta text field">
+          <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2"/>
+        </KunTextField>
+        <KunTextField label="Etiqueta text field" />
       </div>
     </div>
   </div>
@@ -12,6 +19,9 @@
 <script setup>
 import { ref } from 'vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
+import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
+import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
+import IconASterisk from './icons/IconAsterisk.vue';
 
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);

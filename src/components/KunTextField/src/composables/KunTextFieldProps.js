@@ -3,6 +3,7 @@ export default {
   type: { type: String, default: 'text' },
   placeholder: { type: String, default: '' },
   label: { type: String, default: '' },
+  dirty: { type: Boolean, default: false },
   prefix: { type: String, default: '' },
   suffix: { type: String, default: '' },
   rounded: { type: String, default: 'rounded' },
@@ -17,5 +18,7 @@ export default {
   counter: { type: Boolean, default: false },
   hint: { type: String, default: '' },
   persistentHint: { type: Boolean, default: false },
-  validateOnBlur: { type: Boolean, default: false }
+  validateOnBlur: { type: Boolean, default: false },
+  prependInnerClass: String,
+  appendInnerClass: String,
 }

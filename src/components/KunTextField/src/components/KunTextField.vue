@@ -3,42 +3,47 @@
     <!-- Label -->
     <label
       v-if="label"
-      :for="`input-${_uid}`"
-      class="mb-1 text-sm font-medium text-white"
+      :for="uid"
+      :class="[
+        'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
+        isActive || props.placeholder ? '-top-2 text-xs text-white/70 opacity-80' : 'top-3 text-sm text-white/70 opacity-80'
+      ]"
     >
       {{ label }}
     </label>
 
-    <!-- Input container -->
     <div
       class="w-full flex flex-col justify-center relative border"
       :class="[
-        inputFocused ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : hasError ? 'border-red-500' : 'border-gray-900',
+        inputFocused ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : 'border-gray-900',
         disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
         rounded
       ]"
+      v-bind="$attrs"
     >
       <div
-        class="flex flex-row items-center p-2 bg-gray-800 w-full h-full"
+        class="flex flex-row items-center bg-gray-800 w-full h-full"
         :class="hasError ? 'bg-red-50' : ''"
       >
         <div v-if="prefix" class="mr-2">{{ prefix }}</div>
-        <slot name="prepend-inner" />
+        <div :class="prependInnerClass">
+          <slot name="prepend-inner" />
+        </div>
 
         <!-- Input -->
         <input
           ref="inputField"
           :type="type"
           :value="inputValue"
-          :id="`input-${_uid}`"
+          :id="uid"
           :placeholder="placeholder"
           :disabled="disabled"
           :readonly="readonly"
           :maxlength="maxlength"
           autocomplete="off"
-          class="w-full h-full bg-transparent focus:outline-none text-center"
+          class="w-full h-full bg-transparent focus:outline-none p-2"
           :aria-invalid="hasError ? 'true' : 'false'"
-          :aria-describedby="hasError ? `error-${_uid}` : null"
+          :aria-describedby="hasError ? `error-${uid}` : null"
           @input="handleInput"
           @blur="handleBlur"
           @focus="focusInput"
@@ -59,14 +64,16 @@
         </button>
 
         <slot />
-        <slot name="append-inner" />
+        <div :class="appendInnerClass">
+          <slot name="append-inner" />
+        </div>
         <div v-if="suffix" class="ml-2">{{ suffix }}</div>
       </div>
 
       <!-- Error -->
       <div
         v-if="hasError"
-        :id="`error-${_uid}`"
+        :id="`error-${uid}`"
         class="text-red-500 text-sm mt-1 text-center"
       >
         {{ validationError || errorMessage }}
@@ -92,10 +99,11 @@
 </template>
 
 <script setup>
-import inputProps from '../composables/KunTextFieldProps'
-import useKunTextField from '../composables/useKunTextFieldComposable'
+import { getCurrentInstance, computed } from 'vue';
+import inputProps from '../composables/KunTextFieldProps';
+import useKunTextField from '../composables/useKunTextFieldComposable';
 
-const props = defineProps({ ...inputProps })
+const props = defineProps({ ...inputProps });
 const emits = defineEmits([
   'update:modelValue',
   'focusInput',
@@ -103,7 +111,7 @@ const emits = defineEmits([
   'handleClick',
   'keyDown',
   'keyUp'
-])
+]);
 
 const {
   inputField,
@@ -118,12 +126,15 @@ const {
   reset,
   resetValidation,
   clearInput
-} = useKunTextField(props, emits)
+} = useKunTextField(props, emits);
 
 defineExpose({
   validate,
   reset,
   resetValidation,
   inputField
-})
+});
+
+const uid = `input-${getCurrentInstance().uid}`;
+const isActive = computed(() => (inputFocused.value || !!inputValue.value) || props.dirty);
 </script>

@@ -8,10 +8,10 @@
     <slot v-if="$slots.default" />
 
     <!-- Si el icono es un componente, lo renderiza -->
-    <component v-else-if="isComponent" :is="resolvedIcon" />
+    <component v-else-if="isComponent" :is="resolvedIcon" :class="[color, size, contentClass]" />
 
     <!-- Si es una string, la interpreta como clase o SVG raw (dependiendo del consumidor) -->
-    <span v-else :class="resolvedIcon" />
+    <span v-else :class="[resolvedIcon, color, size, contentClass]" />
   </span>
 </template>
 
@@ -38,7 +38,8 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
-  }
+  },
+  contentClass: [String, Array, Object],
 });
 
 const emit = defineEmits(['click']);
