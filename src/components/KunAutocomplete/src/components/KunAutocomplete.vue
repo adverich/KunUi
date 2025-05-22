@@ -98,6 +98,12 @@ onMounted(() => {
   if(props.focusOnRender) textFieldRef.value.focus();
 });
 
+function itemListBg(item) {
+  if (modelValue.value === null || modelValue.value === undefined) return props.bgItemListColor;
+  if (!props.multiple) return placeholder.value === item[props.itemTitle] ? props.selectedColor : props.bgItemListColor;
+  return modelValue.value.find((i) => i[props.itemValue] === item[props.itemValue]) ? props.selectedColor : props.bgItemListColor;
+}
+
 // Estado interno del error
 const internalError = ref('');
 
