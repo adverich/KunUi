@@ -1,4 +1,5 @@
 import './styles/style.css'
+import './utils/utils.js'
 
 import KunAlert from './components/KunAlert/src/components/KunAlert.vue';
 import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';

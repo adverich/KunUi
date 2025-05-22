@@ -1,176 +1,129 @@
-
 <template>
-  <div class="w-full flex flex-col justify-center relative rounded-t-md border"
-  :class="inputFocused ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : 'border-gray-900'" style="cursor: text;">
+  <div class="w-full flex flex-col relative">
+    <!-- Label -->
+    <label
+      v-if="label"
+      :for="`input-${_uid}`"
+      class="mb-1 text-sm font-medium text-white"
+    >
+      {{ label }}
+    </label>
+
+    <!-- Input container -->
     <div
+      class="w-full flex flex-col justify-center relative border"
       :class="[
-        'w-full h-full text-field-style flex flex-row items-center p-2 bg-gray-800',
-        rounded ? 'rounded' : '',
-        hasError ? 'border border-red-500 bg-red-50' : ''
+        inputFocused ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : hasError ? 'border-red-500' : 'border-gray-900',
+        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
+        rounded
       ]"
     >
-      <!-- Prefix -->
-      <div v-if="prefix" class="mr-2">{{ prefix }}</div>
-      <slot name="prepend-inner" />
+      <div
+        class="flex flex-row items-center p-2 bg-gray-800 w-full h-full"
+        :class="hasError ? 'bg-red-50' : ''"
+      >
+        <div v-if="prefix" class="mr-2">{{ prefix }}</div>
+        <slot name="prepend-inner" />
 
-      <!-- Input principal -->
-      <input
-        ref="inputField"
-        :type="type"
-        :value="inputValue"
-        autocomplete="off"
-        class="h-full w-full bg-transparent rounded focus:outline-none text-center"
-        :placeholder="placeholder"
-        @input="handleInput"
-        @blur="handleBlur"
-        @click.stop="emits('handleClick');"
-        @focus="focusInput"
-        @keydown="emits('keyDown', $event)"
-        @keyup="emits('keyUp', $event)"
-      />
+        <!-- Input -->
+        <input
+          ref="inputField"
+          :type="type"
+          :value="inputValue"
+          :id="`input-${_uid}`"
+          :placeholder="placeholder"
+          :disabled="disabled"
+          :readonly="readonly"
+          :maxlength="maxlength"
+          autocomplete="off"
+          class="w-full h-full bg-transparent focus:outline-none text-center"
+          :aria-invalid="hasError ? 'true' : 'false'"
+          :aria-describedby="hasError ? `error-${_uid}` : null"
+          @input="handleInput"
+          @blur="handleBlur"
+          @focus="focusInput"
+          @click.stop="emits('handleClick')"
+          @keydown="emits('keyDown', $event)"
+          @keyup="emits('keyUp', $event)"
+        />
 
-      <slot />
+        <!-- Clearable -->
+        <button
+          v-if="clearable && inputValue"
+          type="button"
+          @click="clearInput"
+          class="ml-2 text-gray-400 hover:text-white"
+          :disabled="disabled || readonly"
+        >
+          &times;
+        </button>
 
-      <!-- Suffix -->
-      <slot name="append-inner" />
-      <div v-if="suffix" class="ml-2">{{ suffix }}</div>
-    </div>
+        <slot />
+        <slot name="append-inner" />
+        <div v-if="suffix" class="ml-2">{{ suffix }}</div>
+      </div>
 
-    <!-- Mensaje de error -->
-    <div v-if="hasError" class="text-red-500 text-sm mt-1 w-full text-center pl-1">
-      {{ validationError }}
+      <!-- Error -->
+      <div
+        v-if="hasError"
+        :id="`error-${_uid}`"
+        class="text-red-500 text-sm mt-1 text-center"
+      >
+        {{ validationError || errorMessage }}
+      </div>
+
+      <!-- Hint -->
+      <div
+        v-else-if="hint && (persistentHint || inputFocused)"
+        class="text-gray-400 text-xs mt-1 text-center"
+      >
+        {{ hint }}
+      </div>
+
+      <!-- Counter -->
+      <div
+        v-if="counter && maxlength"
+        class="text-gray-400 text-xs mt-1 text-right"
+      >
+        {{ inputValue?.length || 0 }} / {{ maxlength }}
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, inject, watch, onUnmounted } from 'vue';
-import inputProps from '../composables/KunTextFieldProps';
+import inputProps from '../composables/KunTextFieldProps'
+import useKunTextField from '../composables/useKunTextFieldComposable'
 
-const props = defineProps({ ...inputProps });
-const emits = defineEmits(['update:modelValue', 'focusInput', 'blurInput', 'handleClick', 'keyDown', 'keyUp']);
+const props = defineProps({ ...inputProps })
+const emits = defineEmits([
+  'update:modelValue',
+  'focusInput',
+  'blurInput',
+  'handleClick',
+  'keyDown',
+  'keyUp'
+])
 
-const registerField = inject('registerField', null);
-const unregisterField = inject('unregisterField', null);
+const {
+  inputField,
+  inputValue,
+  inputFocused,
+  validationError,
+  hasError,
+  handleInput,
+  handleBlur,
+  focusInput,
+  validate,
+  reset,
+  resetValidation,
+  clearInput
+} = useKunTextField(props, emits)
 
-const inputValue = ref(props.modelValue);
-const isTouched = ref(false);
-const validationError = ref('');
-let syncing = false;
-
-const inputFocused = ref(false);
-
-// Sync con modelValue externo
-// watch(() => props.modelValue, (newVal) => {
-//   inputValue.value = newVal;
-// });
-
-// Validación reutilizable
-async function runValidations() {
-  for (const rule of props.rules) {
-    const result = await Promise.resolve(rule(inputValue.value));
-    if (result !== true) return result;
-  }
-  return true;
-}
-
-// Ejecutar validación cuando cambie el valor o cuando se toque
-watch(() => props.modelValue, (newVal) => {
-  if (newVal !== inputValue.value) {
-    syncing = true
-    inputValue.value = newVal
-  }
-})
-
-watch(inputValue, () => {
-  if (syncing) {
-    syncing = false
-    return
-  }
-
-  isTouched.value = true
-  emits('update:modelValue', inputValue.value)
-
-  clearTimeout(debounceTimeout.value)
-  debounceTimeout.value = setTimeout(async () => {
-    const result = await runValidations()
-    validationError.value = result === true ? '' : result
-  }, 300)
-})
-
-// Mostrar error si fue tocado o si el prop.error está activo
-const hasError = computed(() =>
-  props.error || (!!validationError.value && isTouched.value)
-);
-
-function focusInput() {
-  inputFocused.value = true;
-  emits('focusInput');
-}
-
-// Eventos
-function handleInput(e) {
-  inputValue.value = e.target.value;
-  isTouched.value = true;
-  emits('update:modelValue', inputValue.value);
-}
-
-async function handleBlur() {
-  isTouched.value = true;
-  inputFocused.value = false;
-  const result = await runValidations();
-  validationError.value = result === true ? '' : result;
-  emits('blurInput');
-}
-
-// Métodos públicos
-async function validate() {
-  isTouched.value = true;
-  const result = await runValidations();
-  validationError.value = result === true ? '' : result;
-  return result === true;
-}
-
-function reset() {
-  inputValue.value = props.modelValue;
-  isTouched.value = false;
-  validationError.value = '';
-}
-
-function resetValidation() {
-  isTouched.value = false;
-  validationError.value = '';
-}
-
-// Registro/desregistro
-if (registerField) {
-  registerField({ validate });
-}
-
-onUnmounted(() => {
-  if (unregisterField) {
-    unregisterField({ validate });
-  }
-  clearTimeout(debounceTimeout.value);
-});
-
-const inputField = ref(null);
 defineExpose({
   validate,
   reset,
   resetValidation,
   inputField
-});
-
-const debounceTimeout = ref(null);
-// Validar con debounce cuando cambia el valor
-// watch(inputValue, () => {
-//   if (!isTouched.value) return;
-
-//   clearTimeout(debounceTimeout.value);
-//   debounceTimeout.value = setTimeout(async () => {
-//     const result = await runValidations();
-//     validationError.value = result === true ? '' : result;
-//   }, 300);
-// });
+})
 </script>

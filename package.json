@@ -44,7 +44,8 @@
       "require": "./dist/index.js"
     },
     "./dist/adverich-kun-ui.css": "./dist/adverich-kun-ui.css",
-    "./components/*": "./dist/components/*"
+    "./components/*": "./dist/components/*",
+    "./components": "./dist/components/index.js"
   },
   "engines": {
     "node": ">=18.0.0"

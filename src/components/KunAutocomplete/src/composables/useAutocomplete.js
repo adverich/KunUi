@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue';
-import { isObject, isArray } from '../utils/helpers';
+import { isObject, isArray } from '../../../../utils/utils.js'
 
 export function useAutocomplete(props, emits, modelValue, items, itemsPerIntersection) {
     const selectedItem = ref(null);

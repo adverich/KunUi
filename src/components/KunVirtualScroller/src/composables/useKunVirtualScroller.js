@@ -1,5 +1,5 @@
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
-import { debounce } from '../../../../utils/debounce.js'
+import { debounce } from '../../../../utils/utils.js'
 
 export function useKunVirtualScroller({
     root,

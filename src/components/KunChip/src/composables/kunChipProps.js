@@ -76,5 +76,7 @@ export const kunChipProps = {
     style: {
         type: Object,
         default: null
-    }
+    },
+    to: [String, Object],
+    href: String,
 }

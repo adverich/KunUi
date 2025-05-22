@@ -41,6 +41,7 @@ const {
   componentAttrs,
   chipClass,
   chipStyle,
+  isLink,
   handleClose
 } = useChip(props, emit)
 </script>

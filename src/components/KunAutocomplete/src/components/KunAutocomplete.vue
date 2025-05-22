@@ -65,7 +65,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { icons } from '@/icons'
-import { isNotEmpty, isArray } from '../utils/helpers';
+import { isNotEmpty, isArray } from '../../../../utils/utils.js'
 
 import KunInfiniteScroll from '../../../KunInfiniteScroll/src/components/KunInfiniteScroll.vue';
 

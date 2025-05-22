@@ -1,39 +1,21 @@
 export default {
-  modelValue: {
-    type: [String, Number], default: ''
-  },
-  type: {
-    type: String,
-    default: 'text',
-  },
-  placeholder: {
-    type: null,
-    default: 'text',
-  },
-  locale: {
-    type: String,
-    default: 'ar-ES',
-  },
-  prefix: {
-    type: String,
-    default: '',
-  },
-  suffix: {
-    type: String,
-    default: '',
-  },
-  rounded: {
-    type: String,
-    default: 'rounded'
-  },
-  error: {
-    type: Boolean,
-    default: false
-  },
-  errorMessage: {
-    type: String, default: ''
-  },
-  rules: {
-    type: Array, default: () => []
-  },
-};
+  modelValue: { type: [String, Number], default: '' },
+  type: { type: String, default: 'text' },
+  placeholder: { type: String, default: '' },
+  label: { type: String, default: '' },
+  prefix: { type: String, default: '' },
+  suffix: { type: String, default: '' },
+  rounded: { type: String, default: 'rounded' },
+  error: { type: Boolean, default: false },
+  errorMessage: { type: String, default: '' },
+  rules: { type: Array, default: () => [] },
+  disabled: { type: Boolean, default: false },
+  readonly: { type: Boolean, default: false },
+  clearable: { type: Boolean, default: false },
+  debounce: { type: Number, default: 300 },
+  maxlength: { type: [Number, String], default: null },
+  counter: { type: Boolean, default: false },
+  hint: { type: String, default: '' },
+  persistentHint: { type: Boolean, default: false },
+  validateOnBlur: { type: Boolean, default: false }
+}
