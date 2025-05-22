@@ -83,6 +83,9 @@ export const KunAutocompleteProps = {
   },
 
   // ***** STYLE ***** //
+  height: {
+    default: 500,
+  },
   maxHeight: {
     default: 500,
   },
@@ -104,7 +107,7 @@ export const KunAutocompleteProps = {
   },
   selectedColor: {
     type: String,
-    default: "bg-primary",
+    default: "bg-green-200",
   },
   attach: {
     type: Boolean,

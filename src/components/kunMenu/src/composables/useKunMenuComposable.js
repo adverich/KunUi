@@ -3,19 +3,13 @@ export function useKunMenuComposable() {
         const handleClick = (event) => {
             const targetEl = targetRef.value
             if (!targetEl) return
-
             const clickedEl = event.composedPath?.()[0] || event.target
-
             const isIgnored = [targetEl, ...ignoreRefs.map(r => r?.value)].some(el =>
                 el?.contains(clickedEl)
             )
-
-            if (!isIgnored) {
-                handler(event)
-            }
+            if (!isIgnored) handler(event)
         }
 
-        // Agregar/eliminar eventos
         const addEventListeners = () => {
             document.addEventListener('click', handleClick, true)
             document.addEventListener('touchstart', handleClick, true)
@@ -26,10 +20,7 @@ export function useKunMenuComposable() {
             document.removeEventListener('touchstart', handleClick, true)
         }
 
-        return {
-            addEventListeners,
-            removeEventListeners
-        }
+        return { addEventListeners, removeEventListeners }
     }
 
     return { onClickOutside }

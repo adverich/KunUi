@@ -14,15 +14,16 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.6",
-    "@vitejs/plugin-vue": "^5.2.1",
-    "autoprefixer": "^10.4.20",
+    "@tailwindcss/vite": "^4.1.7",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "autoprefixer": "^10.4.21",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "vite": "^6.2.4"
+    "vite": "^6.3.5",
+    "vite-plugin-vue-devtools": "^7.7.6"
   },
   "peerDependencies": {
-    "tailwindcss": "^4.1.6",
+    "tailwindcss": "^4.1.7",
     "vue": "^3.5.13",
     "vue-router": "^4.0.0"
   },

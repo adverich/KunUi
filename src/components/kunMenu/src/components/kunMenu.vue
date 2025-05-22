@@ -1,173 +1,120 @@
 <template>
-  <!-- Teleport content if not attached to self -->
-  <Teleport v-if="attach !== true" :to="attach || 'body'">
-    <component
-      :is="transitionComponent"
-      v-if="typeof props.transition === 'object'"
-      mode="out-in"
-    >
-      <div
+    <Teleport v-if="attach !== true" :to="attach || 'body'">
+      <!-- <div
+        v-if="typeof props.transition === 'object'"
         v-show="menuVisible"
         ref="contentEl"
         role="menu"
         :aria-label="label"
         tabindex="-1"
-        class="absolute bg-white dark:bg-gray-800 rounded shadow-lg z-[var(--zIndex,2000)] overflow-hidden focus:outline-none"
-        :class="[
-          contentClass,
-          locationMap[location]?.class || ''
-        ]"
+        class="absolute w-full rounded shadow-lg z-[var(--zIndex,2000)] overflow-hidden focus:outline-none"
+        :class="[contentClass, originClass]"
         :style="{
-          width: menuWidth,
-          minWidth: computedMinWidth,
-          maxWidth: computedMaxWidth,
-          minHeight: computedMinHeight,
-          maxHeight: computedMaxHeight,
-          height: computedHeight,
+          width: width,
+          minWidth: minWidth,
+          maxWidth: maxWidth,
+          minHeight: minHeight,
+          maxHeight: maxHeight,
+          height: height,
           zIndex,
-          opacity: scrim && typeof scrim === 'string' ? props.opacity : undefined
+          menuPositionStyle
         }"
         v-bind="contentProps"
-        @click.stop="handleContentClick"
-        @keydown.down.stop.prevent="focusNextItem"
-        @keydown.up.stop.prevent="focusPrevItem"
+        @click.stop="handleClick"
+        @keydown="emits('keydown')"
         @keydown.enter.stop="focusCurrentItem"
         @keydown.escape="hideMenu"
       >
-        <div class="max-h-60 overflow-auto">
+        <slot />
+      </div> -->
+
+      <transition :name="transition">
+        <div
+          v-show="menuVisible"
+          ref="contentEl"
+          role="menu"
+          tabindex="-1"
+          class="bg-gray-100 rounded shadow-lg overflow-y-auto focus:outline-none mt-0.5"
+          :class="[contentClass, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex]"
+          :style="{
+            ...menuPositionStyle,
+            maxHeight: typeof maxHeight === 'number' ? maxHeight + 'px' : maxHeight
+          }"
+          v-bind="contentProps"
+          @keydown.enter.stop="focusCurrentItem"
+          @keydown.escape.stop="handleEscape"
+        >
           <slot />
         </div>
-      </div>
-    </component>
-
-    <transition v-else :name="computedTransition">
-      <div
-        v-show="menuVisible"
-        ref="contentEl"
-        role="menu"
-        :aria-label="label"
-        tabindex="-1"
-        class="absolute bg-white dark:bg-gray-800 rounded shadow-lg z-[var(--zIndex,2000)] overflow-hidden focus:outline-none"
-        :class="[
-          contentClass,
-          locationMap[location]?.class || ''
-        ]"
-        :style="{
-          width: menuWidth,
-          minWidth: computedMinWidth,
-          maxWidth: computedMaxWidth,
-          minHeight: computedMinHeight,
-          maxHeight: computedMaxHeight,
-          height: computedHeight,
-          zIndex,
-          opacity: scrim && typeof scrim === 'string' ? props.opacity : undefined
-        }"
-        v-bind="contentProps"
-        @click.stop="handleContentClick"
-        @keydown.down.stop.prevent="focusNextItem"
-        @keydown.up.stop.prevent="focusPrevItem"
-        @keydown.enter.stop="focusCurrentItem"
-        @keydown.escape="hideMenu"
-      >
-        <div class="max-h-60 overflow-auto">
-          <slot />
-        </div>
-      </div>
-    </transition>
-  </Teleport>
-
-  <!-- Activator -->
-  <div
-    ref="activatorEl"
-    class="inline-block relative"
-    :class="[activatorProps.class]"
-    :style="[activatorProps.style]"
-    @click.stop="handleActivatorClick"
-    @mouseenter="handleHover('enter')"
-    @mouseleave="handleHover('leave')"
-    @focus="handleFocus"
-    role="button"
-    :aria-haspopup="true"
-    :aria-expanded="menuVisible"
-    tabindex="0"
-  >
-    <slot name="activator" v-bind="{ isActive: menuVisible }" />
-  </div>
+      </transition>
+    </Teleport>
 </template>
 
 <script setup>
-import { useKunMenu } from '../composables/useKunMenu';
-import { kunMenuProps } from '../composables/kunMenuProps';
+import { onMounted } from 'vue'
+import { useKunMenu } from '../composables/useKunMenu'
+import { kunMenuProps } from '../composables/kunMenuProps'
+import { useKunMenuStyles } from '../composables/useKunMenuStyles'
 
 const props = defineProps(kunMenuProps)
-const emit = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue', 'click:outside', 'handleEscape'])
 
 const {
   menuVisible,
   activatorEl,
   contentEl,
-  computedWidth,
-  computedHeight,
-  computedMinWidth,
-  computedMinHeight,
-  computedMaxWidth,
-  computedMaxHeight,
-  locationMap,
-  transitionComponent,
-  showMenu,
-  hideMenu,
-  toggleMenu,
+  initMenu,
   handleActivatorClick,
   handleHover,
   handleFocus,
-  handleContentClick,
-  positionMenu,
-  focusNextItem,
-  focusPrevItem,
   focusCurrentItem,
-  computedTransition,
-  menuWidth
-} = useKunMenu(props, emit)
+  handleEscape
+} = useKunMenu(props, emits)
+
+const {
+  originClass,
+  setMenuPosition
+} = useKunMenuStyles(props, contentEl, activatorEl, handleActivatorClick, handleHover, handleFocus);
+
+onMounted(() => {
+  setMenuPosition();
+  initMenu();
+});
 </script>
 
-<style scope>
-/* Slide Y - Abre hacia abajo/arriba */
-.slide-y-enter-active,
-.slide-y-leave-active {
-  transition: transform 0.25s ease, opacity 0.25s ease;
+<style scoped>
+/* Fade */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s ease;
 }
-.slide-y-enter-from,
-.slide-y-leave-to {
-  transform: translateY(-10px);
+.fade-enter-from, .fade-leave-to {
   opacity: 0;
 }
 
-/* Slide X - Izquierda/Derecha */
-.slide-left-enter-active,
-.slide-left-leave-active,
-.slide-right-enter-active,
-.slide-right-leave-active {
-  transition: transform 0.25s ease, opacity 0.25s ease;
+/* Slide-Y */
+.slide-y-enter-active, .slide-y-leave-active {
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
-.slide-left-enter-from,
-.slide-left-leave-to {
-  transform: translateX(10px);
-  opacity: 0;
-}
-.slide-right-enter-from,
-.slide-right-leave-to {
-  transform: translateX(-10px);
+.slide-y-enter-from, .slide-y-leave-to {
+  transform: translateY(-8px);
   opacity: 0;
 }
 
-/* Escala + Fade (ideal para submenús) */
-.scale-enter-active,
-.scale-leave-active {
-  transition: all 0.2s ease;
+/* Slide-X */
+.slide-x-enter-active, .slide-x-leave-active {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.slide-x-enter-from, .slide-x-leave-to {
+  transform: translateX(-8px);
+  opacity: 0;
+}
+
+/* Scale */
+.scale-enter-active, .scale-leave-active {
+  transition: transform 0.2s ease, opacity 0.2s ease;
   transform-origin: top left;
 }
-.scale-enter-from,
-.scale-leave-to {
+.scale-enter-from, .scale-leave-to {
   transform: scale(0.92);
   opacity: 0;
 }

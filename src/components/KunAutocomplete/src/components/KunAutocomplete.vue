@@ -1,116 +1,118 @@
 <template>
-  <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" @keydown="openMenu"
-    @keyup.down="focusOnMenu" ref="textFieldRef" autocomplete="off" width="100%"
+  <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef" autocomplete="off" 
+    @update:modelValue="txtUpdated"
+    @keyDown="txtKeyDown"
+    @focusInput="txtFocused" 
+    @handleClick="openMenu"
     :placeholder="(isArray(selectedItem) && selectedItem.length) ? '' : placeholder" :error="!!internalError"
-    @focus="validate(modelValue);" :error-messages="internalError">
-    <div v-if="isArray(selectedItem)" class="d-flex justify-center align-center">
-      <template v-for="item in selectedItem">
+  :error-messages="internalError">
+    <div v-if="isArray(selectedItem)" class="flex justify-center align-center">
+      <template v-for="item in selectedItem" :key="item.id ?? item.name">
         <KunChip size="small" class="ml-1">
-          <div class="d-flex justify-center align-center">
+          <div class="flex justify-center align-center">
             {{ getItemText(item, itemTitle) }}
-            <KunIcon color="error" icon="$mdiClose" size="small" class="ml-1" @click="removeItem(item)" />
+            <KunIcon color="error" :icon="icons.close" size="small" class="ml-1" @click="removeItem(item)" />
           </div>
         </KunChip>
       </template>
     </div>
 
     <template v-if="hasIcons" v-slot:append-inner>
-      <KunIcon v-if="clearable && selectedItem" @click="clearSelection" size="small" color="error" icon="$mdiClose"
-        class="mr-1 mt-1" />
-
-      <KunIcon color="teal-darken-1" size="large" class="cursor-pointer">
-        {{ listRef ? "$mdiMenuUpOutline" : "$mdiMenuDownOutline" }}
-      </KunIcon>
-
-      <KunIcon v-if="required" color="teal-darken-1" size="x-small" class="mb-4">
-        $mdiAsterisk
-      </KunIcon>
+      <KunIcon v-if="clearable && selectedItem" @click="clearSelection" size="small" color="error" :icon="icons.close" class="mr-1 mt-1" />
+      <KunIcon color="teal-darken-1" size="large" class="cursor-pointer" :icon="listRef ? icons.menuUpOutline : icons.menuDownOutline" />
+      <KunIcon v-if="required" color="teal-darken-1" size="x-small" class="mb-4" :icon="icons.asterisk" />
     </template>
 
-    <VMenu @click:outside="lightReset()" v-model="menuModel" activator="parent" @keydown="onMenuKeydown"
-      :close-on-content-click="isCloseOnSelect" :max-height="maxHeight">
-      <VList @update:selected="getSelectedItem" @click:select="lightReset()" ref="listRef" @mouseover="activeIntersect">
-        <VListItem v-if="hasCreateItem">
-          <VBtn @click="createItem" class="w-100" color="success">
+    <KunMenu transition="fade" @click:outside="lightReset()" v-model="menuModel" activator="parent" :text-field-ref="textFieldRef" 
+      @handleEscape="handleEscape" 
+      :close-on-content-click="closeOnSelect" :max-height="maxHeight" :menuPositionStyle="menuPositionStyle">
+
+      <KunList @update:selected="getSelectedItem" @click:select="lightReset()" ref="listRef" @keyDown="handleKeyList">
+        <KunListItem v-if="hasCreateItem">
+          <KunBtn @click="createItem" class="w-full" color="bg-green-400">
             Crear item
-          </VBtn>
-        </VListItem>
-        <VListItem v-for="(item, index) in filteredItems" :key="item.id?.toString() ?? item.name" :value="item"
-          :disabled="checkDisabled(item)" :class="isItemSelected(item) ? selectedColor : bgItemListColor"
-          :density="density" :id="item.id?.toString() ?? item.name">
-          <VListItemTitle class="text-wrap">
-            {{ itemToString(item, textArr, 'hasDefault') }}
-          </VListItemTitle>
-          <VListItemSubtitle class="text-wrap" v-text="itemSubtitle ? itemToString(item, itemSubtitle) : ''" />
-        </VListItem>
-        <div ref="intersectRef" />
-      </VList>
-    </VMenu>
+          </KunBtn>
+        </KunListItem>
+        <KunInfiniteScroll
+          :items="items"
+          :search="search"
+          :searchable-keys="props.searchableKeys"
+          :items-per-intersection="10"
+          :enabled="menuModel"
+          :virtual="false"
+          :item-height="48"
+          v-slot="{ item, index }"
+        >
+          <KunListItem
+            :value="item"
+            :key="item.id?.toString() ?? item.name"
+            :disabled="checkDisabled(item)"
+            :class="itemListBg(item)"
+            :density="density"
+            :id="item.id?.toString() ?? item.name"
+          >
+            <KunListItemTitle class="text-wrap">
+              {{ itemToString(item, textArr, 'hasDefault') }}
+            </KunListItemTitle>
+            <KunListItemSubtitle v-text="itemSubtitle ? itemToString(item, itemSubtitle) : ''" />
+          </KunListItem>
+        </KunInfiniteScroll>
+      </KunList>
+    </KunMenu>
   </KunTextField>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, watchEffect } from 'vue';
-import { isArray } from '../utils/helpers';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { icons } from '@/icons'
+import { isNotEmpty, isArray } from '../utils/helpers';
+
+import KunInfiniteScroll from '../../../KunInfiniteScroll/src/components/KunInfiniteScroll.vue';
+
+import KunList from '../../../KunList/src/components/KunList.vue';
+import KunListItem from '../../../KunListItem/src/components/KunListItem.vue';
+import KunListItemTitle from '../../../KunListItemTitle/src/components/KunListItemTitle.vue';
+import KunListItemSubtitle from '../../../KunListItemSubtitle/src/components/KunListItemSubtitle.vue';
+import KunMenu from '../../../KunMenu/src/components/KunMenu.vue';
+
 import { useAutocomplete } from '../composables/useAutocomplete'; // Asegúrate de que la ruta sea correcta
-import { useIntersect } from '../composables/useIntersect';
 import { KunAutocompleteProps } from '../composables/KunAutocompleteProps';
 import KunTextField from '../../../KunTextField/src/components/KunTextField.vue'
+import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunChip from '../../../KunChip/src/components/KunChip.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 const modelValue = defineModel({ default: null });
 const items = defineModel('items', { default: [], type: Array, required: true });
-const itemsPerIntersection = defineModel('itemsPerIntersection', { default: 20, type: Number });
 
 const props = defineProps(KunAutocompleteProps);
-const emits = defineEmits(["createItem", "validation"]);
-const intersectRef = ref(null);
+const emits = defineEmits(["createItem", "validation", "search"]);
 
-const { selectedItem, textFieldRef, listRef, menuModel, search, removeItem, clearSelection, lightReset, openMenu, focusOnMenu, onMenuKeydown,
+const { selectedItem, textFieldRef, listRef, menuModel, search, removeItem, clearSelection, lightReset, openMenu, onMenuKeydown,
   setSelectedItemValue, getSelectedItem, textArr, getItemText,
-  createItem, checkDisabled, filteredItems, itemToString, placeholder, isCloseOnSelect, isClearOnSelect,
-  handleIntersect, intersectObserved } = useAutocomplete(props, emits, modelValue, items, itemsPerIntersection);
+  createItem, checkDisabled, itemToString, placeholder, hasCreateItem, 
+} = useAutocomplete(props, emits, modelValue, items);
 
-const { observe, stopObserver } = useIntersect(() => handleIntersect(), `0px 0px 200px 0px`, intersectObserved, menuModel, intersectRef);
-
-function activeIntersect() {
-  if (!intersectObserved.value) {
-    observe();
-  }
-}
-
-onMounted(() => props.focusOnRender ? textFieldRef.value.focus() : '');
-onUnmounted(() => stopObserver());
-
-watchEffect(() => {
-  if (isObject(modelValue.value) && !isNotEmpty(modelValue.value)) selectedItem.value = {};
-  if (isArray(modelValue.value) && !isNotEmpty(modelValue.value)) selectedItem.value = [];
-  if (modelValue.value === null) selectedItem.value = null;
-
-  setSelectedItemValue();
+onMounted(() => {
+  setMenuStyle()
+  if(props.focusOnRender) textFieldRef.value.focus();
 });
-
-function isItemSelected(item) {
-  if (modelValue.value === null || modelValue.value === undefined) return false;
-  if (!props.multiple) return placeholder.value === item[props.itemTitle];
-  return modelValue.value.find((i) => i[props.itemValue] === item[props.itemValue]);
-}
 
 // Estado interno del error
 const internalError = ref('');
+
 // Método de validación
 const validate = (value) => {
   for (const rule of props.rules) {
     const result = rule(value);
     if (result !== true) {
       internalError.value = result;
-      emits('validation', false); // Notificar que no es válido
+      emits('validation', false);
       return false;
     }
   }
   internalError.value = '';
-  emits('validation', true); // Notificar que es válido
+  emits('validation', true);
   return true;
 };
 
@@ -120,4 +122,51 @@ watch(() => modelValue.value, (newValue, oldValue) => {
     validate(newValue);
   }
 })
+
+function handleEscape() {
+  menuModel.value = false;
+  textFieldRef.value.$el.focus();
+}
+
+function txtUpdated(event) {
+  emits('search', search);
+}
+
+const menuPositionStyle = ref({});
+function setMenuStyle() {
+  if (textFieldRef.value) {
+    const rect = textFieldRef.value.$el.getBoundingClientRect();
+
+    menuPositionStyle.value = {
+      position: 'absolute',
+      top: `${rect.bottom}px`,  // Posiciona el menú justo debajo
+      left: `${rect.left}px`,   // Alinea con el input
+      width: `${rect.width}px`, // Ocupa el mismo ancho que el padre
+    };
+  }
+}
+
+function txtFocused() {
+  validate(modelValue);
+  menuModel.value = true;
+}
+
+function txtKeyDown(event){
+  const key = event.key;
+  if(key === 'Escape') {
+    handleEscape();
+    return;
+  }
+
+  if (['ArrowDown', 'ArrowUp'].includes(key)) {
+    if (!listRef.value) return;
+    listRef.value.focusWithKey(key);
+    return;
+  }
+  onMenuKeydown(event);
+}
+
+function handleKeyList(event) {
+  onMenuKeydown(event);
+}
 </script>

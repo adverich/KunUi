@@ -1,5 +1,4 @@
-// src/composables/useAutocomplete.js
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { isObject, isArray } from '../utils/helpers';
 
 export function useAutocomplete(props, emits, modelValue, items, itemsPerIntersection) {
@@ -8,13 +7,6 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     const listRef = ref(null);
     const menuModel = ref(false);
     const search = ref("");
-    const intersectObserved = ref(false);
-
-    const isSearcheableKeysEmpty = computed(() => !!!props.searchableKeys.length);
-    const isClearOnSelect = computed(() => props.clearOnSelect);
-    const isClearSearchOnSelect = computed(() => props.clearSearchOnSelect);
-    const isFocusOnSelect = computed(() => props.focusOnSelect);
-    const isCloseOnSelect = computed(() => props.closeOnSelect);
 
     const getItemText = (obj, string) => {
         return string.split('.').reduce((acc, key) => {
@@ -97,7 +89,7 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
                     return result;
                 }, []);
 
-                const keys = isSearcheableKeysEmpty.value ? allKeys : getSelectedKeyValue;
+                const keys = props.searchableKeys.length ? getSelectedKeyValue : allKeys;
                 return keys
                     ? keys.some((value) =>
                         value
@@ -113,7 +105,8 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
             }
             return item.toString().toLowerCase().includes(search.value.toLowerCase());
         });
-        return itemsFound.slice(0, currentBatchStep.value);
+        return itemsFound;
+        // return itemsFound.slice(0, currentBatchStep.value);
     });
 
     const textArr = computed(() => {
@@ -214,10 +207,10 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
                 modelValue.value = selectedItem.value;
             }
         }
-        if (isClearOnSelect.value) {
+        if (props.clearOnSelect) {
             clearSelection()
         };
-        textFieldRef.value.focus();
+        focusTextField();
     }
 
     function checkIfValueExist(result) {
@@ -245,35 +238,34 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     }
 
     function lightReset() {
-        resetCurrentBatchStep();
-        isClearSearchOnSelect.value ? (search.value = "") : "";
-        isFocusOnSelect.value ? textFieldRef.value.focus() : "";
+        props.clearSearchOnSelect ? (search.value = "") : "";
+        props.focusOnSelect ? focusTextField() : "";
     }
 
-    function openMenu(e) {
-        if (isAlphanumeric(e.key)) {
-            menuModel.value = true;
-        }
+    function openMenu() {
+        if (!menuModel.value) menuModel.value = true;
     }
 
     function isAlphanumeric(key) {
-        // Expresión regular para letras (a-z, A-Z) y números (0-9)
-        const regex = /^[a-zA-Z0-9]$/;
-        return regex.test(key);
+        return key.length === 1 && key.match(/\w/);
+    }
+
+    function focusTextField() {
+        textFieldRef.value.inputField.focus();
     }
 
     function focusOnMenu() {
         menuModel.value = true;
         if (!listRef.value) return;
-        listRef.value.focus();
+        textFieldRef.value.$el.focus();
     }
 
     function onMenuKeydown(event) {
         const key = event.key;
         // Verificar si es una tecla alfanumérica
         if (isAlphanumeric(key) || key === "Backspace") {
-            // Hacer focus en VTextField
-            textFieldRef.value.focus();
+            openMenu();
+            focusTextField();
         }
     };
 
@@ -314,49 +306,10 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
         if (item.disabledItem) return true;
     }
 
-
-    // Autocomplete infinite scroll logic.
-    // Next branch to iterate
-    const nextBatch = ref(null);
-
-    // Current batch size, default is itemsPerIntersection value.
-    const currentBatchStep = ref(itemsPerIntersection.value);
-
-    // Calculate max batches available.
-    const maxIterableBatches = computed(() =>
-        Math.ceil(items.value / itemsPerIntersection.value)
-    );
-
-    // Indicates if the last batch has been loaded.
-    const lastBatchReached = computed(() => maxIterableBatches.length >= currentBatchStep.value);
-
-    // Total ITEMS
-    const totalItems = computed(() => items.value.length);
-
-    // Indicates if we are still on the first default batch step.
-    const isFirstBatch = computed(
-        () => itemsPerIntersection.value === currentBatchStep.value
-    );
-
-    function resetCurrentBatchStep() {
-        currentBatchStep.value = itemsPerIntersection.value;
-    }
-
-    function handleIntersect() {
-        if (isFirstBatch.value && lastBatchReached.value) return;
-        if (lastBatchReached.value) return;
-
-        currentBatchStep.value += itemsPerIntersection.value;
-        nextBatch.value = currentBatchStep.value + itemsPerIntersection.value;
-
-        return items.value.slice(0, nextBatch.value);
-    }
-
     return {
-        selectedItem, textFieldRef, listRef, menuModel, search, isCloseOnSelect, isClearOnSelect, getItemText,
+        selectedItem, textFieldRef, listRef, menuModel, search, getItemText,
         setSelectedItemValue, placeholder, filteredItems, textArr, itemToString, getSelectedItem,
         checkIfValueExist, removeFromArray, lightReset, openMenu, focusOnMenu, onMenuKeydown, createItem,
-        removeItem, clearSelection, checkDisabled,
-        handleIntersect, intersectObserved
+        removeItem, clearSelection, checkDisabled, isAlphanumeric,
     };
 }

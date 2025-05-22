@@ -1,3 +1,5 @@
+// kunMenuProps.js
+
 export const kunMenuProps = {
     modelValue: Boolean,
     activator: [String, Object],
@@ -9,49 +11,64 @@ export const kunMenuProps = {
     openOnClick: Boolean,
     openOnHover: Boolean,
     openOnFocus: Boolean,
-    closeOnContentClick: { type: Boolean, default: true },
-    closeOnBack: { type: Boolean, default: true },
+    closeOnContentClick: {
+        type: Boolean,
+        default: true
+    },
+    closeOnBack: {
+        type: Boolean,
+        default: true
+    },
     contained: Boolean,
     contentClass: [String, Array, Object],
     contentProps: {
         type: Object,
         default: () => ({})
     },
+    menuPositionStyle: {
+        type: Object,
+        default: () => ({})
+    },
     disabled: Boolean,
     eager: Boolean,
     height: [String, Number],
-    width: [String, Number],
-    matchActivatorWidth: {
-        type: Boolean,
-        default: false
-    },
     minHeight: [String, Number],
-    minWidth: [String, Number],
     maxHeight: [String, Number],
-    maxWidth: [String, Number],
+    width: {
+        type: [String, Number],
+        default: 'w-full'
+    },
+    minWidth: [String, Number],
+    maxWidth: {
+        type: [String, Number],
+        default: 'w-full'
+    },
     offset: [String, Number, Array],
-    openDelay: { type: [String, Number], default: 100 },
-    closeDelay: { type: [String, Number], default: 100 },
-    location: { type: String, default: 'bottom' },
-    origin: { type: String, default: 'auto' },
+    openDelay: {
+        type: [String, Number],
+        default: 100
+    },
+    closeDelay: {
+        type: [String, Number],
+        default: 100
+    },
+    location: {
+        type: String,
+        default: 'bottom',
+        validator: v => ['top', 'bottom', 'left', 'right'].includes(v)
+    },
+    origin: {
+        type: String,
+        default: 'auto'
+    },
     transition: {
-        type: [String, Object],
+        type: String,
         default: 'scale',
-        validator: v =>
-            ['fade', 'slide-y', 'slide-left', 'slide-right', 'scale'].includes(v) ||
-            (typeof v === 'object' && 'component' in v)
+        validator: value => ['fade', 'slide-y', 'slide-x', 'scale'].includes(value),
     },
     persistent: Boolean,
     zIndex: [String, Number],
     submenu: Boolean,
-    scrim: [Boolean, String],
-    opacity: { type: [Number, String], default: 1 },
-    scrollStrategy: {
-        type: [String, Function],
-        default: 'reposition',
-        validator: v =>
-            ['close', 'block', 'reposition', 'none'].includes(v) || typeof v === 'function'
-    },
     label: {
         type: String,
         default: 'Menú contextual'
@@ -59,5 +76,6 @@ export const kunMenuProps = {
     keyboardNavigation: {
         type: Boolean,
         default: true
-    }
+    },
+    textFieldRef: Object,
 }

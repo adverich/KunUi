@@ -2,11 +2,13 @@ import { defineConfig } from 'vite'
 import path from "path";
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
+import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
   plugins: [
     vue(),
     tailwindcss(),
+    vueDevTools(),
   ],
   build: {
     lib: {

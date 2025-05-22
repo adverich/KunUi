@@ -1,25 +1,25 @@
 <template>
   <span
     :class="[
+      'truncate',
       props.fontSize,
       props.fontWeight,
-      props.class,
-      'truncate',
+      props.class
     ]"
   >
-    <slot>{{ props.text }}</slot>
+    <slot>{{ props.title }}</slot>
   </span>
 </template>
 
 <script setup>
 const props = defineProps({
-  text: {
+  title: {
     type: [String, Number],
     default: null
   },
   fontSize: {
     type: String,
-    default: 'text-sm'
+    default: 'text-lg'
   },
   fontWeight: {
     type: String,
