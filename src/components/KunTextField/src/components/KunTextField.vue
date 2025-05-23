@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex flex-col relative">
+  <div class="w-full flex flex-col relative bg-blue-800">
     <!-- Label -->
     <label
       v-if="label"
@@ -26,11 +26,9 @@
         :class="hasError ? 'bg-red-50' : ''"
       >
         <div v-if="prefix" class="mr-2">{{ prefix }}</div>
-        <template v-if="$slots['prepend-inner']">
-          <div :class="prependInnerClass" class="flex items-center justify-center min-w-[32px] h-full px-1">
-            <slot name="prepend-inner" />
-          </div>
-        </template>
+        <div v-if="hasPrependInner" :class="prependInnerClass" class="flex items-center justify-center min-w-[32px] h-full px-1">
+          <slot name="prepend-inner" />
+        </div>
 
         <!-- Input -->
         <input
@@ -67,11 +65,9 @@
 
         <slot />
 
-        <template v-if="$slots['append-inner']">
-          <div :class="appendInnerClass" class="flex items-center justify-center min-w-[32px] h-full px-1">
-            <slot name="append-inner" />
-          </div>
-        </template>
+        <div v-if="hasAppendInner" :class="appendInnerClass" class="flex items-center justify-center min-w-[32px] h-full px-1">
+          <slot name="append-inner" />
+        </div>
         <div v-if="suffix" class="ml-2">{{ suffix }}</div>
       </div>
 
@@ -104,7 +100,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, computed } from 'vue';
+import { getCurrentInstance, useSlots, computed } from 'vue';
 import inputProps from '../composables/KunTextFieldProps';
 import useKunTextField from '../composables/useKunTextFieldComposable';
 
@@ -142,4 +138,8 @@ defineExpose({
 
 const uid = `input-${getCurrentInstance().uid}`;
 const isActive = computed(() => (inputFocused.value || !!inputValue.value) || props.dirty);
+
+const slots = useSlots();
+const hasPrependInner = computed(() => !!slots['prepend-inner']);
+const hasAppendInner = computed(() => !!slots['append-inner']);
 </script>

@@ -1,103 +1,68 @@
 <template>
-  <div :class="colClasses" :style="customStyle">
+  <div :class="colClasses">
     <slot />
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 const props = defineProps({
-  cols: {
-    type: [String, Number, Boolean],
-    default: false
-  },
-  sm: { type: [String, Number], default: null },
-  md: { type: [String, Number], default: null },
-  lg: { type: [String, Number], default: null },
-  xl: { type: [String, Number], default: null },
-  offset: { type: [String, Number], default: null },
-  smOffset: { type: [String, Number], default: null },
-  mdOffset: { type: [String, Number], default: null },
-  lgOffset: { type: [String, Number], default: null },
-  xlOffset: { type: [String, Number], default: null },
-  order: { type: [String, Number], default: null },
-  alignSelf: {
-    type: String,
-    default: null,
-    validator: v => ['start', 'center', 'end', 'auto', null].includes(v)
-  },
-  class: { type: [String, Array, Object], default: null },
-  style: { type: Object, default: null }
+  cols: [Number, String],
+  sm: [Number, String],
+  md: [Number, String],
+  lg: [Number, String],
+  xl: [Number, String],
 })
 
-// Función auxiliar para calcular ancho en base a cols
-const getWidthClass = (value) => {
-  if (value === true || value === '') return 'grow'
-  const width = parseInt(value)
-  if (isNaN(width)) return ''
-  return `w-${width * 1 / 12 * 100}%`
+const noGutters = inject('noGutters', false)
+const dense = inject('dense', false)
+
+// Convierte número (1-12) a fracción Tailwind: '1/12', '1/2', etc.
+const toFraction = (val) => {
+  const num = parseInt(val)
+  const fractions = {
+    1: '1/12',
+    2: '2/12',
+    3: '1/4',
+    4: '1/3',
+    5: '5/12',
+    6: '1/2',
+    7: '7/12',
+    8: '2/3',
+    9: '3/4',
+    10: '5/6',
+    11: '11/12',
+    12: 'full',
+  }
+  return fractions[num] || 'full'
 }
 
-// Calcular clases dinámicas
 const colClasses = computed(() => {
   const classes = []
 
-  // Padding si no hay noGutters en el row
-  classes.push('px-4') // o usar dynamic class desde prop
-
-  // Ancho base
-  if (props.cols) {
-    if (props.cols === 'auto') {
-      classes.push('grow')
-    } else {
-      const width = parseInt(props.cols)
-      if (!isNaN(width)) {
-        classes.push(`w-${width * 8.33333333}%`)
-      }
-    }
-  } else {
-    classes.push('grow')
+  if (!noGutters) {
+    classes.push(dense ? 'p-1' : 'p-2')
   }
 
-  // Responsive widths
-  if (props.sm) classes.push(`sm:w-${parseInt(props.sm) * 8.33333333}%`)
-  if (props.md) classes.push(`md:w-${parseInt(props.md) * 8.33333333}%`)
-  if (props.lg) classes.push(`lg:w-${parseInt(props.lg) * 8.33333333}%`)
-  if (props.xl) classes.push(`xl:w-${parseInt(props.xl) * 8.33333333}%`)
-
-  // Offset
-  if (props.offset) classes.push(`ml-${parseInt(props.offset) * 8.33333333}%`)
-  if (props.smOffset) classes.push(`sm:ml-${parseInt(props.smOffset) * 8.33333333}%`)
-  if (props.mdOffset) classes.push(`md:ml-${parseInt(props.mdOffset) * 8.33333333}%`)
-  if (props.lgOffset) classes.push(`lg:ml-${parseInt(props.lgOffset) * 8.33333333}%`)
-  if (props.xlOffset) classes.push(`xl:ml-${parseInt(props.xlOffset) * 8.33333333}%`)
-
-  // Order
-  if (props.order) classes.push(`order-${props.order}`)
-
-  // Auto margin o alineación
-  if (props.alignSelf === 'start') classes.push('self-start')
-  else if (props.alignSelf === 'center') classes.push('self-center')
-  else if (props.alignSelf === 'end') classes.push('self-end')
-
-  // Clases personalizadas
-  if (props.class) {
-    if (Array.isArray(props.class)) {
-      classes.push(...props.class)
-    } else if (typeof props.class === 'string') {
-      classes.push(...props.class.split(' '))
-    } else if (typeof props.class === 'object') {
-      Object.entries(props.class).forEach(([key, value]) => {
-        if (value) classes.push(key)
-      })
-    }
+  const sizes = ['cols', 'sm', 'md', 'lg', 'xl']
+  const prefixes = {
+    cols: '', sm: 'sm', md: 'md', lg: 'lg', xl: 'xl',
   }
 
-  return classes
-})
+  sizes.forEach(size => {
+    const val = props[size]
+    if (val) {
+      const fraction = toFraction(val)
+      const prefix = prefixes[size]
+      const cls = prefix ? `${prefix}:w-${fraction}` : `w-${fraction}`
+      classes.push(cls)
+    }
+  })
 
-const customStyle = computed(() => {
-  return props.style || {}
+  const classString = classes.join(' ')
+  console.log('colClasses', classString)
+  return classString;
 })
 </script>
+

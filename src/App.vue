@@ -1,24 +1,76 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col h-lvh bg-red-900">
     <div class="w-full bg-blue-200 flex flex-col justify-center items-center gap-4 py-8" style="overflow: hidden;">
       <div class="w-1/2 flex flex-col justrify-center text-center">
         <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
           item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
       </div>
 
-      <div class="w-1/2 flex flex-col justrify-center text-center mt-6">
-        <KunTextField label="Etiqueta text field">
-          <template v-slot:append-inner>
-            <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2 text-red-800"/>
-          </template>
-        </KunTextField>
+    <!-- <div class="w-1/2 bg-blue-900 "> -->
+      <KunRow>
+        <KunCol cols="2" md="6"  class="bg-red-800">
+          <KunTextField label="Etiqueta text fieldaa" v-model="testing" />
+        </KunCol>
 
-        <KunTextField label="Etiqueta text field">
-          <template v-slot:append-inner>
-            <KunIcon size="text-md" class="custom-icon-asterisk text-red-700 pr-8"/>
-          </template>
-        </KunTextField>
-      </div>
+        <KunCol cols="4" sm="3" md="1" class="bg-red-800">
+          <KunTextField label="Etiqueta text field">
+            <template v-slot:append-inner>
+              <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2 text-red-800"/>
+            </template>
+          </KunTextField>
+        </KunCol>
+
+        <KunCol cols="4" sm="3" md="1" class="bg-red-800">
+          <KunTextField label="Etiqueta text field">
+            <template v-slot:append-inner>
+              <KunIcon size="text-md" class="custom-icon-asterisk text-red-700 pr-8"/>
+            </template>
+          </KunTextField>
+        </KunCol>
+
+        <KunCol cols="4" sm="1" md="2" class="bg-red-800">
+          <KunTextField label="Etiqueta text field" v-model="testing">
+            <template v-slot:append-inner>
+              <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2 text-red-800"/>
+            </template>
+            </KunTextField>
+        </KunCol>
+
+        <KunCol cols="4" sm="6" md="4" class="bg-red-800">
+          <KunTextField label="Etiqueta text field">
+            <template v-slot:append-inner>
+              <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2 text-red-800"/>
+            </template>
+          </KunTextField>
+        </KunCol>
+
+        <KunCol cols="4" sm="6" md="4" class="bg-red-800">
+          <KunTextField label="Etiqueta text field" v-model="testing" />
+        </KunCol>
+
+        
+
+        <KunCol cols="4" sm="6" md="4" class="bg-red-800">
+          <KunTextField label="Etiqueta text field">
+            <template v-slot:append-inner>
+              <KunIcon size="text-md" class="custom-icon-asterisk text-red-700 pr-8"/>
+            </template>
+          </KunTextField>
+        </KunCol>
+
+        <KunCol cols="4" sm="6" md="4" class="bg-red-800">
+          <KunTextField label="Etiqueta text field" v-model="testing" />
+        </KunCol>
+
+        <KunCol cols="4" sm="6" md="4" class="bg-red-800">
+          <KunTextField label="Etiqueta text field">
+            <template v-slot:append-inner>
+              <KunIcon size="text-md" class="custom-icon-asterisk text-red-700 pr-8"/>
+            </template>
+          </KunTextField>
+        </KunCol>
+      </KunRow>
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -29,6 +81,8 @@ import KunAutocomplete from './components/KunAutocomplete/src/components/KunAuto
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import IconASterisk from './icons/IconAsterisk.vue';
+import KunRow from './components/KunRow/src/components/KunRow.vue';
+import KunCol from './components/KunCol/src/components/KunCol.vue';
 
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);
