@@ -26,14 +26,16 @@
         :class="hasError ? 'bg-red-50' : ''"
       >
         <div v-if="prefix" class="mr-2">{{ prefix }}</div>
-        <div :class="prependInnerClass">
-          <slot name="prepend-inner" />
-        </div>
+        <template v-if="$slots['prepend-inner']">
+          <div :class="prependInnerClass" class="flex items-center justify-center min-w-[32px] h-full px-1">
+            <slot name="prepend-inner" />
+          </div>
+        </template>
 
         <!-- Input -->
         <input
           ref="inputField"
-          :type="type"
+          type="text"
           :value="inputValue"
           :id="uid"
           :placeholder="placeholder"
@@ -64,9 +66,12 @@
         </button>
 
         <slot />
-        <div :class="appendInnerClass">
-          <slot name="append-inner" />
-        </div>
+
+        <template v-if="$slots['append-inner']">
+          <div :class="appendInnerClass" class="flex items-center justify-center min-w-[32px] h-full px-1">
+            <slot name="append-inner" />
+          </div>
+        </template>
         <div v-if="suffix" class="ml-2">{{ suffix }}</div>
       </div>
 

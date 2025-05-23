@@ -8,9 +8,16 @@
 
       <div class="w-1/2 flex flex-col justrify-center text-center mt-6">
         <KunTextField label="Etiqueta text field">
-          <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2"/>
+          <template v-slot:append-inner>
+            <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2 text-red-800"/>
+          </template>
         </KunTextField>
-        <KunTextField label="Etiqueta text field" />
+
+        <KunTextField label="Etiqueta text field">
+          <template v-slot:append-inner>
+            <KunIcon size="text-md" class="custom-icon-asterisk text-red-700 pr-8"/>
+          </template>
+        </KunTextField>
       </div>
     </div>
   </div>
@@ -166,3 +173,15 @@ function generateFakeProductsFull(count = 100) {
 }
 
 </script>
+
+<style scoped>
+.custom-icon-asterisk {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+</style>

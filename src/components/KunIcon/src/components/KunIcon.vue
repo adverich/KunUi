@@ -11,7 +11,10 @@
     <component v-else-if="isComponent" :is="resolvedIcon" :class="[color, size, contentClass]" />
 
     <!-- Si es una string, la interpreta como clase o SVG raw (dependiendo del consumidor) -->
-    <span v-else :class="[resolvedIcon, color, size, contentClass]" />
+    <span v-else 
+      :class="[!isSvg ? resolvedIcon : '', color, size, contentClass]"
+      v-html="[isSvg ? resolvedIcon : '']" 
+    />
   </span>
 </template>
 
@@ -29,7 +32,7 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: 'text-xs'
+    default: 'text-md'
   },
   color: {
     type: String,
@@ -48,6 +51,7 @@ function handleClick(event) {
   if (!props.disabled) emit('click', event);
 }
 
+const isSvg = computed(() => typeof resolvedIcon.value === 'string' && resolvedIcon.value.trim().startsWith('<svg'));
 const resolvedIcon = computed(() => {
   if (typeof props.icon === 'string' && props.icon.startsWith('$')) {
     const key = props.icon.slice(1);
