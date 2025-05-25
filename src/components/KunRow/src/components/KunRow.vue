@@ -1,29 +1,47 @@
 <template>
-  <div :class="rowClasses">
+  <div :class="mergedClasses">
     <slot />
   </div>
 </template>
 
 <script setup>
-import { computed, provide } from 'vue'
+import { useAttrs, computed, provide } from 'vue'
+const attrs = useAttrs()
 
 const props = defineProps({
-  noGutters: Boolean,
-  dense: Boolean,
-  align: String,
-  justify: String,
-  direction: String,
+  noGutters: {
+    type: Boolean,
+    default: false,
+  },
+  dense: {
+    type: Boolean,
+    default: true,
+  },
+  align:  {
+    type: String,
+    default: 'center',
+  },
+  justify: {
+    type: String,
+    default: 'space-around',
+  },
+  cols: {
+    type: String,
+    default: '12', // total de columnas del grid
+  }
 })
 
-const rowClasses = computed(() => {
-  const classes = ['flex', 'flex-wrap']
+provide('noGutters', props.noGutters)
+provide('dense', props.dense)
 
-  classes.push(props.direction === 'row-reverse' ? 'flex-row-reverse' : 'flex-row')
+const rowClasses = computed(() => {
+  const classes = ['grid', `grid-cols-${props.cols}`];
 
   if (!props.noGutters) {
-    classes.push(props.dense ? '-mx-1' : '-mx-2') // simula gutters como Vuetify
+    classes.push(props.dense ? '' : 'gap-4')
   }
 
+  // opcional, si querés alinear contenido vertical/horizontal
   if (props.align) {
     classes.push({
       start: 'items-start',
@@ -43,9 +61,12 @@ const rowClasses = computed(() => {
     }[props.justify])
   }
 
+  console.log(classes)
   return classes
 })
 
-provide('noGutters', props.noGutters)
-provide('dense', props.dense)
+const mergedClasses = computed(() => {
+  const userClasses = attrs.class ?? 'w-full'
+  return [...rowClasses.value, userClasses].join(' ')
+})
 </script>
