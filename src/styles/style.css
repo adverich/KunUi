@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+/* @source inline("{xl:,lg:,md:,sm:,}col-span-{1..12}");
+@source inline("grid-cols-{1..12}");
+@source inline("gap-{1,2,3,4}");
+@source inline("p-{1,2,3,4}");
+@source inline("items-start,items-center,items-end,items-stretch");
+@source inline("justify-start,justify-center,justify-end,justify-between,justify-around"); */
