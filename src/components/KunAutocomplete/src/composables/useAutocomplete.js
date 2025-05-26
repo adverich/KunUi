@@ -237,12 +237,13 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
         }
     }
 
-    function lightReset() {
+    function lightReset(event) {
         props.clearSearchOnSelect ? (search.value = "") : "";
         props.focusOnSelect ? focusTextField() : "";
     }
 
     function openMenu() {
+        console.log(1)
         // if (!menuModel.value) menuModel.value = true;
         menuModel.value = !menuModel.value;
     }

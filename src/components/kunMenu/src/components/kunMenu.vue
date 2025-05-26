@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted, watch } from 'vue'
 import { useKunMenu } from '../composables/useKunMenu'
 import { kunMenuProps } from '../composables/kunMenuProps'
 import { useKunMenuStyles } from '../composables/useKunMenuStyles'
@@ -71,6 +71,38 @@ onMounted(() => {
   setMenuPosition();
   initMenu();
 });
+
+onUnmounted(() => {
+  const el = contentEl.value;
+  if (el) {
+    el.removeEventListener('wheel', preventBodyScrollWhenAtEdge);
+  }
+});
+
+watch(menuVisible, (visible) => {
+  const el = contentEl.value;
+  if (!el) return;
+
+  if (visible) {
+    el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false });
+  } else {
+    el.removeEventListener('wheel', preventBodyScrollWhenAtEdge);
+  }
+});
+
+function preventBodyScrollWhenAtEdge(e) {
+  const el = contentEl.value;
+  if (!el) return;
+
+  const isScrollingDown = e.deltaY > 0;
+  const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight;
+  const atTop = el.scrollTop <= 0;
+
+  // Si está al tope o al fondo, evitamos que el scroll pase al body
+  if ((isScrollingDown && atBottom) || (!isScrollingDown && atTop)) {
+    e.preventDefault();
+  }
+}
 </script>
 
 <style scoped>
