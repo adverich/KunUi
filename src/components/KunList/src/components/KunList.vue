@@ -1,12 +1,13 @@
 <template>
   <ul
     role="list"
-    class="w-full"
+    class="w-full bg-gray-500"
     ref="ulRef"
     tabindex="-1"
     @keydown="onKeydown"
     :class="[
       'kun-list',
+      bgList,
       {
         'space-y-1': !dense,
         'space-y-0.5': dense,
@@ -36,6 +37,10 @@ const props = defineProps({
     type: String,
     default: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300',
   },
+  bgList: {
+    type: String,
+    default: 'bg-gray-100 dark:bg-gray-800',
+  }
 })
 const emits = defineEmits(['keyDown'])
 

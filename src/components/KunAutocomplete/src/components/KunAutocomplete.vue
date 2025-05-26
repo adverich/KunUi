@@ -1,5 +1,5 @@
 <template>
-  <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef" autocomplete="off" 
+  <KunTextField v-model="search" :label="label" dirty :hide-details="true" :density="density" ref="textFieldRef" autocomplete="off" 
     @update:modelValue="txtUpdated"
     @keyDown="txtKeyDown"
     @focusInput="txtFocused" 
@@ -59,6 +59,12 @@
         </KunInfiniteScroll>
       </KunList>
     </KunMenu>
+
+    <!-- <div v-if="!hideDetails" class="min-h-[1.25rem]">
+      <div v-if="hasError" :id="`error-${uid}`" class="text-red-500 text-sm  text-center">
+        {{ validationError || errorMessage }}
+      </div>
+    </div> -->
   </KunTextField>
 </template>
 

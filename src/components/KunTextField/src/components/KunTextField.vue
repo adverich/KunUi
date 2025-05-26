@@ -11,7 +11,7 @@
     <div class="w-full flex flex-col justify-center relative" :class="rounded" v-bind="$attrs">
       <div class="flex flex-row items-center bg-gray-800 w-full h-full border" :class="[
         inputFocused ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : 'border-gray-900',
-        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text', hasError ? 'bg-red-500' : ''
+        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text', hasError ? 'bg-red-200 : dark:bg-red-900' : ''
       ]">
         <div v-if="prefix" class="mr-2">{{ prefix }}</div>
         <div v-if="hasPrependInner" :class="prependInnerClass"

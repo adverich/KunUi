@@ -6,12 +6,12 @@
     class="w-full flex flex-col items-start"
     :class="[
       'kun-list-item',
+      bgItems,
       {
-        'px-4 py-2 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700':
-          !disabled,
-        'text-gray-500 dark:text-gray-400 cursor-not-allowed': disabled,
+        'cursor-not-allowed': disabled,
+        [`px-4 py-2 cursor-pointer ${hoverBg}`]: !disabled,
         [activeClass]: isItemSelected || isActive
-      },
+      }
     ]"
     @click="handleClick"
   >
@@ -32,6 +32,14 @@ const props = defineProps({
   activeClass: {
     type: String,
     default: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
+  },
+  bgItems: {
+    type: String,
+    default: 'bg-gray-200 dark:bg-gray-700',
+  },
+  hoverBg: {
+    type: String,
+    default: 'hover:bg-gray-100 dark:hover:bg-gray-600',
   }
 })
 

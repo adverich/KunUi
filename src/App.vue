@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-lvh ">
+  <div class="flex flex-col h-lvh">
     <div class="w-full  flex flex-col justify-center items-center gap-4 py-8" style="overflow: hidden;">
       <div class="w-1/2 flex flex-col justrify-center text-center">
         <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
@@ -9,7 +9,7 @@
       <!-- <div class="w-1/2 bg-blue-900 "> -->
       <KunRow >
         <KunCol cols="12" sm="6" md="4">
-          <KunTextField v-model="testing" error-message="aaa"/>
+          <KunTextField v-model="testing" :error-message="testing"/>
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">
@@ -26,7 +26,7 @@
         </KunCol>
 
         <KunCol cols="4" sm="4" md="4">
-          <KunTextField label="Etiqueta text field" error-message="aaa">
+          <KunTextField label="Etiqueta text field" :error-message="testing">
             <template v-slot:append-inner>
               <KunIcon size="text-md" class="custom-icon-asterisk text-red-700 pr-8" />
             </template>

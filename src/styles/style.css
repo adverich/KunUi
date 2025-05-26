@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+body {
+    color: var(--on-color);
+}
+
+:root {
+    --on-color: #000000;
+}
+
+:root.dark {
+    --on-color: #ffffff;
+}
+
 /* @source inline("{xl:,lg:,md:,sm:,}col-span-{1..12}");
 @source inline("grid-cols-{1..12}");
 @source inline("gap-{1,2,3,4}");
