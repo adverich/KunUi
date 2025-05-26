@@ -27,7 +27,6 @@ export function useKunMenu(props, emits) {
             emits('update:modelValue', true)
         }, +props.openDelay)
 
-        console.log(1)
         document.addEventListener('click', handleClickOutside);
     }
 
@@ -38,7 +37,6 @@ export function useKunMenu(props, emits) {
             emits('update:modelValue', false)
         }, +props.closeDelay)
 
-        console.log(2)
         document.removeEventListener('click', handleClickOutside);
     }
 
@@ -77,7 +75,6 @@ export function useKunMenu(props, emits) {
     }
 
     function handleEscape(event) {
-        console.log('Escape pressed')
         hideMenu();
         emits('handleEscape');
     }

@@ -60,12 +60,6 @@
         </KunInfiniteScroll>
       </KunList>
     </KunMenu>
-
-    <!-- <div v-if="!hideDetails" class="min-h-[1.25rem]">
-      <div v-if="hasError" :id="`error-${uid}`" class="text-red-500 text-sm  text-center">
-        {{ validationError || errorMessage }}
-      </div>
-    </div> -->
   </KunTextField>
 </template>
 
@@ -102,7 +96,12 @@ const { selectedItem, textFieldRef, listRef, menuModel, search, removeItem, clea
 
 onMounted(() => {
   setMenuStyle()
+  window.addEventListener('resize', setMenuStyle);
   if(props.focusOnRender) textFieldRef.value.focus();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', setMenuStyle);
 });
 
 function itemListBg(item) {
@@ -150,9 +149,11 @@ function setMenuStyle() {
   if (textFieldRef.value) {
     const rect = textFieldRef.value.$el.getBoundingClientRect();
 
+    let top = rect.bottom;
+    if(!props.hideDetails) top = top - 20;
     menuPositionStyle.value = {
       position: 'absolute',
-      top: `${rect.bottom}px`,  // Posiciona el menú justo debajo
+      top: `${top}px`,  // Posiciona el menú justo debajo
       left: `${rect.left}px`,   // Alinea con el input
       width: `${rect.width}px`, // Ocupa el mismo ancho que el padre
     };

@@ -42,7 +42,7 @@
         <div v-if="suffix" class="ml-2">{{ suffix }}</div>
       </div>
 
-      <div v-if="!hideDetails" class="min-h-[1.25rem]">
+      <div v-if="!hideDetails" class="h-[1.25rem]">
         <!-- Error -->
         <div v-if="hasError" :id="`error-${uid}`" class="text-red-500 text-sm  text-center">
           {{ validationError || errorMessage }}

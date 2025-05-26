@@ -61,7 +61,6 @@ const rowClasses = computed(() => {
     }[props.justify])
   }
 
-  console.log(classes)
   return classes
 })
 

@@ -61,8 +61,6 @@ const {
 onMounted(() => {
   useIntersectionObserver(sentinel.value, ([entry]) => {
     if (entry.isIntersecting) {
-      console.log('visible');
-      
       // Verificamos si aún hay elementos que cargar
       if (!lastBatchReached.value) {
         loadNextBatch();
