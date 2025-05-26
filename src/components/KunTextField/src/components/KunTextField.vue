@@ -3,17 +3,16 @@
     <!-- Label -->
     <label v-if="label" :for="uid" :class="[
       'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
-      isActive || props.placeholder ? '-top-2 text-xs text-white/70 opacity-80' : 'top-3 text-sm text-white/70 opacity-80'
+      isActive || props.placeholder ? '-top-2 text-xs opacity-80' : 'top-3 text-sm opacity-80'
     ]">
       {{ label }}
     </label>
 
-    <div class="w-full flex flex-col justify-center relative border" :class="[
-      inputFocused ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : 'border-gray-900',
-      disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
-      rounded
-    ]" v-bind="$attrs">
-      <div class="flex flex-row items-center bg-gray-800 w-full h-full" :class="hasError ? 'bg-red-50' : ''">
+    <div class="w-full flex flex-col justify-center relative" :class="rounded" v-bind="$attrs">
+      <div class="flex flex-row items-center bg-gray-800 w-full h-full border" :class="[
+        inputFocused ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : 'border-gray-900',
+        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text', hasError ? 'bg-red-500' : ''
+      ]">
         <div v-if="prefix" class="mr-2">{{ prefix }}</div>
         <div v-if="hasPrependInner" :class="prependInnerClass"
           class="flex items-center justify-center min-w-[32px] h-full px-1">
@@ -49,12 +48,12 @@
       </div>
 
       <!-- Hint -->
-      <div v-else-if="hint && (persistentHint || inputFocused)" class="text-gray-400 text-xs mt-1 text-center">
+      <div v-else-if="hint && (persistentHint || inputFocused)" class="text-xs mt-1 text-center">
         {{ hint }}
       </div>
 
       <!-- Counter -->
-      <div v-if="counter && maxlength" class="text-gray-400 text-xs mt-1 text-right">
+      <div v-if="counter && maxlength" class="text-xs mt-1 text-right">
         {{ inputValue?.length || 0 }} / {{ maxlength }}
       </div>
     </div>

@@ -8,7 +8,7 @@ export default {
   suffix: { type: String, default: '' },
   rounded: { type: String, default: 'rounded' },
   error: { type: Boolean, default: false },
-  errorMessage: { type: String, default: '' },
+  errorMessage: { type: String, default: 'Hay un error' },
   rules: { type: Array, default: () => [] },
   disabled: { type: Boolean, default: false },
   readonly: { type: Boolean, default: false },
