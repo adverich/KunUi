@@ -18,6 +18,7 @@ export default {
   counter: { type: Boolean, default: false },
   hint: { type: String, default: '' },
   persistentHint: { type: Boolean, default: false },
+  hideDetails: { type: Boolean, default: false },
   validateOnBlur: { type: Boolean, default: false },
   prependInnerClass: String,
   appendInnerClass: String,

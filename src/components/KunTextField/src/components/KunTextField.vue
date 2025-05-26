@@ -42,19 +42,21 @@
         <div v-if="suffix" class="ml-2">{{ suffix }}</div>
       </div>
 
-      <!-- Error -->
-      <div v-if="hasError" :id="`error-${uid}`" class="text-red-500 text-sm mt-1 text-center">
-        {{ validationError || errorMessage }}
-      </div>
-
-      <!-- Hint -->
-      <div v-else-if="hint && (persistentHint || inputFocused)" class="text-xs mt-1 text-center">
-        {{ hint }}
-      </div>
-
-      <!-- Counter -->
-      <div v-if="counter && maxlength" class="text-xs mt-1 text-right">
-        {{ inputValue?.length || 0 }} / {{ maxlength }}
+      <div v-if="!hideDetails" class="min-h-[1.25rem] mt-1">
+        <!-- Error -->
+        <div v-if="hasError" :id="`error-${uid}`" class="text-red-500 text-sm mt-1 text-center">
+          {{ validationError || errorMessage }}
+        </div>
+  
+        <!-- Hint -->
+        <div v-else-if="hint && (persistentHint || inputFocused)" class="text-xs mt-1 text-center">
+          {{ hint }}
+        </div>
+  
+        <!-- Counter -->
+        <div v-if="counter && maxlength" class="text-xs mt-1 text-right">
+          {{ inputValue?.length || 0 }} / {{ maxlength }}
+        </div>
       </div>
     </div>
   </div>
