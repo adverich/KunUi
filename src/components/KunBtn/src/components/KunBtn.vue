@@ -13,7 +13,14 @@
       'whitespace-nowrap',
       loading || disabled
         ? 'opacity-50 cursor-not-allowed'
-        : 'hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[.98] transition duration-100 ease-in-out cursor-pointer'
+        : [
+            'hover:opacity-90',
+            'focus:outline-none',
+            ring ? 'focus:ring-2 focus:ring-offset-2' : '',
+            'active:scale-[.98]',
+            'transition duration-100 ease-in-out',
+            'cursor-pointer'
+          ]
     ]"
     :disabled="isButton && (loading || disabled)"
   >
@@ -73,6 +80,10 @@ const props = defineProps({
   href: String,
   replace: { type: Boolean, default: false },
   target: { type: String, default: null },
+  ring: {
+    type: Boolean,
+    default: true
+  },
 })
 
 const isLink = computed(() => !!props.to || !!props.href)
