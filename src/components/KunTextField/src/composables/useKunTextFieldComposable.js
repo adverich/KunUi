@@ -12,7 +12,7 @@ export default function useKunTextField(props, emits) {
     const registerField = inject('registerField', null)
     const unregisterField = inject('unregisterField', null)
 
-    const hasError = computed(() => props.error || (!!validationError.value && isTouched.value))
+    const hasError = computed(() => props.error || (!!validationError.value && isTouched.value) || props.errorMessage)
 
     const runValidations = async () => {
         for (const rule of props.rules) {

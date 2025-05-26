@@ -95,7 +95,7 @@ export const KunAutocompleteProps = {
   },
   hideDetails: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   hasIcons: {
     type: Boolean,
