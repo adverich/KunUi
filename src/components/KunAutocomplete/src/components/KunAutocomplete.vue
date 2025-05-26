@@ -20,7 +20,7 @@
 
     <template v-if="hasIcons" v-slot:append-inner>
       <KunIcon v-if="clearable && selectedItem" @click="clearSelection" size="small" color="error" :icon="icons.close" class="mr-1 mt-1" />
-      <KunIcon color="teal-darken-1" size="large" class="cursor-pointer" :icon="menuModel ? icons.menuUpOutline : icons.menuDownOutline" @click="openMenu" />
+      <KunIcon color="teal-darken-1" size="large" class="cursor-pointer" :icon="menuModel ? icons.menuUpOutline : icons.menuDownOutline" @click.stop="openMenu" />
       <KunIcon v-if="required" color="teal-darken-1" size="x-small" class="mb-4" :icon="icons.asterisk" />
     </template>
 
