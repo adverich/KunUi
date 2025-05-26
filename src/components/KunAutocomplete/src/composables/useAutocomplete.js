@@ -243,7 +243,8 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     }
 
     function openMenu() {
-        if (!menuModel.value) menuModel.value = true;
+        // if (!menuModel.value) menuModel.value = true;
+        menuModel.value = !menuModel.value;
     }
 
     function isAlphanumeric(key) {

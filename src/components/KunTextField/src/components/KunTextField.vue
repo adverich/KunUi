@@ -22,7 +22,7 @@
         <!-- Input -->
         <input ref="inputField" type="text" :value="inputValue" :id="uid" :placeholder="placeholder"
           :disabled="disabled" :readonly="readonly" :maxlength="maxlength" autocomplete="off"
-          class="w-full h-full bg-transparent focus:outline-none p-2" :aria-invalid="hasError ? 'true' : 'false'"
+          class="w-full h-full bg-transparent focus:outline-none p-3" :aria-invalid="hasError ? 'true' : 'false'"
           :aria-describedby="hasError ? `error-${uid}` : null" @input="handleInput" @blur="handleBlur"
           @focus="focusInput" @click.stop="emits('handleClick')" @keydown="emits('keyDown', $event)"
           @keyup="emits('keyUp', $event)" />

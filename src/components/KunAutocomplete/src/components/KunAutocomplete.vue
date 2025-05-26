@@ -1,9 +1,10 @@
 <template>
-  <KunTextField v-model="search" :label="label" dirty :hide-details="true" :density="density" ref="textFieldRef" autocomplete="off" 
+  <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef" autocomplete="off" 
     @update:modelValue="txtUpdated"
     @keyDown="txtKeyDown"
     @focusInput="txtFocused" 
     @handleClick="openMenu"
+    @blurInput="handleBLur"
     :placeholder="(isArray(selectedItem) && selectedItem.length) ? '' : placeholder" :error="!!internalError"
   :error-messages="internalError">
     <div v-if="isArray(selectedItem)" class="flex justify-center align-center">
@@ -160,7 +161,6 @@ function setMenuStyle() {
 
 function txtFocused() {
   validate(modelValue);
-  menuModel.value = true;
 }
 
 function txtKeyDown(event){
@@ -180,5 +180,9 @@ function txtKeyDown(event){
 
 function handleKeyList(event) {
   onMenuKeydown(event);
+}
+
+function handleBLur(){
+  menuModel.value = false;
 }
 </script>
