@@ -11,8 +11,8 @@
       {
         'space-y-1': !dense,
         'space-y-0.5': dense,
-        'pl-4 border-l-2 border-gray-200 dark:border-gray-700': sub,
-        'bg-gray-100 dark:bg-gray-800 p-2 rounded-md': nav,
+        'pl-4 border-l-2 border-gray-300 dark:border-gray-700': sub,
+        'p-2 rounded-md': nav,
       },
     ]"
   >
@@ -39,7 +39,7 @@ const props = defineProps({
   },
   bgList: {
     type: String,
-    default: 'bg-gray-100 dark:bg-gray-800',
+    default: 'bg-transparent',
   }
 })
 const emits = defineEmits(['keyDown'])

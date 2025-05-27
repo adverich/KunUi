@@ -27,7 +27,7 @@ const props = defineProps({
   },
   class: {
     type: [String, Object, Array],
-    default: null
+    default: 'font-semibold uppercase'
   }
 })
 </script>

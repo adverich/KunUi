@@ -9,8 +9,9 @@
       bgItems,
       {
         'cursor-not-allowed': disabled,
-        [`px-4 py-2 cursor-pointer ${hoverBg}`]: !disabled,
-        [activeClass]: isItemSelected || isActive
+        [`cursor-pointer ${hoverBg}`]: !disabled,
+        [activeClass]: isItemSelected || isActive,
+        ['px-4 py-2']: !noGutters
       }
     ]"
     @click="handleClick"
@@ -35,11 +36,15 @@ const props = defineProps({
   },
   bgItems: {
     type: String,
-    default: 'bg-gray-200 dark:bg-gray-700',
+    default: 'bg-transparent',
   },
   hoverBg: {
     type: String,
     default: 'hover:bg-gray-100 dark:hover:bg-gray-600',
+  },
+  noGutters: {
+    type: Boolean,
+    default: false,
   }
 })
 
