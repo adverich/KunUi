@@ -25,42 +25,14 @@
           </KunTextField>
         </KunCol>
 
-        <KunCol cols="4" sm="4" md="4">
-          <KunTextField label="Etiqueta text field" :error-message="testing">
-            <template v-slot:append-inner>
-              <KunIcon size="text-md" class="custom-icon-asterisk text-red-700 pr-8" />
-            </template>
-          </KunTextField>
-        </KunCol>
-
-        <KunCol cols="4" sm="4" md="4">
-          <KunTextField label="Etiqueta text field" v-model="testing">
-            <template v-slot:append-inner>
-              <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2 text-red-800" />
-            </template>
-          </KunTextField>
-        </KunCol>
-
         <KunCol cols="4" sm="6" md="4">
-          <KunTextField label="Etiqueta text field">
-            <template v-slot:append-inner>
-              <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2 text-red-800" />
-            </template>
-          </KunTextField>
-        </KunCol>
+          <KunList>
+            <KunListItemTitle class="uppercase font-semibold"> Follow us </KunListItemTitle>
 
-        <KunCol cols="4" sm="6" md="4">
-          <KunTextField label="Etiqueta text field" v-model="testing" />
-        </KunCol>
-
-
-
-        <KunCol cols="4" sm="6" md="4">
-          <KunTextField label="Etiqueta text field">
-            <template v-slot:append-inner>
-              <KunIcon size="text-md" class="custom-icon-asterisk text-red-700 pr-8" />
-            </template>
-          </KunTextField>
+            <KunListItem>
+              HOLA MUNDO
+            </KunListItem>
+          </KunList>
         </KunCol>
 
         <KunCol cols="4" sm="6" md="4">
@@ -88,6 +60,9 @@ import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import IconASterisk from './icons/IconAsterisk.vue';
 import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
+import KunList from './components/KunList/src/components/KunList.vue';
+import KunListItem from './components/KunListItem/src/components/KunListItem.vue';
+import KunListItemTitle from './components/KunListItemTitle/src/components/KunListItemTitle.vue';
 
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);

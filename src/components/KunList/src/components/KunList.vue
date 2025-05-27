@@ -33,10 +33,6 @@ const props = defineProps({
     default: false,
     validator: value => ['single', 'multiple', true, false].includes(value),
   },
-  selectedClass: {
-    type: String,
-    default: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300',
-  },
   bgList: {
     type: String,
     default: 'bg-transparent',

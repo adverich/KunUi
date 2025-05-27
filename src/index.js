@@ -27,6 +27,7 @@ import KunListItem from './components/KunListItem/src/components/KunListItem.vue
 import KunListItemAction from './components/KunListItemAction/src/components/KunListItemAction.vue';
 import KunListItemAvatar from './components/KunListItemAvatar/src/components/KunListItemAvatar.vue';
 import KunListItemSubtitle from './components/KunListItemSubtitle/src/components/KunListItemSubtitle.vue';
+import KunListItemTitle from './components/KunListItemTitle/src/components/KunListItemTitle.vue';
 import KunListItemText from './components/KunListItemText/src/components/KunListItemText.vue';
 import KunListSubheader from './components/KunListSubheader/src/components/KunListSubheader.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
@@ -50,6 +51,7 @@ const components = {
   KunCardActions,
   KunCardItem,
   KunCardSubtitle,
+  KunListItemTitle,
   KunCardText,
   KunCardTitle,
   KunChip,
@@ -106,6 +108,7 @@ export {
   KunListItemAction,
   KunListItemAvatar,
   KunListItemSubtitle,
+  KunListItemTitle,
   KunListItemText,
   KunListSubheader,
   KunMenu,
