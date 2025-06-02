@@ -1,47 +1,83 @@
 <template>
-  <component :is="componentTag" v-bind="componentAttrs" :class="chipClass" :style="chipStyle"
-    :disabled="isLink ? undefined : (disabled ? '' : undefined)" @click.stop>
-    <!-- Prepend Icon -->
-    <KunIcon v-if="prependIcon" :icon="prependIcon" class="mr-1 flex-shrink-0" />
+  <component
+    :is="componentTag"
+    v-bind="componentAttrs"
+    :class="containerClass"
+    :style="attrs.style"
+    :disabled="!isLink && disabled ? true : undefined"
+    @click.stop
+  >
+    <!-- Prepend slot or icon -->
+    <div v-if="$slots.prepend || prependIcon" class="kun-chip__prepend mr-1">
+      <slot name="prepend">
+        <KunIcon v-if="prependIcon" :icon="prependIcon" />
+      </slot>
+    </div>
 
-    <!-- Slot prepend-icon -->
-    <slot name="prepend">
-      <span v-if="$slots.prepend" class="mr-1"></span>
-    </slot>
+    <!-- Content -->
+    <div class="kun-chip__content truncate">
+      <slot v-if="$slots.default">
+        {{ label || text }}
+      </slot>
+    </div>
 
-    <!-- Label o Texto -->
-    <span class="truncate">{{ label || text }}</span>
+    <!-- Append slot or icon -->
+    <div v-if="$slots.append || appendIcon" class="kun-chip__append ml-1">
+      <slot name="append">
+        <KunIcon v-if="appendIcon" :icon="appendIcon" />
+      </slot>
+    </div>
 
-    <!-- Contenido slot por defecto -->
-    <slot v-if="$slots.default && !(label || text)" />
-
-    <!-- Append Icon -->
-    <KunIcon v-if="appendIcon" :icon="appendIcon" class="ml-1 flex-shrink-0" />
-
-    <!-- Slot append-icon -->
-    <slot name="append" v-else-if="$slots.append" class="ml-1" />
-
-    <!-- Botón de cerrar -->
-    <KunIcon v-if="closable && modelValue" :icon="'$mdi-close'" class="ml-1 flex-shrink-0 cursor-pointer"
-      @click="handleClose" />
+    <!-- Close icon -->
+    <button
+      v-if="closable && modelValue"
+      type="button"
+      class="kun-chip__close ml-1"
+      :aria-label="closeLabel"
+      @click.stop.prevent="handleClose"
+    >
+      <slot name="close">
+        <KunIcon icon="$mdi-close" />
+      </slot>
+    </button>
   </component>
 </template>
 
 <script setup>
-import { defineEmits } from 'vue'
-import { useChip } from '../composables/useChip'
+import { defineEmits, useAttrs, computed } from 'vue'
 import { kunChipProps } from '../composables/kunChipProps'
+import { useChip } from '../composables/useChip'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 const props = defineProps(kunChipProps)
 const emit = defineEmits(['update:modelValue', 'click:close'])
+const attrs = useAttrs()
 
 const {
   componentTag,
   componentAttrs,
-  chipClass,
-  chipStyle,
+  computedClass,
   isLink,
   handleClose
-} = useChip(props, emit)
+} = useChip(props, emit, attrs)
+
+const containerClass = computed(() => [
+  'kun-chip',
+  ...computedClass.value,
+  attrs.class
+].filter(Boolean))
 </script>
+
+<style scoped>
+.kun-chip {
+  @apply inline-flex items-center whitespace-nowrap select-none;
+}
+.kun-chip__prepend,
+.kun-chip__append,
+.kun-chip__close {
+  @apply flex-shrink-0;
+}
+.kun-chip__content {
+  @apply truncate;
+}
+</style>

@@ -9,14 +9,6 @@ export const kunCardSubtitleProps = {
     },
     color: {
         type: String,
-        default: 'text-gray-600'
-    },
-    class: {
-        type: [String, Array, Object],
-        default: null
-    },
-    style: {
-        type: Object,
-        default: null
+        default: 'text-gray-700 dark:text-gray-300'
     }
 }

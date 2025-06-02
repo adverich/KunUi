@@ -1,40 +1,11 @@
 <template>
   <Teleport v-if="attach !== true" :to="attach || 'body'">
-    <!-- <div
-        v-if="typeof props.transition === 'object'"
-        v-show="menuVisible"
-        ref="contentEl"
-        role="menu"
-        :aria-label="label"
-        tabindex="-1"
-        class="absolute w-full rounded shadow-lg z-[var(--zIndex,2000)] overflow-hidden focus:outline-none"
-        :class="[contentClass, originClass]"
-        :style="{
-          width: width,
-          minWidth: minWidth,
-          maxWidth: maxWidth,
-          minHeight: minHeight,
-          maxHeight: maxHeight,
-          height: height,
-          zIndex,
-          menuPositionStyle
-        }"
-        v-bind="contentProps"
-        @click.stop="handleClick"
-        @keydown="emits('keydown')"
-        @keydown.enter.stop="focusCurrentItem"
-        @keydown.escape="hideMenu"
-      >
-        <slot />
-      </div> -->
-
     <transition :name="transition">
       <div v-show="menuVisible" ref="contentEl" role="menu" tabindex="-1"
-        class="bg-gray-100 rounded shadow-lg overflow-y-auto focus:outline-none mt-0.5 z-10"
-        :class="[contentClass, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex]" :style="{
-          ...menuPositionStyle,
-          maxHeight: typeof maxHeight === 'number' ? maxHeight + 'px' : maxHeight
-        }" v-bind="contentProps" @keydown.enter.stop="focusCurrentItem" @keydown.escape.stop="handleEscape">
+        class="rounded shadow-lg overflow-y-auto focus:outline-none mt-0.5 z-10"
+        :class="[contentClass, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex]" 
+        :style="{ ...menuPositionStyle, computedMaxHeight }" 
+      v-bind="contentProps" @keydown.enter.stop="focusCurrentItem" @keydown.escape.stop="handleEscape">
         <slot />
       </div>
     </transition>
@@ -42,7 +13,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, watch } from 'vue'
+import { onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useKunMenu } from '../composables/useKunMenu'
 import { kunMenuProps } from '../composables/kunMenuProps'
 import { useKunMenuStyles } from '../composables/useKunMenuStyles'
@@ -64,12 +35,17 @@ const {
 
 const {
   originClass,
-  setMenuPosition
+  setMenuPosition,
+  updatePosition,
+  computedMaxHeight,
+  menuPositionStyle
 } = useKunMenuStyles(props, contentEl, activatorEl, handleActivatorClick, handleHover, handleFocus);
 
 onMounted(() => {
   setMenuPosition();
+  updatePosition();
   initMenu();
+  window.addEventListener('resize', updatePosition);
 });
 
 onUnmounted(() => {
@@ -77,6 +53,7 @@ onUnmounted(() => {
   if (el) {
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge);
   }
+  window.removeEventListener('resize', updatePosition);
 });
 
 watch(menuVisible, (visible) => {
@@ -84,6 +61,8 @@ watch(menuVisible, (visible) => {
   if (!el) return;
 
   if (visible) {
+    updatePosition();
+
     el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false });
   } else {
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge);

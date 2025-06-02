@@ -25,10 +25,6 @@ export const kunMenuProps = {
         type: Object,
         default: () => ({})
     },
-    menuPositionStyle: {
-        type: Object,
-        default: () => ({})
-    },
     disabled: Boolean,
     eager: Boolean,
     height: [String, Number],

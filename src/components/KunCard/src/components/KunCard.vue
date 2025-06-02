@@ -1,43 +1,55 @@
+// KunCard.vue
 <template>
-    <div class="w-full" :class="cardClass" :style="cardStyle">
-        <!-- Header -->
-        <div v-if="$slots.title || title">
-            <KunCardItem dense>
-                <KunCardTitle :title="title" :subtitle="subtitle" />
-            </KunCardItem>
-        </div>
-
-        <!-- Contenido -->
-        <div v-if="$slots.default || text">
-            <KunCardItem v-if="text">
-                <KunCardText :text="text" />
-            </KunCardItem>
-            <slot v-else />
-        </div>
-
-        <!-- Acciones -->
-        <div v-if="$slots.actions">
-            <KunCardActions>
-                <slot name="actions" />
-            </KunCardActions>
-        </div>
+  <div :class="cardClass">
+    <!-- Header -->
+    <div v-if="$slots.title || title || subtitle">
+      <KunCardItem dense>
+        <KunCardTitle :title="title" :subtitle="subtitle" />
+      </KunCardItem>
     </div>
+
+    <!-- Contenido -->
+    <div v-if="$slots.default || text">
+      <KunCardItem v-if="text">
+        <KunCardText :text="text" />
+      </KunCardItem>
+      <slot v-else />
+    </div>
+
+    <!-- Acciones -->
+    <div v-if="$slots.actions">
+      <KunCardActions>
+        <slot name="actions" />
+      </KunCardActions>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { useCard } from '../composables/useCard'
+import { computed, useAttrs } from 'vue'
 import { kunCardProps } from '../composables/kunCardProps'
 
 import KunCardItem from '../../../KunCardItem/src/components/KunCardItem.vue'
 import KunCardTitle from '../../../KunCardTitle/src/components/KunCardTitle.vue'
-import KunCardSubtitle from '../../../KunCardSubtitle/src/components/KunCardSubtitle.vue'
 import KunCardText from '../../../KunCardText/src/components/KunCardText.vue'
 import KunCardActions from '../../../KunCardActions/src/components/KunCardActions.vue'
 
-const props = defineProps(kunCardProps)
+defineOptions({ inheritAttrs: false })
 
-const {
-    cardClass,
-    cardStyle
-} = useCard(props)
+const props = defineProps(kunCardProps)
+const attrs = useAttrs()
+
+const cardClass = computed(() => {
+  const attrClass = attrs.class || ''
+
+  return [
+    'w-full',
+    props.bgColor,
+    props.textColor || 'text-black',
+    props.outlined ? `border ${props.outlineColor}` : '',
+    props.rounded === true ? 'rounded-lg' : props.rounded ? `rounded-${props.rounded}` : '',
+    props.flat ? 'shadow-none' : `shadow-${props.elevation}`,
+    attrClass
+  ].filter(Boolean).join(' ')
+})
 </script>

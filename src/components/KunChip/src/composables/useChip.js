@@ -1,13 +1,12 @@
 import { computed } from 'vue'
 
-export function useChip(props, emit) {
-    // Determina si es un link o botón
+export function useChip(props, emit, attrs) {
     const isLink = computed(() => !!props.to || !!props.href)
 
     const componentTag = computed(() => {
         if (props.href) return 'a'
         if (props.to) return 'router-link'
-        return 'button'
+        return 'div' // Ya no es forzado a button
     })
 
     const componentAttrs = computed(() => {
@@ -24,43 +23,45 @@ export function useChip(props, emit) {
                 replace: props.replace
             }
         }
-        return {
-            type: 'button',
-            disabled: props.disabled
-        }
+        return {}
     })
 
-    // Calcula clases dinámicas basadas en variantes
-    const chipClass = computed(() => {
-        const classes = [
-            'inline-flex items-center whitespace-nowrap select-none',
-            props.density === 'compact' ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-sm',
-            props.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
-            props.class
-        ]
+    const computedClass = computed(() => {
+        const base = []
+
+        if (props.density === 'compact') {
+            base.push('px-2 py-0.5 text-xs')
+        } else if (props.density === 'comfortable') {
+            base.push('px-2.5 py-1 text-sm')
+        } else {
+            base.push('px-3 py-1.5 text-sm')
+        }
+
+        if (!props.clickable) {
+            base.push('cursor-default')
+        } else if (props.disabled) {
+            base.push('opacity-50 cursor-not-allowed')
+        } else {
+            base.push('cursor-pointer')
+        }
 
         switch (props.variant) {
             case 'flat':
-                classes.push(`${props.color} ${props.textColor} shadow-none`)
+                base.push(`${props.color} ${props.textColor} shadow-none`)
                 break
             case 'outlined':
-                classes.push(`border border-current ${props.textColor} bg-transparent hover:bg-gray-100`)
+                base.push(`border border-current ${props.textColor} bg-transparent hover:bg-gray-100`)
                 break
             case 'pill':
-                classes.push(`${props.color} ${props.textColor} rounded-full`)
+                base.push(`${props.color} ${props.textColor} rounded-full`)
                 break
             default:
-                classes.push(`${props.color} ${props.textColor} rounded-md shadow`)
+                base.push(`${props.color} ${props.textColor} rounded-md shadow`)
         }
 
-        return classes.filter(Boolean)
+        return base
     })
 
-    const chipStyle = computed(() => {
-        return props.style || {}
-    })
-
-    // Manejo de cierre
     const handleClose = (e) => {
         if (!props.disabled) {
             emit('update:modelValue', false)
@@ -72,8 +73,7 @@ export function useChip(props, emit) {
         isLink,
         componentTag,
         componentAttrs,
-        chipClass,
-        chipStyle,
+        computedClass,
         handleClose
     }
 }

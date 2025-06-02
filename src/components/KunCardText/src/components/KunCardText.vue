@@ -1,17 +1,21 @@
 <template>
-    <div class="block" :class="textClass" :style="textStyle">
+    <div class="block" :class="textClass">
         <slot>{{ text }}</slot>
     </div>
 </template>
 
 <script setup>
-import { useCardText } from '../composables/useCardText'
+import { computed, useAttrs } from 'vue'
 import { kunCardTextProps } from '../composables/kunCardTextProps'
 
 const props = defineProps(kunCardTextProps)
+const attrs = useAttrs()
 
-const {
-    textClass,
-    textStyle
-} = useCardText(props)
+const textClass = computed(() => {
+    return [
+        props.color,
+        props.dense ? 'text-xs' : 'text-sm',
+        attrs.class
+    ].filter(Boolean)
+})
 </script>

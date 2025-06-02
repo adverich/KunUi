@@ -1,6 +1,12 @@
 <template>
-  <div class="flex flex-col h-lvh">
-    <div class="w-full  flex flex-col justify-center items-center gap-4 py-8" style="overflow: hidden;">
+  <div class="flex flex-col h-lvh bg-white dark:bg-black text-black dark:text-white">
+    <KunAppbar bgColor="bg-slate-800" />
+    <div class="w-full flex flex-col justify-center items-center gap-4 py-8" style="overflow: hidden;">
+
+      <KunChip> CHIP </KunChip>
+
+      <KunBtn> CLICK ME </KunBtn>
+
       <div class="w-1/2 flex flex-col justrify-center text-center">
         <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
           item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
@@ -63,9 +69,13 @@ import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunList from './components/KunList/src/components/KunList.vue';
 import KunListItem from './components/KunListItem/src/components/KunListItem.vue';
 import KunListItemTitle from './components/KunListItemTitle/src/components/KunListItemTitle.vue';
+import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
+import KunChip from './components/KunChip/src/components/KunChip.vue';
+import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);
+const alert = ref(true);
 
 function generateFakeProductsFull(count = 100) {
   const products = [];

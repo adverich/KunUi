@@ -1,7 +1,7 @@
 <template>
   <ul
     role="list"
-    class="w-full bg-gray-500"
+    class="w-full"
     ref="ulRef"
     tabindex="-1"
     @keydown="onKeydown"

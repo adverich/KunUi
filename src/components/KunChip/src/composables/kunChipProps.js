@@ -17,16 +17,20 @@ export const kunChipProps = {
     },
     color: {
         type: String,
-        default: 'bg-indigo-600'
+        default: 'bg-slate-200 dark:bg-slate-800'
     },
     textColor: {
         type: String,
-        default: 'text-white'
+        default: 'text-slate-700 dark:text-slate-300'
     },
     variant: {
         type: String,
         default: 'default',
         validator: v => ['default', 'outlined', 'flat', 'pill'].includes(v)
+    },
+    clickable: {
+        type: Boolean,
+        default: true
     },
     closable: {
         type: Boolean,
@@ -40,10 +44,6 @@ export const kunChipProps = {
         type: String,
         default: 'default',
         validator: v => ['default', 'comfortable', 'compact'].includes(v)
-    },
-    icon: {
-        type: [String, Object, Function],
-        default: null
     },
     prependIcon: {
         type: [String, Object, Function],
@@ -69,14 +69,4 @@ export const kunChipProps = {
         type: String,
         default: null
     },
-    class: {
-        type: [String, Array, Object],
-        default: null
-    },
-    style: {
-        type: Object,
-        default: null
-    },
-    to: [String, Object],
-    href: String,
 }

@@ -243,7 +243,6 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     }
 
     function openMenu() {
-        console.log(1)
         // if (!menuModel.value) menuModel.value = true;
         menuModel.value = !menuModel.value;
     }

@@ -1,27 +1,16 @@
+// kunCardTitleProps.js
 export const kunCardTitleProps = {
-    title: {
-        type: String,
-        default: null
-    },
-    subtitle: {
-        type: String,
-        default: null
-    },
-    prepend: {
-        type: [String, Object, Function],
-        default: null
-    },
-    append: {
-        type: [String, Object, Function],
-        default: null
-    },
+    title: String,
+    subtitle: String,
+    prepend: [String, Object, Function],
+    append: [String, Object, Function],
     bgColor: {
         type: String,
         default: 'bg-white'
     },
     textColor: {
         type: String,
-        default: 'text-gray-800'
+        default: 'text-gray-800 dark:text-gray-200'
     },
     dense: {
         type: Boolean,
@@ -43,13 +32,5 @@ export const kunCardTitleProps = {
     width: {
         type: [String, Number],
         default: 'full'
-    },
-    class: {
-        type: [String, Array, Object],
-        default: null
-    },
-    style: {
-        type: Object,
-        default: null
     }
 }

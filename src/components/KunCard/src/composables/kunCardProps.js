@@ -11,6 +11,10 @@ export const kunCardProps = {
         type: String,
         default: null
     },
+    textColor: {
+        type: String,
+        default: 'text-black dark:text-white'
+    },
     bgColor: {
         type: String,
         default: 'bg-transparent'
@@ -37,12 +41,4 @@ export const kunCardProps = {
         default: 1,
         validator: v => ['0', '1', '2', '3', '4', '5', '', 0, 1, 2, 3, 4, 5].includes(v)
     },
-    class: {
-        type: [String, Array, Object],
-        default: null
-    },
-    style: {
-        type: Object,
-        default: null
-    }
 }

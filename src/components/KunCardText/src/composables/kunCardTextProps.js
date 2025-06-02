@@ -5,18 +5,10 @@ export const kunCardTextProps = {
     },
     color: {
         type: String,
-        default: 'text-gray-700'
+        default: 'text-gray-700 dark:text-gray-300'
     },
     dense: {
         type: Boolean,
         default: false
-    },
-    class: {
-        type: [String, Array, Object],
-        default: null
-    },
-    style: {
-        type: Object,
-        default: null
     }
 }

@@ -1,6 +1,8 @@
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref } from 'vue'
 
 export function useKunMenuStyles(props, contentEl, activatorEl, handleActivatorClick, handleHover, handleFocus) {
+
+    const menuPositionStyle = ref({})
 
     const locationMap = {
         top: { class: 'origin-bottom' },
@@ -46,54 +48,34 @@ export function useKunMenuStyles(props, contentEl, activatorEl, handleActivatorC
         }
     }
 
-    function positionMenu() {
-        if (!activatorEl.value || !contentEl.value) return
+    function updatePosition() {
+        const el = activatorEl.value
+        if (!el) return
 
-        const activatorRect = activatorEl.value.getBoundingClientRect()
-        const scrollX = window.scrollX || window.pageXOffset
-        const scrollY = window.scrollY || window.pageYOffset
-        const content = contentEl.value
+        if (props.textFieldRef?.$el) {
+            const rect = el.getBoundingClientRect()
 
-        let top = 0, left = 0
-        const location = props.submenu ? 'right' : props.location
-
-        switch (location) {
-            case 'top':
-                top = activatorRect.top - content.offsetHeight
-                left = activatorRect.left
-                break
-            case 'bottom':
-                top = activatorRect.bottom
-                left = activatorRect.left
-                break
-            case 'left':
-                top = activatorRect.top
-                left = activatorRect.left - content.offsetWidth
-                break
-            case 'right':
-                top = activatorRect.top
-                left = activatorRect.right
-                break
-        }
-
-        if (props.offset) {
-            if (Array.isArray(props.offset)) {
-                left += +props.offset[0]
-                top += +props.offset[1]
-            } else {
-                const offsetVal = parseInt(props.offset)
-                if (['top', 'bottom'].includes(location)) left += offsetVal
-                else top += offsetVal
+            let top = rect.bottom
+            if (!props.hideDetails) top = top - 20;
+            menuPositionStyle.value = {
+                position: 'absolute',
+                top: `${top}px`,
+                left: `${rect.left}px`,
+                width: `${rect.width}px`,
             }
         }
-
-        content.style.position = 'absolute'
-        content.style.top = `${top + scrollY}px`
-        content.style.left = `${left + scrollX}px`
     }
+
+    const computedMaxHeight = computed(() => {
+        return typeof props.maxHeight === 'number'
+            ? props.maxHeight + 'px'
+            : undefined
+    })
 
     return {
         originClass,
         setMenuPosition,
+        updatePosition,
+        computedMaxHeight
     }
 }
