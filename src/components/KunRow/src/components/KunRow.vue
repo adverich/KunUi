@@ -1,5 +1,5 @@
 <template>
-  <div :class="mergedClasses">
+  <div :class="mergedClasses" v-bind="$attrs">
     <slot />
   </div>
 </template>

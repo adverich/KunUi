@@ -2,9 +2,10 @@
   <div
     :class="[
       'kun-list-img',
-      'overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700',
-      props.class
+      'overflow-hidden rounded-md',
+      bgColor,
     ]"
+    v-bind="$attrs"
   >
     <img
       :src="props.src"
@@ -24,9 +25,9 @@ const props = defineProps({
     type: String,
     default: ''
   },
-  class: {
-    type: [String, Object, Array],
-    default: null
+  bgColor: {
+    type: String,
+    default: 'bg-gray-200 dark:bg-gray-700'
   }
 })
 </script>

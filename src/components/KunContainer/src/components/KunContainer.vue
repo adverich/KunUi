@@ -1,5 +1,5 @@
 <template>
-  <div :class="containerClasses" :style="customStyle">
+  <div :class="containerClasses" v-bind="$attrs">
     <slot />
   </div>
 </template>
@@ -11,14 +11,6 @@ const props = defineProps({
   fluid: {
     type: Boolean,
     default: false
-  },
-  class: {
-    type: [String, Array, Object],
-    default: null
-  },
-  style: {
-    type: Object,
-    default: null
   }
 })
 
@@ -51,10 +43,5 @@ const containerClasses = computed(() => {
   }
 
   return baseClasses
-})
-
-// Pasar estilos inline personalizados
-const customStyle = computed(() => {
-  return props.style || {}
 })
 </script>

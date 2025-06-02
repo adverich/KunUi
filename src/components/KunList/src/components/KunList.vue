@@ -8,13 +8,15 @@
     :class="[
       'kun-list',
       bgList,
+      borderColor,
       {
         'space-y-1': !dense,
         'space-y-0.5': dense,
-        'pl-4 border-l-2 border-gray-300 dark:border-gray-700': sub,
+        'pl-4 border-l-2': sub,
         'p-2 rounded-md': nav,
       },
     ]"
+    v-bind="$attrs"
   >
     <slot />
   </ul>
@@ -36,6 +38,10 @@ const props = defineProps({
   bgList: {
     type: String,
     default: 'bg-transparent',
+  },
+  borderColor: {
+    type: String,
+    default: 'border-gray-300 dark:border-gray-700'
   }
 })
 const emits = defineEmits(['keyDown'])

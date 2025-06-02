@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit" novalidate
-    :class="`flex flex-col w-full ${props.gap} ${props.padding} ${props.maxWidth}`">
+    :class="`flex flex-col w-full ${props.gap} ${props.padding} ${props.maxWidth}`"
+    v-bind="$attrs">
     <slot />
   </form>
 </template>

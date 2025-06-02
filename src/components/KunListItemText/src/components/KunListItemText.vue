@@ -1,13 +1,12 @@
 <template>
   <span
     :class="[
-      props.fontSize,
-      props.fontWeight,
-      props.class,
       'truncate',
+      fontSize, textColor, fontWeight
     ]"
+    v-bind="$attrs"
   >
-    <slot>{{ props.text }}</slot>
+    <slot>{{ text }}</slot>
   </span>
 </template>
 
@@ -21,13 +20,13 @@ const props = defineProps({
     type: String,
     default: 'text-sm'
   },
+  textColor: {
+    type: String,
+    default: 'text-gray-500 dark:text-gray-400'
+  },
   fontWeight: {
     type: String,
     default: 'font-medium'
-  },
-  class: {
-    type: [String, Object, Array],
-    default: null
   }
 })
 </script>

@@ -1,6 +1,6 @@
 <!-- KunCardTitle.vue -->
 <template>
-  <div :class="containerClass" :style="finalStyle">
+  <div :class="computedClass" :style="computedStyle" v-bind="$attrs">
     <!-- Prepend slot or icon -->
     <div v-if="$slots.prepend || prepend" class="kun-card-title__prepend">
       <slot name="prepend">
@@ -29,27 +29,24 @@
 </template>
 
 <script setup>
-import { computed, useAttrs } from 'vue'
+import { computed } from 'vue'
 import { kunCardTitleProps } from '../composables/kunCardTitleProps'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
-const attrs = useAttrs()
 const props = defineProps(kunCardTitleProps)
 
-const containerClass = computed(() => [
+const computedClass = computed(() => [
   'kun-card-title',
   props.dense ? 'py-1 px-2 text-sm' : 'py-3 px-4 text-base',
   props.flat ? 'shadow-none' : 'shadow',
   props.rounded === true ? 'rounded-md' : props.rounded ? `rounded-${props.rounded}` : '',
   props.bgColor,
-  props.textColor,
-  attrs.class // External class
+  props.textColor
 ].filter(Boolean))
 
-const finalStyle = computed(() => ({
+const computedStyle = computed(() => ({
   height: typeof props.height === 'number' ? `${props.height}px` : props.height,
-  width: typeof props.width === 'number' ? `${props.width}px` : props.width,
-  ...attrs.style // External style
+  width: typeof props.width === 'number' ? `${props.width}px` : props.width
 }))
 
 const titleClass = computed(() => props.dense ? 'font-medium' : 'font-semibold')

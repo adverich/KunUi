@@ -5,7 +5,7 @@
     dashed ? 'border border-dashed border-current bg-transparent' : 'bg-current',
     inset ? (vertical ? 'ml-4' : 'mx-4') : '',
     color,
-  ]" :style="lengthStyle" />
+  ]" :style="lengthStyle"  v-bind="$attrs"/>
 </template>
 
 <script setup>

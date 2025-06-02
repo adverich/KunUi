@@ -1,5 +1,5 @@
 <template>
-  <div class="kun-tooltip relative inline-block">
+  <div class="kun-tooltip relative inline-block" v-bind="$attrs">
     <!-- Slot para el activador -->
     <slot name="activator" :props="activatorProps">
       <!-- Fallback si no hay slot -->

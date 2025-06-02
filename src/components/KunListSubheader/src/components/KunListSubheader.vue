@@ -2,12 +2,13 @@
   <li
     :class="[
       'kun-list-subheader',
-      'px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider',
-      props.class
+      'px-4 py-2 uppercase tracking-wider',
+      fontSize, textColor, fontWeight
     ]"
+    v-bind="$attrs"
     role="separator"
   >
-    {{ props.text }}
+    {{ text }}
     <slot />
   </li>
 </template>
@@ -18,9 +19,17 @@ const props = defineProps({
     type: [String, Number],
     default: ''
   },
-  class: {
-    type: [String, Object, Array],
-    default: null
+  fontSize: {
+    type: String,
+    default: 'text-xs'
+  },
+  textColor: {
+    type: String,
+    default: 'text-gray-500 dark:text-gray-400'
+  },
+  fontWeight: {
+    type: String,
+    default: 'font-semibold'
   }
 })
 </script>

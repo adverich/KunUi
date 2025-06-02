@@ -1,9 +1,8 @@
 <template>
   <component
     :is="componentTag"
-    v-bind="componentAttrs"
     :class="containerClass"
-    :style="attrs.style"
+    v-bind="mergedAttrs"
     :disabled="!isLink && disabled ? true : undefined"
     @click.stop
   >
@@ -44,7 +43,7 @@
 </template>
 
 <script setup>
-import { defineEmits, useAttrs, computed } from 'vue'
+import { defineEmits, computed, useAttrs } from 'vue'
 import { kunChipProps } from '../composables/kunChipProps'
 import { useChip } from '../composables/useChip'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
@@ -59,13 +58,17 @@ const {
   computedClass,
   isLink,
   handleClose
-} = useChip(props, emit, attrs)
+} = useChip(props, emit)
 
 const containerClass = computed(() => [
   'kun-chip',
-  ...computedClass.value,
-  attrs.class
+  ...computedClass.value
 ].filter(Boolean))
+
+const mergedAttrs = computed(() => ({
+  ...attrs,
+  ...componentAttrs.value,
+}))
 </script>
 
 <style scoped>

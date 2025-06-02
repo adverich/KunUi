@@ -1,6 +1,6 @@
 // KunCard.vue
 <template>
-  <div :class="cardClass">
+  <div :class="cardClass" v-bind="$attrs">
     <!-- Header -->
     <div v-if="$slots.title || title || subtitle">
       <KunCardItem dense>
@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { computed, useAttrs } from 'vue'
+import { computed } from 'vue'
 import { kunCardProps } from '../composables/kunCardProps'
 
 import KunCardItem from '../../../KunCardItem/src/components/KunCardItem.vue'
@@ -37,19 +37,15 @@ import KunCardActions from '../../../KunCardActions/src/components/KunCardAction
 defineOptions({ inheritAttrs: false })
 
 const props = defineProps(kunCardProps)
-const attrs = useAttrs()
 
 const cardClass = computed(() => {
-  const attrClass = attrs.class || ''
-
   return [
     'w-full',
     props.bgColor,
     props.textColor || 'text-black',
     props.outlined ? `border ${props.outlineColor}` : '',
     props.rounded === true ? 'rounded-lg' : props.rounded ? `rounded-${props.rounded}` : '',
-    props.flat ? 'shadow-none' : `shadow-${props.elevation}`,
-    attrClass
+    props.flat ? 'shadow-none' : `shadow-${props.elevation}`
   ].filter(Boolean).join(' ')
 })
 </script>

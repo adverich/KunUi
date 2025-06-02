@@ -1,5 +1,5 @@
 <template>
-  <div :class="['kun-slider', { 'kun-slider--disabled': disabled }, props.class]" :style="props.style">
+  <div :class="['kun-slider', { 'kun-slider--disabled': disabled }]" v-bind="$attrs">
     <div v-if="label" class="mb-2 text-sm font-medium text-gray-700">
       {{ label }}
     </div>

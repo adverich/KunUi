@@ -1,3 +1,12 @@
+<template>
+  <div class="relative inline-block">
+    <slot /> <!-- Contenido que envuelve el badge -->
+    <div v-if="visible" :class="computedClass" v-bind="$attrs">
+      <span v-if="!dot">{{ text }}</span>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { computed } from 'vue';
 
@@ -11,19 +20,16 @@ defineProps({
     dot: { type: Boolean, default: false }, // Modo punto
     visible: { type: Boolean, default: true }, // Mostrar u ocultar
 });
+defineOptions({ inheritAttrs: false })
 
-const badgeClasses = computed(() => [
-    'absolute top-0 right-0 flex items-center justify-center px-2 py-1',
-    'transform translate-x-1/2 -translate-y-1/2',
-    'min-w-[20px] min-h-[20px]',
-]);
+const computedClass = computed(() => [
+  'absolute top-0 right-0 flex items-center justify-center px-2 py-1',
+  'transform translate-x-1/2 -translate-y-1/2',
+  'min-w-[20px] min-h-[20px]',
+  props.bgColor,
+  props.textColor,
+  props.textSize,
+  props.fontWeight,
+  props.rounded
+].filter(Boolean))
 </script>
-
-<template>
-  <div class="relative inline-block">
-    <slot /> <!-- Contenido que envuelve el badge -->
-    <div v-if="visible" :class="[...badgeClasses, bgColor, textColor, textSize, fontWeight, rounded]">
-      <span v-if="!dot">{{ text }}</span>
-    </div>
-  </div>
-</template>

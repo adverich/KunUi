@@ -93,6 +93,7 @@ const currentSize = computed(() => sizeClasses[props.size] || sizeClasses.md)
   <div
     class="select-none"
     :class="{ 'opacity-50 cursor-not-allowed': disabled, 'pl-6': inset }"
+    v-bind="$attrs"
   >
     <!-- Vertical -->
     <template v-if="vertical">

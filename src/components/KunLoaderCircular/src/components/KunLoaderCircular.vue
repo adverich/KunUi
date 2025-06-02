@@ -4,6 +4,7 @@
     :style="spinnerStyle"
     role="status"
     aria-label="Loading"
+    v-bind="$attrs"
   />
 </template>
 

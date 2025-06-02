@@ -1,8 +1,9 @@
 <template>
   <header
     class="w-full flex"
-    :class="[heightClass, bgColor, elevationClass, bordered ? 'border-b border-gray-200' : '', attrs.class]"
+    :class="[heightClass, bgColor, elevationClass, bordered ? borderColor : '']"
     :style="{ zIndex }"
+    v-bind="$attrs"
   >
     <!-- IZQUIERDA: Drawer + prepend + title (left) -->
     <div :class="leftSectionClass">
@@ -68,7 +69,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, useAttrs } from 'vue'
+import { computed, defineProps } from 'vue'
 import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
@@ -112,6 +113,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  borderColor: {
+    type: String,
+    default: 'border-b border-gray-200'
+  },
   showDrawerButton: {
     type: Boolean,
     default: true
@@ -133,8 +138,7 @@ const props = defineProps({
     default: 2000
   }
 })
-
-const attrs = useAttrs()
+defineOptions({ inheritAttrs: false })
 
 const heightClass = computed(() => {
   switch (props.density) {

@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 
-export function useChip(props, emit, attrs) {
+export function useChip(props, emit) {
     const isLink = computed(() => !!props.to || !!props.href)
 
     const componentTag = computed(() => {

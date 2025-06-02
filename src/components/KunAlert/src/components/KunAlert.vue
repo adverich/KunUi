@@ -1,12 +1,12 @@
-// KunAlert.vue
 <template>
   <div
     v-if="modelValue"
-    :class="[wrapperClass, positionClass, attrs.class]"
+    :class="[wrapperClass, positionClass]"
     :style="{ zIndex }"
     @click.self="onSelfClick"
     @keydown.esc="handleEscape"
     tabindex="0"
+    v-bind="$attrs"
   >
     <div :class="[alertClass, textColor, bgColor, borderColor]">
       <div class="flex justify-center py-4" v-if="icon">
@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { computed, useAttrs } from 'vue'
+import { computed } from 'vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 
@@ -140,7 +140,6 @@ const props = defineProps({
 })
 
 const emits = defineEmits(['update:modelValue', 'action'])
-const attrs = useAttrs()
 
 const positionClass = computed(() => {
   if (props.fullscreen) return `fixed inset-0 flex items-center justify-center ${props.margin}`

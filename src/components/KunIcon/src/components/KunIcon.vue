@@ -3,6 +3,7 @@
     class="flex items-center"
     :class="[color, size, disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer']"
     @click="handleClick"
+     v-bind="$attrs"
   >
     <!-- Si hay slot, lo usa -->
     <slot v-if="$slots.default" />
