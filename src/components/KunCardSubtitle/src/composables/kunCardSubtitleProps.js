@@ -10,5 +10,9 @@ export const kunCardSubtitleProps = {
     color: {
         type: String,
         default: 'text-gray-700 dark:text-gray-300'
+    },
+    fontWeight: {
+        type: String,
+        default: 'font-normal'
     }
 }

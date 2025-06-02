@@ -1,5 +1,5 @@
 <template>
-    <div class="text-sm text-gray-500 font-normal" :class="computedClass">
+    <div :class="computedClass">
         <slot>{{ subtitle }}</slot>
     </div>
 </template>
@@ -15,6 +15,7 @@ const computedClass = computed(() => {
     return [
         props.color,
         props.dense ? 'text-xs' : 'text-sm',
+        props.fontWeight,
         attrs.class
     ].filter(Boolean)
 })

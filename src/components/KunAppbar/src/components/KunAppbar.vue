@@ -1,6 +1,6 @@
 <template>
   <header
-    class="w-full"
+    class="w-full flex"
     :class="[heightClass, bgColor, elevationClass, bordered ? 'border-b border-gray-200' : '', attrs.class]"
     :style="{ zIndex }"
   >

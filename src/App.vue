@@ -1,6 +1,29 @@
 <template>
   <div class="flex flex-col h-lvh bg-white dark:bg-black text-black dark:text-white">
-    <KunAppbar bgColor="bg-slate-800" />
+    <KunAppbar bgColor="bg-slate-800">
+      <template #actions>
+        <KunBtn text="Nosotros" variant="plain" size="sm" class="border border-gray-600" />
+
+         <KunBtn text="Planes" variant="plain" size="sm" class="border border-gray-600" >
+           <!-- <VIcon color="accent-button-icon" icon="$mdiWalletOutline" start id="planes" /> -->
+         </KunBtn>
+
+         <KunSpacer />
+
+        <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white" icon-color="bg-blue-500" />
+         <KunBtn text="Empresa" variant="soft" bg-color="bg-secondary" class="border border-gray-400">
+          <template #prepend>
+            <KunIcon icon="icon-[carbon--enterprise]" size="text-xl" color="text-primary-500" />
+          </template>
+         </KunBtn>
+
+         <KunBtn text="Clientes" variant="soft" bg-color="bg-secondary" class="border border-gray-400">
+          <template #prepend>
+            <KunIcon icon="icon-[mdi--account-outline]" size="text-xl" color="text-primary-500" />
+          </template>
+         </KunBtn>
+       </template>
+    </KunAppbar>
     <div class="w-full flex flex-col justify-center items-center gap-4 py-8" style="overflow: hidden;">
 
       <KunChip> CHIP </KunChip>
@@ -76,6 +99,7 @@ import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);
 const alert = ref(true);
+const currentTheme = ref('dark')
 
 function generateFakeProductsFull(count = 100) {
   const products = [];
