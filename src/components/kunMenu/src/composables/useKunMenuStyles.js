@@ -31,6 +31,7 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
         // Calculamos la posición con el ajuste de top
         let top = rect.bottom;
         if (!props.hideDetails && props.parentRef?.$el) {
+            console.log('iuii')
             top -= 15;
         }
 

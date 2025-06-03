@@ -73,5 +73,9 @@ export const kunMenuProps = {
     keyboardNavigation: {
         type: Boolean,
         default: true
-    }
+    },
+    hideDetails: {
+        type: Boolean,
+        default: false,
+    },
 }
