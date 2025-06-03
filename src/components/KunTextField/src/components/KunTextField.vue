@@ -107,5 +107,8 @@ const slots = useSlots();
 const hasPrependInner = computed(() => !!slots['prepend-inner']);
 const hasAppendInner = computed(() => !!slots['append-inner']);
 
-const testDetails = computed (() => !props.hideDetails && (hasError || hint && (persistentHint || inputFocused) || (counter && maxlength)) );
+const testDetails = computed (() => !props.hideDetails && (hasError || 
+  (hint && (persistentHint || inputFocused)) || 
+  (counter && maxlength))
+);
 </script>
