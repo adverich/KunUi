@@ -1,20 +1,17 @@
 @import "tailwindcss";
 
-body {
-    color: var(--on-color);
-}
-
 :root {
+    --background: #f6f7ff;
     --on-color: #000000;
 }
 
 :root.dark {
+    --background: #000000;
     --on-color: #ffffff;
 }
 
-/* @source inline("{xl:,lg:,md:,sm:,}col-span-{1..12}");
-@source inline("grid-cols-{1..12}");
-@source inline("gap-{1,2,3,4}");
-@source inline("p-{1,2,3,4}");
-@source inline("items-start,items-center,items-end,items-stretch");
-@source inline("justify-start,justify-center,justify-end,justify-between,justify-around"); */
+
+body {
+    background-color: var(--background);
+    color: var(--on-color);
+}

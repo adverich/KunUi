@@ -1,27 +1,9 @@
 <template>
-  <div class="flex flex-col h-lvh bg-white dark:bg-black text-black dark:text-white">
-    <KunAppbar bgColor="bg-slate-800">
+  <div class="flex flex-col h-lvh text-black dark:text-white">
+    <KunAppbar bgColor="bg-slate-800" @toggle-drawer="toggleTheme">
       <template #actions>
-        <KunBtn text="Nosotros" variant="plain" size="sm" class="border border-gray-600" />
-
-         <KunBtn text="Planes" variant="plain" size="sm" class="border border-gray-600" >
-           <!-- <VIcon color="accent-button-icon" icon="$mdiWalletOutline" start id="planes" /> -->
-         </KunBtn>
-
-         <KunSpacer />
-
-        <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white" icon-color="bg-blue-500" />
-         <KunBtn text="Empresa" variant="soft" bg-color="bg-secondary" class="border border-gray-400">
-          <template #prepend>
-            <KunIcon icon="icon-[carbon--enterprise]" size="text-xl" color="text-primary-500" />
-          </template>
-         </KunBtn>
-
-         <KunBtn text="Clientes" variant="soft" bg-color="bg-secondary" class="border border-gray-400">
-          <template #prepend>
-            <KunIcon icon="icon-[mdi--account-outline]" size="text-xl" color="text-primary-500" />
-          </template>
-         </KunBtn>
+        <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white" icon-color="bg-blue-500" @update:model-value="setTheme"/>
+         <KunBtn text="Clientes" variant="soft" bg-color="bg-secondary" class="border border-gray-400" size="xxs" />
        </template>
     </KunAppbar>
     <div class="w-full flex flex-col justify-center items-center gap-4 py-8" style="overflow: hidden;">
@@ -82,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
@@ -95,6 +77,7 @@ import KunListItemTitle from './components/KunListItemTitle/src/components/KunLi
 import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
+import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
 
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);
@@ -240,6 +223,45 @@ function generateFakeProductsFull(count = 100) {
   return products;
 }
 
+function toggleTheme(){
+  const html = document.documentElement;
+
+  if (currentTheme.value === 'light') {
+    console.log('ahora dark')
+    html.classList.add('dark');
+    currentTheme.value = 'dark';
+  } else {
+    console.log('ahora light')
+    html.classList.remove('dark');
+    currentTheme.value = 'light';
+  }
+
+}
+
+function setTheme(theme) {
+  console.log(theme)
+  const html = document.documentElement;
+
+  if (theme === 'light') {
+    html.classList.remove('dark');
+  } else {
+    html.classList.add('dark');
+  }
+
+  currentTheme.value = theme;
+}
+
+const theme = ref(localStorage.getItem('theme') || 'light')
+
+const toggleThemea = () => {
+  theme.value = theme.value === 'light' ? 'dark' : 'light'
+  document.documentElement.classList.toggle('dark', theme.value === 'dark')
+  localStorage.setItem('theme', theme.value)
+}
+
+onMounted(() => {
+  document.documentElement.classList.add(localStorage.getItem('theme') || 'light')
+})
 </script>
 
 <style scoped>
