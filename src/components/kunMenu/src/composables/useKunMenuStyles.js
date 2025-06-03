@@ -20,6 +20,8 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
         const el = activatorEl.value;
         if (!(el instanceof HTMLElement)) return;
 
+        console.log(props.parentRef.inputField);
+
         const rect = el.getBoundingClientRect();
 
         // Si el tamaño aún es inestable, reintenta hasta 10 veces
@@ -28,23 +30,24 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
             return;
         }
 
-        // Calculamos la posición con el ajuste de top
-        let top = rect.bottom;
-        if (!props.hideDetails && props.parentRef?.$el) {
-            console.log('iuii')
-            top -= 15;
-        }
+        // Obtiene el offset dinámico del contenedor
+        const parent = props.parentRef?.$el || activatorEl.value?.parentElement;
+        const computedStyles = parent ? window.getComputedStyle(parent) : {};
+        const marginTop = parseInt(computedStyles.marginTop, 10) || 0;
+        const paddingTop = parseInt(computedStyles.paddingTop, 10) || 0;
+        const parentOffset = marginTop + paddingTop;
 
+        // Ajustamos la posición con compensación del scrollbar si es necesario
+        const scrollbarWidth = el.offsetWidth - el.clientWidth;
+
+        let top = rect.bottom - parentOffset; // Ajuste dinámico de altura
         menuPositionStyle.value = {
             position: 'absolute',
             top: `${top + window.scrollY}px`,
             left: `${rect.left + window.scrollX}px`,
-            width: `${rect.width}px`,
+            width: `${rect.width + scrollbarWidth}px`, // Compensa el ancho si hay scrollbar
         };
-
-        console.log('repositionMenu done:', menuPositionStyle.value);
     }
-
 
 
 
