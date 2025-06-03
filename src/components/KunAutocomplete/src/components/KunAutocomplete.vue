@@ -26,7 +26,6 @@
 
     <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :parent-ref="textFieldRef" 
     @handleEscape="handleEscape" :close-on-content-click="closeOnSelect" :max-height="maxHeight" :hide-details="hideDetails">
-
       <KunList @update:selected="getSelectedItem" @click:select="lightReset()" ref="listRef" @keyDown="handleKeyList">
         <KunListItem v-if="hasCreateItem">
           <KunBtn @click="createItem" class="w-full" color="bg-green-400">

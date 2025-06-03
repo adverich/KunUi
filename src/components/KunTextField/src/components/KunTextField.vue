@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex flex-col relative" :class="testDetails ? 'mb-[1.25rem]' : ''">
+  <div class="w-full flex flex-col relative">
     <!-- Label -->
     <label v-if="label" :for="uid" :class="[labelColor, 
       'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
@@ -43,7 +43,7 @@
         <div v-if="suffix" class="ml-2">{{ suffix }}</div>
       </div>
 
-      <div v-if="!testDetails" class="h-[1.25rem]">
+      <div v-if="!hideDetails" class="h-[1.25rem]">
         <!-- Error -->
         <div v-if="hasError" :id="`error-${uid}`" class="text-red-500 text-sm  text-center">
           {{ validationError || errorMessage }}
@@ -106,9 +106,4 @@ const isActive = computed(() => (inputFocused.value || !!inputValue.value) || pr
 const slots = useSlots();
 const hasPrependInner = computed(() => !!slots['prepend-inner']);
 const hasAppendInner = computed(() => !!slots['append-inner']);
-
-const testDetails = computed (() => !props.hideDetails && (hasError || 
-  (hint && (persistentHint || inputFocused)) || 
-  (counter && maxlength))
-);
 </script>

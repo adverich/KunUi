@@ -17,35 +17,33 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
     })
 
     function repositionMenu(attempt = 0) {
-        const el = activatorEl.value;
-        if (!(el instanceof HTMLElement)) return;
+        const textFieldEl = props.parentRef?.$el;
+        if (!(textFieldEl instanceof HTMLElement)) return;
 
-        console.log(props.parentRef.inputField);
-
-        const rect = el.getBoundingClientRect();
+        const textFieldRect = textFieldEl.getBoundingClientRect();
 
         // Si el tamaño aún es inestable, reintenta hasta 10 veces
-        if ((rect.width < 10 || rect.height < 10) && attempt < 10) {
+        if ((textFieldRect.width < 10 || textFieldRect.height < 10) && attempt < 10) {
             requestAnimationFrame(() => repositionMenu(attempt + 1));
             return;
         }
 
         // Obtiene el offset dinámico del contenedor
-        const parent = props.parentRef?.$el || activatorEl.value?.parentElement;
+        const parent = textFieldEl.parentElement;
         const computedStyles = parent ? window.getComputedStyle(parent) : {};
         const marginTop = parseInt(computedStyles.marginTop, 10) || 0;
         const paddingTop = parseInt(computedStyles.paddingTop, 10) || 0;
         const parentOffset = marginTop + paddingTop;
 
         // Ajustamos la posición con compensación del scrollbar si es necesario
-        const scrollbarWidth = el.offsetWidth - el.clientWidth;
+        const scrollbarWidth = textFieldEl.offsetWidth - textFieldEl.clientWidth;
+        const pxHideDetails = props.hideDetails ? 0 : 15;
 
-        let top = rect.bottom - parentOffset; // Ajuste dinámico de altura
         menuPositionStyle.value = {
             position: 'absolute',
-            top: `${top + window.scrollY}px`,
-            left: `${rect.left + window.scrollX}px`,
-            width: `${rect.width + scrollbarWidth}px`, // Compensa el ancho si hay scrollbar
+            top: `${textFieldRect.bottom - parentOffset - pxHideDetails}px`,
+            left: `${textFieldRect.left}px`,
+            width: `${textFieldRect.width + scrollbarWidth}px`
         };
     }
 
