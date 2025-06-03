@@ -7,6 +7,7 @@ export const kunMenuProps = {
         type: Object,
         default: () => ({})
     },
+    parentRef: Object,
     attach: [Boolean, String, Object],
     openOnClick: Boolean,
     openOnHover: Boolean,
@@ -72,6 +73,5 @@ export const kunMenuProps = {
     keyboardNavigation: {
         type: Boolean,
         default: true
-    },
-    textFieldRef: Object,
+    }
 }

@@ -22,4 +22,8 @@ export default {
   validateOnBlur: { type: Boolean, default: false },
   prependInnerClass: String,
   appendInnerClass: String,
+  textColor: { type: String, default: 'text-black dark:text-white' },
+  labelColor: { type: String, default: 'text-black/80 dark:text-white/80' },
+  placeholderColor: { type: String, default: 'placeholder-black/60 dark:placeholder-white/60' },
+  bgInput: { type: String, default: 'bg-gray-200 dark:bg-gray-800' },
 }

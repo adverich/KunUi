@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex flex-col relative">
     <!-- Label -->
-    <label v-if="label" :for="uid" :class="[
+    <label v-if="label" :for="uid" :class="[labelColor, 
       'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
       isActive || props.placeholder ? '-top-2 text-xs opacity-80' : 'top-3 text-sm opacity-80'
     ]">
@@ -9,7 +9,7 @@
     </label>
 
     <div class="w-full flex flex-col justify-center relative" :class="rounded" v-bind="$attrs">
-      <div class="flex flex-row items-center bg-gray-800 w-full h-full border" :class="[
+      <div class="flex flex-row items-center w-full h-full border" :class="[bgInput, 
         inputFocused ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : 'border-gray-900',
         disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text', hasError ? 'bg-red-200 : dark:bg-red-900' : ''
       ]">
@@ -23,13 +23,14 @@
         <input ref="inputField" type="text" :value="inputValue" :id="uid" :placeholder="placeholder"
           :disabled="disabled" :readonly="readonly" :maxlength="maxlength" autocomplete="off"
           class="w-full h-full bg-transparent focus:outline-none p-3" :aria-invalid="hasError ? 'true' : 'false'"
+          :class="[textColor, placeholderColor]"
           :aria-describedby="hasError ? `error-${uid}` : null" @input="handleInput" @blur="handleBlur"
           @focus="focusInput" @click.stop="emits('handleClick')" @keydown="emits('keyDown', $event)"
-          @keyup="emits('keyUp', $event)" />
+        @keyup="emits('keyUp', $event)" />
 
         <!-- Clearable -->
         <button v-if="clearable && inputValue" type="button" @click="clearInput"
-          class="ml-2 text-gray-400 hover:text-white" :disabled="disabled || readonly">
+          class="ml-2" :class="textColor" :disabled="disabled || readonly">
           &times;
         </button>
 

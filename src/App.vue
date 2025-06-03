@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-lvh text-black dark:text-white">
-    <KunAppbar bgColor="bg-slate-800" @toggle-drawer="toggleTheme">
+    <KunAppbar bgColor="bg-slate-400 dark:bg-slate-800" @toggle-drawer="toggleTheme">
       <template #actions>
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white" icon-color="bg-blue-500" @update:model-value="setTheme"/>
          <KunBtn text="Clientes" variant="soft" bg-color="bg-secondary" class="border border-gray-400" size="xxs" />
@@ -29,7 +29,7 @@
         </KunCol>
 
         <KunCol cols="6" sm="4" md="4">
-          <KunTextField label="Etiqueta text field">
+          <KunTextField label="Label" placeholder="placeholder">
             <template v-slot:append-inner>
               <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2 text-red-800" />
             </template>
@@ -250,18 +250,6 @@ function setTheme(theme) {
 
   currentTheme.value = theme;
 }
-
-const theme = ref(localStorage.getItem('theme') || 'light')
-
-const toggleThemea = () => {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-  document.documentElement.classList.toggle('dark', theme.value === 'dark')
-  localStorage.setItem('theme', theme.value)
-}
-
-onMounted(() => {
-  document.documentElement.classList.add(localStorage.getItem('theme') || 'light')
-})
 </script>
 
 <style scoped>

@@ -1,22 +1,13 @@
-import { ref, computed, watch } from 'vue'
-import { useKunMenuComposable } from './useKunMenuComposable'
+import { ref, watch } from 'vue'
 
 export function useKunMenu(props, emits) {
     const menuVisible = ref(props.modelValue)
-    const activatorEl = ref(null)
-    const contentEl = ref(null)
     const openTimeout = ref(null)
     const closeTimeout = ref(null)
 
     watch(() => props.modelValue, (val) => {
         menuVisible.value = val
-        if (val) {
-            emits('update:modelValue', true);
-            document.addEventListener('click', handleClickOutside);
-        } else {
-            emits('update:modelValue', false);
-            document.removeEventListener('click', handleClickOutside);
-        }
+        emits('update:modelValue', val)
     })
 
     function showMenu() {
@@ -26,8 +17,6 @@ export function useKunMenu(props, emits) {
             menuVisible.value = true
             emits('update:modelValue', true)
         }, +props.openDelay)
-
-        document.addEventListener('click', handleClickOutside);
     }
 
     function hideMenu() {
@@ -36,12 +25,10 @@ export function useKunMenu(props, emits) {
             menuVisible.value = false
             emits('update:modelValue', false)
         }, +props.closeDelay)
-
-        document.removeEventListener('click', handleClickOutside);
     }
 
     function toggleMenu() {
-        // menuVisible.value ? hideMenu() : showMenu()
+        menuVisible.value ? hideMenu() : showMenu()
     }
 
     function handleActivatorClick() {
@@ -50,33 +37,22 @@ export function useKunMenu(props, emits) {
     }
 
     function handleHover(type) {
-        // if (!props.openOnHover || props.disabled) return
-        // clearTimeout(openTimeout.value)
-        // clearTimeout(closeTimeout.value)
-        // const delay = type === 'enter' ? props.openDelay : props.closeDelay
-        // setTimeout(() => {
-        //     menuVisible.value = type === 'enter'
-        // }, +delay)
+        if (!props.openOnHover || props.disabled) return
+        clearTimeout(openTimeout.value)
+        clearTimeout(closeTimeout.value)
+        const delay = type === 'enter' ? props.openDelay : props.closeDelay
+        setTimeout(() => {
+            menuVisible.value = type === 'enter'
+        }, +delay)
     }
 
     function handleFocus() {
         if (props.openOnFocus) menuVisible.value = true
     }
 
-    function handleClickOutside(event) {
-        if (
-            menuVisible.value &&
-            contentEl.value &&
-            !contentEl.value.contains(event.target) &&
-            !props.textFieldRef.$el.contains(event.target) // Si el click ocurre en el input, no cerrar
-        ) {
-            hideMenu();
-        }
-    }
-
-    function handleEscape(event) {
-        hideMenu();
-        emits('handleEscape');
+    function handleEscape() {
+        hideMenu()
+        emits('handleEscape')
     }
 
     function focusCurrentItem() {
@@ -85,32 +61,12 @@ export function useKunMenu(props, emits) {
         if (item?.getAttribute('role') === 'menuitem') item.click()
     }
 
-    function initMenu() {
-        const { onClickOutside } = useKunMenuComposable()
-        // const { addEventListeners, removeEventListeners } = onClickOutside(
-        //     contentEl,
-        //     () => hideMenu(),
-        //     [activatorEl]
-        // )
-        // addEventListeners()
-
-        // onBeforeUnmount(() => {
-        //     removeEventListeners()
-        //     clearTimeout(openTimeout.value)
-        //     clearTimeout(closeTimeout.value)
-        // })
-    }
-
     return {
         menuVisible,
-        activatorEl,
-        contentEl,
         showMenu,
         hideMenu,
         toggleMenu,
-        initMenu,
         handleActivatorClick,
-        handleClickOutside,
         handleHover,
         handleFocus,
         handleEscape,

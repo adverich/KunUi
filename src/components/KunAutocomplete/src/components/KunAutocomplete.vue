@@ -5,7 +5,7 @@
     @focusInput="txtFocused" 
     @handleClick="openMenu"
     @blurInput="handleBLur"
-    :placeholder="(isArray(selectedItem) && selectedItem.length) ? '' : placeholder" :error="!!internalError"
+    :placeholder="props.multiple && isArray(selectedItem) && selectedItem.length ? '' : placeholder" :error="!!internalError"
   :error-messages="internalError">
     <div v-if="isArray(selectedItem)" class="flex justify-center align-center">
       <template v-for="item in selectedItem" :key="item.id ?? item.name">
@@ -24,7 +24,7 @@
       <KunIcon v-if="required" color="teal-darken-1" size="x-small" class="mb-4" :icon="icons.asterisk" />
     </template>
 
-    <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :text-field-ref="textFieldRef" 
+    <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :parent-ref="textFieldRef" 
     @handleEscape="handleEscape" :close-on-content-click="closeOnSelect" :max-height="maxHeight">
 
       <KunList @update:selected="getSelectedItem" @click:select="lightReset()" ref="listRef" @keyDown="handleKeyList">
@@ -94,13 +94,7 @@ const { selectedItem, textFieldRef, listRef, menuModel, search, removeItem, clea
 } = useAutocomplete(props, emits, modelValue, items);
 
 onMounted(() => {
-  setMenuStyle()
-  window.addEventListener('resize', setMenuStyle);
   if(props.focusOnRender) textFieldRef.value.focus();
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', setMenuStyle);
 });
 
 function itemListBg(item) {
@@ -136,27 +130,11 @@ watch(() => modelValue.value, (newValue, oldValue) => {
 
 function handleEscape() {
   menuModel.value = false;
-  textFieldRef.value.$el.focus();
+  textFieldRef.value.inputField?.focus();
 }
 
 function txtUpdated(event) {
   emits('search', search);
-}
-
-const menuPositionStyle = ref({});
-function setMenuStyle() {
-  if (textFieldRef.value) {
-    const rect = textFieldRef.value.$el.getBoundingClientRect();
-
-    let top = rect.bottom;
-    if(!props.hideDetails) top = top - 20;
-    menuPositionStyle.value = {
-      position: 'absolute',
-      top: `${top}px`,  // Posiciona el menú justo debajo
-      left: `${rect.left}px`,   // Alinea con el input
-      width: `${rect.width}px`, // Ocupa el mismo ancho que el padre
-    };
-  }
 }
 
 function txtFocused() {
