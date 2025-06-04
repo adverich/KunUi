@@ -10,7 +10,14 @@
 
       <KunChip> CHIP </KunChip>
 
-      <KunBtn> CLICK ME </KunBtn>
+      <div class="w-full flex justify-center gap-6">
+        <KunBtn> DEFAULT </KunBtn>
+        <KunBtn variant="tonal"> TONAL </KunBtn>
+        <KunBtn variant="plain"> PLAIN </KunBtn>
+        <KunBtn variant="outlined"> OUTLINED </KunBtn>
+        <KunBtn variant="soft"> SOFT </KunBtn>
+        <KunBtn variant="text"> TEXT </KunBtn>
+      </div>
 
       <div class="w-1/2 flex flex-col justrify-center text-center">
         <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
@@ -83,6 +90,8 @@ import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
+import KunSpacer from './components/KunSpacer/src/components/KunSpacer.vue';
+import KunDivider from './components/KunDivider/src/components/KunDivider.vue';
 
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);

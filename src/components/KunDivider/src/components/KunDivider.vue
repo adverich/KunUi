@@ -1,11 +1,12 @@
 <template>
   <div role="separator" :class="[
     'shrink-0',
-    vertical ? 'w-px h-full' : 'h-px w-full',
+    'flex-grow',
+    vertical ? 'w-px h-full' : 'h-px',
     dashed ? 'border border-dashed border-current bg-transparent' : 'bg-current',
     inset ? (vertical ? 'ml-4' : 'mx-4') : '',
     color,
-  ]" :style="lengthStyle"  v-bind="$attrs"/>
+  ]" :style="lengthStyle" v-bind="$attrs"/>
 </template>
 
 <script setup>
