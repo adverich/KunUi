@@ -1,6 +1,6 @@
 <template>
   <Teleport v-if="fullscreen" to="body">
-    <div class="fixed inset-0 flex justify-center items-center bg-black/75 z-[2500]">
+    <div class="fixed inset-0 flex justify-center items-center bg-black/75 z-[2500] pt-[25px]">
       <div class="w-1/2 h-1/2 text-center flex flex-col items-center justify-center">
         Cargando datos
         <div
