@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-lvh text-black dark:text-white">
 
-    <!-- <KunLoaderCircular v-model="loader" v-if="loader" /> -->
+    <KunLoaderCircular v-model="loader" v-if="loader" fullscreen size="190" width="25" />
 
     <KunAppbar bgColor="bg-slate-400 dark:bg-slate-800" @toggle-drawer="loader = !loader">
       <template #actions>
@@ -14,7 +14,7 @@
 
       <div class="w-full flex justify-center gap-6">
         <KunBtn> DEFAULT </KunBtn>
-        <KunBtn variant="tonal" loading> TONAL </KunBtn>
+        <KunBtn variant="tonal"> TONAL </KunBtn>
         <KunDivider class="mt-4"/>
         <KunBtn variant="plain"> PLAIN </KunBtn>
         <KunBtn variant="outlined"> OUTLINED </KunBtn>
