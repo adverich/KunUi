@@ -13,6 +13,7 @@
       <div class="w-full flex justify-center gap-6">
         <KunBtn> DEFAULT </KunBtn>
         <KunBtn variant="tonal"> TONAL </KunBtn>
+        <KunDivider class="mt-4"/>
         <KunBtn variant="plain"> PLAIN </KunBtn>
         <KunBtn variant="outlined"> OUTLINED </KunBtn>
         <KunBtn variant="soft"> SOFT </KunBtn>
