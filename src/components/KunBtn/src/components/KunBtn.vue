@@ -6,39 +6,45 @@
     :style="attrs.style"
     :disabled="isButton && (loading || disabled)"
   >
-    <!-- Loader -->
-    <template v-if="loading">
-      <slot name="loader">
-        <span
-          class="mr-2 h-5 w-5 border-[3px] border-current border-t-transparent rounded-full animate-spin"
-        ></span>
-      </slot>
-    </template>
+    <div class="relative flex items-center justify-center w-full h-full">
+      <!-- Loader encima sin opacidad -->
+      <template v-if="loading">
+        <slot name="loader">
+          <div class="absolute inset-0 flex items-center justify-center z-10">
+            <KunLoaderCircular size="20" width="5" />
+          </div>
+        </slot>
+      </template>
 
-    <!-- Prepend -->
-    <template v-else-if="$slots.prepend">
-      <span class="mr-2 flex items-center">
-        <slot name="prepend" />
-      </span>
-    </template>
+      <!-- Contenido del botón con opacidad -->
+      <div :class="{ 'opacity-50': loading }" class="flex items-center justify-center w-full h-full">
+        <!-- Prepend -->
+        <template v-if="$slots.prepend">
+          <span class="mr-2 flex items-center">
+            <slot name="prepend" />
+          </span>
+        </template>
 
-    <!-- Text -->
-    <span v-if="!loading && (text || $slots.default)" class="truncate">
-      <slot>{{ text }}</slot>
-    </span>
+        <!-- Texto -->
+        <span v-if="text || $slots.default" class="truncate">
+          <slot>{{ text }}</slot>
+        </span>
 
-    <!-- Append -->
-    <template v-if="!loading && $slots.append">
-      <span class="ml-2 flex items-center">
-        <slot name="append" />
-      </span>
-    </template>
+        <!-- Append -->
+        <template v-if="$slots.append">
+          <span class="ml-2 flex items-center">
+            <slot name="append" />
+          </span>
+        </template>
+      </div>
+    </div>
   </component>
 </template>
 
 <script setup>
 import { computed, useAttrs } from 'vue'
 import { RouterLink } from 'vue-router'
+import KunLoaderCircular from '../../../KunLoaderCircular/src/components/KunLoaderCircular.vue';
 
 const props = defineProps({
   text: String,
@@ -158,8 +164,9 @@ const computedClass = computed(() => {
     props.fontWeight,
     props.rounded,
     props.textAlign,
-    variantClasses.value
-  ]
+    variantClasses.value,
+    'relative' // 🔹 Hace que los hijos `absolute` se posicionen correctamente
+  ];
 
   if (!props.loading && !props.disabled) {
     base.push(
@@ -169,21 +176,20 @@ const computedClass = computed(() => {
       'active:scale-[.98]',
       'transition duration-100 ease-in-out',
       'cursor-pointer'
-    )
+    );
   } else {
-    base.push('opacity-50 cursor-not-allowed')
+    base.push('pointer-events-none'); // 🔹 Evita interacción sin apagar el botón
+    if (props.disabled) base.push('opacity-50 cursor-not-allowed'); // 🔹 Mantiene opacidad solo para estado `disabled`
   }
 
-  // Agrega minWidth si tiene texto
   if (hasText.value) {
-    base.push(props.minWidth)
+    base.push(props.minWidth);
   }
 
-  // Agrega cualquier clase personalizada pasada desde el padre
   if (attrs.class) {
-    base.push(attrs.class)
+    base.push(attrs.class);
   }
 
-  return base.filter(Boolean)
-})
+  return base.filter(Boolean);
+});
 </script>

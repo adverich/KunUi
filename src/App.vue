@@ -1,18 +1,20 @@
 <template>
   <div class="flex flex-col h-lvh text-black dark:text-white">
-    <KunAppbar bgColor="bg-slate-400 dark:bg-slate-800" @toggle-drawer="toggleTheme">
+
+    <!-- <KunLoaderCircular v-model="loader" v-if="loader" /> -->
+
+    <KunAppbar bgColor="bg-slate-400 dark:bg-slate-800" @toggle-drawer="loader = !loader">
       <template #actions>
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white" icon-color="bg-blue-500" @update:model-value="setTheme"/>
          <KunBtn text="Clientes" variant="soft" bg-color="bg-secondary" class="border border-gray-400" size="xxs" />
        </template>
     </KunAppbar>
     <div class="w-full flex flex-col justify-center items-center gap-4 py-8" style="overflow: hidden;">
-
       <KunChip> CHIP </KunChip>
 
       <div class="w-full flex justify-center gap-6">
         <KunBtn> DEFAULT </KunBtn>
-        <KunBtn variant="tonal"> TONAL </KunBtn>
+        <KunBtn variant="tonal" loading> TONAL </KunBtn>
         <KunDivider class="mt-4"/>
         <KunBtn variant="plain"> PLAIN </KunBtn>
         <KunBtn variant="outlined"> OUTLINED </KunBtn>
@@ -91,13 +93,13 @@ import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
-import KunSpacer from './components/KunSpacer/src/components/KunSpacer.vue';
+import KunLoaderCircular from './components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
 import KunDivider from './components/KunDivider/src/components/KunDivider.vue';
 
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);
-const alert = ref(true);
 const currentTheme = ref('dark')
+const loader = ref(true)
 
 function generateFakeProductsFull(count = 100) {
   const products = [];
