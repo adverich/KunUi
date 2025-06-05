@@ -3,7 +3,7 @@
     <!-- Label -->
     <label v-if="label" :for="uid" :class="[labelColor, 
       'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
-      isActive || props.placeholder ? '-top-2 text-xs opacity-80' : 'top-3 text-sm opacity-80'
+      isActive || props.placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'
     ]">
       {{ label }}
     </label>
