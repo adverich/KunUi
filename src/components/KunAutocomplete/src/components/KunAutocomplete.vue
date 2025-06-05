@@ -3,7 +3,7 @@
     @update:modelValue="txtUpdated"
     @keyDown="txtKeyDown"
     @focusInput="txtFocused" 
-    @handleClick="openMenu"
+    @handleClick="toggleMenu"
     @blurInput="handleBLur"
     :placeholder="props.multiple && isArray(selectedItem) && selectedItem.length ? '' : placeholder" :error="!!internalError"
   :error-messages="internalError">
@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { icons } from '@/icons'
 import { isNotEmpty, isArray } from '../../../../utils/utils.js'
 
@@ -85,10 +85,10 @@ const modelValue = defineModel({ default: null });
 const items = defineModel('items', { default: [], type: Array, required: true });
 
 const props = defineProps(KunAutocompleteProps);
-const emits = defineEmits(["createItem", "validation", "search"]);
+const emits = defineEmits(["update:model-value", "createItem", "validation", "search"]);
 
-const { selectedItem, textFieldRef, listRef, menuModel, search, removeItem, clearSelection, lightReset, openMenu, onMenuKeydown,
-  setSelectedItemValue, getSelectedItem, textArr, getItemText,
+const { selectedItem, textFieldRef, listRef, menuModel, search, removeItem, clearSelection, lightReset, openMenu, toggleMenu, onMenuKeydown,
+  getSelectedItem, textArr, getItemText,
   createItem, checkDisabled, itemToString, placeholder, hasCreateItem, 
 } = useAutocomplete(props, emits, modelValue, items);
 

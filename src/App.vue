@@ -1,46 +1,43 @@
 <template>
   <div class="flex flex-col h-lvh text-black dark:text-white">
-
-    <KunLoaderCircular v-model="loader" v-if="loader" fullscreen size="190" width="25" />
-
     <KunAppbar bgColor="bg-slate-400 dark:bg-slate-800" @toggle-drawer="loader = !loader">
       <template #actions>
-        <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white" icon-color="bg-blue-500" @update:model-value="setTheme"/>
-         <KunBtn text="Clientes" variant="soft" bg-color="bg-secondary" class="border border-gray-400" size="xxs" />
-       </template>
+        <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
+          icon-color="bg-blue-500" @update:model-value="setTheme" />
+        <KunBtn text="Clientes" variant="soft" bg-color="bg-secondary" class="border border-gray-400" size="xxs" />
+      </template>
     </KunAppbar>
+
     <div class="w-full flex flex-col justify-center items-center gap-4 py-8" style="overflow: hidden;">
       <KunChip> CHIP </KunChip>
-
       <div class="w-full flex justify-center gap-6">
         <KunBtn> DEFAULT </KunBtn>
         <KunBtn variant="tonal"> TONAL </KunBtn>
-        <KunDivider class="mt-4"/>
         <KunBtn variant="plain"> PLAIN </KunBtn>
         <KunBtn variant="outlined"> OUTLINED </KunBtn>
         <KunBtn variant="soft"> SOFT </KunBtn>
         <KunBtn variant="text"> TEXT </KunBtn>
       </div>
-
+      
       <div class="w-1/2 flex flex-col justrify-center text-center">
-        <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
-          item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
+        <KunAutocomplete v-model="selected" activator="parent" return-object :items="testProducts" item-title="name"
+          item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" @update:model-value="doSomething" />
       </div>
 
       <!-- <div class="w-1/2 bg-blue-900 "> -->
-      <KunRow >
+      <KunRow>
         <KunCol cols="12" sm="6" md="4">
           <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
             item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">
-          <KunTextField v-model="testing" :error-message="testing"/>
+          <KunTextField v-model="testing" :error-message="testing" />
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">
           <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
-          item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
+            item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
         </KunCol>
 
         <KunCol cols="6" sm="4" md="4">
@@ -99,7 +96,11 @@ import KunDivider from './components/KunDivider/src/components/KunDivider.vue';
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);
 const currentTheme = ref('dark')
-const loader = ref(true)
+const loader = ref(false)
+const selected = ref({})
+function doSomething(item){
+  console.log(item);
+}
 
 function generateFakeProductsFull(count = 100) {
   const products = [];
@@ -240,7 +241,7 @@ function generateFakeProductsFull(count = 100) {
   return products;
 }
 
-function toggleTheme(){
+function toggleTheme() {
   const html = document.documentElement;
 
   if (currentTheme.value === 'light') {

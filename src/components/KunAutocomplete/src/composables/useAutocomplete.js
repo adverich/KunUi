@@ -14,39 +14,6 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
         }, obj);
     };
 
-    function setSelectedItemValue() {
-        if (isArray(modelValue.value)) {
-            if (modelValue.value.length) {
-                selectedItem.value = items.value.filter((i) => {
-                    let itmText = getItemText(i, props.itemTitle);
-                    return isObject(i)
-                        ? modelValue.value.some((itm) =>
-                            getItemText(itm, props.itemTitle).includes(itmText)
-                        )
-                        : modelValue.value.some((itm) => itm.includes(i))
-                })
-            } else {
-                selectedItem.value = [];
-            }
-        }
-        if (
-            (isObject(modelValue.value) && Object.keys(modelValue.value).length) ||
-            (typeof modelValue.value === "number" && modelValue.value) ||
-            (typeof modelValue.value === "string" && modelValue.value) ||
-            (typeof modelValue.value === "boolean")
-        ) {
-            selectedItem.value = items.value.find((i) =>
-                isObject(i)
-                    ? props.returnObject
-                        ? props.itemValue
-                            ? i[props.itemValue] === modelValue.value[props.itemValue]
-                            : i[props.itemTitle] === modelValue.value[props.itemTitle]
-                        : i[props.itemValue] === modelValue.value
-                    : i === modelValue.value
-            );
-        }
-    }
-
     const placeholder = computed(() => {
         if (selectedItem.value) {
             if (isArray(selectedItem.value)) {
@@ -61,52 +28,6 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
             return selectedItem.value.toString();
         }
         return !items.value.length ? props.textNoItems : props.placeholderText;
-    });
-
-    // FILTRO DE ITEMS O DEVUELVE EL LISTADO COMPLETO SEGUN LA CANTIDAD DE ELEMENTOS A MOSTRAR
-    const filteredItems = computed(() => {
-        if (props.startEmtpy && search.value.length < 3) {
-            return [];
-        }
-        let itemsFound = items.value.filter((item) => {
-            if (isObject(item)) {
-                const allKeys = Object.values(item).filter((i) => {
-                    if (isObject(i)) return;
-                    if (isArray(i)) return;
-                    return i;
-                });
-
-                const getSelectedKeyValue = [item].reduce((acc, curr) => {
-                    let result = props.searchableKeys.map((key) => {
-                        if (key.includes(".")) {
-                            const propsArr = key.split('.');
-                            return propsArr.reduce((obj, prop) => {
-                                return obj && obj[prop];  // Accede a la propiedad actual
-                            }, curr);
-                        }
-                        return curr[key];
-                    });
-                    return result;
-                }, []);
-
-                const keys = props.searchableKeys.length ? getSelectedKeyValue : allKeys;
-                return keys
-                    ? keys.some((value) =>
-                        value
-                            ? value
-                                .toString()
-                                .toLowerCase()
-                                .includes(search.value.toLowerCase())
-                            : ""
-                    )
-                    : search.value
-                        ? item == search.value
-                        : item;
-            }
-            return item.toString().toLowerCase().includes(search.value.toLowerCase());
-        });
-        return itemsFound;
-        // return itemsFound.slice(0, currentBatchStep.value);
     });
 
     const textArr = computed(() => {
@@ -167,50 +88,51 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     }
 
     function getSelectedItem(item) {
-        let result = item[0];
-
-        if (!props.multiple) {
-            selectedItem.value = item[0];
-            if (props.returnObject) {
-                modelValue.value = result;
-            }
-            if (!props.returnObject && isObject(result)) {
-                if (props.itemValue) {
-                    modelValue.value = result[props.itemValue];
-                } else {
-                    modelValue.value = Object.values(result)[0];
-                }
-            }
-            if (!isObject(result)) {
-                modelValue.value = result;
-            }
-            menuModel.value = false;
-        } else {
-            if (!selectedItem.value) {
-                selectedItem.value = [];
-            }
-            if (!checkIfValueExist(result)) {
+        try {
+            if (!props.multiple) {
                 if (props.returnObject) {
-                    selectedItem.value.push(result);
-                }
-                if (!props.returnObject && isObject(result)) {
-                    if (props.itemValue) {
-                        selectedItem.value.push(result[props.itemValue]);
+                    selectedItem.value = item;
+                } else {
+                    if (isObject(result)) {
+                        if (props.itemValue) {
+                            selectedItem.value = item[props.itemValue];
+                        } else {
+                            selectedItem.value = Object.values(result)[0];
+                        }
                     } else {
-                        modelValue.value = selectedItem.value.push(Object.values(result)[0]);
-                        return;
+                        selectedItem.value = result;
                     }
                 }
-                modelValue.value = selectedItem.value;
+                menuModel.value = false;
             } else {
-                if (result) removeFromArray(result);
-                modelValue.value = selectedItem.value;
+                if (!selectedItem.value) {
+                    selectedItem.value = [];
+                }
+                if (!checkIfValueExist(item)) {
+                    if (props.returnObject) {
+                        selectedItem.value.push(item);
+                    } else {
+                        if (isObject(item)) {
+                            if (props.itemValue) {
+                                selectedItem.value.push(item[props.itemValue]);
+                            } else {
+                                selectedItem.value.push(Object.values(item)[0]);
+                            }
+                        } else {
+                            selectedItem.value.push(item);
+                        }
+                    }
+                } else {
+                    if (item) removeFromArray(item);
+                }
             }
+            emits('update:model-value', selectedItem.value);
+            if (props.clearOnSelect) clearSelection();
+        } catch (e) {
+            console.log(e)
+        } finally {
+            focusTextField();
         }
-        if (props.clearOnSelect) {
-            clearSelection()
-        };
-        focusTextField();
     }
 
     function checkIfValueExist(result) {
@@ -226,13 +148,13 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
 
     function removeFromArray(result) {
         if (props.returnObject) {
-            let item = selectedItem.value.find(
+            const item = selectedItem.value.find(
                 (i) => i[props.itemValue] === result[props.itemValue]
             );
-            let index = selectedItem.value.indexOf(item);
+            const index = selectedItem.value.indexOf(item);
             selectedItem.value.splice(index, 1);
         } else {
-            let index = selectedItem.value.indexOf(result[props.itemValue]);
+            const index = selectedItem.value.indexOf(result[props.itemValue]);
             selectedItem.value.splice(index, 1);
         }
     }
@@ -243,7 +165,10 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     }
 
     function openMenu() {
-        // if (!menuModel.value) menuModel.value = true;
+        if (!menuModel.value) menuModel.value = true;
+    }
+
+    function toggleMenu() {
         menuModel.value = !menuModel.value;
     }
 
@@ -279,7 +204,6 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     function removeItem(item) {
         let index = selectedItem.value.indexOf(item);
         selectedItem.value.splice(index, 1);
-        modelValue.value = selectedItem.value;
     }
 
     function clearSelection() {
@@ -288,29 +212,27 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
             selectedItem.value = [];
         }
         if (isObject(modelValue.value)) {
-            selectedItem.value = {};
+            selectedItem.value = null;
         }
         if (typeof modelValue.value === "number" && modelValue.value) {
             selectedItem.value = null;
         }
         if (typeof modelValue.value === "string" && modelValue.value) {
-            selectedItem.value = '';
+            selectedItem.value = null;
         }
         if (typeof modelValue.value == "boolean") {
             selectedItem.value = false;
         }
-        modelValue.value = selectedItem.value;
     }
 
     function checkDisabled(item) {
-        if (!item.disabledItem) return false;
-        if (item.disabledItem) return true;
+        return item.disabledItem ? true : false;
     }
 
     return {
         selectedItem, textFieldRef, listRef, menuModel, search, getItemText,
-        setSelectedItemValue, placeholder, filteredItems, textArr, itemToString, getSelectedItem,
-        checkIfValueExist, removeFromArray, lightReset, openMenu, focusOnMenu, onMenuKeydown, createItem,
+        placeholder, textArr, itemToString, getSelectedItem,
+        checkIfValueExist, removeFromArray, lightReset, openMenu, toggleMenu, focusOnMenu, onMenuKeydown, createItem,
         removeItem, clearSelection, checkDisabled, isAlphanumeric,
     };
 }

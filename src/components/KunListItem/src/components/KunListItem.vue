@@ -92,5 +92,19 @@ function handleClick() {
   if (listContext && props.value !== null) {
     listContext.toggleItem?.(props.value)
   }
+  
+  liRef.value?.dispatchEvent(
+    new CustomEvent('select', {
+      detail: props.value,
+      bubbles: true
+    })
+  );
+
+  liRef.value?.dispatchEvent(
+    new CustomEvent('selected', {
+      detail: props.value,
+      bubbles: true
+    })
+  )
 }
 </script>

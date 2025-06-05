@@ -5,6 +5,8 @@
     ref="ulRef"
     tabindex="-1"
     @keydown="onKeydown"
+    @select="handleSelect"
+    @selected="handleUpdateSelected"
     :class="[
       'kun-list',
       bgList,
@@ -44,7 +46,7 @@ const props = defineProps({
     default: 'border-gray-300 dark:border-gray-700'
   }
 })
-const emits = defineEmits(['keyDown'])
+const emits = defineEmits(['keyDown', 'click:select', 'update:selected'])
 
 useKunList(props)
 
@@ -111,5 +113,13 @@ function onKeydown(e) {
   }
 
   items[nextIndex]?.focus()
+}
+
+function handleSelect(item) {
+  emits('click:select', item.detail)
+}
+
+function handleUpdateSelected(event) {
+  emits('update:selected', event.detail)
 }
 </script>
