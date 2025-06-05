@@ -18,9 +18,9 @@
         <KunBtn variant="soft"> SOFT </KunBtn>
         <KunBtn variant="text"> TEXT </KunBtn>
       </div>
-      
+
       <div class="w-1/2 flex flex-col justrify-center text-center">
-        <KunAutocomplete v-model="selected" activator="parent" return-object :items="testProducts" item-title="name"
+        <KunAutocomplete clear-on-select v-model="selected" activator="parent" :items="testProducts" item-title="name" item-value="id"
           item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" @update:model-value="doSomething" />
       </div>
 
@@ -99,6 +99,7 @@ const currentTheme = ref('dark')
 const loader = ref(false)
 const selected = ref({})
 function doSomething(item){
+  console.log('a');
   console.log(item);
 }
 

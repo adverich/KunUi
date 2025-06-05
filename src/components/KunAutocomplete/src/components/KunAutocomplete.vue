@@ -5,10 +5,10 @@
     @focusInput="txtFocused" 
     @handleClick="toggleMenu"
     @blurInput="handleBLur"
-    :placeholder="props.multiple && isArray(selectedItem) && selectedItem.length ? '' : placeholder" :error="!!internalError"
+    :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder" :error="!!internalError"
   :error-messages="internalError">
-    <div v-if="isArray(selectedItem)" class="flex justify-center align-center">
-      <template v-for="item in selectedItem" :key="item.id ?? item.name">
+    <div v-if="isArray(modelValue)" class="flex justify-center align-center">
+      <template v-for="item in modelValue" :key="item.id ?? item.name">
         <KunChip size="small" class="ml-1">
           <div class="flex justify-center align-center">
             {{ getItemText(item, itemTitle) }}
@@ -19,7 +19,7 @@
     </div>
 
     <template v-if="hasIcons" v-slot:append-inner>
-      <KunIcon v-if="clearable && selectedItem" @click="clearSelection" size="small" color="error" :icon="icons.close" class="mr-1 mt-1" />
+      <KunIcon v-if="clearable && modelValue" @click="clearSelection" size="small" color="error" :icon="icons.close" class="mr-1 mt-1" />
       <KunIcon color="teal-darken-1" size="large" class="cursor-pointer" :icon="menuModel ? icons.menuUpOutline : icons.menuDownOutline" @click.stop="openMenu" />
       <KunIcon v-if="required" color="teal-darken-1" size="x-small" class="mb-4" :icon="icons.asterisk" />
     </template>
@@ -85,9 +85,9 @@ const modelValue = defineModel({ default: null });
 const items = defineModel('items', { default: [], type: Array, required: true });
 
 const props = defineProps(KunAutocompleteProps);
-const emits = defineEmits(["update:model-value", "createItem", "validation", "search"]);
+const emits = defineEmits(["createItem", "validation", "search"]);
 
-const { selectedItem, textFieldRef, listRef, menuModel, search, removeItem, clearSelection, lightReset, openMenu, toggleMenu, onMenuKeydown,
+const { textFieldRef, listRef, menuModel, search, removeItem, clearSelection, lightReset, openMenu, toggleMenu, onMenuKeydown,
   getSelectedItem, textArr, getItemText,
   createItem, checkDisabled, itemToString, placeholder, hasCreateItem, 
 } = useAutocomplete(props, emits, modelValue, items);

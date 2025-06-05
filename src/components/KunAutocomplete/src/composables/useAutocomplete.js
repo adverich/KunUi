@@ -89,44 +89,44 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
 
     function getSelectedItem(item) {
         try {
+            selectedItem.value = item;
             if (!props.multiple) {
                 if (props.returnObject) {
-                    selectedItem.value = item;
+                    modelValue.value = item;
                 } else {
                     if (isObject(item)) {
                         if (props.itemValue) {
-                            selectedItem.value = item[props.itemValue];
+                            modelValue.value = item[props.itemValue];
                         } else {
-                            selectedItem.value = Object.values(item)[0];
+                            modelValue.value = Object.values(item)[0];
                         }
                     } else {
-                        selectedItem.value = item;
+                        modelValue.value = item;
                     }
                 }
                 menuModel.value = false;
             } else {
-                if (!selectedItem.value) {
-                    selectedItem.value = [];
+                if (!modelValue.value) {
+                    modelValue.value = [];
                 }
                 if (!checkIfValueExist(item)) {
                     if (props.returnObject) {
-                        selectedItem.value.push(item);
+                        modelValue.value.push(item);
                     } else {
                         if (isObject(item)) {
                             if (props.itemValue) {
-                                selectedItem.value.push(item[props.itemValue]);
+                                modelValue.value.push(item[props.itemValue]);
                             } else {
-                                selectedItem.value.push(Object.values(item)[0]);
+                                modelValue.value.push(Object.values(item)[0]);
                             }
                         } else {
-                            selectedItem.value.push(item);
+                            modelValue.value.push(item);
                         }
                     }
                 } else {
                     if (item) removeFromArray(item);
                 }
             }
-            emits('update:model-value', selectedItem.value);
             if (props.clearOnSelect) clearSelection();
         } catch (e) {
             console.log(e)
@@ -136,10 +136,10 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     }
 
     function checkIfValueExist(value) {
-        if (selectedItem.value === null) return false;
+        if (modelValue.value === null) return false;
         if (!value) return true;
 
-        return selectedItem.value.some((i) =>
+        return modelValue.value.some((i) =>
             props.returnObject ?
                 i[props.itemValue] === value[props.itemValue]
                 : i === value[props.itemValue]
@@ -148,14 +148,14 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
 
     function removeFromArray(value) {
         if (props.returnObject) {
-            const item = selectedItem.value.find(
+            const item = modelValue.value.find(
                 (i) => i[props.itemValue] === value[props.itemValue]
             );
-            const index = selectedItem.value.indexOf(item);
-            selectedItem.value.splice(index, 1);
+            const index = modelValue.value.indexOf(item);
+            modelValue.value.splice(index, 1);
         } else {
-            const index = selectedItem.value.indexOf(value[props.itemValue]);
-            selectedItem.value.splice(index, 1);
+            const index = modelValue.value.indexOf(value[props.itemValue]);
+            modelValue.value.splice(index, 1);
         }
     }
 
@@ -202,27 +202,29 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     }
 
     function removeItem(item) {
-        let index = selectedItem.value.indexOf(item);
-        selectedItem.value.splice(index, 1);
+        let index = modelValue.value.indexOf(item);
+        modelValue.value.splice(index, 1);
     }
 
     function clearSelection() {
         search.value = "";
-        if (isArray(modelValue.value)) {
-            selectedItem.value = [];
-        }
-        if (isObject(modelValue.value)) {
-            selectedItem.value = null;
-        }
-        if (typeof modelValue.value === "number" && modelValue.value) {
-            selectedItem.value = null;
-        }
-        if (typeof modelValue.value === "string" && modelValue.value) {
-            selectedItem.value = null;
-        }
-        if (typeof modelValue.value == "boolean") {
-            selectedItem.value = false;
-        }
+        modelValue.value = null;
+        selectedItem.value = null;
+        // if (isArray(modelValue.value)) {
+        //     selectedItem.value = [];
+        // }
+        // if (isObject(modelValue.value)) {
+        //     selectedItem.value = null;
+        // }
+        // if (typeof modelValue.value === "number" && modelValue.value) {
+        //     selectedItem.value = null;
+        // }
+        // if (typeof modelValue.value === "string" && modelValue.value) {
+        //     selectedItem.value = null;
+        // }
+        // if (typeof modelValue.value == "boolean") {
+        //     selectedItem.value = false;
+        // }
     }
 
     function checkDisabled(item) {
