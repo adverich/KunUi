@@ -93,14 +93,14 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
                 if (props.returnObject) {
                     selectedItem.value = item;
                 } else {
-                    if (isObject(result)) {
+                    if (isObject(item)) {
                         if (props.itemValue) {
                             selectedItem.value = item[props.itemValue];
                         } else {
-                            selectedItem.value = Object.values(result)[0];
+                            selectedItem.value = Object.values(item)[0];
                         }
                     } else {
-                        selectedItem.value = result;
+                        selectedItem.value = item;
                     }
                 }
                 menuModel.value = false;
@@ -135,26 +135,26 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
         }
     }
 
-    function checkIfValueExist(result) {
+    function checkIfValueExist(value) {
         if (selectedItem.value === null) return false;
-        if (!result) return true;
+        if (!value) return true;
 
         return selectedItem.value.some((i) =>
             props.returnObject ?
-                i[props.itemValue] === result[props.itemValue]
-                : i === result[props.itemValue]
+                i[props.itemValue] === value[props.itemValue]
+                : i === value[props.itemValue]
         );
     }
 
-    function removeFromArray(result) {
+    function removeFromArray(value) {
         if (props.returnObject) {
             const item = selectedItem.value.find(
-                (i) => i[props.itemValue] === result[props.itemValue]
+                (i) => i[props.itemValue] === value[props.itemValue]
             );
             const index = selectedItem.value.indexOf(item);
             selectedItem.value.splice(index, 1);
         } else {
-            const index = selectedItem.value.indexOf(result[props.itemValue]);
+            const index = selectedItem.value.indexOf(value[props.itemValue]);
             selectedItem.value.splice(index, 1);
         }
     }
