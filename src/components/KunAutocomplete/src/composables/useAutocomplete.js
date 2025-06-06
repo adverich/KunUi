@@ -139,12 +139,15 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
 
     const watchModelValue = ref(true);
     watch(() => modelValue.value, (newVal) => {
+        console.log('a')
+        console.log(modelValue.value);
         if (watchModelValue.value) selectedItem.value = findItemByValue(newVal);
     }, { immediate: true });
 
     function findItemByValue(value) {
         if (!value) return null;
-
+        console.log('b')
+        console.log(value)
         // Si es un objeto
         if (props.returnObject) return value;
 

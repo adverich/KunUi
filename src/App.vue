@@ -26,7 +26,7 @@
 
       <!-- <div class="w-1/2 bg-blue-900 "> -->
       <KunRow>
-        <!-- <KunCol cols="12" sm="6" md="4">
+        <KunCol cols="12" sm="6" md="4">
           <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
             item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
         </KunCol>
@@ -38,7 +38,7 @@
         <KunCol cols="12" sm="6" md="4">
           <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
             item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
-        </KunCol> -->
+        </KunCol>
 
         <KunCol cols="6" sm="4" md="4">
           <KunTextField label="Label" placeholder="placeholder">
