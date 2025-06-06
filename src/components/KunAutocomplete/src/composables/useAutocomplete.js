@@ -139,27 +139,23 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
 
     const watchModelValue = ref(true);
     watch(() => modelValue.value, (newVal) => {
-        console.log('a')
-        console.log(modelValue.value);
+        if (watchModelValue.value) selectedItem.value = findItemByValue(newVal);
+    }, { immediate: true });
+
+    watch(() => items.value, (newVal) => {
         if (watchModelValue.value) selectedItem.value = findItemByValue(newVal);
     }, { immediate: true });
 
     function findItemByValue(value) {
         if (!value) return null;
-        console.log('b')
-        console.log(value)
         // Si es un objeto
         if (props.returnObject) return value;
 
         // Si es múltiple, buscar cada objeto en items
         if (props.multiple && Array.isArray(value)) return value.map(val => items.value.find(item => item[props.itemValue] === val)).filter(Boolean);
 
-        console.log('c');
-        console.log(items.value);
         // Single value: buscar en items el objeto cuyo itemValue coincida con value
         const item = items.value.find(item => item[props.itemValue] === value) || null;
-        console.log(props.itemValue);
-        console.log(item);
         return item;
     }
 
