@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { isObject, isArray } from '../../../../utils/utils.js'
 
 export function useAutocomplete(props, emits, modelValue, items, itemsPerIntersection) {
@@ -89,6 +89,7 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
 
     function getSelectedItem(item) {
         try {
+            watchModelValue.value = false;
             selectedItem.value = item;
             if (!props.multiple) {
                 if (props.returnObject) {
@@ -96,8 +97,12 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
                 } else {
                     if (isObject(item)) {
                         if (props.itemValue) {
+                            console.log(1)
+                            console.log(item)
+
                             modelValue.value = item[props.itemValue];
                         } else {
+                            console.log(2)
                             modelValue.value = Object.values(item)[0];
                         }
                     } else {
@@ -128,11 +133,34 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
                 }
             }
             if (props.clearOnSelect) clearSelection();
+            watchModelValue.value = true;
         } catch (e) {
             console.log(e)
         } finally {
             focusTextField();
         }
+    }
+
+    const watchModelValue = ref(true);
+    watch(() => modelValue.value, (newVal) => {
+        console.log(modelValue.value)
+        if (watchModelValue.value || ((!selectedItem.value && modelValue.value) || (selectedItem.value !== modelValue.value))) {
+            console.log('si');
+            selectedItem.value = findItemByValue(newVal)
+        };
+    }, { immediate: true });
+
+    function findItemByValue(value) {
+        if (!value) return null;
+
+        // Si es un objeto
+        if (props.returnObject) return value;
+
+        // Si es múltiple, buscar cada objeto en items
+        if (props.multiple && Array.isArray(value)) return value.map(val => items.value.find(item => item[props.itemValue] === val)).filter(Boolean);
+
+        // Single value: buscar en items el objeto cuyo itemValue coincida con value
+        return items.value.find(item => item[props.itemValue] === value) || null;
     }
 
     function checkIfValueExist(value) {

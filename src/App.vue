@@ -21,12 +21,12 @@
 
       <div class="w-1/2 flex flex-col justrify-center text-center">
         <KunAutocomplete v-model="selected" activator="parent" :items="testProducts" item-title="name" item-value="id"
-          item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" @update:model-value="doSomething" />
+          item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
       </div>
 
       <!-- <div class="w-1/2 bg-blue-900 "> -->
       <KunRow>
-        <KunCol cols="12" sm="6" md="4">
+        <!-- <KunCol cols="12" sm="6" md="4">
           <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
             item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
         </KunCol>
@@ -38,7 +38,7 @@
         <KunCol cols="12" sm="6" md="4">
           <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
             item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
-        </KunCol>
+        </KunCol> -->
 
         <KunCol cols="6" sm="4" md="4">
           <KunTextField label="Label" placeholder="placeholder">
@@ -90,14 +90,12 @@ import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
-import KunLoaderCircular from './components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
-import KunDivider from './components/KunDivider/src/components/KunDivider.vue';
 
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);
 const currentTheme = ref('dark')
 const loader = ref(false)
-const selected = ref({})
+const selected = ref(74983)
 function doSomething(item){
   // console.log('a');
   // console.log(item);
