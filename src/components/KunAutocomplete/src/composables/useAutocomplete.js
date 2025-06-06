@@ -143,11 +143,7 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
 
     const watchModelValue = ref(true);
     watch(() => modelValue.value, (newVal) => {
-        console.log(modelValue.value)
-        if (watchModelValue.value || ((!selectedItem.value && modelValue.value) || (selectedItem.value !== modelValue.value))) {
-            console.log('si');
-            selectedItem.value = findItemByValue(newVal)
-        };
+        if (watchModelValue.value) selectedItem.value = findItemByValue(newVal);
     }, { immediate: true });
 
     function findItemByValue(value) {
