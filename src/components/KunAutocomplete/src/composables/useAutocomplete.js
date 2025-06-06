@@ -97,12 +97,8 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
                 } else {
                     if (isObject(item)) {
                         if (props.itemValue) {
-                            console.log(1)
-                            console.log(item)
-
                             modelValue.value = item[props.itemValue];
                         } else {
-                            console.log(2)
                             modelValue.value = Object.values(item)[0];
                         }
                     } else {
@@ -134,7 +130,6 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
             }
             if (props.clearOnSelect) clearSelection();
             watchModelValue.value = true;
-            emits('update:modelValue', modelValue.value);
         } catch (e) {
             console.log(e)
         } finally {
