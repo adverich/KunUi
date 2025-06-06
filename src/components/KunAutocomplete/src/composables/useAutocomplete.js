@@ -134,6 +134,7 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
             }
             if (props.clearOnSelect) clearSelection();
             watchModelValue.value = true;
+            emits('update:modelValue', modelValue.value);
         } catch (e) {
             console.log(e)
         } finally {
