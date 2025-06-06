@@ -155,7 +155,7 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
         if (props.multiple && Array.isArray(value)) return value.map(val => items.value.find(item => item[props.itemValue] === val)).filter(Boolean);
 
         console.log('c');
-        console.log(items);
+        console.log(items.value);
         // Single value: buscar en items el objeto cuyo itemValue coincida con value
         const item = items.value.find(item => item[props.itemValue] === value) || null;
         console.log(props.itemValue);
