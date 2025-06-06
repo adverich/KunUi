@@ -154,8 +154,13 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
         // Si es múltiple, buscar cada objeto en items
         if (props.multiple && Array.isArray(value)) return value.map(val => items.value.find(item => item[props.itemValue] === val)).filter(Boolean);
 
+        console.log('c');
+        console.log(items);
         // Single value: buscar en items el objeto cuyo itemValue coincida con value
-        return items.value.find(item => item[props.itemValue] === value) || null;
+        const item = items.value.find(item => item[props.itemValue] === value) || null;
+        console.log(props.itemValue);
+        console.log(item);
+        return item;
     }
 
     function checkIfValueExist(value) {
