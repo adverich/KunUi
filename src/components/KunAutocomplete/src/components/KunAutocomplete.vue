@@ -74,7 +74,7 @@ import KunListItemTitle from '../../../KunListItemTitle/src/components/KunListIt
 import KunListItemSubtitle from '../../../KunListItemSubtitle/src/components/KunListItemSubtitle.vue';
 import KunMenu from '../../../KunMenu/src/components/KunMenu.vue';
 
-import { useAutocomplete } from '../composables/useAutocomplete'; // Asegúrate de que la ruta sea correcta
+import { useAutocomplete } from '../composables/useAutocomplete';
 import { KunAutocompleteProps } from '../composables/KunAutocompleteProps';
 import KunTextField from '../../../KunTextField/src/components/KunTextField.vue'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
