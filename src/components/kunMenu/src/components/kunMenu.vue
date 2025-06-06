@@ -10,7 +10,6 @@
         :class="[contentClass, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex]"
         :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }"
         v-bind="contentProps"
-        @keydown.enter.stop="focusCurrentItem"
         @keydown.escape.stop="handleEscape"
       >
         <slot />
@@ -24,6 +23,7 @@ import { onMounted, onUnmounted, watch, nextTick, onBeforeUnmount } from 'vue'
 import { useKunMenu } from '../composables/useKunMenu'
 import { kunMenuProps } from '../composables/kunMenuProps'
 import { useKunMenuStyles } from '../composables/useKunMenuStyles'
+import { useKunMenuComposable } from '../composables/useKunMenuComposable'
 
 const props = defineProps(kunMenuProps)
 const emits = defineEmits(['update:modelValue', 'click:outside', 'handleEscape'])
@@ -33,8 +33,8 @@ const {
   handleActivatorClick,
   handleHover,
   handleFocus,
-  focusCurrentItem,
-  handleEscape
+  handleEscape,
+  hideMenu
 } = useKunMenu(props, emits)
 
 const {
@@ -46,6 +46,16 @@ const {
   computedMaxHeight,
   menuPositionStyle,
 } = useKunMenuStyles(props, handleActivatorClick, handleHover, handleFocus)
+
+const { onClickOutside } = useKunMenuComposable()
+const { addEventListeners, removeEventListeners } = onClickOutside(
+  contentEl,
+  () => {
+    hideMenu()
+    emits('click:outside')
+  },
+  [activatorEl]
+)
 
 onMounted(() => {
   nextTick(() => {
@@ -68,9 +78,11 @@ watch(menuVisible, (visible) => {
 
   if (visible) {
     repositionMenu()
-    el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false })
+    el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false });
+    addEventListeners();
   } else {
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
+    removeEventListeners();
   }
 })
 

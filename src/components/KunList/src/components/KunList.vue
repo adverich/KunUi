@@ -1,14 +1,13 @@
 <template>
   <ul
-    role="list"
-    class="w-full"
     ref="ulRef"
+    role="list"
+    class="w-full kun-list"
     tabindex="-1"
-    @keydown="onKeydown"
-    @select="handleSelect"
-    @selected="handleUpdateSelected"
+    @keydown.prevent="onKeydown"
+    @select="e => emit('click:select', e.detail)"
+    @selected="e => emit('update:selected', e.detail)"
     :class="[
-      'kun-list',
       bgList,
       borderColor,
       {
@@ -25,8 +24,7 @@
 </template>
 
 <script setup>
-import { ref, provide } from 'vue'
-import { useKunList } from '../composables/useKunList'
+import { ref, provide, nextTick, computed } from 'vue'
 
 const props = defineProps({
   nav: Boolean,
@@ -35,7 +33,7 @@ const props = defineProps({
   selectable: {
     type: [Boolean, String],
     default: false,
-    validator: value => ['single', 'multiple', true, false].includes(value),
+    validator: v => ['single', 'multiple', true, false].includes(v),
   },
   bgList: {
     type: String,
@@ -46,80 +44,85 @@ const props = defineProps({
     default: 'border-gray-300 dark:border-gray-700'
   }
 })
-const emits = defineEmits(['keyDown', 'click:select', 'update:selected'])
 
-useKunList(props)
+const emit = defineEmits(['keyDown', 'click:select', 'update:selected'])
 
 const ulRef = ref(null)
 const itemRefs = ref([])
 
-defineExpose({
-  focusWithKey: (key) => {
-    const items = itemRefs.value.filter(Boolean)
-    if (items.length === 0) return
+const selectedItems = ref([])
 
-    // Mover el foco directamente al ítem adecuado
-    if (key === 'ArrowDown') {
-      items[0]?.focus()
-    } else if (key === 'ArrowUp') {
-      items[items.length - 1]?.focus()
-    }
-  },
-  focus: () => {
-    ulRef.value?.focus?.()
+provide('registerListItemRef', el => {
+  if (el && !itemRefs.value.includes(el)) {
+    itemRefs.value.push(el)
   }
 })
 
-provide('registerListItemRef', (el) => {
-  if (el) {
-    // ✅ Evita push duplicados que causan renders
-    if (!itemRefs.value.includes(el)) {
-      itemRefs.value.push(el)
+const isMultiple = computed(() =>
+  props.selectable === 'multiple' || props.selectable === true
+)
+
+function toggleItem(value) {
+  if (!props.selectable || value == null) return
+
+  if (isMultiple.value) {
+    const exists = selectedItems.value.includes(value)
+    if (exists) {
+      selectedItems.value = selectedItems.value.filter(v => v !== value)
+    } else {
+      selectedItems.value.push(value)
     }
+    emit('update:selected', [...selectedItems.value])
   } else {
-    // ✅ Borra solo si existe
-    itemRefs.value = itemRefs.value.filter(item => item !== el)
+    selectedItems.value = [value]
+    emit('update:selected', value)
   }
+}
+
+// 🔴🔴 ESTE PROVIDE FALTABA
+provide('kunListContext', {
+  toggleItem
 })
 
 function onKeydown(e) {
+  emit('keyDown', e)
   const key = e.key
-
-  emits('keyDown', e)
-  if (!['ArrowDown', 'ArrowUp'].includes(key)) return
-  e.preventDefault()
-
   const items = itemRefs.value.filter(Boolean)
-  if (items.length === 0) return
 
-  const currentIndex = items.findIndex(el => el === document.activeElement)
+  if (!items.length || !['ArrowUp', 'ArrowDown', 'Enter'].includes(key)) return
 
-  // Si el foco no está en un ítem válido, enfocar el primero o último
-  if (currentIndex === -1) {
-    if (key === 'ArrowDown') {
-      items[0]?.focus()
-    } else if (key === 'ArrowUp') {
-      items[items.length - 1]?.focus()
-    }
+  if (key === 'Enter') {
+    const item = document.activeElement
+    if (item?.getAttribute('role') === 'menuitem') item.click()
     return
   }
 
-  let nextIndex = currentIndex
+  if (key === 'ArrowUp' || key === 'ArrowDown') {
+    e.preventDefault()
+    const currentIndex = items.findIndex(i => i === document.activeElement)
+    let nextIndex = -1
 
-  if (key === 'ArrowDown') {
-    nextIndex = (currentIndex + 1) % items.length
-  } else if (key === 'ArrowUp') {
-    nextIndex = (currentIndex - 1 + items.length) % items.length
+    if (currentIndex === -1) {
+      nextIndex = key === 'ArrowDown' ? 0 : items.length - 1
+    } else if (key === 'ArrowDown') {
+      nextIndex = (currentIndex + 1) % items.length
+    } else if (key === 'ArrowUp') {
+      nextIndex = (currentIndex - 1 + items.length) % items.length
+    }
+
+    const el = items[nextIndex]
+    el?.focus?.()
+    return
   }
-
-  items[nextIndex]?.focus()
 }
 
-function handleSelect(item) {
-  emits('click:select', item.detail)
+function focusWithKey(key = 'ArrowDown') {
+  const items = itemRefs.value.filter(Boolean)
+  if (!items.length) return
+  const index = key === 'ArrowDown' ? 0 : items.length - 1
+  const el = items[index]
+  el?.focus?.()
 }
 
-function handleUpdateSelected(event) {
-  emits('update:selected', event.detail)
-}
+defineExpose({ focusWithKey, focus: () => ulRef.value?.focus?.() })
 </script>

@@ -20,7 +20,7 @@
       </div>
 
       <div class="w-1/2 flex flex-col justrify-center text-center">
-        <KunAutocomplete clear-on-select v-model="selected" activator="parent" :items="testProducts" item-title="name" item-value="id"
+        <KunAutocomplete v-model="selected" activator="parent" :items="testProducts" item-title="name" item-value="id"
           item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" @update:model-value="doSomething" />
       </div>
 
@@ -99,8 +99,8 @@ const currentTheme = ref('dark')
 const loader = ref(false)
 const selected = ref({})
 function doSomething(item){
-  console.log('a');
-  console.log(item);
+  // console.log('a');
+  // console.log(item);
 }
 
 function generateFakeProductsFull(count = 100) {

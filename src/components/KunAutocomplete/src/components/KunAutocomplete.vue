@@ -1,10 +1,10 @@
 <template>
   <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef" autocomplete="off" 
     @update:modelValue="txtUpdated"
-    @keyDown="txtKeyDown"
     @focusInput="txtFocused" 
     @handleClick="toggleMenu"
-    @blurInput="handleBLur"
+    @blur="textFieldBlur"
+    @keyDown.prevent="textKeyDown"
     :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder" :error="!!internalError"
   :error-messages="internalError">
     <div v-if="isArray(modelValue)" class="flex justify-center align-center">
@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 import { icons } from '@/icons'
 import { isNotEmpty, isArray } from '../../../../utils/utils.js'
 
@@ -132,6 +132,13 @@ function handleEscape() {
   textFieldRef.value.inputField?.focus();
 }
 
+function textKeyDown(e){
+  const key = e.key
+  if (!['ArrowUp', 'ArrowDown'].includes(key)) return;
+  if(!menuModel.value) openMenu();
+  listRef.value?.focusWithKey?.(key);
+}
+
 function txtUpdated(event) {
   emits('search', search);
 }
@@ -140,26 +147,12 @@ function txtFocused() {
   validate(modelValue);
 }
 
-function txtKeyDown(event){
-  const key = event.key;
-  if(key === 'Escape') {
-    handleEscape();
-    return;
-  }
-
-  if (['ArrowDown', 'ArrowUp'].includes(key)) {
-    if (!listRef.value) return;
-    listRef.value.focusWithKey(key);
-    return;
-  }
-  onMenuKeydown(event);
-}
 
 function handleKeyList(event) {
   onMenuKeydown(event);
 }
 
-function handleBLur(){
-  menuModel.value = false;
+function textFieldBlur(){
+  // SE MANTIENE LA FUNCINOALIDAD TEMPORALMENTE POR SI SE NECESITA, SINO SERA ELIMINADO
 }
 </script>

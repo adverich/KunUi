@@ -55,12 +55,6 @@ export function useKunMenu(props, emits) {
         emits('handleEscape')
     }
 
-    function focusCurrentItem() {
-        if (!props.keyboardNavigation) return
-        const item = document.activeElement
-        if (item?.getAttribute('role') === 'menuitem') item.click()
-    }
-
     return {
         menuVisible,
         showMenu,
@@ -70,6 +64,5 @@ export function useKunMenu(props, emits) {
         handleHover,
         handleFocus,
         handleEscape,
-        focusCurrentItem,
     }
 }

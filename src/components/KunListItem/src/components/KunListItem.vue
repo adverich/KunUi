@@ -18,6 +18,7 @@
         'px-4 py-2': !noGutters,
       }
     ]"
+    @keydown.enter.prevent="handleClick"
     @click="handleClick"
     v-bind="$attrs"
   >
@@ -63,7 +64,7 @@ const props = defineProps({
 
 const liRef = ref(null)
 const registerRef = inject('registerListItemRef', null)
-const listContext = inject('kun-list', null)
+const listContext = inject('kunListContext', null)
 
 // Registro para navegación/focus externo si fuera necesario
 onMounted(() => {
@@ -89,22 +90,26 @@ const isActive = computed(() => props.active)
 // Click handler
 function handleClick() {
   if (props.disabled) return
-  if (listContext && props.value !== null) {
-    listContext.toggleItem?.(props.value)
-  }
-  
+
+  // Dispara intención de selección (evento de usuario)
   liRef.value?.dispatchEvent(
     new CustomEvent('select', {
       detail: props.value,
-      bubbles: true
-    })
-  );
-
-  liRef.value?.dispatchEvent(
-    new CustomEvent('selected', {
-      detail: props.value,
-      bubbles: true
+      bubbles: true,
     })
   )
+
+  // Cambia selección si corresponde
+  if (listContext && props.value !== null) {
+    listContext.toggleItem?.(props.value)
+
+    // Solo después de cambiar estado, emití el selected
+    liRef.value?.dispatchEvent(
+      new CustomEvent('selected', {
+        detail: props.value,
+        bubbles: true,
+      })
+    )
+  }
 }
 </script>
