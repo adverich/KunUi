@@ -139,8 +139,14 @@ function doSomething(item){
 }
 const value = ref(5);
 const valueTwo = ref(2);
-const minQuantity = computed (() => testProducts.length ? testProducts.length / 5000 / 2 : 1);
-console.log(minQuantity.value);
+const minQuantity = ref(0);
+function setMin(){
+  setTimeout(() => {
+    minQuantity.value = 4;
+    console.log(minQuantity.value);
+  }, 2500);
+}
+setMin();
 
 function generateFakeProductsFull(count = 100) {
   const products = [];

@@ -1,4 +1,4 @@
-export const useSliderProps = () => ({
+export const KunSliderProps = {
     modelValue: {
         type: [Number, Array],
         default: 0
@@ -67,4 +67,4 @@ export const useSliderProps = () => ({
         type: Object,
         default: null
     }
-})
+}

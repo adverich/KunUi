@@ -25,12 +25,12 @@
         @pointerdown="onTrackClick"
       >
         <!-- Track Fill -->
-        <div
+        <!-- <div
           class="absolute rounded-full z-10"
           :class="trackColor"
           :style="trackFillStyle"
           style="transition: all 150ms ease;"
-        />
+        /> -->
 
         <!-- Ticks and Labels -->
         <div
@@ -44,17 +44,17 @@
             class="h-1/2 flex flex-col items-center justify-center relative bg-red-700"
           >
             <!-- Invisible clickable area, no modifica el layout -->
-            <!-- <div
-              class="absolute z-20 py-1 bg-red-700"
+            <div
+              class="absolute z-20"
               :style="{
-                width: vertical ? '-2px' : '2px',
-                height: vertical ? '2px' : '-2px',
-                top: vertical ? '-2px' : '-2px',
-                left: vertical ? '-2px' : '2px',
+                width: vertical ? '0px' : '1px',
+                height: vertical ? '4px' : '20px',
+                top: vertical ? '-0px' : '-8px',
+                left: vertical ? '0px' : '0px',
                 cursor: 'pointer'
               }"
               @click.stop="() => onTickClick(i)"
-            /> -->
+            />
 
             <!-- Visible tick -->
             <div
@@ -68,13 +68,13 @@
             />
 
             <!-- Optional label -->
-            <!-- <span
+            <span
               v-if="tickLabels"
               class="text-xs mt-1 select-none"
               :style="{ transform: vertical ? 'none' : 'translateY(8px)' }"
             >
               {{ min + step * i }}
-            </span> -->
+            </span>
           </div>
         </div>
 
@@ -117,13 +117,13 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useSliderProps } from '../composables/useSliderProps'
+import { KunSliderProps } from '../composables/KunSliderProps'
 import { useSlider } from '../composables/useSlider'
 import { useSliderInteractions } from '../composables/useSliderInteractions'
 import KunThumb from './KunThumb.vue'
 
 const emit = defineEmits(['update:modelValue', 'input', 'change'])
-const props = defineProps(useSliderProps())
+const props = defineProps(KunSliderProps);
 
 const trackRef = ref(null)
 
@@ -134,23 +134,6 @@ const {
   trackFillStyle,
   tickCount
 } = useSlider(props, emit, trackRef)
-
-const {
-  range,
-  vertical,
-  ticks,
-  tickLabels,
-  min,
-  max,
-  step,
-  trackColor,
-  thumbColor,
-  thumbLabel,
-  label,
-  disabled,
-  tickSize,
-  tickColor
-} = props
 
 const thumbs = computed(() => (Array.isArray(val.value) ? [...val.value] : [val.value]))
 
