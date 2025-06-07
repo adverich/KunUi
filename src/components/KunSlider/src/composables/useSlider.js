@@ -1,10 +1,31 @@
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 
 export function useSlider(props, emit, trackRef) {
     const val = computed({
         get: () => (props.range ? [...props.modelValue] : Number(props.modelValue)),
         set: (v) => emit('update:modelValue', props.range ? v : v[0])
     })
+
+    watch(
+        () => [props.min, props.max, props.modelValue],
+        () => {
+            const min = Number(props.min)
+            const max = Number(props.max)
+
+            if (props.range) {
+                const normalized = props.modelValue.map((v) => Math.min(max, Math.max(min, v)))
+                if (JSON.stringify(normalized) !== JSON.stringify(props.modelValue)) {
+                    emit('update:modelValue', normalized)
+                }
+            } else {
+                const value = Math.min(max, Math.max(min, props.modelValue))
+                if (value !== props.modelValue) {
+                    emit('update:modelValue', value)
+                }
+            }
+        },
+        { immediate: true }
+    )
 
     const tickCount = computed(() => {
         const min = Number(props.min)

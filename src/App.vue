@@ -23,15 +23,15 @@
       <KunRow>
         <KunCol cols="12" sm="6" md="4">
           <KunSlider
-            v-model="value"
-            :min="0"
+            v-model="valueTwo"
+            :min="minQuantity ?? 1"
             :max="10"
             label="testing"
             ticks
             :thumb-label="false"
           >
             <template v-slot:append>
-              <KunTextField v-model="value" hide-details density="compact" text-center 
+              <KunTextField v-model="valueTwo" hide-details density="compact" text-center 
                 class="ml-1" rounded="rounded-xl" type="number" style="width: 50px" readonly />
             </template>
           </KunSlider>
@@ -40,7 +40,7 @@
         <KunCol cols="12" sm="6" md="4">
           <KunSlider
             v-model="value"
-            :min="0"
+            :min="2"
             :max="10"
             label="testing"
             ticks
@@ -112,7 +112,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
@@ -138,6 +138,9 @@ function doSomething(item){
   // console.log(item);
 }
 const value = ref(5);
+const valueTwo = ref(2);
+const minQuantity = computed (() => testProducts.length ? testProducts.length / 5000 / 2 : 1);
+console.log(minQuantity.value);
 
 function generateFakeProductsFull(count = 100) {
   const products = [];

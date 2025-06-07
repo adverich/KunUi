@@ -20,7 +20,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   value: Number,
   thumbStyle: Object,
   thumbLabel: Boolean,
@@ -28,8 +30,18 @@ defineProps({
     type: String,
     default: 'bg-blue-500'
   },
-  min: Number,
-  max: Number
+  min: {
+    type: Number,
+    default: 0
+  },
+  max: {
+    type: Number,
+    default: 100
+  },
+  step: {
+    type: Number,
+    default: 1
+  }
 })
 
 const emit = defineEmits(['update'])
