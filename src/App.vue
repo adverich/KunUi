@@ -60,11 +60,9 @@
 
         </KunCol>
 
-
-
         <KunCol cols="12" sm="6" md="4">
-          <KunAutocomplete v-model="selected" activator="parent" return-object :items="testProducts" item-title="name"
-            item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
+          <KunAutocomplete v-model="selected" activator="parent" :items="testProducts" item-title="name" return-object
+            item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"  @update:modelValue="doSomethig"/>
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">
@@ -143,10 +141,14 @@ const minQuantity = ref(0);
 function setMin(){
   setTimeout(() => {
     minQuantity.value = 4;
-    console.log(minQuantity.value);
   }, 2500);
 }
 setMin();
+
+function doSomethig(item){
+  console.trace();
+  console.log(item);
+}
 
 function generateFakeProductsFull(count = 100) {
   const products = [];
@@ -303,7 +305,6 @@ function toggleTheme() {
 }
 
 function setTheme(theme) {
-  console.log(theme)
   const html = document.documentElement;
 
   if (theme === 'light') {
