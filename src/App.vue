@@ -61,8 +61,8 @@
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">
-          <KunAutocomplete v-model="selected" activator="parent" :items="testProducts" item-title="name" return-object
-            item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"  @update:modelValue="doSomethig"/>
+          <KunAutocomplete v-model="selected" activator="parent" :items="testProducts" item-title="name" item-value="id"
+            item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"  @selectedItem="doSomethig"/>
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">

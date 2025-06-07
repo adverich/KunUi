@@ -128,6 +128,7 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
                     if (item) removeFromArray(item);
                 }
             }
+            emits('selectedItem', selectedItem.value);
             if (props.clearOnSelect) clearSelection();
             watchModelValue.value = true;
         } catch (e) {
