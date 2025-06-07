@@ -12,7 +12,7 @@
   >
     <div
       v-if="thumbLabel"
-      class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-200 dark:bg-gray-800 text-black dark:text-white text-xs px-2 py-1 rounded-full whitespace-nowrap select-none"
+      class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-200/40 dark:bg-gray-800/40 text-black dark:text-white text-xs px-3 py-2 rounded-full whitespace-nowrap select-none"
     >
       {{ value }}
     </div>

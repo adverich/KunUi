@@ -22,14 +22,22 @@
       <!-- <div class="w-1/2 bg-blue-900 "> -->
       <KunRow>
         <KunCol cols="12" sm="6" md="4">
-          <!-- <KunSlider v-model="branches" :max="10"
-            :min="1" :step="1" hide-details show-ticks="always"
-            track-color="primary" color="secondary" :rules="rules.quantity">
+          <KunSlider
+            v-model="value"
+            :min="0"
+            :max="10"
+            label="testing"
+            ticks
+            :thumb-label="false"
+          >
             <template v-slot:append>
-              <KunTextField v-model="branches" hide-details single-line density="compact"
-                type="number" style="width: 50px" readonly />
+              <KunTextField v-model="value" hide-details density="compact" text-center 
+                class="ml-1" rounded="rounded-xl" type="number" style="width: 50px" readonly />
             </template>
-          </KunSlider> -->
+          </KunSlider>
+        </KunCol>
+
+        <KunCol cols="12" sm="6" md="4">
           <KunSlider
             v-model="value"
             :min="0"
