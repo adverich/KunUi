@@ -19,15 +19,38 @@
         <KunBtn variant="text"> TEXT </KunBtn>
       </div>
 
-      <div class="w-1/2 flex flex-col justrify-center text-center">
-        <KunAutocomplete v-model="selected" activator="parent" :items="testProducts" item-title="name" item-value="id"
-          item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
-      </div>
-
       <!-- <div class="w-1/2 bg-blue-900 "> -->
       <KunRow>
         <KunCol cols="12" sm="6" md="4">
-          <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
+          <!-- <KunSlider v-model="branches" :max="10"
+            :min="1" :step="1" hide-details show-ticks="always"
+            track-color="primary" color="secondary" :rules="rules.quantity">
+            <template v-slot:append>
+              <KunTextField v-model="branches" hide-details single-line density="compact"
+                type="number" style="width: 50px" readonly />
+            </template>
+          </KunSlider> -->
+          <KunSlider
+            v-model="value"
+            :min="0"
+            :max="10"
+            label="testing"
+            ticks
+          />
+        </KunCol>
+
+        <KunCol cols="12" sm="6" md="4">
+
+        </KunCol>
+
+        <KunCol cols="12" sm="6" md="4">
+
+        </KunCol>
+
+
+
+        <KunCol cols="12" sm="6" md="4">
+          <KunAutocomplete v-model="selected" activator="parent" return-object :items="testProducts" item-title="name"
             item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
         </KunCol>
 
@@ -90,6 +113,7 @@ import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
+import KunSlider from './components/KunSlider/src/components/KunSlider.vue';
 
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);
@@ -100,6 +124,7 @@ function doSomething(item){
   // console.log('a');
   // console.log(item);
 }
+const value = ref(5)
 
 function generateFakeProductsFull(count = 100) {
   const products = [];

@@ -6,7 +6,7 @@ export const kunCardTitleProps = {
     append: [String, Object, Function],
     bgColor: {
         type: String,
-        default: 'bg-white'
+        default: 'bg-ransparent'
     },
     textColor: {
         type: String,
