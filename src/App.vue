@@ -36,7 +36,12 @@
             :max="10"
             label="testing"
             ticks
-          />
+          >
+            <template v-slot:append>
+              <KunTextField v-model="value" hide-details density="compact" text-center 
+                class="ml-1" rounded="rounded-xl" type="number" style="width: 50px" readonly />
+            </template>
+          </KunSlider>
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">
@@ -124,7 +129,7 @@ function doSomething(item){
   // console.log('a');
   // console.log(item);
 }
-const value = ref(5)
+const value = ref(5);
 
 function generateFakeProductsFull(count = 100) {
   const products = [];

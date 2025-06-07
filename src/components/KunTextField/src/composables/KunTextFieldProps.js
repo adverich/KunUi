@@ -7,6 +7,7 @@ export default {
   prefix: { type: String, default: '' },
   suffix: { type: String, default: '' },
   rounded: { type: String, default: 'rounded' },
+  borderColor: { type: String, default: 'border-gray-300 dark:border-gray-700' },
   error: { type: Boolean, default: false },
   errorMessage: { type: String, default: '' },
   rules: { type: Array, default: () => [] },
@@ -26,4 +27,5 @@ export default {
   labelColor: { type: String, default: 'text-black/80 dark:text-white/80' },
   placeholderColor: { type: String, default: 'placeholder-black/60 dark:placeholder-white/60' },
   bgInput: { type: String, default: 'bg-slate-200 dark:bg-slate-800' },
+  textCenter: { type: Boolean, default: false },
 }
