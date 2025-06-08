@@ -21,7 +21,7 @@
         </div>
 
         <!-- Input -->
-        <input ref="inputField" type="text" :value="inputValue" :id="uid" :placeholder="placeholder"
+        <input ref="inputField" :type="type" :value="inputValue" :id="uid" :placeholder="placeholder"
           :disabled="disabled" :readonly="readonly" :maxlength="maxlength" autocomplete="off"
           class="w-full h-full bg-transparent rounded focus:outline-none p-3" :aria-invalid="hasError ? 'true' : 'false'"
           :class="[textColor, placeholderColor, textCenter ? 'text-center' : '']"
