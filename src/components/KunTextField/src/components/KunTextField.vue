@@ -37,7 +37,7 @@
 
         <slot />
 
-        <div v-if="type === 'password' || showPasswordToggle" class="flex items-center justify-center min-w-[32px] h-full px-1">
+        <div v-if="type === 'password' && showPasswordToggle" class="flex items-center justify-center min-w-[32px] h-full px-1">
           <KunIcon :icon="passIcon" @click="fnShowPass" />
         </div>
 
