@@ -66,7 +66,7 @@
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">
-          <KunTextField v-model="testing" :error-message="testing" />
+          <KunTextField v-model="contrasena" type="password" :error-message="testing" />
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">
@@ -135,6 +135,8 @@ function doSomething(item){
   // console.log('a');
   // console.log(item);
 }
+
+const contrasena = ref('')
 const value = ref(5);
 const valueTwo = ref(2);
 const minQuantity = ref(0);

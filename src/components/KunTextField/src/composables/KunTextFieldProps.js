@@ -28,4 +28,5 @@ export default {
   placeholderColor: { type: String, default: 'placeholder-black/60 dark:placeholder-white/60' },
   bgInput: { type: String, default: 'bg-slate-200 dark:bg-slate-800' },
   textCenter: { type: Boolean, default: false },
+  showPasswordToggle: { type: Boolean, default: true }
 }

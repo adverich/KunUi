@@ -7,6 +7,8 @@ import IconMenuDownOutline from './IconMenuDownOutline.vue'
 import IconMenuUpOutline from './IconMenuUpOutline.vue'
 import IconSearch from './IconSearch.vue'
 import IconStar from './IconStar.vue'
+import IconEyeOutline from './IconEyeOutline.vue'
+import IconEyeOffOutline from './IconEyeOffOutline.vue'
 
 export const icons = {
     asterisk: IconAsterisk,
@@ -18,4 +20,6 @@ export const icons = {
     menuUpOutline: IconMenuUpOutline,
     search: IconSearch,
     star: IconStar,
+    eyeOutline: IconEyeOutline,
+    eyeOffOutline: IconEyeOffOutline,
 }
