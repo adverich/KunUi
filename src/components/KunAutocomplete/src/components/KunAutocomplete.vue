@@ -4,7 +4,7 @@
     @focusInput="txtFocused" 
     @handleClick="toggleMenu"
     @blur="textFieldBlur"
-    @keyDown.prevent="textKeyDown"
+    @keyDown="textKeyDown"
     :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder" :error="!!internalError"
   :error-messages="internalError">
     <div v-if="isArray(modelValue)" class="flex justify-center align-center">
@@ -87,8 +87,8 @@ const items = defineModel('items', { default: [], type: Array, required: true })
 const props = defineProps(KunAutocompleteProps);
 const emits = defineEmits(["selectedItem", "createItem", "validation", "search"]);
 
-const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, toggleMenu, onMenuKeydown,
-  getSelectedItem, textArr, getItemText,
+const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, closeMenu, toggleMenu, onMenuKeydown,
+  getSelectedItem, textArr, getItemText, isAlphanumeric, 
   createItem, checkDisabled, itemToString, placeholder, hasCreateItem, 
 } = useAutocomplete(props, emits, modelValue, items);
 
@@ -134,9 +134,21 @@ function handleEscape() {
 
 function textKeyDown(e){
   const key = e.key
-  if (!['ArrowUp', 'ArrowDown'].includes(key)) return;
-  if(!menuModel.value) openMenu();
-  listRef.value?.focusWithKey?.(key);
+
+  if (key === 'Tab' || key === 'Shift') {
+    closeMenu();
+    return;
+  }
+
+  if (isAlphanumeric(key) || key === "Backspace") {
+    openMenu();
+  }
+
+  if (['ArrowUp', 'ArrowDown'].includes(key)) {
+     e.preventDefault();
+    if(!menuModel.value) openMenu();
+    listRef.value?.focusWithKey?.(key);
+  }
 }
 
 function txtUpdated(event) {

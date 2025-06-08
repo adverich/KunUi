@@ -1,4 +1,4 @@
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import { isObject, isArray } from '../../../../utils/utils.js'
 
 export function useAutocomplete(props, emits, modelValue, items, itemsPerIntersection) {
@@ -193,6 +193,10 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
         if (!menuModel.value) menuModel.value = true;
     }
 
+    function closeMenu() {
+        if (menuModel.value) menuModel.value = false;
+    }
+
     function toggleMenu() {
         menuModel.value = !menuModel.value;
     }
@@ -213,10 +217,26 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
 
     function onMenuKeydown(event) {
         const key = event.key;
-        // Verificar si es una tecla alfanumérica
         if (isAlphanumeric(key) || key === "Backspace") {
             openMenu();
             focusTextField();
+
+            nextTick(() => {
+                const inputEl = textFieldRef.value?.inputField;
+                if (inputEl) {
+                    const start = inputEl.selectionStart;
+                    const end = inputEl.selectionEnd;
+                    const text = inputEl.value;
+
+                    const newChar = event.key.length === 1 ? event.key : ''; // solo insertamos caracteres imprimibles
+
+                    inputEl.value = text.slice(0, start) + newChar + text.slice(end);
+                    inputEl.selectionStart = inputEl.selectionEnd = start + newChar.length;
+
+                    // Opcional: emitir evento input si usás v-model con listeners
+                    inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            });
         }
     };
 
@@ -259,7 +279,7 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     return {
         selectedItem, textFieldRef, listRef, menuModel, search, getItemText,
         placeholder, textArr, itemToString, getSelectedItem,
-        checkIfValueExist, removeFromArray, lightReset, openMenu, toggleMenu, focusOnMenu, onMenuKeydown, createItem,
+        checkIfValueExist, removeFromArray, lightReset, openMenu, closeMenu, toggleMenu, focusOnMenu, onMenuKeydown, createItem,
         removeItem, clearSelection, checkDisabled, isAlphanumeric,
     };
 }
