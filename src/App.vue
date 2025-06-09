@@ -53,7 +53,7 @@
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">
-
+          <KunNumberField v-model="testNumber" controlVariant="default" />
         </KunCol>
 
         <KunCol cols="12" sm="6" md="4">
@@ -113,6 +113,7 @@
 import { ref, computed } from 'vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
+import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import IconASterisk from './icons/IconAsterisk.vue';
 import KunRow from './components/KunRow/src/components/KunRow.vue';
@@ -126,6 +127,7 @@ import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
 import KunSlider from './components/KunSlider/src/components/KunSlider.vue';
 
+const testNumber = ref(0)
 const testing = ref(null);
 const testProducts = generateFakeProductsFull(50000);
 const currentTheme = ref('dark')

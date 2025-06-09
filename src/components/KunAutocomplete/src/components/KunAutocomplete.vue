@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { icons } from '@/icons'
 import { isNotEmpty, isArray } from '../../../../utils/utils.js'
 

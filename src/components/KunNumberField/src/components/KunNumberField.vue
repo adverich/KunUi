@@ -1,0 +1,175 @@
+<template>
+  <div class="w-full flex flex-col relative">
+    <!-- Label -->
+    <label
+      v-if="label"
+      :for="uid"
+      :class="[labelColor,
+        'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
+        isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'
+      ]"
+    >
+      {{ label }}
+    </label>
+
+    <div class="w-full flex flex-col justify-center relative" v-bind="$attrs">
+      <div class="flex items-center w-full h-full border" :class="[
+        bgInput, rounded,
+        focus ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : borderColor,
+        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
+        error ? 'bg-red-200 dark:bg-red-900' : ''
+      ]">
+        
+        <!-- Control - (SPLIT start) -->
+         <div v-if="controlVariant === 'split'" class="h-full">
+           <button
+             type="button"
+             class="p-3 text-lg border-r border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
+             @click="onDecrement"
+             :disabled="disabled || readonly"
+           >−</button>
+         </div>
+
+        <!-- Prefix -->
+        <div v-if="prefix" class="mr-2">{{ prefix }}</div>
+
+        <!-- Prepend -->
+        <div v-if="prependIcon" class="flex items-center justify-center min-w-[32px] h-full px-1">
+          <i :class="prependIcon" />
+        </div>
+
+        <!-- Input -->
+        <input
+          :id="uid"
+          ref="numberInput"
+          :key="inputKey"
+          type="text"
+          :value="inputValue"
+          :placeholder="placeholder"
+          :readonly="readonly"
+          :disabled="disabled"
+          :maxlength="maxlength"
+          autocomplete="off"
+          class="w-full h-full bg-transparent rounded focus:outline-none p-3"
+          :aria-invalid="error ? 'true' : 'false'"
+          :class="[textColor, placeholderColor, textCenter ? 'text-center' : '']"
+          @input="updateValue($event.target.value)"
+          @focus="handleFocus"
+          @blur="handleBlur" 
+        />
+
+        <!-- Clearable -->
+        <button
+          v-if="clearable && inputValue != null"
+          type="button"
+          @click="onClear"
+          class="ml-2"
+          :class="textColor"
+          :disabled="disabled || readonly"
+        >
+          &times;
+        </button>
+
+        <!-- Controls: DEFAULT -->
+        <template v-if="controlVariant === 'default'">
+          <div class="flex items-center h-full">
+            <button
+              type="button"
+              class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
+              @click="onIncrement"
+              :disabled="disabled || readonly"
+            >
+              ▲
+            </button>
+
+            <button
+              type="button"
+              class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
+              @click="onDecrement"
+              :disabled="disabled || readonly"
+            >
+              ▼
+            </button>
+          </div>
+        </template>
+
+        <!-- Controls: STACKED -->
+        <template v-else-if="controlVariant === 'stacked'">
+          <div class="flex flex-col items-center justify-center border-l border-slate-600">
+            <div class="border-b border-slate-600 pb-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onIncrement">
+              <button
+                type="button"
+                class="text-xs text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer"
+                :disabled="disabled || readonly"
+              >▲</button>
+            </div>
+            <div class="border-t border-slate-600 pt-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onDecrement">
+              <button
+                type="button"
+                class="text-xs text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer"
+                :disabled="disabled || readonly"
+              >▼</button>
+            </div>
+          </div>
+        </template>
+
+        <!-- Append icon -->
+        <div v-if="appendIcon" class="flex items-center justify-center min-w-[32px] h-full px-1 cursor-pointer">
+          <i :class="appendIcon" />
+        </div>
+
+        <!-- Control + (SPLIT end) -->
+         <div v-if="controlVariant === 'split'" class="h-full">
+           <button
+             type="button"
+             class="p-3 text-lg border-l border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
+             @click="onIncrement"
+             :disabled="disabled || readonly"
+           >+</button>
+         </div>
+
+        <!-- Suffix -->
+        <div v-if="suffix" class="ml-2">{{ suffix }}</div>
+      </div>
+
+      <!-- Details -->
+      <div v-if="!hideDetails" class="h-[1.25rem]">
+        <div v-if="error || errorMessages" class="text-red-500 text-sm text-center">
+          <div v-if="Array.isArray(errorMessages)">
+            <div v-for="(msg, i) in errorMessages" :key="i">{{ msg }}</div>
+          </div>
+          <div v-else-if="typeof errorMessages === 'string'">{{ errorMessages }}</div>
+        </div>
+        <div v-else-if="hint && (persistentHint || focus)" class="text-xs text-center">
+          {{ hint }}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<script setup>
+import { getCurrentInstance } from 'vue';
+import { KunNumberFieldProps } from '../composables/KunNumberFieldProps';
+import { useKunNumberField } from '../composables/useKunNumberFieldComposable';
+
+const props = defineProps(KunNumberFieldProps);
+const emit = defineEmits(['update:modelValue']);
+
+const uid = `number-input-${getCurrentInstance().uid}`;
+
+const {
+  inputValue,
+  numberInput,
+  inputKey,
+  updateValue,
+  onIncrement,
+  onDecrement,
+  onClear,
+  focus,
+  handleFocus,
+  isActive,
+  handleBlur
+} = useKunNumberField(props, emit);
+</script>

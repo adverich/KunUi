@@ -25,9 +25,11 @@
           :disabled="disabled" :readonly="readonly" :maxlength="maxlength" autocomplete="off"
           class="w-full h-full bg-transparent rounded focus:outline-none p-3" :aria-invalid="hasError ? 'true' : 'false'"
           :class="[textColor, placeholderColor, textCenter ? 'text-center' : '']"
-          :aria-describedby="hasError ? `error-${uid}` : null" @input="handleInput" @blur="handleBlur"
-          @focus="focusInput" @click.stop="emits('handleClick')" @keydown="emits('keyDown', $event)"
-        @keyup="emits('keyUp', $event)" />
+          :aria-describedby="hasError ? `error-${uid}` : null" 
+          @input="handleInput" @blur="handleBlur" 
+          @focus="focusInput" @click.stop="emits('handleClick')" 
+          @keydown="emits('keyDown', $event)" @keyup="emits('keyUp', $event)" 
+        />
 
         <!-- Clearable -->
         <button v-if="clearable && inputValue" type="button" @click="clearInput"
