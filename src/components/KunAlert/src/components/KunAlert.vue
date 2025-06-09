@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="modelValue"
+    class="px-2"
     :class="[wrapperClass, positionClass]"
     :style="{ zIndex }"
     @click.self="onSelfClick"
@@ -36,7 +37,7 @@
 
         <button
           v-if="closable"
-          class="absolute top-0 right-1 text-xl focus:outline-none cursor-pointer"
+          class="absolute top-0 right-1 px-1 text-xl focus:outline-none cursor-pointer"
           @click="onClose"
         >
           <KunIcon icon="hand" size="text-base" class="mr-1" />
@@ -48,7 +49,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 
@@ -117,29 +118,19 @@ const props = defineProps({
     type: String,
     default: 'p-2'
   },
-  margin: {
-    type: String,
-    default: 'm-2'
-  },
-  fullscreen: {
-    type: Boolean,
-    default: false
-  },
-  persistent: {
-    type: Boolean,
-    default: false
-  },
-  persistentLabel: {
-    type: String,
-    default: 'Aceptar'
-  },
-  actionLabel: {
-    type: String,
-    default: ''
-  }
+  margin: { type: String, default: 'm-2' },
+  fullscreen: { type: Boolean, default: false },
+  persistent: { type: Boolean, default: false },
+  persistentLabel: { type: String, default: 'Aceptar' },
+  actionLabel: { type: String, default: '' },
+  timeout: { type: Number, default: 2500 }
 })
 
 const emits = defineEmits(['update:modelValue', 'action'])
+
+onMounted(() => setTimeout(() => {
+  emits('update:modelValue', false);
+}, props.timeout))
 
 const positionClass = computed(() => {
   if (props.fullscreen) return `fixed inset-0 flex items-center justify-center ${props.margin}`
