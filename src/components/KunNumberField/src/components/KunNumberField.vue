@@ -21,7 +21,7 @@
       ]">
         
         <!-- Control - (SPLIT start) -->
-         <div v-if="controlVariant === 'split'" class="h-full">
+         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
            <button
              type="button"
              class="p-3 text-lg border-r border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
@@ -71,8 +71,8 @@
         </button>
 
         <!-- Controls: DEFAULT -->
-        <template v-if="controlVariant === 'default'">
-          <div class="flex items-center h-full">
+        <template v-if="!noArrows">
+          <div v-if="controlVariant === 'default'" class="flex items-center h-full">
             <button
               type="button"
               class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
@@ -91,11 +91,9 @@
               ▼
             </button>
           </div>
-        </template>
 
-        <!-- Controls: STACKED -->
-        <template v-else-if="controlVariant === 'stacked'">
-          <div class="flex flex-col items-center justify-center border-l border-slate-600">
+          <!-- Controls: STACKED -->
+          <div v-if="controlVariant === 'stacked'" class="flex flex-col items-center justify-center border-l border-slate-600">
             <div class="border-b border-slate-600 pb-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onIncrement">
               <button
                 type="button"
@@ -119,7 +117,7 @@
         </div>
 
         <!-- Control + (SPLIT end) -->
-         <div v-if="controlVariant === 'split'" class="h-full">
+         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
            <button
              type="button"
              class="p-3 text-lg border-l border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"

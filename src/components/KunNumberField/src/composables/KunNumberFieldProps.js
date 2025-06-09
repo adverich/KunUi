@@ -21,6 +21,7 @@ export const KunNumberFieldProps = {
   bgInput: { type: String, default: 'bg-slate-200 dark:bg-slate-800' },
   textCenter: { type: Boolean, default: false },
   controlVariant: { type: String, default: 'default' },
+  noArrows: { type: Boolean, default: false },
 
   // Estado
   error: { type: Boolean, default: false },
