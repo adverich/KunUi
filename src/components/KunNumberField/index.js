@@ -1,9 +1,9 @@
-import KunTextField from './KunTextField.vue'
-import useKunTextField from './composables/useKunTextField.js'
+import KunNumberField from './KunNumberField.vue'
+import useKunNumberFieldComposable from './composables/useKunNumberFieldComposable.js'
 
 export {
-    KunTextField,
-    useKunTextField,
+    KunNumberField,
+    useKunNumberFieldComposable,
 }
 
-export default KunTextField;
+export default KunNumberField;
