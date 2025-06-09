@@ -113,8 +113,9 @@
         </template>
 
         <!-- Append icon -->
-        <div v-if="appendIcon" class="flex items-center justify-center min-w-[32px] h-full px-1 cursor-pointer">
-          <i :class="appendIcon" />
+        <div v-if="appendIcon || appendIconSlot" class="flex items-center justify-center min-w-[32px] h-full px-1">
+          <KunIcon v-if="appendIcon" />
+          <slot v-else name="append-icon" />
         </div>
 
         <!-- Control + (SPLIT end) -->
