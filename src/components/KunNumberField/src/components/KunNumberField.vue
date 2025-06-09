@@ -21,21 +21,22 @@
       ]">
         
         <!-- Control - (SPLIT start) -->
-         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
-           <button
-             type="button"
-             class="p-3 text-lg border-r border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
-             @click="onDecrement"
-             :disabled="disabled || readonly"
-           >−</button>
-         </div>
+        <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
+          <button
+            type="button"
+            class="p-3 text-lg border-r border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
+            @click="onDecrement"
+            :disabled="disabled || readonly"
+          >−</button>
+        </div>
 
         <!-- Prefix -->
         <div v-if="prefix" class="mr-2">{{ prefix }}</div>
 
         <!-- Prepend -->
-        <div v-if="prependIcon" class="flex items-center justify-center min-w-[32px] h-full px-1">
-          <i :class="prependIcon" />
+        <div v-if="prependIcon || prependIconSlot" class="flex items-center justify-center min-w-[32px] h-full px-1">
+          <KunIcon v-if="prependIcon" />
+          <slot v-else name="prepend-icon" />
         </div>
 
         <!-- Input -->
@@ -148,7 +149,7 @@
 
 
 <script setup>
-import { getCurrentInstance } from 'vue';
+import { getCurrentInstance, useSlots } from 'vue';
 import { KunNumberFieldProps } from '../composables/KunNumberFieldProps';
 import { useKunNumberField } from '../composables/useKunNumberFieldComposable';
 
@@ -156,6 +157,9 @@ const props = defineProps(KunNumberFieldProps);
 const emit = defineEmits(['update:modelValue']);
 
 const uid = `number-input-${getCurrentInstance().uid}`;
+const slots = useSlots();
+const prependIconSlot = !!slots['prepend-icon'];
+const appendIconSlot = !!slots['append-icon'];
 
 const {
   inputValue,
