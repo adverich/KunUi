@@ -1,7 +1,6 @@
 <template>
   <form @submit.prevent="handleSubmit" novalidate
-    :class="`flex flex-col w-full ${props.gap} ${props.padding} ${props.maxWidth}`"
-    v-bind="$attrs">
+    :class="`flex flex-col w-full ${props.gap} ${props.padding} ${props.maxWidth}`" v-bind="$attrs">
     <slot />
   </form>
 </template>
@@ -23,6 +22,7 @@ const props = defineProps({
     default: 'max-w-full'
   }
 });
+const emits = defineEmits(["submit"]);
 
 const fields = ref([]);
 
@@ -70,7 +70,7 @@ function resetValidation() {
 function handleSubmit() {
   validate().then(({ valid }) => {
     if (valid) {
-      $emit('submit');
+      emits('submit');
     }
   });
 }

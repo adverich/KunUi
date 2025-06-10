@@ -134,8 +134,6 @@ const currentTheme = ref('dark')
 const loader = ref(false)
 const selected = ref(74983)
 function doSomething(item){
-  // console.log('a');
-  // console.log(item);
 }
 
 const contrasena = ref('')
