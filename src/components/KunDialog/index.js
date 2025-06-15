@@ -1,0 +1,1 @@
+export { default as KunDialog } from './components/KunDialog.vue'

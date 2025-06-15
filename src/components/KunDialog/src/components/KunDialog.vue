@@ -1,0 +1,110 @@
+<template>
+  <Teleport to="body">
+    <transition name="fade" appear>
+      <div
+        v-if="modelValue"
+        :class="mergedDialogClass"
+        @keydown.esc="onEsc"
+        v-bind="$attrs"
+      >
+        <KunDialogOverlay
+          v-if="overlay"
+          :persistent="persistent"
+          @click="handleOverlayClick"
+        />
+
+        <transition
+          name="scale"
+          enter-active-class="transition transform ease-out duration-300"
+          enter-from-class="opacity-0 scale-95"
+          enter-to-class="opacity-100 scale-100"
+          leave-active-class="transition transform ease-in duration-200"
+          leave-from-class="opacity-100 scale-100"
+          leave-to-class="opacity-0 scale-95"
+        >
+          <KunDialogContent
+            v-if="modelValue"
+            :width="width"
+            :max-width="maxWidth"
+            :height="height"
+            :max-heigh="maxHeigh"
+            :bg-color="bgColor"
+            :contentClass="contentClass"
+            @close="close"
+          >
+            <slot />
+          </KunDialogContent>
+        </transition>
+      </div>
+    </transition>
+  </Teleport>
+</template>
+
+<script setup lang="ts">
+import { watch, onMounted, onBeforeUnmount } from 'vue'
+import KunDialogOverlay from './KunDialogOverlay.vue'
+import KunDialogContent from './KunDialogContent.vue'
+
+const props = defineProps({
+  modelValue: Boolean,
+  overlay: { type: Boolean, default: true },
+  persistent: { type: Boolean, default: false },
+  dialogClass: { type: String, default: '' },
+  xPosition: {
+    type: String,
+    default: 'center', // 'start' | 'center' | 'end'
+    validator: v => ['start', 'center', 'end'].includes(v),
+  },
+  yPosition: {
+    type: String,
+    default: 'center', // 'start' | 'center' | 'end'
+    validator: v => ['top', 'center', 'bottom'].includes(v),
+  },
+  contentClass: { type: String, default: '' },
+  bgColor: { type: String, default: 'bg-slate-100 dark:bg-slate-900' },
+  height: { type: String, default: 'h-fit' },
+  maxHeigh: { type: String, default: 'max-h-[100vh]' },
+  width: { type: String, default: 'w-full' },
+  maxWidth: { type: String, default: 'max-w-1/3' },
+})
+
+const emits = defineEmits(['update:modelValue']);
+const baseDialogClass = "fixed inset-0 z-250 flex";
+const xPositionClass = 'justify-' + props.xPosition;
+const yPositionClass = 'items-' + props.yPosition;
+const ySpacing = props.yPosition === 'top' ? 'pt-15' : props.yPosition === 'bottom' ? 'pb-15' : '';
+const mergedDialogClass = [baseDialogClass, props.dialogClass, xPositionClass, yPositionClass, ySpacing];
+
+const close = () => {
+  if (!props.persistent) emits('update:modelValue', false)
+}
+
+const onEsc = (e: KeyboardEvent) => {
+  if (!props.persistent && props.modelValue) {
+    emits('update:modelValue', false)
+  }
+}
+
+const handleOverlayClick = () => {
+  close()
+}
+
+const preventScroll = () => {
+  document.body.style.overflow = 'hidden'
+}
+const restoreScroll = () => {
+  document.body.style.overflow = ''
+}
+
+watch(() => props.modelValue, (val) => {
+  if (val) preventScroll()
+  else restoreScroll()
+})
+
+onMounted(() => {
+  if (props.modelValue) preventScroll()
+})
+onBeforeUnmount(() => {
+  restoreScroll()
+})
+</script>

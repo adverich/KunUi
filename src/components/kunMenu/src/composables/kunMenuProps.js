@@ -40,6 +40,7 @@ export const kunMenuProps = {
         type: [String, Number],
         default: 'w-full'
     },
+    zIndex: { type: String, default: "z-50" },
     offset: [String, Number, Array],
     openDelay: {
         type: [String, Number],
@@ -56,7 +57,17 @@ export const kunMenuProps = {
     },
     origin: {
         type: String,
-        default: 'auto'
+        default: 'auto',
+        validator: value => {
+            const validOrigins = [
+                'auto',
+                'top left', 'top center', 'top right',
+                'bottom left', 'bottom center', 'bottom right',
+                'left top', 'left center', 'left bottom',
+                'right top', 'right center', 'right bottom'
+            ]
+            return validOrigins.includes(value)
+        }
     },
     transition: {
         type: String,

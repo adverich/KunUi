@@ -7,6 +7,7 @@ export default function useKunTextField(props, emits) {
     const validationError = ref('')
     const isTouched = ref(false)
     const inputField = ref(null)
+    const rootRef = ref(null)
     const syncing = ref(false)
 
     const registerField = inject('registerField', null)
@@ -99,6 +100,7 @@ export default function useKunTextField(props, emits) {
     return {
         inputField,
         inputValue,
+        rootRef,
         inputFocused,
         validationError,
         hasError,

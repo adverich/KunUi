@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, provide, nextTick, computed } from 'vue'
+import { ref, provide, computed } from 'vue'
 
 const props = defineProps({
   nav: Boolean,

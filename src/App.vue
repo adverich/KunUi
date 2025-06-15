@@ -1,110 +1,70 @@
 <template>
-  <div class="flex flex-col h-lvh text-black dark:text-white">
+  <div class="flex flex-col h-dvh text-black dark:text-white overflow-hidden" style="overflow: hidden!important;">
     <KunAppbar bgColor="bg-slate-400 dark:bg-slate-800" @toggle-drawer="loader = !loader">
       <template #actions>
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
           icon-color="bg-blue-500" @update:model-value="setTheme" />
-        <KunBtn text="Clientes" variant="soft" bg-color="bg-secondary" class="border border-gray-400" size="xxs" />
+
+        <KunIcon color="text-red-500" :icon="IconClose" />
+
+        <KunAvatar class="bg-blue-800" @click="menuModel = true" ref="avatarRef">
+          <KunIcon :icon="IconAccountOutline" />
+          
+          <KunMenu activator="parent" v-model="menuModel" :parent-ref="avatarRef" location="bottom"
+            origin="bottom right" minWidth="min-w-96" width="w-96" maxWidth="max-w-96">
+            <KunList>
+              <KunListItem>Hola mundo</KunListItem>
+              <KunListItem>Hola mundo dos</KunListItem>
+            </KunList>
+          </KunMenu>
+        </KunAvatar>
       </template>
     </KunAppbar>
 
-    <div class="w-full flex flex-col justify-center items-center gap-4 py-8" style="overflow: hidden;">
-      <KunChip> CHIP </KunChip>
-      <div class="w-full flex justify-center gap-6">
-        <KunBtn> DEFAULT </KunBtn>
-        <KunBtn variant="tonal"> TONAL </KunBtn>
-        <KunBtn variant="plain"> PLAIN </KunBtn>
-        <KunBtn variant="outlined"> OUTLINED </KunBtn>
-        <KunBtn variant="soft"> SOFT </KunBtn>
-        <KunBtn variant="text"> TEXT </KunBtn>
+    <div class="w-full h-full flex flex-col" style="overflow: hidden!important;">
+      <div class="flex w-full">
+        <KunAutocomplete v-model="selected" activator="parent" :items="products" item-title="name" item-value="id"
+          item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"
+        />
       </div>
 
-      <!-- <div class="w-1/2 bg-blue-900 "> -->
-      <KunRow>
-        <KunCol cols="12" sm="6" md="4">
-          <KunSlider
-            v-model="valueTwo"
-            :min="minQuantity ?? 1"
-            :max="10"
-            label="testing"
-            ticks
-            :thumb-label="false"
-          >
-            <template v-slot:append>
-              <KunTextField v-model="valueTwo" hide-details density="compact" text-center 
-                class="ml-1" rounded="rounded-xl" type="number" style="width: 50px" readonly />
+        <div class="h-full w-full overflow-auto">
+          <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect :searchableKeys="['name']" show-expand>
+            <template #expand="{ item }">
+              <div class="bg-slate-800 text-blue-500 text-center py-1">{{ item.name }}</div>
             </template>
-          </KunSlider>
-        </KunCol>
+          </KunTable>
+        </div>
 
-        <KunCol cols="12" sm="6" md="4">
-          <KunSlider
-            v-model="value"
-            :min="2"
-            :max="10"
-            label="testing"
-            ticks
-          >
-            <template v-slot:append>
-              <KunTextField v-model="value" hide-details density="compact" text-center 
-                class="ml-1" rounded="rounded-xl" type="number" style="width: 50px" readonly />
-            </template>
-          </KunSlider>
-        </KunCol>
+        <!-- <div class="w-full flex justify-center gap-6">
+          <KunBtn> DEFAULT </KunBtn>
+          <KunBtn variant="tonal"> TONAL </KunBtn>
+          <KunBtn variant="plain"> PLAIN </KunBtn>
+          <KunBtn variant="outlined"> OUTLINED </KunBtn>
+          <KunBtn variant="soft"> SOFT </KunBtn>
+          <KunBtn variant="text"> TEXT </KunBtn>
+        </div> -->
 
-        <KunCol cols="12" sm="6" md="4">
-          <KunNumberField v-model="testNumber" controlVariant="default" />
-        </KunCol>
+        <!-- <KunRow>
+          <KunCol cols="12" sm="6" md="3">
+            <KunSlider v-model="value" :min="2" :max="10" label="testing" ticks>
+              <template v-slot:append>
+                <KunTextField v-model="value" hide-details density="compact" text-center class="ml-1" rounded="rounded-xl"
+                  type="number" style="width: 50px" readonly />
+              </template>
+            </KunSlider>
+          </KunCol>
 
-        <KunCol cols="12" sm="6" md="4">
+          <KunCol cols="12" sm="6" md="3">
+            <KunNumberField v-model="testNumber" controlVariant="default" />
+          </KunCol>
 
-        </KunCol>
-
-        <KunCol cols="12" sm="6" md="4">
-          <KunAutocomplete v-model="selected" activator="parent" :items="testProducts" item-title="name" item-value="id"
-            item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"  @selectedItem="doSomethig"/>
-        </KunCol>
-
-        <KunCol cols="12" sm="6" md="4">
-          <KunTextField v-model="contrasena" type="password" :error-message="testing" />
-        </KunCol>
-
-        <KunCol cols="12" sm="6" md="4">
-          <KunAutocomplete v-model="testing" activator="parent" return-object :items="testProducts" item-title="name"
-            item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']" />
-        </KunCol>
-
-        <KunCol cols="6" sm="4" md="4">
-          <KunTextField label="Label" placeholder="placeholder">
-            <template v-slot:append-inner>
-              <KunIcon :icon="IconASterisk" size="text-xs" class="pr-2 text-red-800" />
-            </template>
-          </KunTextField>
-        </KunCol>
-
-        <KunCol cols="4" sm="6" md="4">
-          <KunList>
-            <KunListItemTitle class="uppercase font-semibold"> Follow us </KunListItemTitle>
-
-            <KunListItem>
-              HOLA MUNDO
-            </KunListItem>
-          </KunList>
-        </KunCol>
-
-        <KunCol cols="4" sm="6" md="4">
-          <KunTextField label="Etiqueta text field" v-model="testing" />
-        </KunCol>
-
-        <KunCol cols="4" sm="6" md="4">
-          <KunTextField label="Etiqueta text field">
-            <template v-slot:append-inner>
-              <KunIcon size="text-md" class="custom-icon-asterisk text-red-700 pr-8" />
-            </template>
-          </KunTextField>
-        </KunCol>
-      </KunRow>
-      <!-- </div> -->
+          <KunCol cols="12" sm="6" md="3">
+            <KunAutocomplete v-model="selected" activator="parent" :items="products" item-title="name" item-value="id"
+              item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"
+            />
+          </KunCol>
+        </KunRow> -->
     </div>
   </div>
 </template>
@@ -115,41 +75,111 @@ import KunAutocomplete from './components/KunAutocomplete/src/components/KunAuto
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
-import IconASterisk from './icons/IconAsterisk.vue';
+import IconAccountOutline from './icons/IconAccountOutline.vue';
+import IconClose from './icons/IconClose.vue';
 import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunList from './components/KunList/src/components/KunList.vue';
 import KunListItem from './components/KunListItem/src/components/KunListItem.vue';
-import KunListItemTitle from './components/KunListItemTitle/src/components/KunListItemTitle.vue';
 import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
-import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
 import KunSlider from './components/KunSlider/src/components/KunSlider.vue';
+import KunAvatar from './components/KunAvatar/src/components/KunAvatar.vue';
+import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
+import KunTable from './components/KunTable/src/components/KunTable.vue';
 
-const testNumber = ref(0)
-const testing = ref(null);
-const testProducts = generateFakeProductsFull(50000);
+const menuModel = ref(false);
+const avatarRef = ref(null);
+
+const productBrands = ref(generateFakeBrands(500));
+const productCategories = ref(generateFakeCategories(20));
+const productFamilies = ref(generateFakeFamilies(100));
+const productMkups = ref(generateFakeMkups(5));
+const products = ref(generateFakeProductsFull(25000));
+
 const currentTheme = ref('dark')
 const loader = ref(false)
 const selected = ref(74983)
-function doSomething(item){
-}
 
-const contrasena = ref('')
 const value = ref(5);
-const valueTwo = ref(2);
 const minQuantity = ref(0);
-function setMin(){
+function setMin() {
   setTimeout(() => {
     minQuantity.value = 4;
   }, 2500);
 }
 setMin();
 
-function doSomethig(item){
-  console.trace();
-  console.log(item);
+const headers = [
+  {value: 'bar_code', label: 'CB', sortable: true },
+  {value: 'fullName', label: 'Producto', sortable: true },
+  {value: 'amount_content', label: 'contenido', align: 'center' },
+  {value: 'measurement_unit_id', label: 'Unidad', align: 'center' },
+  {value: 'product_brand', label: 'Marca', align: 'center', headerAlign: 'center' },
+  {value: 'price_base', label: 'Precio', align: 'center' },
+]
+const filters = [
+  { value: 'product_category_id', label: 'Categoria', title: 'name', items: productCategories.value, placeholder: 'Seleccionar categorias' },
+  { value: 'product_family_id', label: 'Familia', title: 'name', items: productFamilies.value, placeholder: 'Seleccionar familias' },
+  { value: 'product_brand', label: 'Marca', title: 'name', items: productBrands.value, placeholder: 'Seleccionar marcas' },
+]
+
+function generateFakeBrands(count = 10) {
+  const brands = [];
+  for (let i = 0; i < count; i++) {
+    const id = 10000 + i;
+    brands.push({
+      id,
+      company_id: 36,
+      name: `Marca ${i + 1}`,
+      deleted_at: null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    });
+  }
+  return brands;
+}
+
+function generateFakeCategories(count = 10) {
+  const categories = [];
+  for (let i = 0; i < count; i++) {
+    categories.push({
+      id: 80 + i,
+      name: `Categoría ${i + 1}`
+    });
+  }
+  return categories;
+}
+
+function generateFakeFamilies(count = 10) {
+  const families = [];
+  for (let i = 0; i < count; i++) {
+    families.push({
+      id: 660 + i,
+      name: `Familia ${i + 1}`
+    });
+  }
+  return families;
+}
+
+function generateFakeMkups(count = 5) {
+  const mkups = [];
+  for (let i = 0; i < count; i++) {
+    mkups.push({
+      id: 30 + i,
+      name: `Mkup ${i + 1}`
+    });
+  }
+  return mkups;
+}
+
+function generateRandomBarcode() {
+  let barcode = '';
+  for (let i = 0; i < 13; i++) {
+    barcode += Math.floor(Math.random() * 10);
+  }
+  return barcode;
 }
 
 function generateFakeProductsFull(count = 100) {
@@ -161,11 +191,14 @@ function generateFakeProductsFull(count = 100) {
       .toISOString();
   }
 
+  function getRandomItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
   for (let i = 1; i <= count; i++) {
     const id = 74980 + i;
     const product_variant_id = 26000 + i;
     const company_id = 36;
-    const product_brand_id = 10883;
     const measurement_unit_id = 7;
 
     const created_at = randomDate(new Date(2023, 0, 1), now);
@@ -176,10 +209,15 @@ function generateFakeProductsFull(count = 100) {
     const name = `Producto Prueba ${i}`;
     const fullName = `RASSIT - ${name} 1 UN`;
 
+    const product_brand = getRandomItem(productBrands.value);
+    const product_category = getRandomItem(productCategories.value);
+    const product_family = getRandomItem(productFamilies.value);
+    const product_mkup = getRandomItem(productMkups.value);
+
     products.push({
       id,
       company_id,
-      bar_code: "",
+      bar_code: generateRandomBarcode(),
       sku: null,
       serial_number: null,
       status: 1,
@@ -188,9 +226,9 @@ function generateFakeProductsFull(count = 100) {
       composition: null,
       hasVariants: 0,
       hasStock: 0,
-      product_category_id: 82,
-      product_family_id: 665,
-      product_brand_id,
+      product_category_id: product_category.id,
+      product_family_id: product_family.id,
+      product_brand_id: product_brand.id,
       name,
       description: null,
       tags: null,
@@ -205,7 +243,7 @@ function generateFakeProductsFull(count = 100) {
       cost_net: "330.58",
       cost_untaxed: "0.00",
       vat_id: 5,
-      product_mkup_id: 39,
+      product_mkup_id: product_mkup.id,
       price_base: "1200.00",
       price_discounted: "0.00",
       stock: stockValue,
@@ -268,14 +306,7 @@ function generateFakeProductsFull(count = 100) {
       ],
       price_lists: [],
       taxes: [],
-      product_brand: {
-        id: product_brand_id,
-        company_id,
-        name: "RASSIT",
-        deleted_at: null,
-        created_at: "2024-03-25T15:36:30.000000Z",
-        updated_at: "2024-03-25T15:36:30.000000Z"
-      },
+      product_brand,
       measurement_unit: {
         id: measurement_unit_id,
         measurement_unit_id,
@@ -291,20 +322,6 @@ function generateFakeProductsFull(count = 100) {
   return products;
 }
 
-function toggleTheme() {
-  const html = document.documentElement;
-
-  if (currentTheme.value === 'light') {
-    console.log('ahora dark')
-    html.classList.add('dark');
-    currentTheme.value = 'dark';
-  } else {
-    console.log('ahora light')
-    html.classList.remove('dark');
-    currentTheme.value = 'light';
-  }
-
-}
 
 function setTheme(theme) {
   const html = document.documentElement;
@@ -319,14 +336,11 @@ function setTheme(theme) {
 }
 </script>
 
-<style scoped>
-.custom-icon-asterisk {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+<style>
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 </style>

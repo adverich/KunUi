@@ -1,14 +1,10 @@
 <template>
   <div class="w-full flex flex-col relative">
     <!-- Label -->
-    <label
-      v-if="label"
-      :for="uid"
-      :class="[labelColor,
-        'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
-        isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'
-      ]"
-    >
+    <label v-if="label" :for="uid" :class="[labelColor,
+      'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
+      isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'
+    ]">
       {{ label }}
     </label>
 
@@ -19,15 +15,12 @@
         disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
         error ? 'bg-red-200 dark:bg-red-900' : ''
       ]">
-        
+
         <!-- Control - (SPLIT start) -->
         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
-          <button
-            type="button"
+          <button type="button"
             class="p-3 text-lg border-r border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
-            @click="onDecrement"
-            :disabled="disabled || readonly"
-          >−</button>
+            @click="onDecrement" :disabled="disabled || readonly">−</button>
         </div>
 
         <!-- Prefix -->
@@ -40,74 +33,46 @@
         </div>
 
         <!-- Input -->
-        <input
-          :id="uid"
-          ref="numberInput"
-          :key="inputKey"
-          type="text"
-          :value="inputValue"
-          :placeholder="placeholder"
-          :readonly="readonly"
-          :disabled="disabled"
-          :maxlength="maxlength"
-          autocomplete="off"
-          class="w-full h-full bg-transparent rounded focus:outline-none p-3"
-          :aria-invalid="error ? 'true' : 'false'"
+        <input :id="uid" ref="numberInput" :key="inputKey" type="text" :value="inputValue" :placeholder="placeholder"
+          :readonly="readonly" :disabled="disabled" :maxlength="maxlength" autocomplete="off"
+          class="w-full h-full bg-transparent rounded focus:outline-none p-3" :aria-invalid="error ? 'true' : 'false'"
           :class="[textColor, placeholderColor, textCenter ? 'text-center' : '']"
-          @input="updateValue($event.target.value)"
-          @focus="handleFocus"
-          @blur="handleBlur" 
-        />
+          @input="updateValue($event.target.value)" @focus="handleFocus" @blur="handleBlur" />
 
         <!-- Clearable -->
-        <button
-          v-if="clearable && inputValue != null"
-          type="button"
-          @click="onClear"
-          class="ml-2"
-          :class="textColor"
-          :disabled="disabled || readonly"
-        >
+        <button v-if="clearable && inputValue != null" type="button" @click="onClear" class="ml-2" :class="textColor"
+          :disabled="disabled || readonly">
           &times;
         </button>
 
         <!-- Controls: DEFAULT -->
         <template v-if="!noArrows">
           <div v-if="controlVariant === 'default'" class="flex items-center h-full">
-            <button
-              type="button"
+            <button type="button"
               class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
-              @click="onIncrement"
-              :disabled="disabled || readonly"
-            >
+              @click="onIncrement" :disabled="disabled || readonly">
               ▲
             </button>
 
-            <button
-              type="button"
+            <button type="button"
               class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
-              @click="onDecrement"
-              :disabled="disabled || readonly"
-            >
+              @click="onDecrement" :disabled="disabled || readonly">
               ▼
             </button>
           </div>
 
           <!-- Controls: STACKED -->
-          <div v-if="controlVariant === 'stacked'" class="flex flex-col items-center justify-center border-l border-slate-600">
+          <div v-if="controlVariant === 'stacked'"
+            class="flex flex-col items-center justify-center border-l border-slate-600">
             <div class="border-b border-slate-600 pb-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onIncrement">
-              <button
-                type="button"
+              <button type="button"
                 class="text-xs text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer"
-                :disabled="disabled || readonly"
-              >▲</button>
+                :disabled="disabled || readonly">▲</button>
             </div>
             <div class="border-t border-slate-600 pt-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onDecrement">
-              <button
-                type="button"
+              <button type="button"
                 class="text-xs text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer"
-                :disabled="disabled || readonly"
-              >▼</button>
+                :disabled="disabled || readonly">▼</button>
             </div>
           </div>
         </template>
@@ -119,14 +84,11 @@
         </div>
 
         <!-- Control + (SPLIT end) -->
-         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
-           <button
-             type="button"
-             class="p-3 text-lg border-l border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
-             @click="onIncrement"
-             :disabled="disabled || readonly"
-           >+</button>
-         </div>
+        <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
+          <button type="button"
+            class="p-3 text-lg border-l border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
+            @click="onIncrement" :disabled="disabled || readonly">+</button>
+        </div>
 
         <!-- Suffix -->
         <div v-if="suffix" class="ml-2">{{ suffix }}</div>
@@ -153,6 +115,7 @@
 import { getCurrentInstance, useSlots } from 'vue';
 import { KunNumberFieldProps } from '../composables/KunNumberFieldProps';
 import { useKunNumberField } from '../composables/useKunNumberFieldComposable';
+import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 const props = defineProps(KunNumberFieldProps);
 const emit = defineEmits(['update:modelValue']);

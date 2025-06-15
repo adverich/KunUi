@@ -1,17 +1,17 @@
 <template>
-  <component :is="tag" v-bind="$attrs" :class="computedClasses" @click="$emit('click', $event)"
+  <component :is="props.tag" v-bind="$attrs" :class="computedClasses" @click="$emit('click', $event)"
     @mouseover="$emit('hover', $event)" @contextmenu="$emit('contextmenu', $event)" @focus="$emit('focus', $event)">
-    <img v-if="image" :src="image" :alt="alt" :class="computedImageClasses" />
-    <span v-else-if="icon" :class="computedIconClasses">{{ icon }}</span>
-    <span v-else-if="text" :class="computedTextClasses">{{ text }}</span>
-    <slot v-if="!image && !icon && !text"></slot>
+    <img v-if="props.image" :src="props.image" :alt="props.alt" :class="computedImageClasses" />
+    <span v-else-if="props.icon" :class="computedIconClasses">{{ props.icon }}</span>
+    <span v-else-if="props.text" :class="computedTextClasses">{{ props.text }}</span>
+    <slot v-if="!props.image && !props.icon && !props.text"></slot>
   </component>
 </template>
 
 <script setup>
 import { computed } from "vue";
 
-defineProps({
+const props = defineProps({
   image: String,
   icon: String,
   text: String,
@@ -41,13 +41,13 @@ const sizes = {
 
 const computedClasses = computed(() => [
   "relative flex items-center justify-center overflow-hidden cursor-pointer transition-all",
-  sizes[size] || sizes.default,
-  rounded ? "rounded-full" : tile ? "rounded-none" : "rounded",
-  border ? `border border-${border}` : "",
-  color ? `bg-${color}` : "bg-gray-200",
-  density === "compact" ? "p-1" : density === "comfortable" ? "p-2" : "p-3",
-  start ? "ms-2" : "",
-  end ? "me-2" : "",
+  sizes[props.size] || sizes.default,
+  props.rounded ? "rounded-full" : props.tile ? "rounded-none" : "rounded",
+  props.border ? `border border-${props.border}` : "",
+  props.color ? `bg-${props.color}` : "bg-gray-200",
+  props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3",
+  props.start ? "ms-2" : "",
+  props.end ? "me-2" : "",
 ]);
 
 const computedImageClasses = computed(() => [

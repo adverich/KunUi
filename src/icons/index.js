@@ -9,7 +9,7 @@ import IconSearch from './IconSearch.vue'
 import IconStar from './IconStar.vue'
 import IconEyeOutline from './IconEyeOutline.vue'
 import IconEyeOffOutline from './IconEyeOffOutline.vue'
-
+import IconAccountOutline from './IconAccountOutline.vue'
 export const icons = {
     asterisk: IconAsterisk,
     check: IconCheck,
@@ -22,4 +22,5 @@ export const icons = {
     star: IconStar,
     eyeOutline: IconEyeOutline,
     eyeOffOutline: IconEyeOffOutline,
+    accountOutline: IconAccountOutline,
 }

@@ -1,7 +1,7 @@
 import { ref, computed, watch, nextTick } from 'vue';
 import { isObject, isArray } from '../../../../utils/utils.js'
 
-export function useAutocomplete(props, emits, modelValue, items, itemsPerIntersection) {
+export function useAutocomplete(props, emits, modelValue, items) {
     const selectedItem = ref(null);
     const textFieldRef = ref(null);
     const listRef = ref(null);
@@ -107,23 +107,17 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
                 }
                 menuModel.value = false;
             } else {
-                if (!modelValue.value) {
-                    modelValue.value = [];
-                }
                 if (!checkIfValueExist(item)) {
-                    if (props.returnObject) {
-                        modelValue.value.push(item);
-                    } else {
-                        if (isObject(item)) {
-                            if (props.itemValue) {
-                                modelValue.value.push(item[props.itemValue]);
-                            } else {
-                                modelValue.value.push(Object.values(item)[0]);
-                            }
-                        } else {
-                            modelValue.value.push(item);
-                        }
-                    }
+                    const val = props.returnObject
+                        ? item
+                        : isObject(item)
+                            ? props.itemValue
+                                ? item[props.itemValue]
+                                : Object.values(item)[0]
+                            : item;
+
+                    const updated = [...(modelValue.value || []), val];
+                    emits('update:modelValue', updated);
                 } else {
                     if (item) removeFromArray(item);
                 }
@@ -139,13 +133,13 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     }
 
     const watchModelValue = ref(true);
-    watch(() => modelValue.value, (newVal) => {
-        if (watchModelValue.value) selectedItem.value = findItemByValue(newVal);
-    }, { immediate: true });
+    // watch(() => modelValue.value, (newVal) => {
+    //     if (watchModelValue.value) selectedItem.value = findItemByValue(newVal);
+    // }, { immediate: true });
 
-    watch(() => items.value, () => {
-        selectedItem.value = findItemByValue(modelValue.value);
-    }, { immediate: true });
+    // watch(() => items.value, () => {
+    //     selectedItem.value = findItemByValue(modelValue.value);
+    // }, { immediate: true });
 
     function findItemByValue(value) {
         if (!value) return null;
@@ -172,16 +166,18 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     }
 
     function removeFromArray(value) {
+        let updated = modelValue.value;
         if (props.returnObject) {
-            const item = modelValue.value.find(
+            const item = updated.find(
                 (i) => i[props.itemValue] === value[props.itemValue]
             );
-            const index = modelValue.value.indexOf(item);
-            modelValue.value.splice(index, 1);
+            const index = updated.indexOf(item);
+            updated.splice(index, 1);
         } else {
-            const index = modelValue.value.indexOf(value[props.itemValue]);
-            modelValue.value.splice(index, 1);
+            const index = updated.indexOf(value[props.itemValue]);
+            updated.splice(index, 1);
         }
+        emits('update:modelValue', updated);
     }
 
     function lightReset(event) {
@@ -273,7 +269,7 @@ export function useAutocomplete(props, emits, modelValue, items, itemsPerInterse
     }
 
     function checkDisabled(item) {
-        return item.disabledItem ? true : false;
+        return item.disabled ? true : false;
     }
 
     return {

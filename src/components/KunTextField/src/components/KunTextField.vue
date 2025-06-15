@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex flex-col relative">
+  <div class="w-full flex flex-col relative" ref="rootRef">
     <!-- Label -->
     <label v-if="label" :for="uid" :class="[labelColor, 
       'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
@@ -23,8 +23,8 @@
         <!-- Input -->
         <input ref="inputField" :type="inputType" :value="inputValue" :id="uid" :placeholder="placeholder"
           :disabled="disabled" :readonly="readonly" :maxlength="maxlength" autocomplete="off"
-          class="w-full h-full bg-transparent rounded focus:outline-none p-3" :aria-invalid="hasError ? 'true' : 'false'"
-          :class="[textColor, placeholderColor, textCenter ? 'text-center' : '']"
+          class="w-full h-full bg-transparent focus:outline-none p-3" :aria-invalid="hasError ? 'true' : 'false'"
+          :class="[textColor, placeholderColor, rounded, textCenter ? 'text-center' : '']"
           :aria-describedby="hasError ? `error-${uid}` : null" 
           @input="handleInput" @blur="handleBlur" 
           @focus="focusInput" @click.stop="emits('handleClick')" 
@@ -89,6 +89,7 @@ const emits = defineEmits([
 const {
   inputField,
   inputValue,
+  rootRef,
   inputFocused,
   validationError,
   hasError,
@@ -105,7 +106,8 @@ defineExpose({
   validate,
   reset,
   resetValidation,
-  inputField
+  inputField,
+  rootRef
 });
 
 const uid = `input-${getCurrentInstance().uid}`;

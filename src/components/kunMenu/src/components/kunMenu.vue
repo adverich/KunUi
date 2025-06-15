@@ -1,17 +1,11 @@
 <template>
   <Teleport v-if="attach !== true" :to="attach || 'body'">
     <transition :name="transition">
-      <div
-        v-show="menuVisible"
-        ref="contentEl"
-        role="menu"
-        tabindex="-1"
-        class="relative shadow-xl overflow-y-auto focus:outline-none z-50 bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
+      <div v-show="menuVisible" ref="contentEl" role="menu" tabindex="-1"
+        class="relative shadow-xl rounded-b overflow-y-auto focus:outline-none bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
         :class="[contentClass, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex]"
-        :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }"
-        v-bind="contentProps"
-        @keydown.escape.stop="handleEscape"
-      >
+        :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }" v-bind="contentProps"
+        @keydown.escape.stop="handleEscape">
         <slot />
       </div>
     </transition>
@@ -41,7 +35,6 @@ const {
   initializeMenu,
   repositionMenu,
   contentEl,
-  activatorEl,
   originClass,
   computedMaxHeight,
   menuPositionStyle,
@@ -54,7 +47,7 @@ const { addEventListeners, removeEventListeners } = onClickOutside(
     hideMenu()
     emits('click:outside')
   },
-  [activatorEl]
+  [props.parentRef?.$el]
 )
 
 onMounted(() => {
@@ -100,7 +93,7 @@ function preventBodyScrollWhenAtEdge(e) {
 }
 
 function cleanupActivatorListeners() {
-  const el = activatorEl.value
+  const el = props.parentRef?.$el
   if (el) {
     el.removeEventListener('click', handleActivatorClick)
     el.removeEventListener('mouseenter', () => handleHover('enter'))
@@ -119,6 +112,7 @@ onBeforeUnmount(() => {
 .fade-leave-active {
   transition: opacity 0.2s ease;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
@@ -128,6 +122,7 @@ onBeforeUnmount(() => {
 .slide-y-leave-active {
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
+
 .slide-y-enter-from,
 .slide-y-leave-to {
   transform: translateY(-8px);
@@ -144,7 +139,8 @@ div::-webkit-scrollbar-track {
 }
 
 div::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 116, 139, 0.5); /* gris semi-transparente */
+  background-color: rgba(100, 116, 139, 0.5);
+  /* gris semi-transparente */
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: content-box;

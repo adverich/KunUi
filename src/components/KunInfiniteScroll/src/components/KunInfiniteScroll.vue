@@ -72,22 +72,31 @@ onMounted(() => {
 
 <template>
   <div class="w-full h-full overflow-auto" ref="scrollContainer">
-    <component
-        v-if="virtual"
-        :is="KunVirtualScroller"
-        :items="visibleItems"
-        :estimated-item-height="itemSize"
-        :scroll-to-index="scrollToIndex"
-        class="virtual-list"
-    >
+      <component
+          v-if="virtual"
+          :is="KunVirtualScroller"
+          :items="visibleItems.length ? visibleItems : [{}]"
+          :estimated-item-height="itemSize"
+          :scroll-to-index="scrollToIndex"
+          class="virtual-list"
+      >
         <template #default="{ item, index }">
-            <slot :item="item" :index="index" />
+          <slot
+            :item="visibleItems.length ? item : null"
+            :index="visibleItems.length ? index : null"
+            :empty="!visibleItems.length"
+          />
         </template>
-    </component>
+      </component>
 
     <template v-else>
-      <template v-for="item in visibleItems">
-        <slot :item="item" />
+      <template v-if="visibleItems.length">
+        <template v-for="(item, index) in visibleItems" :key="item.id ?? index">
+          <slot :item="item" :index="index" :visible-items="visibleItems" />
+        </template>
+      </template>
+      <template v-else>
+        <slot :visible-items="visibleItems" />
       </template>
     </template>
     <div ref="sentinel" class="w-full h-1" />

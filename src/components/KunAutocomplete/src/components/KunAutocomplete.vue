@@ -1,64 +1,61 @@
 <template>
-  <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef" autocomplete="off" 
-    @update:modelValue="txtUpdated"
-    @focusInput="txtFocused" 
-    @handleClick="toggleMenu"
-    @blur="textFieldBlur"
-    @keyDown="textKeyDown"
-    :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder" :error="!!internalError"
-  :error-messages="internalError">
-    <div v-if="isArray(modelValue)" class="flex justify-center align-center">
-      <template v-for="item in modelValue" :key="item.id ?? item.name">
-        <KunChip size="small" class="ml-1">
-          <div class="flex justify-center align-center">
-            {{ getItemText(item, itemTitle) }}
-            <KunIcon color="error" :icon="icons.close" size="small" class="ml-1" @click="removeItem(item)" />
-          </div>
-        </KunChip>
+  <div class="w-full h-fit" ref="parentRef">
+    <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
+      autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
+      @blur="textFieldBlur" @keyDown="textKeyDown"
+      :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
+      :error="!!internalError" :error-messages="internalError">
+      <div v-if="isArray(modelValue)" class="flex justify-center align-center">
+        <template v-for="item in modelValue" :key="item.id ?? item.name">
+          <KunChip size="small" class="ml-1">
+            <div class="flex justify-center align-center">
+              {{ getItemText(item, itemTitle) }}
+              <KunIcon color="error" :icon="icons.close" size="small" class="ml-1" @click="removeItem(item)" />
+            </div>
+          </KunChip>
+        </template>
+      </div>
+
+      <template v-if="hasIcons" v-slot:append-inner>
+        <KunIcon v-if="clearable && modelValue" @click="clearSelection" size="small" color="error" :icon="icons.close"
+          class="mr-1 mt-1" />
+        <KunIcon color="teal-darken-1" size="large" class="cursor-pointer"
+          :icon="menuModel ? icons.menuUpOutline : icons.menuDownOutline" @click.stop="openMenu" />
+        <KunIcon v-if="required" color="teal-darken-1" size="x-small" class="mb-4" :icon="icons.asterisk" />
       </template>
-    </div>
 
-    <template v-if="hasIcons" v-slot:append-inner>
-      <KunIcon v-if="clearable && modelValue" @click="clearSelection" size="small" color="error" :icon="icons.close" class="mr-1 mt-1" />
-      <KunIcon color="teal-darken-1" size="large" class="cursor-pointer" :icon="menuModel ? icons.menuUpOutline : icons.menuDownOutline" @click.stop="openMenu" />
-      <KunIcon v-if="required" color="teal-darken-1" size="x-small" class="mb-4" :icon="icons.asterisk" />
-    </template>
-
-    <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :parent-ref="textFieldRef" 
-    @handleEscape="handleEscape" :close-on-content-click="closeOnSelect" :max-height="maxHeight" :hide-details="hideDetails">
-      <KunList @update:selected="getSelectedItem" @click:select="lightReset()" ref="listRef" @keyDown="handleKeyList">
-        <KunListItem v-if="hasCreateItem">
-          <KunBtn @click="createItem" class="w-full" color="bg-green-400">
-            Crear item
-          </KunBtn>
-        </KunListItem>
-        <KunInfiniteScroll
-          :items="items"
-          :search="search"
-          :searchable-keys="props.searchableKeys"
-          :items-per-intersection="10"
-          :enabled="menuModel"
-          :virtual="false"
-          :item-height="48"
-          v-slot="{ item, index }"
-        >
-          <KunListItem
-            :value="item"
-            :key="item.id?.toString() ?? item.name"
-            :disabled="checkDisabled(item)"
-            :class="itemListBg(item)"
-            :density="density"
-            :id="item.id?.toString() ?? item.name"
-          >
-            <KunListItemTitle class="text-wrap">
-              {{ itemToString(item, textArr, 'hasDefault') }}
-            </KunListItemTitle>
-            <KunListItemSubtitle v-text="itemSubtitle ? itemToString(item, itemSubtitle) : ''" />
+      <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :z-index="zIndex"
+        :parent-ref="parentRef" location="bottom" origin="bottom left" @handleEscape="handleEscape"
+        :close-on-content-click="closeOnSelect" :max-height="maxHeight" :hide-details="hideDetails">
+        <KunList @update:selected="getSelectedItem" @click:select="lightReset()" ref="listRef" @keyDown="handleKeyList">
+          <KunListItem v-if="hasCreateItem">
+            <KunBtn @click="createItem" class="w-full" color="bg-green-400">
+              Crear item
+            </KunBtn>
           </KunListItem>
-        </KunInfiniteScroll>
-      </KunList>
-    </KunMenu>
-  </KunTextField>
+          <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
+            :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="{ item, index, empty }">
+            <template v-if="!empty && item">
+              <KunListItem :value="item" :key="item.id?.toString() ?? item.name" :disabled="checkDisabled(item)"
+                :class="itemListBg(item)" :density="density" :id="item.id?.toString() ?? item.name">
+                <KunListItemTitle class="text-wrap">
+                  {{ itemToString(item, itemTitle ?? textArr, 'hasDefault') }}
+                </KunListItemTitle>
+                <KunListItemSubtitle v-text="itemSubtitle ? itemToString(item, itemSubtitle) : ''" />
+              </KunListItem>
+            </template>
+            <template v-else>
+              <KunListItem disabled>
+                <KunListItemTitle class="text-center w-full text-gray-500">
+                  No hay elementos disponibles
+                </KunListItemTitle>
+              </KunListItem>
+            </template>
+          </KunInfiniteScroll>
+        </KunList>
+      </KunMenu>
+    </KunTextField>
+  </div>
 </template>
 
 <script setup>
@@ -88,13 +85,20 @@ const props = defineProps(KunAutocompleteProps);
 const emits = defineEmits(["selectedItem", "createItem", "validation", "search"]);
 
 const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, closeMenu, toggleMenu, onMenuKeydown,
-  getSelectedItem, textArr, getItemText, isAlphanumeric, 
-  createItem, checkDisabled, itemToString, placeholder, hasCreateItem, 
+  getSelectedItem, textArr, getItemText, isAlphanumeric,
+  createItem, checkDisabled, itemToString, placeholder, hasCreateItem,
 } = useAutocomplete(props, emits, modelValue, items);
 
 onMounted(() => {
-  if(props.focusOnRender) textFieldRef.value.focus();
+  if (props.focusOnRender) textFieldRef.value.focus();
 });
+
+const parentRef = ref(null);
+// watchEffect(() => {
+//   if (textFieldRef.value?.rootRef) {
+//     parentRef.value = textFieldRef.value.rootRef;
+//   }
+// });
 
 function itemListBg(item) {
   if (modelValue.value === null || modelValue.value === undefined) return props.bgItemListColor;
@@ -132,7 +136,7 @@ function handleEscape() {
   textFieldRef.value.inputField?.focus();
 }
 
-function textKeyDown(e){
+function textKeyDown(e) {
   const key = e.key
 
   if (key === 'Tab' || key === 'Shift') {
@@ -145,8 +149,8 @@ function textKeyDown(e){
   }
 
   if (['ArrowUp', 'ArrowDown'].includes(key)) {
-     e.preventDefault();
-    if(!menuModel.value) openMenu();
+    e.preventDefault();
+    if (!menuModel.value) openMenu();
     listRef.value?.focusWithKey?.(key);
   }
 }
@@ -164,7 +168,7 @@ function handleKeyList(event) {
   onMenuKeydown(event);
 }
 
-function textFieldBlur(){
+function textFieldBlur() {
   // SE MANTIENE LA FUNCINOALIDAD TEMPORALMENTE POR SI SE NECESITA, SINO SERA ELIMINADO
 }
 </script>

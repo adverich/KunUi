@@ -83,19 +83,13 @@ export const KunAutocompleteProps = {
   },
 
   // ***** STYLE ***** //
-  height: {
-    default: 500,
-  },
-  maxHeight: {
-    default: 500,
-  },
-  density: {
-    type: String,
-    default: "comfortable",
-  },
+  height: { default: 500 },
+  maxHeight: { default: 500 },
+  density: { type: String, default: "comfortable" },
+  zIndex: { type: String, default: "z-50" },
   hideDetails: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   hasIcons: {
     type: Boolean,

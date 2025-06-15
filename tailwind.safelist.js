@@ -105,6 +105,11 @@ const utilityClasses = [
     'xl:col-span-10',
     'xl:col-span-11',
     'xl:col-span-12',
+
+    'origin-top-left', 'origin-top', 'origin-top-right',
+    'origin-bottom-left', 'origin-bottom', 'origin-bottom-right',
+    'origin-left-top', 'origin-left', 'origin-left-bottom',
+    'origin-right-top', 'origin-right', 'origin-right-bottom'
 ]
 
 module.exports = [...utilityClasses]
