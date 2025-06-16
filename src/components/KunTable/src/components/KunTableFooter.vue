@@ -48,6 +48,7 @@ const next = () => {
         @change="emit('update:itemsPerPage', +$event.target.value)"
       >
         <option
+          class="bg-slate-200 dark:bg-slate-800"
           v-for="option in pageOptions"
           :key="option"
           :value="option"

@@ -7,7 +7,7 @@ import KunAppbarTitle from './components/KunAppbarTitle/src/components/KunAppbar
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunAvatar from './components/KunAvatar/src/components/KunAvatar.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
-import KunBudge from './components/KunBudge/src/components/KunBudge.vue';
+import KunBadge from './components/KunBadge/src/components/KunBadge.vue';
 import KunCard from './components/KunCard/src/components/KunCard.vue';
 import KunCardActions from './components/KunCardActions/src/components/KunCardActions.vue';
 import KunCardItem from './components/KunCardItem/src/components/KunCardItem.vue';
@@ -50,7 +50,7 @@ const components = {
   KunAutocomplete,
   KunAvatar,
   KunBtn,
-  KunBudge,
+  KunBadge,
   KunCard,
   KunCardActions,
   KunCardItem,
@@ -94,7 +94,7 @@ export {
   KunAutocomplete,
   KunAvatar,
   KunBtn,
-  KunBudge,
+  KunBadge,
   KunCard,
   KunCardActions,
   KunCardItem,

@@ -28,8 +28,13 @@
       :key="header.value"
       :class="[mergedTdClass, header.align === 'right' ? 'text-right' : header.align === 'center' ? 'text-center' : 'text-left']"
     >
-      <slot :name="`item.${header.value}`" :item="item" :value="item[header.value]" :index="index">
-        {{ item[header.value] ?? 'Sin datos' }}
+      <slot 
+        :name="`item.${header.value}`"
+        :item="item"
+        :value="getValue(header, item)"
+        :index="index"
+      >
+        {{ formatValue(header, getValue(header, item)) }}
       </slot>
     </td>
 
@@ -41,6 +46,7 @@
 </template>
 
 <script setup>
+import { getValue, formatValue } from '@/utils/tableFormatters';
 const props = defineProps({
   item: Object,
   index: Number,
@@ -61,7 +67,7 @@ const props = defineProps({
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 
-const baseRowClass = 'hover:bg-slate-300 dark:hover:bg-slate-600';
+const baseRowClass = 'hover:bg-slate-300 dark:hover:bg-slate-600 border-t border-slate-300 dark:border-slate-700';
 const baseTrClass = '';
 const mergedTableClass = [
   baseRowClass, baseTrClass, props.rowClass, props.trClass, props.stripedClass, props.isSelected ? props.selectedClass : ''

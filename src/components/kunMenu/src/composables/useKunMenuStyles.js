@@ -15,9 +15,34 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
         return locationMap[props.location]?.class || 'origin-top'
     })
 
+    // function repositionMenu(attempt = 0) {
+    //     const parentEl = props.parentRef;
+    //     if (!(parentEl instanceof HTMLElement)) return;
+
+    //     const parentRect = parentEl.getBoundingClientRect();
+
+    //     if ((parentRect.width < 10 || parentRect.height < 10) && attempt < 10) {
+    //         requestAnimationFrame(() => repositionMenu(attempt + 1));
+    //         return;
+    //     }
+
+    //     // Ajustamos la posición con compensación del scrollbar si es necesario
+    //     const scrollbarWidth = parentEl.offsetWidth - parentEl.clientWidth;
+    //     const pxHideDetails = props.hideDetails ? 0 : 19;
+
+    //     menuPositionStyle.value = {
+    //         position: 'absolute',
+    //         top: `${parentRect.bottom - pxHideDetails}px`,
+    //         left: `${parentRect.left}px`,
+    //         width: `${parentRect.width + scrollbarWidth}px`
+    //     };
+    // }
+
     function repositionMenu(attempt = 0) {
         const parentEl = props.parentRef;
-        if (!(parentEl instanceof HTMLElement)) return;
+        const content = contentEl.value;
+
+        if (!(parentEl instanceof HTMLElement) || !content) return;
 
         const parentRect = parentEl.getBoundingClientRect();
 
@@ -26,24 +51,54 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
             return;
         }
 
-        // Optional: compensar si hay padding del padre que empuja visualmente
-        // const parent = parentEl.parentElement;
-        // const computedStyles = parent ? window.getComputedStyle(parent) : {};
-        // const paddingBottom = parseFloat(computedStyles.paddingBottom || '0');
-        // const marginBottom = parseFloat(computedStyles.marginBottom || '0');
-        // const extraOffset = paddingBottom + marginBottom;
+        requestAnimationFrame(() => {
+            const contentRect = content.getBoundingClientRect();
+            const contentWidth = contentRect.width || content.offsetWidth || 0;
+            const contentHeight = contentRect.height || content.offsetHeight || 0;
 
-        // Ajustamos la posición con compensación del scrollbar si es necesario
-        const scrollbarWidth = parentEl.offsetWidth - parentEl.clientWidth;
-        const pxHideDetails = props.hideDetails ? 0 : 19;
+            const scrollbarWidth = parentEl.offsetWidth - parentEl.clientWidth;
+            const pxHideDetails = props.hideDetails ? 0 : 19;
 
-        menuPositionStyle.value = {
-            position: 'absolute',
-            top: `${parentRect.bottom - pxHideDetails}px`,
-            left: `${parentRect.left}px`,
-            width: `${parentRect.width + scrollbarWidth}px`
-        };
+            let top = parentRect.bottom - pxHideDetails;
+            let left = parentRect.left;
+
+            const origin = props.origin || 'auto';
+
+            if (origin.includes('right')) {
+                left = parentRect.right - contentWidth;
+            } else if (origin.includes('center')) {
+                left = parentRect.left + (parentRect.width / 2) - (contentWidth / 2);
+            } else {
+                left = parentRect.left;
+            }
+
+            if (origin.includes('top')) {
+                top = parentRect.top - contentHeight;
+            } else if (origin.includes('center')) {
+                top = parentRect.top + (parentRect.height / 2) - (contentHeight / 2);
+            } else {
+                top = parentRect.bottom - pxHideDetails;
+            }
+
+            console.log('[KunMenu] Posición calculada:', {
+                origin,
+                contentWidth,
+                contentHeight,
+                parentRight: parentRect.right,
+                calculatedLeft: left,
+            });
+
+            menuPositionStyle.value = {
+                position: 'absolute',
+                top: `${top}px`,
+                left: `${left}px`,
+                width: props.width === 'w-full' ? `${parentRect.width + scrollbarWidth}px` : undefined,
+            };
+        });
     }
+
+
+
 
     function initializeMenu() {
         const el = props.parentRef?.$el || contentEl.value?.parentElement

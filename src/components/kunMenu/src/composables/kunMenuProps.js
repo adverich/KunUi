@@ -22,10 +22,6 @@ export const kunMenuProps = {
     },
     contained: Boolean,
     contentClass: [String, Array, Object],
-    contentProps: {
-        type: Object,
-        default: () => ({})
-    },
     disabled: Boolean,
     eager: Boolean,
     height: [String, Number],

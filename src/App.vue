@@ -5,27 +5,33 @@
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
           icon-color="bg-blue-500" @update:model-value="setTheme" />
 
-        <KunIcon color="text-red-500" :icon="IconClose" />
-
-        <KunAvatar class="bg-blue-800" @click="menuModel = true" ref="avatarRef">
-          <KunIcon :icon="IconAccountOutline" />
-          
-          <KunMenu activator="parent" v-model="menuModel" :parent-ref="avatarRef" location="bottom"
-            origin="bottom right" minWidth="min-w-96" width="w-96" maxWidth="max-w-96">
-            <KunList>
-              <KunListItem>Hola mundo</KunListItem>
-              <KunListItem>Hola mundo dos</KunListItem>
-            </KunList>
-          </KunMenu>
-        </KunAvatar>
+        <div class="h-15 w-max" ref="avatarRef">
+          <KunAvatar class="bg-transparent" @click="menuModel = true">
+            <KunIcon :icon="IconAccountOutline" />
+            <KunMenu activator="parent" v-model="menuModel" :parent-ref="avatarRef" z-index="z-[2000]"
+              location="bottom" origin="bottom right" 
+              minWidth="min-w-48" width="w-64" maxWidth="max-w-64"
+            >
+              <KunList>
+                <KunListItem>Hola mundo</KunListItem>
+                <KunListItem>Hola mundo dos</KunListItem>
+              </KunList>
+            </KunMenu>
+          </KunAvatar>
+        </div>
       </template>
     </KunAppbar>
 
     <div class="w-full h-full flex flex-col" style="overflow: hidden!important;">
-      <div class="flex w-full py-2">
+      <div class="flex w-1/2 py-2">
         <KunAutocomplete v-model="selected" activator="parent" :items="products" item-title="name" item-value="id"
           item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"
         />
+        <div class="flex w-1/2 py-2">
+          <KunBadge text="12">
+            <KunBtn text="CUACK"/>
+          </KunBadge>
+        </div>
       </div>
 
         <div class="h-full w-full overflow-auto">
@@ -33,6 +39,28 @@
           :searchableKeys="['name']" show-expand hasActions :action-loading-map="actionLoading">
             <template #expand="{ item }">
               <div class="bg-slate-800 text-blue-500 text-center py-1">{{ item.name }}</div>
+            </template>
+
+            <template #item.invoice_payments="{ item, header }">
+              <div class="flex flex-wrap gap-2">
+                <KunBadge
+                  v-for="(obj, i) in item[header.chipsProps.source]"
+                  :key="i"
+                  :content="obj[header.chipsProps.subtitle]"
+                  color="green-darken-3"
+                  location="top right"
+                  offset-y="-5"
+                >
+                  <KunChip
+                    color="green-darken-4"
+                    density="comfortable"
+                    variant="flat"
+                    elevation="5"
+                  >
+                    {{ obj[header.chipsProps.title] }}
+                  </KunChip>
+                </KunBadge>
+              </div>
             </template>
 
             <template #item.actions="{ item, loading }">
@@ -108,6 +136,9 @@ import KunAvatar from './components/KunAvatar/src/components/KunAvatar.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunTable from './components/KunTable/src/components/KunTable.vue';
 import KunTooltip from './components/KunTooltip/src/components/KunTooltip.vue';
+import KunBadge from './components/KunBadge/src/components/KunBadge.vue';
+import KunChip from './components/KunChip/src/components/KunChip.vue';
+
 const menuModel = ref(false);
 const avatarRef = ref(null);
 
@@ -115,7 +146,7 @@ const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
 const productFamilies = ref(generateFakeFamilies(100));
 const productMkups = ref(generateFakeMkups(5));
-const products = ref(generateFakeProductsFull(25000));
+const products = ref(generateFakeProductsFull(10000));
 
 const currentTheme = ref('dark')
 const loader = ref(false)
@@ -130,6 +161,10 @@ function setMin() {
 }
 setMin();
 
+function getTotalAmount(item){
+  return Number(item.stock) * Number(item.price_base);
+}
+
 const headers = [
   {value: 'bar_code', label: 'CB', sortable: true, align: 'center', headerAlign: 'center' },
   {value: 'fullName', label: 'Producto', sortable: true, headerAlign: 'center' },
@@ -137,7 +172,8 @@ const headers = [
   {value: 'measurement_unit_id', label: 'Unidad', align: 'center', headerAlign: 'center' },
   // {value: 'product_brand', label: 'Marca', align: 'center', headerAlign: 'center' },
   {value: 'price_base', label: 'Precio', align: 'center', headerAlign: 'center' },
-  {value: 'total_price', label: 'Precio total', align: 'center', headerAlign: 'center' },
+  {value: 'total_price', label: 'Precio total', align: 'center', headerAlign: 'center', columnType: 'function', columnFunction: getTotalAmount, columnFormat: 'money' },
+  {value: 'created_at', label: 'Fecha', align: 'center', headerAlign: 'center', columnFormat: 'dateTime' },
 ]
 const filters = [
   { value: 'product_category_id', label: 'Categoria', title: 'name', items: productCategories.value, placeholder: 'Seleccionar categorias' },
@@ -224,7 +260,7 @@ function generateFakeProductsFull(count = 100) {
     const created_at = randomDate(new Date(2023, 0, 1), now);
     const updated_at = randomDate(new Date(2024, 0, 1), now);
 
-    const stockValue = (-30 - (i % 50)).toFixed(2);
+    const stockValue = (30 + (i % 50)).toFixed(2);
 
     const name = `Producto Prueba ${i}`;
     const fullName = `RASSIT - ${name} 1 UN`;
