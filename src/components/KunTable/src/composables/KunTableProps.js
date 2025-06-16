@@ -7,7 +7,19 @@ export default () => ({
         type: Array,
         default: () => [],
     },
-    loading: Boolean,
+    hasActions: {
+        type: Boolean,
+        default: false,
+    },
+    actionLabel: {
+        type: String,
+        default: 'Acciones',
+    },
+    actionsAlign: String,
+    actionLoadingMap: {
+        type: Object,
+        default: () => ({}), // ej. { 3: true, 5: false }
+    },
     filterable: Boolean,
     filters: {
         type: Array,

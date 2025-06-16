@@ -32,6 +32,11 @@
         {{ item[header.value] }}
       </slot>
     </td>
+
+    <!-- Action space -->
+    <td v-if="hasActions" :class="[mergedTdClass, actionsAlign]">
+      <slot name="item.actions" :item="item" :index="index" :loading="loading" />
+    </td>
   </tr>
 </template>
 
@@ -48,7 +53,10 @@ const props = defineProps({
   tdClass: String,
   selectedClass: String,
   stripedClass: String,
-  isSelected: Boolean
+  isSelected: Boolean,
+  hasActions: Boolean,
+  actionsAlign: String,
+  loading: Boolean,
 });
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);

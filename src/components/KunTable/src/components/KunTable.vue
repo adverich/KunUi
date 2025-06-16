@@ -10,7 +10,7 @@
                 'justify-end flex': searchPosition === 'end'
             }"
         >
-            <KunBtn v-if="filterable" @click="modalFilter = true" text="Filtrar"/>
+            <KunBtn v-if="filterable" @click="modalFilter = true" text="Filtrar" />
 
             <input
                 v-if="searchable"
@@ -36,6 +36,8 @@
                 :thead-class="theadClass"
                 :tr-class="trClass"
                 :th-class="thClass"
+                :has-actions="hasActions"
+                :action-label="actionLabel"
                 @sort="updateSort"
                 @toggle-select-all="toggleSelectAll"
             />
@@ -55,6 +57,8 @@
                 :show-select="showSelect"
                 :show-expand="showExpand"
                 :headers="headers"
+                :has-actions="hasActions"
+                :action-loading-map="actionLoadingMap"
                 @toggle-expand="toggleExpand"
                 @toggle-select="toggleSelect"
             >
@@ -144,6 +148,7 @@ const slotProps = computed(() => ({
   toggleExpand,
   isExpanded,
   sortBy: options.sortBy,
+  hasActions: props.hasActions,
 }));
 
 const baseWrapperClass = 'overflow-auto h-full w-full flex flex-col border border-gray-200 rounded';

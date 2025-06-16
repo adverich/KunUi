@@ -9,13 +9,16 @@
         :showSelect="showSelect"
         :is-selected="isSelected(item)"
         :is-expanded="isExpanded(item)"
+        :has-actions="hasActions"
+        :loading="actionLoadingMap[item.id] || false"
         v-bind="$attrs"
       >
         <template
           v-for="(_, name) in $slots"
           #[name]="slotProps"
         >
-          <slot :name="name" v-bind="slotProps" />
+          <!-- <slot name="item.actions" :item="item" :index="index" :loading="loading" /> -->
+          <slot :name="name" v-bind="{ ...slotProps, item, index, loading: actionLoadingMap?.[item.id] || false }" />
         </template>
       </KunTableRow>
 
@@ -53,6 +56,9 @@ const props = defineProps({
   headers: Array,
   showExpand: Boolean,
   showSelect: Boolean,
+  hasActions: Boolean,
+  loading: Boolean,
+  actionLoadingMap: Object,
 });
 
 const baseTbodyClass = 'table-auto w-full h-full text-sm text-left';

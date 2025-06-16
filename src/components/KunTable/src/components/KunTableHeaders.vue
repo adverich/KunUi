@@ -38,6 +38,11 @@
           </span>
         </slot>
       </th>
+
+      <!-- Headers actions -->
+      <th v-if="hasActions" :class="[mergedThClass]">
+        {{ actionLabel }}
+      </th>
     </tr>
   </thead>
 </template>
@@ -53,6 +58,8 @@ const props = defineProps({
   theadClass: String,
   trClass: String,
   thClass: String,
+  hasActions: Boolean,
+  actionLabel: String,
 });
 
 const emits = defineEmits(['toggle-select-all', 'sort', 'expandAll', 'collapseAll']);

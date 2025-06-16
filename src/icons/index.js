@@ -10,6 +10,8 @@ import IconStar from './IconStar.vue'
 import IconEyeOutline from './IconEyeOutline.vue'
 import IconEyeOffOutline from './IconEyeOffOutline.vue'
 import IconAccountOutline from './IconAccountOutline.vue'
+import IconPencil from './IconPencil.vue'
+import IconTrashOutline from './IconTrashOutline.vue'
 export const icons = {
     asterisk: IconAsterisk,
     check: IconCheck,
@@ -23,4 +25,6 @@ export const icons = {
     eyeOutline: IconEyeOutline,
     eyeOffOutline: IconEyeOffOutline,
     accountOutline: IconAccountOutline,
+    pencil: IconPencil,
+    trashOutline: IconTrashOutline,
 }

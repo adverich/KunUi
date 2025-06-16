@@ -22,16 +22,26 @@
     </KunAppbar>
 
     <div class="w-full h-full flex flex-col" style="overflow: hidden!important;">
-      <div class="flex w-full">
+      <div class="flex w-full py-2">
         <KunAutocomplete v-model="selected" activator="parent" :items="products" item-title="name" item-value="id"
           item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"
         />
       </div>
 
         <div class="h-full w-full overflow-auto">
-          <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect :searchableKeys="['name']" show-expand>
+          <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect 
+          :searchableKeys="['name']" show-expand hasActions :action-loading-map="actionLoading">
             <template #expand="{ item }">
               <div class="bg-slate-800 text-blue-500 text-center py-1">{{ item.name }}</div>
+            </template>
+
+            <template #item.actions="{ item, loading }">
+              <KunBtn @click="editItem(item)" :loading="loading?.edit" :disabled="loading?.delete" >
+                <KunIcon :icon="IconPencil" />
+              </KunBtn>
+              <KunBtn @click="deleteItem(item)" :loading="loading?.delete" :disabled="loading?.edit" >
+                <KunIcon :icon="IconTrashOutline" />
+              </KunBtn>
             </template>
           </KunTable>
         </div>
@@ -77,6 +87,8 @@ import KunNumberField from './components/KunNumberField/src/components/KunNumber
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import IconAccountOutline from './icons/IconAccountOutline.vue';
 import IconClose from './icons/IconClose.vue';
+import IconPencil from './icons/IconPencil.vue';
+import IconTrashOutline from './icons/IconTrashOutline.vue';
 import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunList from './components/KunList/src/components/KunList.vue';
@@ -322,6 +334,20 @@ function generateFakeProductsFull(count = 100) {
   return products;
 }
 
+const actionLoading = ref({})
+function editItem(value){
+  if (!actionLoading.value[value.id]) actionLoading.value[value.id] = {};
+  actionLoading.value[value.id].edit = true;
+  console.log('editing item');
+  console.log(value);
+}
+
+function deleteItem(value){
+  if (!actionLoading.value[value.id]) actionLoading.value[value.id] = {};
+  actionLoading.value[value.id].delete = true;
+  console.log('deleteing item');
+  console.log(value);
+}
 
 function setTheme(theme) {
   const html = document.documentElement;
