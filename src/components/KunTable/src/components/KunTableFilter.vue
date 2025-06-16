@@ -11,7 +11,7 @@
                     <KunAutocomplete multiple v-model="selectedFilters[filter.value]" :items="filter.items" item-value="id" :item-title="filter.title" z-index="z-250" :text-no-items="filter.textNoItem" />
                 </KunCol>
             </KunRow>
-            <div class="flex justify-around">
+            <div class="flex justify-end mt-8 p-2 gap-x-2">
                 <KunBtn @click="clearFilters">
                     Limpiar filtros
                 </KunBtn>

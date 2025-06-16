@@ -40,7 +40,7 @@
       </th>
 
       <!-- Headers actions -->
-      <th v-if="hasActions" :class="[mergedThClass]">
+      <th v-if="hasActions" :class="[mergedThClass]" class="text-center">
         {{ actionLabel }}
       </th>
     </tr>
@@ -80,12 +80,12 @@ function isSorted(header) {
   return props.sortBy?.key === header.key;
 }
 
-const baseTheadClass = 'bg-slate-800 sticky top-0 z-5';
+const baseTheadClass = 'bg-slate-200 dark:bg-slate-800 sticky top-0 z-5';
 const mergedTheadClass = [baseTheadClass, props.theadClass];
 
 const baseTrClass = '';
 const mergedTrClass = [baseTrClass, props.trClass];
 
-const baseThClass = 'px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider';
+const baseThClass = 'px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 uppercase tracking-wider';
 const mergedThClass = [baseThClass, props.thClass];
 </script>

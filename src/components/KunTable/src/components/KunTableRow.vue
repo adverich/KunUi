@@ -29,7 +29,7 @@
       :class="[mergedTdClass, header.align === 'right' ? 'text-right' : header.align === 'center' ? 'text-center' : 'text-left']"
     >
       <slot :name="`item.${header.value}`" :item="item" :value="item[header.value]" :index="index">
-        {{ item[header.value] }}
+        {{ item[header.value] ?? 'Sin datos' }}
       </slot>
     </td>
 

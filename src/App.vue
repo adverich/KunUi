@@ -131,12 +131,13 @@ function setMin() {
 setMin();
 
 const headers = [
-  {value: 'bar_code', label: 'CB', sortable: true },
-  {value: 'fullName', label: 'Producto', sortable: true },
-  {value: 'amount_content', label: 'contenido', align: 'center' },
-  {value: 'measurement_unit_id', label: 'Unidad', align: 'center' },
+  {value: 'bar_code', label: 'CB', sortable: true, align: 'center', headerAlign: 'center' },
+  {value: 'fullName', label: 'Producto', sortable: true, headerAlign: 'center' },
+  {value: 'amount_content', label: 'contenido', align: 'center', headerAlign: 'center' },
+  {value: 'measurement_unit_id', label: 'Unidad', align: 'center', headerAlign: 'center' },
   // {value: 'product_brand', label: 'Marca', align: 'center', headerAlign: 'center' },
-  {value: 'price_base', label: 'Precio', align: 'center' },
+  {value: 'price_base', label: 'Precio', align: 'center', headerAlign: 'center' },
+  {value: 'total_price', label: 'Precio total', align: 'center', headerAlign: 'center' },
 ]
 const filters = [
   { value: 'product_category_id', label: 'Categoria', title: 'name', items: productCategories.value, placeholder: 'Seleccionar categorias' },

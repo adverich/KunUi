@@ -3,21 +3,21 @@
         <!-- Barra de búsqueda -->
         <div
             v-if="searchable || filterable"
-            class="py-2 px-4 bg-slate-800"
+            class="py-2 px-4 bg-slate-200 dark:bg-slate-800"
             :class="{
                 'justify-start flex': searchPosition === 'start',
                 'justify-center flex': searchPosition === 'center',
                 'justify-end flex': searchPosition === 'end'
             }"
         >
-            <KunBtn v-if="filterable" @click="modalFilter = true" text="Filtrar" />
+            <KunBtn v-if="filterable" @click="modalFilter = true" text="Filtrar" bgColor="bg-slate-300 dark:bg-slate-700" />
 
             <input
                 v-if="searchable"
                 v-model="searchQuery"
                 type="text"
                 :placeholder="searchPlaceholder"
-                class="border px-3 py-1 rounded w-full max-w-sm text-sm"
+                class="border mx-2 px-3 py-1 rounded w-full max-w-sm text-sm"
             />
         </div>
 
