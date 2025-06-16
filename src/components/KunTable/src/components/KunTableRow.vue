@@ -34,7 +34,7 @@
     </td>
 
     <!-- Action space -->
-    <td v-if="hasActions" :class="[mergedTdClass, actionsAlign]">
+    <td v-if="hasActions" :class="[mergedTdClass, mergedActionsClass]">
       <slot name="item.actions" :item="item" :index="index" :loading="loading" />
     </td>
   </tr>
@@ -61,12 +61,13 @@ const props = defineProps({
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 
-const baseRowClass = 'hover:bg-slate-600';
+const baseRowClass = 'hover:bg-slate-300 dark:hover:bg-slate-600';
 const baseTrClass = '';
 const mergedTableClass = [
   baseRowClass, baseTrClass, props.rowClass, props.trClass, props.stripedClass, props.isSelected ? props.selectedClass : ''
 ];
 
-const baseTdClass = 'px-3 py-2 whitespace-nowrap text-sm text-gray-700 hover:bg-slate-600';
+const baseTdClass = 'px-3 py-2 whitespace-nowrap text-sm text-black dark:text-white ';
 const mergedTdClass = [baseTdClass, props.tdClass];
+const mergedActionsClass = ['text-center', props.actionsAlign]
 </script>

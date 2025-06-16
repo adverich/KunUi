@@ -36,14 +36,14 @@ const next = () => {
 </script>
 
 <template>
-  <div class="flex items-center justify-between p-2 text-sm border-t border-gray-200 bg-gray-50">
-    <div class="text-gray-600">
+  <div class="flex items-center justify-between p-2 text-sm border-t border-slate-300 dark:border-slate-700  bg-slate-50 dark:bg-slate-900">
+    <div class="text-balck dark:text-white">
       Mostrando {{ start }} - {{ end }} de {{ itemsLength }}
     </div>
 
     <div class="flex items-center gap-2">
       <select
-        class="border rounded px-2 py-1 text-sm text-gray-700"
+        class="border rounded px-2 py-1 text-sm text-slate-700 dark:text-slate-300"
         :value="itemsPerPage"
         @change="emit('update:itemsPerPage', +$event.target.value)"
       >
@@ -57,19 +57,19 @@ const next = () => {
       </select>
 
       <button
-        class="px-2 py-1 border rounded text-gray-600 hover:bg-gray-200 disabled:opacity-50"
+        class="px-2 py-1 border rounded text-slate-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-gray-800 disabled:opacity-50"
         :disabled="currentPage <= 1"
         @click="prev"
       >
         ←
       </button>
 
-      <span class="text-gray-700">
+      <span class="text-slate-700 dark:text-slate-300">
         Página {{ currentPage }} de {{ totalPages }}
       </span>
 
       <button
-        class="px-2 py-1 border rounded text-gray-600 hover:bg-gray-200 disabled:opacity-50"
+        class="px-2 py-1 border rounded text-slate-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-gray-800 disabled:opacity-50"
         :disabled="currentPage >= totalPages"
         @click="next"
       >

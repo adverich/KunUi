@@ -38,6 +38,7 @@ import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunSlider from './components/KunSlider/src/components/KunSlider.vue';
 import KunSpacer from './components/KunSpacer/src/components/KunSpacer.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
+import KunTable from './components/KunTable/src/components/KunTable.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
 import KunTooltip from './components/KunTooltip/src/components/KunTooltip.vue';
@@ -80,6 +81,7 @@ const components = {
   KunSlider,
   KunSpacer,
   KunSwitch,
+  KunTable,
   KunTextField,
   KunToolbar,
   KunTooltip,
@@ -122,6 +124,7 @@ export {
   KunSlider,
   KunSpacer,
   KunSwitch,
+  KunTable,
   KunTextField,
   KunToolbar,
   KunTooltip,

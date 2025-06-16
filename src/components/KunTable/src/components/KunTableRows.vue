@@ -69,6 +69,7 @@ const fullColspan = computed(() => {
   let total = props.headers?.length || 0;
   if (props.showSelect) total += 1;
   if (props.showExpand) total += 1;
+  if (props.hasActions) total += 1;
   return total;
 });
 </script>

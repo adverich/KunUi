@@ -36,12 +36,19 @@
             </template>
 
             <template #item.actions="{ item, loading }">
-              <KunBtn @click="editItem(item)" :loading="loading?.edit" :disabled="loading?.delete" >
-                <KunIcon :icon="IconPencil" />
-              </KunBtn>
-              <KunBtn @click="deleteItem(item)" :loading="loading?.delete" :disabled="loading?.edit" >
-                <KunIcon :icon="IconTrashOutline" />
-              </KunBtn>
+              <div>
+                <KunTooltip text="Editar" location="top">
+                  <template #activator="{ props }">
+                    <KunBtn v-bind="props" @click="editItem(item)" :loading="loading?.edit" :disabled="loading?.delete" size="xxs">
+                      <KunIcon :icon="IconPencil" size="text-xs" />
+                    </KunBtn>
+                  </template>
+                </KunTooltip>
+
+                <KunBtn @click="deleteItem(item)" :loading="loading?.delete" :disabled="loading?.edit" size="xxs">
+                  <KunIcon :icon="IconTrashOutline" />
+                </KunBtn>
+              </div>
             </template>
           </KunTable>
         </div>
@@ -100,7 +107,7 @@ import KunSlider from './components/KunSlider/src/components/KunSlider.vue';
 import KunAvatar from './components/KunAvatar/src/components/KunAvatar.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunTable from './components/KunTable/src/components/KunTable.vue';
-
+import KunTooltip from './components/KunTooltip/src/components/KunTooltip.vue';
 const menuModel = ref(false);
 const avatarRef = ref(null);
 
@@ -128,7 +135,7 @@ const headers = [
   {value: 'fullName', label: 'Producto', sortable: true },
   {value: 'amount_content', label: 'contenido', align: 'center' },
   {value: 'measurement_unit_id', label: 'Unidad', align: 'center' },
-  {value: 'product_brand', label: 'Marca', align: 'center', headerAlign: 'center' },
+  // {value: 'product_brand', label: 'Marca', align: 'center', headerAlign: 'center' },
   {value: 'price_base', label: 'Precio', align: 'center' },
 ]
 const filters = [
