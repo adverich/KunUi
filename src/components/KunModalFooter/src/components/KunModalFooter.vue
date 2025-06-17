@@ -3,17 +3,18 @@
         v-if="modelValue"
         :class="[
             isFixed ? 'fixed' : '',
-            'z-[9999] rounded-md shadow-lg pa-4 transition-all duration-300',
+            'z-[9999] rounded-md shadow-lg p-2 transition-all duration-300',
             widthClass,
             heightClass,
             colorClass
         ]"
+        v-bind="$attrs"
     >
         <div class="flex items-center justify-between">
             <p class="text-sm font-medium">{{ message }}</p>
             <button
                 type="button"
-                class="ml-3 inline-flex rounded-md p-1 hover:bg-opacity-75 focus:outline-none"
+                class="ml-2 inline-flex rounded-md p-1 hover:bg-opacity-75 focus:outline-none"
                 @click="closeMessage"
             >
                 <svg

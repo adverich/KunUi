@@ -29,7 +29,7 @@
         />
         <div class="flex w-1/2 py-2">
           <KunBadge text="12">
-            <KunBtn text="CUACK"/>
+            <KunBtn text="CUACK" @click="doSomething"/>
           </KunBadge>
         </div>
       </div>
@@ -110,6 +110,7 @@
             />
           </KunCol>
         </KunRow> -->
+        <KunMultipleModalFooter v-model:messages="footerMessages" class="px-6"/>
     </div>
   </div>
 </template>
@@ -138,9 +139,29 @@ import KunTable from './components/KunTable/src/components/KunTable.vue';
 import KunTooltip from './components/KunTooltip/src/components/KunTooltip.vue';
 import KunBadge from './components/KunBadge/src/components/KunBadge.vue';
 import KunChip from './components/KunChip/src/components/KunChip.vue';
+import KunMultipleModalFooter from './components/KunModalFooter/src/components/KunMultipleModalFooter.vue';
 
 const menuModel = ref(false);
 const avatarRef = ref(null);
+
+const footerMessages = ref([]);
+function doSomething(){
+  showMessage("TESTEANDO ALERTA");
+}
+
+function showMessage(message, color = "green", time = 30000) {
+  const id = Date.now();
+  // Crear el mensaje con su timeout
+  const newMessage = {
+    id,
+    text: message,
+    color,
+    modelValue: true,
+    timeout: setTimeout(() => removeMessage(id), time) // Almacena el timeout en el objeto
+  };
+
+  footerMessages.value = [...footerMessages.value, newMessage];
+}
 
 const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));

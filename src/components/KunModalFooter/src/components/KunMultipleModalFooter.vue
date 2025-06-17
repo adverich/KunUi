@@ -1,5 +1,5 @@
 <template>
-    <div :class="containerClasses">
+    <div :class="containerClasses" v-bind="$attrs">
         <KunModalFooter
             v-for="msg in useMessages"
             :key="msg.id"
