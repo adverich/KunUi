@@ -8,7 +8,7 @@ export function formatValue(header, value) {
     }
 
     if (header.columnType === 'function') {
-        const raw = header.columnFunction?.(value);
+        const raw = header.columnFunction?.(value, header);
         if (header.columnFormat && formatters[header.columnFormat])
             return formatters[header.columnFormat](raw);
         return raw;
