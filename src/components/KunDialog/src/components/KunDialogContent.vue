@@ -4,16 +4,17 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { computed } from 'vue'
 const props = defineProps({
-    fullscreen: Boolean,
-    scrollable: Boolean,
-    contentClass: String,
-    bgColor: String,
-    width: String,
-    maxWidth: String,
-    height: String,
-    maxHeight: String,
+  fullscreen: Boolean,
+  scrollable: Boolean,
+  contentClass: String,
+  bgColor: String,
+  width: String,
+  maxWidth: String,
+  height: String,
+  maxHeight: String,
 })
 
 const baseClass = computed(() => {
