@@ -43,30 +43,39 @@
             />
             <slot v-else name="thead" v-bind="slotProps" />
 
-            <slot name="body.prepend" v-bind="slotProps" />
-            <KunTableRows 
-                :items="paginatedItems"
-                :is-selected="isSelected"
-                :is-expanded="isExpanded"
-                :tbody-class="tbodyClass"
-                :row-class="rowClass"
-                :tr-class="trClass"
-                :td-class="tdClass"
-                :selected-class="selectedClass"
-                :striped-class="stripedClass"
-                :show-select="showSelect"
-                :show-expand="showExpand"
-                :headers="headers"
-                :has-actions="hasActions"
-                :action-loading-map="actionLoadingMap"
-                @toggle-expand="toggleExpand"
-                @toggle-select="toggleSelect"
-            >
-                <template v-for="(_, name) in $slots" #[name]="slotProps">
-                    <slot :name="name" v-bind="slotProps" />
-                </template>
-            </KunTableRows>
-            <slot name="body.append" v-bind="slotProps" />
+            <template v-if="paginatedItems.length">
+                <slot name="body.prepend" v-bind="slotProps" />
+                <KunTableRows 
+                    :items="paginatedItems"
+                    :is-selected="isSelected"
+                    :is-expanded="isExpanded"
+                    :tbody-class="tbodyClass"
+                    :row-class="rowClass"
+                    :tr-class="trClass"
+                    :td-class="tdClass"
+                    :selected-class="selectedClass"
+                    :striped-class="stripedClass"
+                    :show-select="showSelect"
+                    :show-expand="showExpand"
+                    :headers="headers"
+                    :has-actions="hasActions"
+                    :action-loading-map="actionLoadingMap"
+                    @toggle-expand="toggleExpand"
+                    @toggle-select="toggleSelect"
+                >
+                    <template v-for="(_, name) in $slots" #[name]="slotProps">
+                        <slot :name="name" v-bind="slotProps" />
+                    </template>
+                </KunTableRows>
+                <slot name="body.append" v-bind="slotProps" />
+            </template>
+            <template v-else>
+                <tr>
+                    <td :colspan="fullColspan">
+                        <KunCard class="h-full flex justify-center items-center" title="No hay elementos disponibles" titleSize="text-4xl" />
+                    </td>
+                </tr>
+            </template>
 
             <template v-if="$slots.tfoot">
                 <tfoot><slot name="tfoot" v-bind="slotProps" /></tfoot>
@@ -98,6 +107,7 @@ import KunTableFooter from './KunTableFooter.vue';
 import KunTableRows from './KunTableRows.vue';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunTableFilter from './KunTableFilter.vue';
+import KunCard from '../../../KunCard/src/components/KunCard.vue';
 
 import useExpand from '../composables/useExpand';
 import useOptions from '../composables/useOptions';
@@ -155,4 +165,12 @@ const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
 
 const baseTableClass = 'table-auto w-full h-full text-sm text-left';
 const mergedTableClass = [baseTableClass, tableClass.value];
+
+const fullColspan = computed(() => {
+  let total = props.headers?.length || 0;
+  if (props.showSelect) total += 1;
+  if (props.showExpand) total += 1;
+  if (props.hasActions) total += 1;
+  return total;
+});
 </script>

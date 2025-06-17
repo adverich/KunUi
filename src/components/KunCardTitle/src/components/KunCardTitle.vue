@@ -10,9 +10,9 @@
 
     <!-- Title and optional subtitle -->
     <div class="kun-card-title__content">
-      <h3 :class="titleClass">
+      <div :class="titleClass">
         <slot>{{ title }}</slot>
-      </h3>
+      </div>
 
       <div v-if="$slots.subtitle || subtitle" :class="subtitleClass">
         <slot name="subtitle">{{ subtitle }}</slot>
@@ -49,8 +49,8 @@ const computedStyle = computed(() => ({
   width: typeof props.width === 'number' ? `${props.width}px` : props.width
 }))
 
-const titleClass = computed(() => props.dense ? 'font-medium' : 'font-semibold')
-const subtitleClass = computed(() => 'text-xs opacity-75 mt-1')
+const titleClass = [props.dense ? 'font-medium' : 'font-semibold', props.titleSize]
+const subtitleClass = 'text-xs opacity-75 mt-1';
 </script>
 
 <style scoped>

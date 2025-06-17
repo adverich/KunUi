@@ -1,6 +1,7 @@
 // kunCardTitleProps.js
 export const kunCardTitleProps = {
     title: String,
+    titleSize: String,
     subtitle: String,
     prepend: [String, Object, Function],
     append: [String, Object, Function],

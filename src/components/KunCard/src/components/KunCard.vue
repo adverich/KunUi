@@ -4,7 +4,7 @@
     <!-- Header -->
     <div v-if="$slots.title || title || subtitle">
       <KunCardItem dense>
-        <KunCardTitle :title="title" :subtitle="subtitle" />
+        <KunCardTitle :title="title" :subtitle="subtitle" :titleSize="titleSize"/>
       </KunCardItem>
     </div>
 

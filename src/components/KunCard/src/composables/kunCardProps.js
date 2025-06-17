@@ -1,20 +1,10 @@
 export const kunCardProps = {
-    title: {
-        type: String,
-        default: null
-    },
-    subtitle: {
-        type: String,
-        default: null
-    },
-    text: {
-        type: String,
-        default: null
-    },
-    textColor: {
-        type: String,
-        default: 'text-black dark:text-white'
-    },
+    title: { type: String, default: null },
+    titleSize: {},
+    subtitle: { type: String, default: null },
+    subTitleSize: {},
+    text: { type: String, default: null },
+    textColor: { type: String, default: 'text-black dark:text-white' },
     bgColor: {
         type: String,
         default: 'bg-transparent'
