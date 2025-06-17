@@ -382,15 +382,11 @@ const actionLoading = ref({})
 function editItem(value){
   if (!actionLoading.value[value.id]) actionLoading.value[value.id] = {};
   actionLoading.value[value.id].edit = true;
-  console.log('editing item');
-  console.log(value);
 }
 
 function deleteItem(value){
   if (!actionLoading.value[value.id]) actionLoading.value[value.id] = {};
   actionLoading.value[value.id].delete = true;
-  console.log('deleteing item');
-  console.log(value);
 }
 
 function setTheme(theme) {

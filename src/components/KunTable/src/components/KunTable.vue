@@ -71,7 +71,6 @@
             <template v-if="$slots.tfoot">
                 <tfoot><slot name="tfoot" v-bind="slotProps" /></tfoot>
             </template>
-            
         </table>
 
         <!-- <div class="h-full"></div> -->
