@@ -23,13 +23,14 @@
           leave-to-class="opacity-0 scale-95"
         >
           <KunDialogContent
-            v-if="modelValue"
+            :fullscreen="fullscreen"
+            :scrollable="scrollable"
             :width="width"
             :max-width="maxWidth"
             :height="height"
-            :max-heigh="maxHeigh"
+            :max-height="maxHeigh"
             :bg-color="bgColor"
-            :contentClass="contentClass"
+            :content-class="contentClass"
             @close="close"
           >
             <slot />
@@ -48,6 +49,8 @@ import KunDialogContent from './KunDialogContent.vue'
 const props = defineProps({
   modelValue: Boolean,
   overlay: { type: Boolean, default: true },
+  fullscreen: { type: Boolean, default: false },
+  scrollable: { type: Boolean, default: false },
   persistent: { type: Boolean, default: false },
   dialogClass: { type: String, default: '' },
   xPosition: {
@@ -97,13 +100,14 @@ const restoreScroll = () => {
 }
 
 watch(() => props.modelValue, (val) => {
-  if (val) preventScroll()
+  if (val && !props.fullscreen) preventScroll()
   else restoreScroll()
 })
 
 onMounted(() => {
-  if (props.modelValue) preventScroll()
+  if (props.modelValue && !props.fullscreen) preventScroll();
 })
+
 onBeforeUnmount(() => {
   restoreScroll()
 })
