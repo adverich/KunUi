@@ -43,7 +43,7 @@
             />
             <slot v-else name="thead" v-bind="slotProps" />
 
-            <template v-if="paginatedItems.length">
+            <template v-if="paginatedItems.length && !isMobile">
                 <slot name="body.prepend" v-bind="slotProps" />
                 <KunTableRows 
                     :items="paginatedItems"
@@ -68,6 +68,9 @@
                     </template>
                 </KunTableRows>
                 <slot name="body.append" v-bind="slotProps" />
+            </template>
+            <template v-else-if="paginatedItems.length && isMobile">
+                
             </template>
             <template v-else>
                 <tr>
@@ -102,6 +105,7 @@
 
 <script setup>
 import { computed, ref, toRefs, watch } from 'vue';
+import { isMobile } from '@/utils/_platform';
 import KunTableHeaders from './KunTableHeaders.vue';
 import KunTableFooter from './KunTableFooter.vue';
 import KunTableRows from './KunTableRows.vue';

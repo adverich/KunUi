@@ -18,6 +18,7 @@ import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunContainer from './components/KunContainer/src/components/KunContainer.vue';
 import KunCurrency from './components/KunCurrency/src/components/KunCurrency.vue';
+import KunDialog from './components/KunDialog/src/components/KunDialog.vue';
 import KunDivider from './components/KunDivider/src/components/KunDivider.vue';
 import KunForm from './components/KunForm/src/components/KunForm.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
@@ -64,6 +65,7 @@ const components = {
   KunCol,
   KunContainer,
   KunCurrency,
+  KunDialog,
   KunDivider,
   KunForm,
   KunIcon,
@@ -109,6 +111,7 @@ export {
   KunCol,
   KunContainer,
   KunCurrency,
+  KunDialog,
   KunDivider,
   KunForm,
   KunIcon,
