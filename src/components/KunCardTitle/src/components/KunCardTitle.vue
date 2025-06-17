@@ -62,6 +62,6 @@ const subtitleClass = 'text-xs opacity-75 mt-1';
   @apply flex items-center justify-center;
 }
 .kun-card-title__content {
-  @apply flex flex-col flex-grow truncate;
+  @apply flex flex-col flex-grow whitespace-normal break-words;
 }
 </style>
