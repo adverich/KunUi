@@ -44,6 +44,7 @@ import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
 import KunTable from './components/KunTable/src/components/KunTable.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
+import KunToolbarTitle from './components/KunToolbar/src/components/KunToolbarTitle.vue';
 import KunTooltip from './components/KunTooltip/src/components/KunTooltip.vue';
 
 const components = {
@@ -90,6 +91,7 @@ const components = {
   KunTable,
   KunTextField,
   KunToolbar,
+  KunToolbarTitle,
   KunTooltip,
 };
 
@@ -136,6 +138,7 @@ export {
   KunTable,
   KunTextField,
   KunToolbar,
+  KunToolbarTitle,
   KunTooltip,
 };
 
