@@ -33,6 +33,7 @@ import KunListItemText from './components/KunListItemText/src/components/KunList
 import KunListSubheader from './components/KunListSubheader/src/components/KunListSubheader.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunModalFooter from './components/KunModalFooter/src/components/KunModalFooter.vue';
+import KunMultipleModalFooter from './components/KunModalFooter/src/components/KunMultipleModalFooter.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
 import KunLoaderCircular from './components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
 import KunRow from './components/KunRow/src/components/KunRow.vue';
@@ -77,6 +78,7 @@ const components = {
   KunListSubheader,
   KunMenu,
   KunModalFooter,
+  KunMultipleModalFooter,
   KunNumberField,
   KunLoaderCircular,
   KunRow,
@@ -122,6 +124,7 @@ export {
   KunListSubheader,
   KunMenu,
   KunModalFooter,
+  KunMultipleModalFooter,
   KunLoaderCircular,
   KunRow,
   KunSlider,
