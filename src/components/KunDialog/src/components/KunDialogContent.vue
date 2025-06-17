@@ -19,11 +19,10 @@ const props = defineProps({
 
 const baseClass = computed(() => {
   if (props.fullscreen) {
-    return 'fixed inset-0 w-screen h-screen rounded-none p-4 overflow-y-auto shadow-none';
+    return 'fixed inset-0 w-screen h-screen rounded-none overflow-y-auto shadow-none';
   }
 
   const overflowClass = props.scrollable ? 'overflow-y-auto' : 'overflow-visible';
-
   return `relative rounded-2xl shadow-xl transition-all p-2 ${overflowClass}`;
 });
 
