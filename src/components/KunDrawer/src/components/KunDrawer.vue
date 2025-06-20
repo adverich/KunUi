@@ -84,7 +84,10 @@ const props = defineProps({
 })
 
 const appbarHeight = useAppbarHeight();
-const computedTop = computed(() => props.fullHeight ? '0px' : `${appbarHeight.value}px`)
+const computedTop = computed(() =>
+  props.fullHeight ? '0px' : `${appbarHeight.value}px`
+)
+
 const computedHeight = computed(() =>
   props.fullHeight ? '100vh' : `calc(100vh - ${appbarHeight.value}px)`
 )

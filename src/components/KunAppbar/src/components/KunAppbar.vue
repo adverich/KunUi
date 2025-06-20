@@ -13,6 +13,7 @@
           v-if="showDrawerButton"
           :class="buttonClass"
           minWidth="fit-content"
+          bgColor="bg-transparent"
           textColor="text-black dark:text-white"
           @click="$emit('toggle-drawer')"
         >
