@@ -7,6 +7,6 @@ export function setAppbarHeight(value) {
 }
 
 export function useAppbarHeight() {
-    consoler.log(appbarHeight.value);
+    console.log(appbarHeight.value);
     return appbarHeight;;
 }
