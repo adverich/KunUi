@@ -146,11 +146,11 @@ defineOptions({ inheritAttrs: false })
 const heightClass = computed(() => {
   switch (props.density) {
     case 'comfortable':
-      return 'min-h-12 py-1'
+      return 'h-[56px]'
     case 'compact':
-      return 'min-h-10 py-0.5'
+      return 'h-[48px]'
     default:
-      return 'min-h-14 py-2'
+      return 'h-[64px]'
   }
 })
 
