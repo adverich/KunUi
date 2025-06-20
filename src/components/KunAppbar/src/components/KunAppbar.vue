@@ -164,7 +164,11 @@ const elevationClass = computed(() => {
 const el = ref(null)
 async function updateHeight() {
   await nextTick()
-  if (el.value) setAppbarHeight(el.value.offsetHeight);
+  // if (el.value) setAppbarHeight(el.value.offsetHeight);
+  if (el.value) {
+    const rect = el.value.getBoundingClientRect()
+    setAppbarHeight(Math.round(rect.height))
+  }
 }
 
 onMounted(updateHeight)
