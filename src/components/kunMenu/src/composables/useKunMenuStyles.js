@@ -80,13 +80,13 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
                 top = parentRect.bottom - pxHideDetails;
             }
 
-            console.log('[KunMenu] Posición calculada:', {
-                origin,
-                contentWidth,
-                contentHeight,
-                parentRight: parentRect.right,
-                calculatedLeft: left,
-            });
+            // console.log('[KunMenu] Posición calculada:', {
+            //     origin,
+            //     contentWidth,
+            //     contentHeight,
+            //     parentRight: parentRect.right,
+            //     calculatedLeft: left,
+            // });
 
             menuPositionStyle.value = {
                 position: 'absolute',

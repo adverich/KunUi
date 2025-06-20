@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-dvh text-black dark:text-white overflow-hidden" style="overflow: hidden!important;">
-    <KunAppbar bgColor="bg-slate-400 dark:bg-slate-800" @toggle-drawer="loader = !loader">
+    <KunAppbar bgColor="bg-slate-400 dark:bg-slate-800" @toggle-drawer="leftDrawerStatus = !leftDrawerStatus" showDrawerButton>
       <template #actions>
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
           icon-color="bg-blue-500" @update:model-value="setTheme" />
@@ -22,6 +22,30 @@
       </template>
     </KunAppbar>
 
+    <KunDrawer
+      v-model="leftDrawerStatus"
+      :temporary="true"
+      location="start"
+      scrim
+      elevation="4"
+      rounded="rounded-r-lg"
+      color="bg-slate-100 dark:bg-slate-900"
+    >
+      <template #prepend>
+        <div class="p-4 text-lg font-bold">Menú</div>
+      </template>
+
+      <div class="my-1 py-2 space-y-2">
+        <div class="hover:bg-slate-200 p-2 rounded cursor-pointer">Inicio</div>
+        <div class="hover:bg-slate-200 p-2 rounded cursor-pointer">Productos</div>
+        <div class="hover:bg-slate-200 p-2 rounded cursor-pointer">Clientes</div>
+      </div>
+
+      <template #append>
+        <div class="mt-auto p-4 text-sm text-gray-400">© 2025</div>
+      </template>
+    </KunDrawer>
+
     <div class="w-full h-full flex flex-col" style="overflow: hidden!important;">
       <div class="flex w-1/2 py-2">
         <KunAutocomplete v-model="selected" activator="parent" :items="products" item-title="name" item-value="id"
@@ -34,7 +58,7 @@
         </div>
       </div>
 
-        <div class="h-full w-full overflow-auto">
+        <!-- <div class="h-full w-full overflow-auto">
           <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect 
           :searchableKeys="['name']" show-expand hasActions :action-loading-map="actionLoading">
             <template #expand="{ item }">
@@ -79,37 +103,7 @@
               </div>
             </template>
           </KunTable>
-        </div>
-
-        <!-- <div class="w-full flex justify-center gap-6">
-          <KunBtn> DEFAULT </KunBtn>
-          <KunBtn variant="tonal"> TONAL </KunBtn>
-          <KunBtn variant="plain"> PLAIN </KunBtn>
-          <KunBtn variant="outlined"> OUTLINED </KunBtn>
-          <KunBtn variant="soft"> SOFT </KunBtn>
-          <KunBtn variant="text"> TEXT </KunBtn>
         </div> -->
-
-        <!-- <KunRow>
-          <KunCol cols="12" sm="6" md="3">
-            <KunSlider v-model="value" :min="2" :max="10" label="testing" ticks>
-              <template v-slot:append>
-                <KunTextField v-model="value" hide-details density="compact" text-center class="ml-1" rounded="rounded-xl"
-                  type="number" style="width: 50px" readonly />
-              </template>
-            </KunSlider>
-          </KunCol>
-
-          <KunCol cols="12" sm="6" md="3">
-            <KunNumberField v-model="testNumber" controlVariant="default" />
-          </KunCol>
-
-          <KunCol cols="12" sm="6" md="3">
-            <KunAutocomplete v-model="selected" activator="parent" :items="products" item-title="name" item-value="id"
-              item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"
-            />
-          </KunCol>
-        </KunRow> -->
         <KunMultipleModalFooter v-model:messages="footerMessages" class="px-6"/>
     </div>
   </div>
@@ -118,21 +112,15 @@
 <script setup>
 import { ref, computed } from 'vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
-import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
-import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import IconAccountOutline from './icons/IconAccountOutline.vue';
-import IconClose from './icons/IconClose.vue';
 import IconPencil from './icons/IconPencil.vue';
 import IconTrashOutline from './icons/IconTrashOutline.vue';
-import KunRow from './components/KunRow/src/components/KunRow.vue';
-import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunList from './components/KunList/src/components/KunList.vue';
 import KunListItem from './components/KunListItem/src/components/KunListItem.vue';
 import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
-import KunSlider from './components/KunSlider/src/components/KunSlider.vue';
 import KunAvatar from './components/KunAvatar/src/components/KunAvatar.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunTable from './components/KunTable/src/components/KunTable.vue';
@@ -140,9 +128,12 @@ import KunTooltip from './components/KunTooltip/src/components/KunTooltip.vue';
 import KunBadge from './components/KunBadge/src/components/KunBadge.vue';
 import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunMultipleModalFooter from './components/KunModalFooter/src/components/KunMultipleModalFooter.vue';
+import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
+
 
 const menuModel = ref(false);
 const avatarRef = ref(null);
+const leftDrawerStatus = ref(false);
 
 const footerMessages = ref([]);
 function doSomething(){

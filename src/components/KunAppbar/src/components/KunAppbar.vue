@@ -1,5 +1,6 @@
 <template>
   <header
+    ref="el"
     class="w-full flex"
     :class="[heightClass, bgColor, elevationClass, bordered ? borderColor : '']"
     :style="{ zIndex }"
@@ -69,11 +70,12 @@
 </template>
 
 <script setup>
-import { computed, defineProps } from 'vue'
+import { computed, defineProps, ref, onMounted, onUpdated, nextTick } from 'vue'
 import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import IconMenuRounded from '../../../../icons/IconMenuRounded.vue'
+import { setAppbarHeight } from '@/utils/useLayout'
 
 const props = defineProps({
   bgColor: {
@@ -157,4 +159,13 @@ const elevationClass = computed(() => {
     ? ''
     : `shadow-${props.elevation}`
 })
+
+const el = ref(null)
+async function updateHeight() {
+  await nextTick()
+  if (el.value) setAppbarHeight(el.value.offsetHeight);
+}
+
+onMounted(updateHeight)
+onUpdated(updateHeight)
 </script>
