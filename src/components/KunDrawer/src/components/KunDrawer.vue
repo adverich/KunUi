@@ -45,7 +45,7 @@
 import { computed, watch, onMounted } from 'vue'
 import { useAppbarHeight } from '@/utils/useLayout'
 
-const emit = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:model-value'])
 
 const props = defineProps({
   modelValue: Boolean,
@@ -144,7 +144,7 @@ const bgColorClass = computed(() => { return props.color ?? 'bg-white dark:bg-sl
 
 // Close method (only if temporary and not persistent)
 const close = () => {
-  if (!props.persistent) emit('update:modelValue', false)
+  if (!props.persistent) emits('update:model-value', false)
 }
 </script>
 
