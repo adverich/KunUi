@@ -1,27 +1,11 @@
 <template>
   <Teleport v-if="attach !== true" :to="attach || 'body'">
     <transition :name="transition">
-      <div
-        v-show="menuVisible"
-        ref="contentEl"
-        role="menu"
-        tabindex="-1"
-        :class="[
-          $attrs.class, // <- Aplica clase heredada del padre manualmente
-          'relative shadow-xl rounded-b overflow-y-auto focus:outline-none bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700',
-          contentClass,
-          originClass,
-          width,
-          height,
-          minWidth,
-          maxWidth,
-          minHeight,
-          maxHeight,
-          zIndex
-        ]"
-        :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }"
+      <div v-show="menuVisible" ref="contentEl" role="menu" tabindex="-1"
+        class="relative shadow-xl rounded-b overflow-y-auto focus:outline-none bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
+        :class="[props.class, contentClass, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex]"
+        :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }" 
         @keydown.escape.stop="handleEscape"
-        v-bind="filteredAttrs"
       >
         <slot />
       </div>
@@ -30,30 +14,14 @@
 </template>
 
 <script setup>
-import {
-  onMounted,
-  onUnmounted,
-  watch,
-  nextTick,
-  onBeforeUnmount,
-  computed,
-  useAttrs
-} from 'vue'
-
+import { onMounted, onUnmounted, watch, nextTick, onBeforeUnmount } from 'vue'
 import { useKunMenu } from '../composables/useKunMenu'
 import { kunMenuProps } from '../composables/kunMenuProps'
 import { useKunMenuStyles } from '../composables/useKunMenuStyles'
 import { useKunMenuComposable } from '../composables/useKunMenuComposable'
 
-const $attrs = useAttrs()
 const props = defineProps(kunMenuProps)
 const emits = defineEmits(['update:modelValue', 'click:outside', 'handleEscape'])
-
-// Filtrar attrs para evitar repetir 'class' en v-bind
-const filteredAttrs = computed(() => {
-  const { class: _class, ...rest } = $attrs
-  return rest
-})
 
 const {
   menuVisible,
@@ -70,7 +38,7 @@ const {
   contentEl,
   originClass,
   computedMaxHeight,
-  menuPositionStyle
+  menuPositionStyle,
 } = useKunMenuStyles(props, handleActivatorClick, handleHover, handleFocus)
 
 const { onClickOutside } = useKunMenuComposable()
@@ -104,11 +72,11 @@ watch(menuVisible, (visible) => {
 
   if (visible) {
     repositionMenu()
-    el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false })
-    addEventListeners()
+    el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false });
+    addEventListeners();
   } else {
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
-    removeEventListeners()
+    removeEventListeners();
   }
 })
 
@@ -162,6 +130,7 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 
+/* Scrollbar estilizado para todos los navegadores modernos */
 div::-webkit-scrollbar {
   width: 8px;
 }
@@ -172,6 +141,7 @@ div::-webkit-scrollbar-track {
 
 div::-webkit-scrollbar-thumb {
   background-color: rgba(100, 116, 139, 0.5);
+  /* gris semi-transparente */
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: content-box;
