@@ -16,48 +16,59 @@
         [`cursor-pointer ${hoverBg}`]: !disabled,
         [activeClass]: isItemSelected || isActive,
         'px-4 py-2': !noGutters,
-        'gap-2': !slim,
       }
     ]"
     @keydown.enter.prevent="handleClick"
     @click="handleClick"
     v-bind="$attrs"
   >
-    <!-- Prepend slot -->
-    <div class="shrink-0 flex items-center">
+    <!-- Prepend -->
+    <div v-if="hasPrepend" class="shrink-0 flex items-center gap-2 me-3">
       <slot name="prepend">
-        <template v-if="prependAvatar">
-          <img :src="prependAvatar" class="w-8 h-8 rounded-full" />
-        </template>
-        <template v-else-if="prependIcon">
-          <Component :is="prependIcon" class="w-5 h-5" />
-        </template>
+        <img
+          v-if="prependAvatar"
+          :src="prependAvatar"
+          class="w-8 h-8 rounded-full"
+        />
+        <component
+          v-if="isComponent(prependIcon)"
+          :is="prependIcon"
+          class="w-5 h-5"
+        />
+        <i
+          v-else-if="prependIcon"
+          :class="prependIcon"
+          class="text-xl leading-none"
+        />
       </slot>
     </div>
 
     <!-- Main content -->
     <div class="flex flex-col min-w-0 flex-1">
       <slot>
-        <slot name="title" v-if="title">
-          <div class="font-medium truncate">{{ title }}</div>
-        </slot>
-        <slot name="subtitle" v-if="subtitle">
-          <div class="text-sm text-gray-500 dark:text-gray-400 truncate">
-            {{ subtitle }}
-          </div>
-        </slot>
+        <slot name="title" />
+        <slot name="subtitle" />
       </slot>
     </div>
 
-    <!-- Append slot -->
-    <div class="shrink-0 flex items-center ml-auto">
+    <!-- Append -->
+    <div v-if="hasAppend" class="shrink-0 flex items-center gap-2 ms-3">
       <slot name="append">
-        <template v-if="appendAvatar">
-          <img :src="appendAvatar" class="w-8 h-8 rounded-full" />
-        </template>
-        <template v-else-if="appendIcon">
-          <Component :is="appendIcon" class="w-5 h-5" />
-        </template>
+        <img
+          v-if="appendAvatar"
+          :src="appendAvatar"
+          class="w-8 h-8 rounded-full"
+        />
+        <component
+          v-if="isComponent(appendIcon)"
+          :is="appendIcon"
+          class="w-5 h-5"
+        />
+        <i
+          v-else-if="appendIcon"
+          :class="appendIcon"
+          class="text-xl leading-none"
+        />
       </slot>
     </div>
   </li>
@@ -67,15 +78,13 @@
 import { ref, inject, onMounted, onBeforeUnmount, computed } from 'vue'
 
 const props = defineProps({
-  value: {
-    type: [String, Number, Boolean, Object, Array, null],
-    default: null
-  },
+  value: [String, Number, Boolean, Object, Array, null],
+  to: [String, Object],
   disabled: Boolean,
   active: Boolean,
   activeClass: {
     type: String,
-    default: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
+    default: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300',
   },
   bgItems: {
     type: String,
@@ -89,28 +98,21 @@ const props = defineProps({
     type: String,
     default: 'hover:bg-gray-100 dark:hover:bg-gray-600',
   },
-  noGutters: {
-    type: Boolean,
-    default: false,
-  },
+  noGutters: Boolean,
   itemPosition: {
     type: String,
-    default: 'items-start'
+    default: 'items-start',
   },
   prependIcon: [String, Object, Function],
   appendIcon: [String, Object, Function],
   prependAvatar: String,
   appendAvatar: String,
-  title: [String, Number, Boolean],
-  subtitle: [String, Number, Boolean],
-  slim: Boolean,
 })
 
 const liRef = ref(null)
 const registerRef = inject('registerListItemRef', null)
 const listContext = inject('kunListContext', null)
 
-// Registro para navegación/focus externo si fuera necesario
 onMounted(() => {
   if (registerRef && liRef.value) {
     registerRef(liRef.value)
@@ -119,23 +121,26 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (registerRef) {
-    registerRef(null) // elimina ref al desmontar
+    registerRef(null)
   }
 })
 
-// Estado reactivo de selección
 const isItemSelected = computed(() => {
   return listContext?.isSelected?.(props.value) ?? false
 })
 
-// Estado activo (externo)
 const isActive = computed(() => props.active)
 
-// Click handler
+const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar))
+const hasAppend = computed(() => !!(props.appendIcon || props.appendAvatar))
+
+function isComponent(val) {
+  return typeof val === 'object' || typeof val === 'function'
+}
+
 function handleClick() {
   if (props.disabled) return
 
-  // Dispara intención de selección (evento de usuario)
   liRef.value?.dispatchEvent(
     new CustomEvent('select', {
       detail: props.value,
@@ -143,11 +148,9 @@ function handleClick() {
     })
   )
 
-  // Cambia selección si corresponde
   if (listContext && props.value !== null) {
     listContext.toggleItem?.(props.value)
 
-    // Solo después de cambiar estado, emití el selected
     liRef.value?.dispatchEvent(
       new CustomEvent('selected', {
         detail: props.value,
