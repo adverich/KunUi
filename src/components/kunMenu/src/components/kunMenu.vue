@@ -6,7 +6,7 @@
         :class="[contentClass, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex]"
         :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }" 
         @keydown.escape.stop="handleEscape"
-        v-bind="$attrs"
+        v-bind="filteredAttrs" 
       >
         <slot />
       </div>
@@ -15,14 +15,20 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, watch, nextTick, onBeforeUnmount } from 'vue'
+import { onMounted, onUnmounted, watch, nextTick, onBeforeUnmount, useAttrs } from 'vue'
 import { useKunMenu } from '../composables/useKunMenu'
 import { kunMenuProps } from '../composables/kunMenuProps'
 import { useKunMenuStyles } from '../composables/useKunMenuStyles'
 import { useKunMenuComposable } from '../composables/useKunMenuComposable'
 
+const $attrs = useAttrs()
 const props = defineProps(kunMenuProps)
 const emits = defineEmits(['update:modelValue', 'click:outside', 'handleEscape'])
+
+const filteredAttrs = computed(() => {
+  const { class: _class, ...rest } = $attrs
+  return rest
+})
 
 const {
   menuVisible,
