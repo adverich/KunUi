@@ -1,7 +1,7 @@
 // kunMenuProps.js
 
 export const kunMenuProps = {
-    class: String,
+    class: [String, Array, Object],
     modelValue: Boolean,
     activator: [String, Object],
     activatorProps: {

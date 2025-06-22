@@ -1,5 +1,10 @@
 <template>
-  <li
+  <component
+    :is="isLink ? 'RouterLink' : tag"
+    :to="isLink ? to : undefined"
+    :href="isHref ? href : undefined"
+    :replace="replace"
+    :exact="exact"
     ref="liRef"
     role="option"
     :aria-selected="isItemSelected || isActive"
@@ -18,8 +23,8 @@
         'px-4 py-2': !noGutters,
       }
     ]"
-    @keydown.enter.prevent="handleClick"
     @click="handleClick"
+    @keydown.enter.prevent="handleClick"
     v-bind="$attrs"
   >
     <!-- Prepend -->
@@ -46,8 +51,17 @@
     <!-- Main content -->
     <div class="flex flex-col min-w-0 flex-1">
       <slot>
-        <slot name="title" />
-        <slot name="subtitle" />
+        <slot name="title">
+          <div v-if="title" class="font-medium truncate">{{ title }}</div>
+        </slot>
+        <slot name="subtitle">
+          <div
+            v-if="subtitle"
+            class="text-sm text-gray-500 dark:text-gray-400 truncate"
+          >
+            {{ subtitle }}
+          </div>
+        </slot>
       </slot>
     </div>
 
@@ -71,15 +85,24 @@
         />
       </slot>
     </div>
-  </li>
+  </component>
 </template>
 
 <script setup>
 import { ref, inject, onMounted, onBeforeUnmount, computed } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const props = defineProps({
   value: [String, Number, Boolean, Object, Array, null],
   to: [String, Object],
+  href: String,
+  tag: {
+    type: String,
+    default: 'li',
+  },
+  replace: Boolean,
+  exact: Boolean,
+
   disabled: Boolean,
   active: Boolean,
   activeClass: {
@@ -103,10 +126,14 @@ const props = defineProps({
     type: String,
     default: 'items-start',
   },
+
   prependIcon: [String, Object, Function],
   appendIcon: [String, Object, Function],
   prependAvatar: String,
   appendAvatar: String,
+
+  title: [String, Number, Boolean],
+  subtitle: [String, Number, Boolean],
 })
 
 const liRef = ref(null)
@@ -125,18 +152,19 @@ onBeforeUnmount(() => {
   }
 })
 
+const isComponent = val => typeof val === 'object' || typeof val === 'function'
+
+const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar))
+const hasAppend = computed(() => !!(props.appendIcon || props.appendAvatar))
+
 const isItemSelected = computed(() => {
   return listContext?.isSelected?.(props.value) ?? false
 })
 
 const isActive = computed(() => props.active)
 
-const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar))
-const hasAppend = computed(() => !!(props.appendIcon || props.appendAvatar))
-
-function isComponent(val) {
-  return typeof val === 'object' || typeof val === 'function'
-}
+const isLink = computed(() => !!props.to)
+const isHref = computed(() => !!props.href)
 
 function handleClick() {
   if (props.disabled) return
