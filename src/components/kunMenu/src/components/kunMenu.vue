@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, watch, nextTick, onBeforeUnmount, useAttrs } from 'vue'
+import { onMounted, onUnmounted, watch, nextTick, onBeforeUnmount, computed, useAttrs } from 'vue'
 import { useKunMenu } from '../composables/useKunMenu'
 import { kunMenuProps } from '../composables/kunMenuProps'
 import { useKunMenuStyles } from '../composables/useKunMenuStyles'
