@@ -5,24 +5,61 @@
     :aria-selected="isItemSelected || isActive"
     :aria-disabled="disabled"
     tabindex="-1"
-    class="w-full flex flex-col"
+    class="w-full flex"
     :class="[
       'kun-list-item',
       bgItems,
-      itemPosition,
       textColor,
+      itemPosition,
       {
         'cursor-not-allowed opacity-50': disabled,
         [`cursor-pointer ${hoverBg}`]: !disabled,
         [activeClass]: isItemSelected || isActive,
         'px-4 py-2': !noGutters,
+        'gap-2': !slim,
       }
     ]"
     @keydown.enter.prevent="handleClick"
     @click="handleClick"
     v-bind="$attrs"
   >
-    <slot />
+    <!-- Prepend slot -->
+    <div class="shrink-0 flex items-center">
+      <slot name="prepend">
+        <template v-if="prependAvatar">
+          <img :src="prependAvatar" class="w-8 h-8 rounded-full" />
+        </template>
+        <template v-else-if="prependIcon">
+          <Component :is="prependIcon" class="w-5 h-5" />
+        </template>
+      </slot>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex flex-col min-w-0 flex-1">
+      <slot>
+        <slot name="title" v-if="title">
+          <div class="font-medium truncate">{{ title }}</div>
+        </slot>
+        <slot name="subtitle" v-if="subtitle">
+          <div class="text-sm text-gray-500 dark:text-gray-400 truncate">
+            {{ subtitle }}
+          </div>
+        </slot>
+      </slot>
+    </div>
+
+    <!-- Append slot -->
+    <div class="shrink-0 flex items-center ml-auto">
+      <slot name="append">
+        <template v-if="appendAvatar">
+          <img :src="appendAvatar" class="w-8 h-8 rounded-full" />
+        </template>
+        <template v-else-if="appendIcon">
+          <Component :is="appendIcon" class="w-5 h-5" />
+        </template>
+      </slot>
+    </div>
   </li>
 </template>
 
@@ -59,7 +96,14 @@ const props = defineProps({
   itemPosition: {
     type: String,
     default: 'items-start'
-  }
+  },
+  prependIcon: [String, Object, Function],
+  appendIcon: [String, Object, Function],
+  prependAvatar: String,
+  appendAvatar: String,
+  title: [String, Number, Boolean],
+  subtitle: [String, Number, Boolean],
+  slim: Boolean,
 })
 
 const liRef = ref(null)
