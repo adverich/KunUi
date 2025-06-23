@@ -186,7 +186,7 @@ const slotProps = computed(() => ({
 const baseWrapperClass = 'overflow-auto h-full w-full flex flex-col border border-slate-200 dark:border-slate-800 rounded';
 const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
 
-const baseTableClass = 'table-auto w-full h-full text-sm text-left';
+const baseTableClass = 'table-auto w-full h-fit text-sm text-left';
 const mergedTableClass = [baseTableClass, tableClass.value];
 
 const fullColspan = computed(() => {

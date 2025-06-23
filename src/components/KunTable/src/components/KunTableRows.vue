@@ -61,7 +61,7 @@ const props = defineProps({
   actionLoadingMap: Object,
 });
 
-const baseTbodyClass = 'table-auto w-full h-full text-sm text-left';
+const baseTbodyClass = 'table-auto w-full text-sm text-left';
 const mergedTbodyClass = [baseTbodyClass, props.tbodyClass];
 
 // Total de columnas visibles (data + selección + expand)
