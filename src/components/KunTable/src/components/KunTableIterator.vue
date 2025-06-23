@@ -37,9 +37,16 @@
         class="flex justify-between text-sm"
       >
         <div class="font-semibold text-slate-600 dark:text-slate-300">
-          {{ header.text }}
+          {{ header.label ?? header.text }}
         </div>
-        <div class="text-right text-slate-800 dark:text-slate-100">
+        <div
+          class="text-right text-slate-800 dark:text-slate-100"
+          :class="{
+            'text-right': header.align === 'right',
+            'text-center': header.align === 'center',
+            'text-left': header.align === 'left' || !header.align,
+          }"
+        >
           <slot
             :name="`item.${header.value}`"
             :item="item"
@@ -53,8 +60,13 @@
     </div>
 
     <!-- Acciones -->
-    <div v-if="hasActions" class="mt-4">
-      <slot name="item.actions" :item="item" :index="index" :loading="loading" />
+    <div v-if="hasActions" class="flex justify-between items-start mt-4 text-sm">
+      <div class="font-semibold text-slate-600 dark:text-slate-300">
+        Acciones
+      </div>
+      <div class="text-right">
+        <slot name="item.actions" :item="item" :index="index" :loading="loading" />
+      </div>
     </div>
   </div>
 </template>
