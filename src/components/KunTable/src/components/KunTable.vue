@@ -22,12 +22,12 @@
         </div>
 
         <table :class="mergedTableClass">
-            <template v-if="$slots.colgroup">
+            <template v-if="$slots.colgroup && !isMobile">
                 <colgroup><slot name="colgroup" v-bind="slotProps" /></colgroup>
             </template>
 
             <KunTableHeaders
-                v-if="!hideDefaultHeader"
+                v-if="!hideDefaultHeader && !isMobile"
                 :headers="headers"
                 :sort-by="options.sortBy"
                 :show-select="showSelect"
@@ -47,17 +47,17 @@
                 <slot name="body.prepend" v-bind="slotProps" />
                 <KunTableRows 
                     :items="paginatedItems"
-                    :is-selected="isSelected"
-                    :is-expanded="isExpanded"
+                    :headers="headers"
                     :tbody-class="tbodyClass"
                     :row-class="rowClass"
                     :tr-class="trClass"
                     :td-class="tdClass"
                     :selected-class="selectedClass"
                     :striped-class="stripedClass"
+                    :is-selected="isSelected"
+                    :is-expanded="isExpanded"
                     :show-select="showSelect"
                     :show-expand="showExpand"
-                    :headers="headers"
                     :has-actions="hasActions"
                     :action-loading-map="actionLoadingMap"
                     @toggle-expand="toggleExpand"
@@ -69,9 +69,27 @@
                 </KunTableRows>
                 <slot name="body.append" v-bind="slotProps" />
             </template>
+
             <template v-else-if="paginatedItems.length && isMobile">
-                
+                <KunTableIterators
+                    :items="paginatedItems"
+                    :headers="headers"
+                    :row-class="rowClass"
+                    :is-selected="isSelected"
+                    :is-expanded="isExpanded"
+                    :show-select="showSelect"
+                    :show-expand="showExpand"
+                    :has-actions="hasActions"
+                    :action-loading-map="actionLoadingMap"
+                    @toggle-expand="toggleExpand"
+                    @toggle-select="toggleSelect"
+                >
+                    <template v-for="(_, name) in $slots" #[name]="slotProps">
+                    <slot :name="name" v-bind="slotProps" />
+                    </template>
+                </KunTableIterators>
             </template>
+
             <template v-else>
                 <tr>
                     <td :colspan="fullColspan">
@@ -109,6 +127,7 @@ import { isMobile } from '@/utils/_platform';
 import KunTableHeaders from './KunTableHeaders.vue';
 import KunTableFooter from './KunTableFooter.vue';
 import KunTableRows from './KunTableRows.vue';
+import KunTableIterators from './KunTableIterators.vue';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunTableFilter from './KunTableFilter.vue';
 import KunCard from '../../../KunCard/src/components/KunCard.vue';

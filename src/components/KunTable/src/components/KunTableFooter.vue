@@ -79,3 +79,12 @@ const next = () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+</style>
