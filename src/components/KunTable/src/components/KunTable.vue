@@ -85,7 +85,7 @@
             </template>
         </table>
 
-        <!-- <div class="h-full"></div> -->
+        <div class="h-full"></div>
         <!-- Footer Fijo -->
         <div v-if="!hideDefaultFooter" class="sticky bottom-0 z-10">
             <KunTableFooter

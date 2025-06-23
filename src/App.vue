@@ -58,7 +58,7 @@
         </div>
       </div>
 
-        <!-- <div class="h-full w-full overflow-auto">
+        <div class="h-full w-full overflow-auto">
           <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect 
           :searchableKeys="['name']" show-expand hasActions :action-loading-map="actionLoading">
             <template #expand="{ item }">
@@ -103,7 +103,7 @@
               </div>
             </template>
           </KunTable>
-        </div> -->
+        </div>
         <KunMultipleModalFooter v-model:messages="footerMessages" class="px-6"/>
     </div>
   </div>
@@ -158,7 +158,7 @@ const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
 const productFamilies = ref(generateFakeFamilies(100));
 const productMkups = ref(generateFakeMkups(5));
-const products = ref(generateFakeProductsFull(10000));
+const products = ref(generateFakeProductsFull(15));
 
 const currentTheme = ref('dark')
 const loader = ref(false)
