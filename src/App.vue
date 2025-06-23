@@ -158,7 +158,7 @@ const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
 const productFamilies = ref(generateFakeFamilies(100));
 const productMkups = ref(generateFakeMkups(5));
-const products = ref(generateFakeProductsFull(15));
+const products = ref(generateFakeProductsFull(20));
 
 const currentTheme = ref('dark')
 const loader = ref(false)
@@ -180,7 +180,7 @@ function getTotalAmount(item){
 const headers = [
   {value: 'bar_code', label: 'CB', sortable: true, align: 'center', headerAlign: 'center' },
   {value: 'fullName', label: 'Producto', sortable: true, headerAlign: 'center' },
-  {value: 'amount_content', label: 'contenido', align: 'center', headerAlign: 'center' },
+  {value: 'amount_content', label: 'contenido', align: 'center', headerAlign: 'center', sortable: true },
   {value: 'measurement_unit_id', label: 'Unidad', align: 'center', headerAlign: 'center' },
   // {value: 'product_brand', label: 'Marca', align: 'center', headerAlign: 'center' },
   {value: 'price_base', label: 'Precio', align: 'center', headerAlign: 'center' },

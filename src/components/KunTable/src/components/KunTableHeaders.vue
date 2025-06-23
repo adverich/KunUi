@@ -29,12 +29,9 @@
         :style="{ cursor: header.sortable ? 'pointer' : 'default' }"
       >
         <slot :name="`header.${header.key}`" :header="header">
-          <span>{{ header.label }}</span>
-          <span v-if="header.sortable">
-            <span v-if="isSorted(header)">
-              {{ sortBy.order === 'asc' ? '⬆️' : '⬇️' }}
-            </span>
-            <span v-else>⇅</span>
+          <span>{{ header.label ?? header.text }}</span>
+          <span v-if="header.sortable" class="inline-flex items-center gap-1 ml-1">
+            <component :is="getSortIcon(header)" class="w-4 h-4 text-gray-500" />
           </span>
         </slot>
       </th>
@@ -48,6 +45,10 @@
 </template>
 
 <script setup>
+import arrowUp from '@/icons/IconArrowUp.vue'
+import arrowDown from '@/icons/IconArrowDown.vue'
+import arrowDownUp from '@/icons/IconArrowDownUp.vue'
+
 const props = defineProps({
   headers: Array,
   showSelect: Boolean,
@@ -71,13 +72,20 @@ function toggleSelectAll() {
 function toggleSort(header) {
   if (!header.sortable) return;
 
-  const isSame = props.sortBy?.key === header.key;
-  const newOrder = isSame && props.sortBy.order === 'asc' ? 'desc' : 'asc';
-  emits('sort', { key: header.key, order: newOrder });
+  const existing = props.sortBy?.find(s => s.key === header.value);
+  const newOrder = existing?.order === 'asc' ? 'desc' : 'asc';
+
+  emits('sort', { key: header.value, order: newOrder });
 }
 
-function isSorted(header) {
-  return props.sortBy?.key === header.key;
+function getSortOrder(header) {
+  return props.sortBy?.find(s => s.key === header.value)?.order;
+}
+
+const getSortIcon = (header) => {
+  const order = getSortOrder(header);
+  if (!order) return arrowDownUp;
+  return order === 'asc' ? arrowUp : arrowDown;
 }
 
 const baseTheadClass = 'bg-slate-200 dark:bg-slate-800 sticky top-0 z-5';

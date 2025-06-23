@@ -13,6 +13,7 @@ export default () => ({
     itemsPerPage: { type: Number, default: 10 },
     page: { type: Number, default: 1 },
     sortBy: { type: Array, default: () => [] },
+    mutliSort: Boolean,
     pageOptions: { type: Array, default: () => [5, 10, 25, 50, 100] },
 
     searchable: { type: Boolean, default: false },
