@@ -133,13 +133,13 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     const watchModelValue = ref(true);
-    // watch(() => modelValue.value, (newVal) => {
-    //     if (watchModelValue.value) selectedItem.value = findItemByValue(newVal);
-    // }, { immediate: true });
+    watch(() => modelValue.value, (newVal) => {
+        if (watchModelValue.value) selectedItem.value = findItemByValue(newVal);
+    }, { immediate: true });
 
-    // watch(() => items.value, () => {
-    //     selectedItem.value = findItemByValue(modelValue.value);
-    // }, { immediate: true });
+    watch(() => items.value, () => {
+        selectedItem.value = findItemByValue(modelValue.value);
+    }, { immediate: true });
 
     function findItemByValue(value) {
         if (!value) return null;
