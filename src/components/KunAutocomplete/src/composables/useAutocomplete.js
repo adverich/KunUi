@@ -38,8 +38,6 @@ export function useAutocomplete(props, emits, modelValue, items) {
     });
 
     function itemToString(item, value, hasDefault) {
-        console.log('aca tamos');
-        console.log(item[value]);
         if (isObject(item)) {
             if (value) {
                 // Verificamos si tiene texto configurado
@@ -70,7 +68,6 @@ export function useAutocomplete(props, emits, modelValue, items) {
                 if (item[value] !== undefined && item[value] !== null) {
                     return item[value].toString();
                 }
-                console.log('wtf');
                 return "";
             }
             if (hasDefault) {
