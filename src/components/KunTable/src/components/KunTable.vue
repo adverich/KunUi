@@ -33,6 +33,7 @@
                 :show-select="showSelect"
                 :show-expand="showExpand"
                 :all-selected="allSelected"
+                :some-selected="someSelected"
                 :thead-class="theadClass"
                 :tr-class="trClass"
                 :th-class="thClass"
@@ -167,7 +168,7 @@ watch(searchQuery, (q) => {
 });
 
 const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems);
-const { isSelected, toggleSelect, toggleSelectAll, allSelected } = useSelect(propsRefs, emits);
+const { isSelected, toggleSelect, toggleSelectAll, allSelected, someSelected } = useSelect(propsRefs, emits, paginatedItems);
 const { isExpanded, toggleExpand } = useExpand();
 
 const slotProps = computed(() => ({

@@ -13,12 +13,13 @@
     <td
       v-if="showSelect"
       :class="mergedTdClass"
+      class="h-full w-10 flex flex-col items-center justify-center"
     >
       <input
         type="checkbox"
         :checked="isSelected"
         @change.stop="emits('toggle-select', item)"
-        class="form-checkbox"
+        class="h-5 w-5 text-blue-600 transition-all duration-200 ease-in-out rounded"
       />
     </td>
 

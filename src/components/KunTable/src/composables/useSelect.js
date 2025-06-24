@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue';
 
-export default function useSelect(props, emits) {
+export default function useSelect(props, emits, paginatedItems) {
     const selectedItems = ref([]);
 
     const isSelected = (item) => selectedItems.value.includes(item);
@@ -16,7 +16,7 @@ export default function useSelect(props, emits) {
     };
 
     const selectAll = () => {
-        selectedItems.value = [...props.items];
+        selectedItems.value = [...paginatedItems.value];
         emits?.('update:selectedItems', selectedItems.value);
     };
 
@@ -34,10 +34,14 @@ export default function useSelect(props, emits) {
     };
 
     const allSelected = computed(() => {
-        return props.items?.length > 0 && selectedItems.value.length === props.items.length;
+        return paginatedItems.value?.length > 0 && selectedItems.value.length === paginatedItems.value.length;
     });
 
-    watch(() => props.items, (newVal, oldVal) => {
+    const someSelected = computed(() => {
+        return paginatedItems.value?.length > 0 && selectedItems.value.length > 0 && selectedItems.value.length < paginatedItems.value.length;
+    });
+
+    watch(() => paginatedItems, (newVal, oldVal) => {
         if (newVal !== oldVal) clearSelection();
     }, { deep: true });
 
@@ -49,5 +53,6 @@ export default function useSelect(props, emits) {
         clearSelection,
         toggleSelectAll,
         allSelected,
+        someSelected
     };
 }
