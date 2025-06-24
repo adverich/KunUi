@@ -4,7 +4,6 @@
       <div
         v-if="modelValue"
         :class="mergedDialogClass"
-        @keydown.esc="onEsc"
         v-bind="$attrs"
       >
         <KunDialogOverlay
@@ -42,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted, onBeforeUnmount } from 'vue'
+import { watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
 import KunDialogOverlay from './KunDialogOverlay.vue'
 import KunDialogContent from './KunDialogContent.vue'
 
@@ -82,12 +81,6 @@ const close = () => {
   if (!props.persistent) emits('update:modelValue', false)
 }
 
-const onEsc = (e: KeyboardEvent) => {
-  if (!props.persistent && props.modelValue) {
-    emits('update:modelValue', false)
-  }
-}
-
 const handleOverlayClick = () => {
   close()
 }
@@ -111,4 +104,27 @@ onMounted(() => {
 onBeforeUnmount(() => {
   restoreScroll()
 })
+
+
+// Manejador de eventos de teclado
+function handleKeydown(event) {
+  event.stopPropagation();
+  if (event.key === "Escape") {
+    if (!props.persistent) {
+      emits('update:modelValue', false)
+    }
+  }
+}
+
+// Agregar listener cuando el componente se monta
+onMounted(() => {
+  if (props.modelValue) {
+    window.addEventListener("keydown", handleKeydown);
+  }
+});
+
+// Eliminar listener cuando el componente se desmonta
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
 </script>

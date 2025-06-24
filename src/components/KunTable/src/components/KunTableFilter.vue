@@ -1,5 +1,5 @@
 <template>
-    <KunDialog v-if="filterDialog" v-model="filterDialog" yPosition="top" persistent maxWidth="max-w-1/2">
+    <KunDialog v-if="filterDialog" v-model="filterDialog" yPosition="top" maxWidth="max-w-1/2">
         <div class="w-full">
             <div class="flex justify-end">
                 <KunBtn @click="closeDialog" rounded="rounded-full" size="xxs" bgColor="bg-transparent">
