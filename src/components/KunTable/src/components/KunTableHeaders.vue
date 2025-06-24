@@ -72,14 +72,26 @@ function toggleSelectAll() {
 function toggleSort(header) {
   if (!header.sortable) return;
 
-  const existing = props.sortBy?.find(s => s.key === header.value);
-  const newOrder = existing?.order === 'asc' ? 'desc' : 'asc';
+  let current = null;
 
+  if (Array.isArray(props.sortBy)) {
+    current = props.sortBy.find(s => s.key === header.value);
+  } else if (typeof props.sortBy === 'string') {
+    current = props.sortBy === header.value ? { key: header.value, order: 'asc' } : null;
+  }
+
+  const newOrder = current?.order === 'asc' ? 'desc' : 'asc';
   emits('sort', { key: header.value, order: newOrder });
 }
 
 function getSortOrder(header) {
-  return props.sortBy?.find(s => s.key === header.value)?.order;
+  if (Array.isArray(props.sortBy)) {
+    return props.sortBy.find(s => s.key === header.value)?.order;
+  }
+  if (typeof props.sortBy === 'string' && props.sortBy === header.value) {
+    return 'asc';
+  }
+  return undefined;
 }
 
 const getSortIcon = (header) => {

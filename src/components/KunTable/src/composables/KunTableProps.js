@@ -12,7 +12,10 @@ export default () => ({
     // Features
     itemsPerPage: { type: Number, default: 10 },
     page: { type: Number, default: 1 },
-    sortBy: { type: Array, default: () => [] },
+    sortBy: {
+        type: [Array, String],
+        default: () => []
+    },
     mutliSort: Boolean,
     pageOptions: { type: Array, default: () => [5, 10, 25, 50, 100] },
 

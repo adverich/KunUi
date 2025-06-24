@@ -3,16 +3,27 @@ import { computed, watch, reactive } from 'vue';
 export default function useOptions(props, emits, filteredItems) {
     const { page, itemsPerPage, sortBy, mutliSort } = props;
 
+    const normalizeSortBy = (rawSortBy) => {
+        if (typeof rawSortBy === 'string') {
+            return [{ key: rawSortBy, order: 'asc' }];
+        }
+
+        if (Array.isArray(rawSortBy)) {
+            return rawSortBy.map(s => typeof s === 'string' ? { key: s, order: 'asc' } : s);
+        }
+
+        return [];
+    };
+
     const options = reactive({
         page: page.value,
         itemsPerPage: itemsPerPage.value,
-        sortBy: [...sortBy.value || []],
+        sortBy: normalizeSortBy(sortBy.value),
     });
 
     watch(() => page.value, (val) => options.page = val);
     watch(() => itemsPerPage.value, (val) => options.itemsPerPage = val);
-    // watch(() => sortBy.value, (val) => options.sortBy = [...val]);
-    // watch(() => options.sortBy, (val) => emits?.('update:sortBy', val));
+    watch(() => options.sortBy, (val) => emits?.('update:sortBy', val));
 
     watch(() => options.page, (val) => emits?.('update:page', val));
     watch(() => options.itemsPerPage, (val) => emits?.('update:itemsPerPage', val));
@@ -74,7 +85,7 @@ export default function useOptions(props, emits, filteredItems) {
             if (mutliSort.value) {
                 options.sortBy.push({ key, order });
             } else {
-                options.sortBy = [{ key: key, order: order }]
+                options.sortBy = [{ key, order }]
             }
         };
     };

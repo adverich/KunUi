@@ -81,7 +81,7 @@
 
         <div class="h-full w-full overflow-auto">
           <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect 
-          :searchableKeys="['name']" show-expand hasActions :action-loading-map="actionLoading">
+          :searchableKeys="['name']" show-expand hasActions :action-loading-map="actionLoading" sort-by="fullName">
             <template #expand="{ item }">
               <div class="bg-slate-800 text-blue-500 text-center py-1">{{ item.name }}</div>
             </template>
