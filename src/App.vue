@@ -56,6 +56,27 @@
             <KunBtn text="CUACK" @click="doSomething"/>
           </KunBadge>
         </div>
+
+        <KunAutocomplete v-model="testFalse"
+            :items="trueOrFalse" item-title="name" item-text="name" item-value="value"
+          max-height="300" label="Trabajar sin internet" :hide-details="false" />
+
+          <KunTooltip location="top">
+            <template #activator="{ props }">
+              <KunIcon v-bind="props" :icon="IconPencil" size="text-2xl ml-2" />
+            </template>
+            <span> El sistema funcionara sin internet, esto utilizara mas recursos de su pc</span>
+          </KunTooltip>
+
+          <div class="ml-4">
+            <KunTooltip text="Editar" location="top" :dist="{ y: 16 }">
+              <template #activator="{ props }">
+                <KunBtn v-bind="props" size="xxs">
+                  <KunIcon :icon="IconPencil" size="text-xs" />
+                </KunBtn>
+              </template>
+            </KunTooltip>
+          </div>
       </div>
 
         <div class="h-full w-full overflow-auto">
@@ -88,7 +109,7 @@
             </template>
 
             <template #item.actions="{ item, loading }">
-              <div>
+              <div class="flex gap-x-2">
                 <KunTooltip text="Editar" location="top">
                   <template #activator="{ props }">
                     <KunBtn v-bind="props" @click="editItem(item)" :loading="loading?.edit" :disabled="loading?.delete" size="xxs">
@@ -172,6 +193,12 @@ function setMin() {
   }, 2500);
 }
 setMin();
+
+const trueOrFalse = [
+  { id: 1, value: true, name: "Si" },
+  { id: 2, value: false, name: "No" },
+];
+const testFalse = ref(false);
 
 function getTotalAmount(item){
   return Number(item.stock) * Number(item.price_base);

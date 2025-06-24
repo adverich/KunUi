@@ -10,8 +10,7 @@
       <div
         v-show="isVisible"
         ref="tooltipRef"
-        class="absolute px-3 py-2 text-sm rounded shadow text-black dark:text-white bg-gray-600:75 dark:bg-gray-700/75"
-        :class="contentClass"
+        :class="mergedClass"
         :style="tooltipStyle"
         style="z-index: 9999;"
         role="tooltip"
@@ -34,6 +33,7 @@ import {
 } from 'vue'
 
 const props = defineProps({
+  class: [String, Array, Object],
   text: String,
   location: {
     type: String,
@@ -47,7 +47,6 @@ const props = defineProps({
     type: String,
     default: 'fade',
   },
-  contentClass: [String, Array, Object],
   disabled: Boolean,
   delay: {
     type: [Number, String],
@@ -56,6 +55,14 @@ const props = defineProps({
   closeDelay: {
     type: [Number, String],
     default: 100,
+  },
+  textColor: { type: String, default: 'text-black dark:text-white' },
+  bgColor: { type: String, default: 'bg-gray-600:75 dark:bg-gray-700/75 '},
+  rounded: { type: String, default: 'rounded '},
+  textSize: { type: String, default: 'text-sm' },
+  dist: {
+    type: [Number, Object],
+    default: () => ({ x: 0, y: 8 })
   },
 })
 
@@ -110,6 +117,16 @@ const activatorProps = computed(() => {
   return listeners
 })
 
+const baseClass="absolute px-3 py-2 shadow";
+const mergedClass = computed(() => [baseClass, props.textColor, props.bgColor, props.textSize, props.rounded, props.class]);
+
+const offset = computed(() => {
+  if (typeof props.dist === 'number') {
+    return { x: 0, y: props.dist }
+  }
+  return { x: props.dist.x ?? 0, y: props.dist.y ?? 0 }
+});
+
 function updatePosition() {
   const activator = activatorRef.value
   const tooltip = tooltipRef.value
@@ -120,22 +137,24 @@ function updatePosition() {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop
   const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
 
+  const { x, y } = offset.value;
+
   const positions = {
     top: {
-      top: `${activatorRect.top + scrollTop - tooltipRect.height - 16}px`,
-      left: `${activatorRect.left + scrollLeft + activatorRect.width / 2 - tooltipRect.width / 2}px`,
+      top: `${activatorRect.top + scrollTop - tooltipRect.height - y}px`,
+      left: `${activatorRect.left + scrollLeft + activatorRect.width / 2 - tooltipRect.width / 2 + x}px`,
     },
     bottom: {
-      top: `${activatorRect.bottom + scrollTop + 8}px`,
-      left: `${activatorRect.left + scrollLeft + activatorRect.width / 2 - tooltipRect.width / 2}px`,
+      top: `${activatorRect.bottom + scrollTop + y}px`,
+      left: `${activatorRect.left + scrollLeft + activatorRect.width / 2 - tooltipRect.width / 2 + x}px`,
     },
     left: {
-      top: `${activatorRect.top + scrollTop + activatorRect.height / 2 - tooltipRect.height / 2}px`,
-      left: `${activatorRect.left + scrollLeft - tooltipRect.width - 8}px`,
+      top: `${activatorRect.top + scrollTop + activatorRect.height / 2 - tooltipRect.height / 2 + y}px`,
+      left: `${activatorRect.left + scrollLeft - tooltipRect.width - x}px`,
     },
     right: {
-      top: `${activatorRect.top + scrollTop + activatorRect.height / 2 - tooltipRect.height / 2}px`,
-      left: `${activatorRect.right + scrollLeft + 8}px`,
+      top: `${activatorRect.top + scrollTop + activatorRect.height / 2 - tooltipRect.height / 2 + y}px`,
+      left: `${activatorRect.right + scrollLeft + x}px`,
     },
   }
 

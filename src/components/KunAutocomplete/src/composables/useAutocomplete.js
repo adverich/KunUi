@@ -38,6 +38,8 @@ export function useAutocomplete(props, emits, modelValue, items) {
     });
 
     function itemToString(item, value, hasDefault) {
+        console.log('aca tamos');
+        console.log(item[value]);
         if (isObject(item)) {
             if (value) {
                 // Verificamos si tiene texto configurado
@@ -64,7 +66,11 @@ export function useAutocomplete(props, emits, modelValue, items) {
                 if (!props.returnObject && typeof item[value] === "number") {
                     return item[value].toString();
                 }
-                if (item[value] !== undefined && item[value] !== null) return item[value].toString();
+
+                if (item[value] !== undefined && item[value] !== null) {
+                    return item[value].toString();
+                }
+                console.log('wtf');
                 return "";
             }
             if (hasDefault) {
@@ -89,20 +95,20 @@ export function useAutocomplete(props, emits, modelValue, items) {
 
     function getSelectedItem(item) {
         try {
-            watchModelValue.value = false;
+            let updated = null;
             selectedItem.value = item;
             if (!props.multiple) {
                 if (props.returnObject) {
-                    modelValue.value = item;
+                    updated = item;
                 } else {
                     if (isObject(item)) {
                         if (props.itemValue) {
-                            modelValue.value = item[props.itemValue];
+                            updated = item[props.itemValue];
                         } else {
-                            modelValue.value = Object.values(item)[0];
+                            updated = Object.values(item)[0];
                         }
                     } else {
-                        modelValue.value = item;
+                        updated = item;
                     }
                 }
                 menuModel.value = false;
@@ -116,15 +122,16 @@ export function useAutocomplete(props, emits, modelValue, items) {
                                 : Object.values(item)[0]
                             : item;
 
-                    const updated = [...(modelValue.value || []), val];
-                    emits('update:modelValue', updated);
+                    updated = [...(modelValue.value || []), val];
                 } else {
                     if (item) removeFromArray(item);
                 }
             }
+            modelValue.value = updated;
+            emits('update:modelValue', updated);
             emits('selectedItem', selectedItem.value);
             if (props.clearOnSelect) clearSelection();
-            watchModelValue.value = true;
+            // setValue();
         } catch (e) {
             console.log(e)
         } finally {
@@ -132,17 +139,12 @@ export function useAutocomplete(props, emits, modelValue, items) {
         }
     }
 
-    const watchModelValue = ref(true);
-    watch(() => modelValue.value, (newVal) => {
-        if (watchModelValue.value) selectedItem.value = findItemByValue(newVal);
-    }, { immediate: true });
-
     watch(() => items.value, () => {
         selectedItem.value = findItemByValue(modelValue.value);
     }, { immediate: true });
 
     function findItemByValue(value) {
-        if (!value) return null;
+        if (value === undefined || value === null) return null;
         // Si es un objeto
         if (props.returnObject) return value;
 

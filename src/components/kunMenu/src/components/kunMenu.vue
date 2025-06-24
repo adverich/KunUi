@@ -3,7 +3,7 @@
     <transition :name="transition">
       <div v-show="menuVisible" ref="contentEl" role="menu" tabindex="-1"
         class="relative shadow-xl rounded-b overflow-y-auto focus:outline-none bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
-        :class="[props.class, contentClass, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex]"
+        :class="[props.class, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex]"
         :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }" 
         @keydown.escape.stop="handleEscape"
       >
