@@ -23,7 +23,7 @@ const baseClass = computed(() => {
   }
 
   const overflowClass = props.scrollable ? 'overflow-y-auto' : 'overflow-visible';
-  return `relative rounded-2xl shadow-xl transition-all p-2 ${overflowClass}`;
+  return `relative rounded-2xl shadow-xl transition-all ${overflowClass}`;
 });
 
 const mergedClass = computed(() => [
