@@ -64,7 +64,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
                 if (!props.returnObject && typeof item[value] === "number") {
                     return item[value].toString();
                 }
-                if (item[value]) return item[value].toString();
+                if (item[value] !== undefined && item[value] !== null) return item[value].toString();
                 return "";
             }
             if (hasDefault) {
