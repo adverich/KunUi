@@ -11,10 +11,12 @@ import IconEyeOutline from './IconEyeOutline.vue'
 import IconEyeOffOutline from './IconEyeOffOutline.vue'
 import IconMenuDownOutline from './IconMenuDownOutline.vue'
 import IconMenuUpOutline from './IconMenuUpOutline.vue'
+import IconMinus from './IconMinus.vue'
 import IconPencil from './IconPencil.vue'
 import IconSearch from './IconSearch.vue'
 import IconStar from './IconStar.vue'
 import IconTrashOutline from './IconTrashOutline.vue'
+
 export const icons = {
     accountOutline: IconAccountOutline,
     arrowDown: IconArrowDown,
@@ -29,6 +31,7 @@ export const icons = {
     eyeOffOutline: IconEyeOffOutline,
     menuDownOutline: IconMenuDownOutline,
     menuUpOutline: IconMenuUpOutline,
+    Minus: IconMinus,
     pencil: IconPencil,
     search: IconSearch,
     star: IconStar,

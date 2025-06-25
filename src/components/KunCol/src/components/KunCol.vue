@@ -8,11 +8,11 @@
 import { computed, inject } from 'vue'
 
 const props = defineProps({
-  cols: String,
-  sm: String,
-  md: String,
-  lg: String,
-  xl: String,
+  cols: [String, Number],
+  sm: [String, Number],
+  md: [String, Number],
+  lg: [String, Number],
+  xl: [String, Number],
 })
 
 const noGutters = inject('noGutters', false)

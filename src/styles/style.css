@@ -15,3 +15,20 @@ body {
     background-color: var(--background);
     color: var(--on-color);
 }
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: currentColor;
+    transform: scale(0);
+    animation: ripple-animation 600ms linear;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
