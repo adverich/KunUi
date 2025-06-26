@@ -92,6 +92,7 @@ const props = defineProps({
   icon: [Boolean, String, Function, Object, Array],
   prependIcon: [String, Function, Object, Array],
   appendIcon: [String, Function, Object, Array],
+  iconSize: { type: String, default: null }
 })
 
 const attrs = useAttrs()
@@ -113,7 +114,7 @@ const renderIcon = (icon) => {
 
   return h(KunIcon, {
     icon,
-    size: iconSize.value,
+    size: resolvedIconSize.value,
     color: props.textColor ?? 'text-font-color',
     disabled: props.disabled,
   });
@@ -152,16 +153,18 @@ const buttonSize = (size) => {
   }
 }
 
-const iconSize = computed(() => {
+const resolvedIconSize = computed(() => {
+  if (props.iconSize) return props.iconSize
+
   switch (props.size) {
-    case 'xxs': return 'text-xs';
-    case 'xs':  return 'text-xs';
-    case 'sm':  return 'text-sm';
-    case 'md':  return 'text-base';
-    case 'lg':  return 'text-lg';
-    case 'xl':  return 'text-xl';
-    case 'xxl': return 'text-2xl';
-    default:    return 'text-base';
+    case 'xxs': return 'text-xs'
+    case 'xs':  return 'text-xs'
+    case 'sm':  return 'text-sm'
+    case 'md':  return 'text-base'
+    case 'lg':  return 'text-lg'
+    case 'xl':  return 'text-xl'
+    case 'xxl': return 'text-2xl'
+    default:    return 'text-base'
   }
 })
 
