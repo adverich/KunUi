@@ -52,11 +52,12 @@
 </template>
 
 <script setup>
-import { computed, useAttrs } from 'vue'
+import { computed, useAttrs, useSlots, h } from 'vue'
 import { RouterLink } from 'vue-router'
 import KunLoaderCircular from '@/components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 
+const slots = useSlots()
 const props = defineProps({
   text: String,
   size: {
@@ -252,6 +253,6 @@ const computedClass = computed(() => {
 });
 
 const isIconOnly = computed(() => {
-  return !!props.icon && !props.text && !$slots.default
+  return !!props.icon && !props.text && !slots.default
 })
 </script>
