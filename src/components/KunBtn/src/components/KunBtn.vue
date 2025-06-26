@@ -88,7 +88,6 @@ const props = defineProps({
   replace: Boolean,
   target: String,
   ring: Boolean,
-  icon: String,
   icon: [Boolean, String, Function, Object, Array],
   prependIcon: [String, Function, Object, Array],
   appendIcon: [String, Function, Object, Array],
@@ -105,14 +104,19 @@ const componentTag = computed(() => {
 })
 
 const renderIcon = (icon) => {
-  if (!icon) return null
+  // No renderizar si está explícitamente deshabilitado
+  if (!icon || icon === false) return null;
 
-  // Si es booleano `true` (icon solo sin valor), no renderizar nada
-  if (icon === true) return null
+  // Si `true`, se espera que haya un ícono por slot o fallback; no lo manejamos acá
+  if (icon === true && !props.icon) return null;
 
-  // Pasá todo a KunIcon como `icon` prop
-  return h(KunIcon, { icon })
-}
+  return h(KunIcon, {
+    icon,
+    size: iconSize.value,
+    color: props.textColor ?? 'text-font-color',
+    disabled: props.disabled,
+  });
+};
 
 const componentAttrs = computed(() => {
   if (props.href) {
@@ -146,6 +150,19 @@ const buttonSize = (size) => {
     default: return 'px-3 py-2 text-sm'
   }
 }
+
+const iconSize = computed(() => {
+  switch (props.size) {
+    case 'xxs': return 'text-xs';
+    case 'xs':  return 'text-xs';
+    case 'sm':  return 'text-sm';
+    case 'md':  return 'text-base';
+    case 'lg':  return 'text-lg';
+    case 'xl':  return 'text-xl';
+    case 'xxl': return 'text-2xl';
+    default:    return 'text-base';
+  }
+})
 
 const variantClasses = computed(() => {
   const bg = props.bgColor
@@ -193,6 +210,22 @@ const computedClass = computed(() => {
     'relative' // 🔹 Hace que los hijos `absolute` se posicionen correctamente
   ];
 
+  // Si es botón solo con ícono
+  if (isIconOnly.value) {
+    base.push('aspect-square justify-center items-center');
+
+    switch (props.size) {
+      case 'xxs': base.push('p-1'); break;
+      case 'xs':  base.push('p-1.5'); break;
+      case 'sm':  base.push('p-2'); break;
+      case 'md':  base.push('p-2.5'); break;
+      case 'lg':  base.push('p-3'); break;
+      case 'xl':  base.push('p-3.5'); break;
+      case 'xxl': base.push('p-4'); break;
+      default:    base.push('p-2.5');
+    }
+  }
+
   if (!props.loading && !props.disabled) {
     base.push(
       'hover:opacity-90',
@@ -217,4 +250,8 @@ const computedClass = computed(() => {
 
   return base.filter(Boolean);
 });
+
+const isIconOnly = computed(() => {
+  return !!props.icon && !props.text && !$slots.default
+})
 </script>

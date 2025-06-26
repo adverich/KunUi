@@ -1,7 +1,7 @@
 <template>
   <span
     class="flex items-center"
-    :class="[color, size, disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer']"
+    :class="[color, normalizedSize, disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer']"
     @click="handleClick"
      v-bind="$attrs"
   >
@@ -9,11 +9,11 @@
     <slot v-if="$slots.default" />
 
     <!-- Si el icono es un componente, lo renderiza -->
-    <component v-else-if="isComponent" :is="resolvedIcon" :class="[color, size, contentClass]" />
+    <component v-else-if="isComponent" :is="resolvedIcon" :class="[color, normalizedSize, contentClass]" />
 
     <!-- Si es una string, la interpreta como clase o SVG raw (dependiendo del consumidor) -->
     <span v-else 
-      :class="[!isSvg ? resolvedIcon : '', color, size, contentClass]"
+      :class="[!isSvg ? resolvedIcon : '', color, normalizedSize, contentClass]"
       v-html="[isSvg ? resolvedIcon : '']" 
     />
   </span>
@@ -54,6 +54,7 @@ function handleClick(event) {
 
 const isSvg = computed(() => typeof resolvedIcon.value === 'string' && resolvedIcon.value.trim().startsWith('<svg'));
 const resolvedIcon = computed(() => {
+  if (Array.isArray(props.icon)) return props.icon[0];
   if (typeof props.icon === 'string' && props.icon.startsWith('$')) {
     const key = props.icon.slice(1);
     return props.aliases[key] || '';
@@ -63,6 +64,15 @@ const resolvedIcon = computed(() => {
 
 const isComponent = computed(() =>
   typeof resolvedIcon.value === 'function' ||
-  (typeof resolvedIcon.value === 'object' && resolvedIcon.value !== null)
+  (resolvedIcon.value && typeof resolvedIcon.value === 'object' && ('render' in resolvedIcon.value || 'setup' in resolvedIcon.value))
 );
+
+const normalizedSize = computed(() => {
+  const rawSize = Array.isArray(props.icon) ? props.icon[1] : props.size;
+  if (!rawSize) return 'text-base';
+  if (typeof rawSize === 'number' || /^\d+$/.test(rawSize)) {
+    return `text-[${rawSize}px]`;
+  }
+  return rawSize;
+});
 </script>
