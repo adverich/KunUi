@@ -206,7 +206,7 @@ const hasText = computed(() => !!props.text)
 const computedClass = computed(() => {
   const base = [
     'inline-flex items-center justify-center break-keep transition-all whitespace-nowrap',
-    buttonSize(props.size),
+    !isIconOnly.value ? buttonSize(props.size) : '',
     props.fontWeight,
     props.rounded,
     props.textAlign,
