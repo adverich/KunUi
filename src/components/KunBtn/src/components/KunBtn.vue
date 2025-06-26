@@ -19,21 +19,31 @@
       <!-- Contenido del botón con opacidad -->
       <div :class="{ 'opacity-50': loading }" class="flex items-center justify-center w-full h-full">
         <!-- Prepend -->
-        <template v-if="$slots.prepend">
+        <template v-if="$slots.prepend || prependIcon">
           <span class="mr-2 flex items-center">
             <slot name="prepend" />
+            <component :is="renderIcon(prependIcon)" />
           </span>
         </template>
 
-        <!-- Texto -->
-        <span v-if="text || $slots.default" class="truncate">
-          <slot>{{ text }}</slot>
+        <!-- Texto o ícono central -->
+        <span
+          v-if="text || $slots.default || icon"
+          class="truncate flex items-center justify-center"
+        >
+          <template v-if="icon && !text && !$slots.default">
+            <component :is="renderIcon(icon)" />
+          </template>
+          <template v-else>
+            <slot>{{ text }}</slot>
+          </template>
         </span>
 
         <!-- Append -->
-        <template v-if="$slots.append">
+        <template v-if="$slots.append || appendIcon">
           <span class="ml-2 flex items-center">
             <slot name="append" />
+            <component :is="renderIcon(appendIcon)" />
           </span>
         </template>
       </div>
@@ -44,7 +54,8 @@
 <script setup>
 import { computed, useAttrs } from 'vue'
 import { RouterLink } from 'vue-router'
-import KunLoaderCircular from '../../../KunLoaderCircular/src/components/KunLoaderCircular.vue';
+import KunLoaderCircular from '@/components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
+import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 
 const props = defineProps({
   text: String,
@@ -76,7 +87,11 @@ const props = defineProps({
   href: String,
   replace: Boolean,
   target: String,
-  ring: Boolean
+  ring: Boolean,
+  icon: String,
+  icon: [Boolean, String, Function, Object, Array],
+  prependIcon: [String, Function, Object, Array],
+  appendIcon: [String, Function, Object, Array],
 })
 
 const attrs = useAttrs()
@@ -88,6 +103,16 @@ const componentTag = computed(() => {
   if (props.to) return RouterLink
   return 'button'
 })
+
+const renderIcon = (icon) => {
+  if (!icon) return null
+
+  // Si es booleano `true` (icon solo sin valor), no renderizar nada
+  if (icon === true) return null
+
+  // Pasá todo a KunIcon como `icon` prop
+  return h(KunIcon, { icon })
+}
 
 const componentAttrs = computed(() => {
   if (props.href) {
