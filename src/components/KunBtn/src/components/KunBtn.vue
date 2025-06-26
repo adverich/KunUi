@@ -213,6 +213,8 @@ const computedClass = computed(() => {
     variantClasses.value,
     'relative' // 🔹 Hace que los hijos `absolute` se posicionen correctamente
   ];
+  
+  if (attrs.class) base.push(attrs.class);
 
   // Si es botón solo con ícono
   if (isIconOnly.value) {
@@ -244,13 +246,7 @@ const computedClass = computed(() => {
     if (props.disabled) base.push('opacity-50 cursor-not-allowed'); // 🔹 Mantiene opacidad solo para estado `disabled`
   }
 
-  if (hasText.value) {
-    base.push(props.minWidth);
-  }
-
-  if (attrs.class) {
-    base.push(attrs.class);
-  }
+  if (hasText.value) base.push(props.minWidth);
 
   return base.filter(Boolean);
 });
