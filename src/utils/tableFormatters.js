@@ -1,19 +1,21 @@
 export function getValue(header, item) {
-    return header.value && header.value in item ? item[header.value] : item;
-}
+    if (!header || !header.value) return undefined;
 
-export function formatValue(header, value) {
     if (header.columnType === 'relation') {
-        return getNestedValue(value, header.relationPath) ?? 'Sin valor';
+        const value = getNestedValue(item, header.relationPath);
+        return safeValue(value);
     }
 
     if (header.columnType === 'function') {
-        const raw = header.columnFunction?.(value, header);
-        if (header.columnFormat && formatters[header.columnFormat])
-            return formatters[header.columnFormat](raw);
-        return raw;
+        const value = header.columnFunction?.(item, header);
+        return safeValue(value);
     }
 
+    const value = item?.[header.value];
+    return safeValue(value);
+}
+
+export function formatValue(header, value) {
     const formatter = formatters[header.columnFormat] || formatters.default;
     return formatter(value);
 }
@@ -78,3 +80,9 @@ function convertirSegundosATiempo(segundos) {
     const segundosRestantes = segundos % 60;
     return `${horas} horas, ${minutos} minutos y ${segundosRestantes} segundos`;
 };
+
+function safeValue(value) {
+    if (value === null || value === undefined) return undefined;
+    if (value === 'null' || value === 'undefined') return undefined;
+    return value;
+}
