@@ -77,6 +77,10 @@
               </template>
             </KunTooltip>
           </div>
+
+          <div class="bg-blue-500 px-4 w-full">
+            <KunTextarea auto-grow v-model="testingArea"/>
+          </div>
       </div>
 
         <div class="h-full w-full overflow-auto">
@@ -157,10 +161,13 @@ import KunBadge from './components/KunBadge/src/components/KunBadge.vue';
 import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunMultipleModalFooter from './components/KunModalFooter/src/components/KunMultipleModalFooter.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
+import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
 
 const menuModel = ref(false);
 const avatarRef = ref(null);
 const leftDrawerStatus = ref(false);
+
+const testingArea = ref('');
 
 const footerMessages = ref([]);
 function doSomething(){
