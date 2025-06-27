@@ -151,15 +151,23 @@ const {
 } = useKunTextarea(props, emits, textareaRef)
 
 const variantClass = computed(() => {
+  const hasCustomBg = !!props.bgColor
+
   switch (props.variant) {
     case 'filled':
-      return 'bg-gray-100 dark:bg-gray-900 border border-transparent'
+      return [
+        hasCustomBg ? '' : 'bg-gray-100 dark:bg-gray-900',
+        'border border-transparent',
+      ]
     case 'outlined':
       return 'border border-gray-300 bg-transparent'
     case 'underlined':
       return 'border-b border-gray-300 bg-transparent rounded-none'
     case 'solo':
-      return 'bg-white dark:bg-black shadow-md border-transparent'
+      return [
+        hasCustomBg ? '' : 'bg-white dark:bg-black',
+        'shadow-md border-transparent',
+      ]
     default:
       return ''
   }
