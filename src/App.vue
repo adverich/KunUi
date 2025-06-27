@@ -82,6 +82,13 @@
         <div class="h-full w-full overflow-auto">
           <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect 
           :searchableKeys="['name']" show-expand hasActions :action-loading-map="actionLoading" sort-by="fullName">
+
+            <template #prependSearch>
+              <div class="w-full bg-red-800 flex justify-center">
+                <KunBtn text="HOLA MUNDO" />
+              </div>
+            </template>
+
             <template #expand="{ item }">
               <div class="bg-slate-800 text-blue-500 text-center py-1">{{ item.name }}</div>
             </template>
@@ -150,7 +157,6 @@ import KunBadge from './components/KunBadge/src/components/KunBadge.vue';
 import KunChip from './components/KunChip/src/components/KunChip.vue';
 import KunMultipleModalFooter from './components/KunModalFooter/src/components/KunMultipleModalFooter.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
-
 
 const menuModel = ref(false);
 const avatarRef = ref(null);

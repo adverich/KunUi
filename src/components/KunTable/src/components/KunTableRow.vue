@@ -74,7 +74,7 @@ const mergedTableClass = [
   baseRowClass, baseTrClass, props.rowClass, props.trClass, props.stripedClass, props.isSelected ? props.selectedClass : ''
 ];
 
-const baseTdClass = 'px-3 py-2 whitespace-nowrap text-sm text-black dark:text-white ';
+const baseTdClass = 'px-3 py-2 whitespace-nowrap text-sm text-black dark:text-white';
 const mergedTdClass = [baseTdClass, props.tdClass];
 const mergedActionsClass = ['text-center', props.actionsAlign]
 </script>

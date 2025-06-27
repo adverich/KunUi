@@ -2,14 +2,16 @@
     <div :class="mergedWrapperClass" v-bind="$attrs" style="user-select: text">
         <!-- Barra de búsqueda -->
         <div
-            v-if="searchable || filterable"
-            class="py-2 px-4 bg-slate-200 dark:bg-slate-800"
+            v-if="searchable || filterable || $slots.prependSearch || $slots.appendSearch"
+            class="p-2 bg-slate-200 dark:bg-slate-800"
             :class="{
                 'justify-start flex': searchPosition === 'start',
                 'justify-center flex': searchPosition === 'center',
                 'justify-end flex': searchPosition === 'end'
             }"
         >
+            <slot name="prependSearch" />
+
             <KunBtn v-if="filterable" @click="modalFilter = true" text="Filtrar" bgColor="bg-slate-300 dark:bg-slate-700" />
 
             <input
@@ -19,6 +21,8 @@
                 :placeholder="searchPlaceholder"
                 class="border mx-2 px-3 py-1 rounded w-full max-w-sm text-sm"
             />
+
+            <slot name="appendSearch" />
         </div>
 
         <table :class="mergedTableClass">
