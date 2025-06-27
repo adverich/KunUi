@@ -1,14 +1,15 @@
 export const kunTextareaProps = {
-  modelValue: [String, Number],
+  modelValue: [String, Number, Array, Object, Boolean],
+  formatModel: {
+    type: String,
+    default: 'auto', // auto | raw | json
+  },
   label: String,
   placeholder: String,
-  rows: {
-    type: [String, Number],
-    default: 1,
-  },
+  rows: { type: [String, Number], default: 1 },
   autoGrow: Boolean,
   noResize: Boolean,
-  maxRows: [Number, String], // 🔧 Agregado
+  maxRows: [Number, String],
 
   clearable: Boolean,
   clearIcon: {
@@ -18,14 +19,8 @@ export const kunTextareaProps = {
   disabled: Boolean,
   readonly: Boolean,
 
-  variant: {
-    type: String,
-    default: 'filled',
-  },
-  density: {
-    type: String,
-    default: 'default',
-  },
+  variant: { type: String, default: 'filled' },
+  density: { type: String, default: 'default' },
 
   // Estilo
   rounded: [Boolean, String, Number],
@@ -64,16 +59,10 @@ export const kunTextareaProps = {
   validateOn: String,
   hint: String,
   persistentHint: Boolean,
-  hideDetails: {
-    type: [Boolean, String],
-    default: false,
-  },
+  hideDetails: { type: [Boolean, String], default: false },
   persistentCounter: Boolean,
 
   // Loader
   loading: Boolean,
-  loadingColor: {
-    type: String,
-    default: 'bg-slate-500',
-  },
+  loadingColor: { type: String, default: 'bg-slate-500' },
 }

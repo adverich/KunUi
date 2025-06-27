@@ -2,16 +2,49 @@ import { ref, watch, computed, onMounted, nextTick } from 'vue'
 
 export function useKunTextarea(props, emit, textareaRef) {
     const isFocused = ref(false)
-    const internalValue = ref(props.modelValue ?? '')
+    const rawModelValue = ref(props.modelValue)
 
-    watch(() => props.modelValue, v => {
-        internalValue.value = v ?? ''
+    const formatInputValue = (v) => {
+        if (props.formatModel === 'raw') return String(v ?? '')
+        if (props.formatModel === 'json' || props.formatModel === 'auto') {
+            if (typeof v === 'object' && v !== null) {
+                try {
+                    return JSON.stringify(v, null, 2)
+                } catch (e) {
+                    return String(v)
+                }
+            }
+        }
+        return String(v ?? '')
+    }
+
+    const parseTextareaValue = (text) => {
+        if (props.formatModel === 'raw') return text
+
+        try {
+            const parsed = JSON.parse(text)
+            if (props.formatModel === 'json' || props.formatModel === 'auto') {
+                return parsed
+            }
+        } catch (e) {
+            // si no es parseable y estamos en auto, devolver string
+        }
+
+        return text
+    }
+
+    const internalValue = ref(formatInputValue(props.modelValue))
+
+    watch(() => props.modelValue, (val) => {
+        rawModelValue.value = val
+        internalValue.value = formatInputValue(val)
         if (props.autoGrow) nextTick(adjustHeight)
     })
 
     const updateValue = (v) => {
         internalValue.value = v
-        emit('update:modelValue', v)
+        const parsed = parseTextareaValue(v)
+        emit('update:modelValue', parsed)
     }
 
     const handleClear = () => {
@@ -21,20 +54,18 @@ export function useKunTextarea(props, emit, textareaRef) {
 
     const adjustHeight = () => {
         if (!textareaRef.value) return
-        const el = textareaRef.value
-        el.style.height = 'auto'
-        el.style.overflowY = 'hidden'
+        textareaRef.value.style.height = 'auto'
+        textareaRef.value.style.overflowY = 'hidden'
 
-        const scrollHeight = el.scrollHeight
-        const lineHeightStr = getComputedStyle(el).lineHeight
-        const lineHeight = parseFloat(lineHeightStr) || 24
+        const scrollHeight = textareaRef.value.scrollHeight
+        const lineHeight = parseFloat(getComputedStyle(textareaRef.value).lineHeight || '24')
         const maxRows = Number(props.maxRows || 0)
 
         if (props.maxRows && maxRows > 0) {
             const maxHeight = maxRows * lineHeight
-            el.style.height = Math.min(scrollHeight, maxHeight) + 'px'
+            textareaRef.value.style.height = Math.min(scrollHeight, maxHeight) + 'px'
         } else {
-            el.style.height = scrollHeight + 'px'
+            textareaRef.value.style.height = scrollHeight + 'px'
         }
     }
 
@@ -42,12 +73,12 @@ export function useKunTextarea(props, emit, textareaRef) {
         if (props.autoGrow) nextTick(adjustHeight)
     })
 
-    // Validación
+    // Validación (igual)
     const validationErrors = ref([])
     const isPristine = ref(true)
 
     const validate = (silent = false) => {
-        const value = props.validationValue ?? internalValue.value
+        const value = props.validationValue ?? parseTextareaValue(internalValue.value)
         const rules = props.rules ?? []
         const errors = []
 
@@ -92,7 +123,6 @@ export function useKunTextarea(props, emit, textareaRef) {
         handleClear,
         adjustHeight,
 
-        // validación
         isPristine,
         validate,
         reset,
