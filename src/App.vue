@@ -78,8 +78,8 @@
             </KunTooltip>
           </div>
 
-          <div class="bg-blue-500 px-4 w-full">
-            <KunTextarea auto-grow v-model="testingArea"/>
+          <div class="px-4 w-full">
+            <KunTextarea auto-grow v-model="testingArea" bgColor="bg-red-800" />
           </div>
       </div>
 

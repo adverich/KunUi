@@ -16,6 +16,7 @@ export const kunTextareaProps = {
     type: [String, Function, Object],
     default: 'i-mdi-close',
   },
+  persistentClear: Boolean,
   disabled: Boolean,
   readonly: Boolean,
 
@@ -28,7 +29,7 @@ export const kunTextareaProps = {
   flat: Boolean,
   color: String,
   bgColor: String,
-  baseColor: String,
+  textColor: String,
   iconColor: [String, Boolean],
   glow: Boolean,
   class: [String, Array, Object],

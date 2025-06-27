@@ -86,7 +86,7 @@
           <div class="h-1 w-full bg-gray-200 rounded overflow-hidden">
             <div
               class="h-full transition-all duration-300"
-              :class="[`bg-${loadingColor}`]"
+              :class="[`${loadingColor}`]"
               style="width: 100%"
             ></div>
           </div>
@@ -190,8 +190,8 @@ const inputClasses = computed(() => [
     [`rounded-${props.rounded}`]: typeof props.rounded === 'string' || typeof props.rounded === 'number',
     'shadow-md': props.variant === 'solo' && !props.flat,
     'shadow-none': props.flat,
-    [`text-${props.baseColor}`]: props.baseColor,
-    [`bg-${props.bgColor}`]: props.bgColor,
+    [`text-${props.textColor}`]: props.textColor,
+    [`${props.bgColor}`]: props.bgColor,
     'text-gray-500 bg-gray-200': props.disabled,
     'focus:outline-none focus:ring-2': !props.disabled,
     [`focus:ring-${props.color}`]: props.color && !props.disabled && !hasError.value,
