@@ -95,20 +95,15 @@
                 </KunTableIterators>
             </template>
 
-            <template v-else>
-                <tr>
-                    <td :colspan="fullColspan">
-                        <KunCard class="h-full flex justify-center items-center" title="No hay elementos disponibles" titleSize="text-4xl" />
-                    </td>
-                </tr>
-            </template>
-
             <template v-if="$slots.tfoot">
                 <tfoot><slot name="tfoot" v-bind="slotProps" /></tfoot>
             </template>
         </table>
 
-        <div class="h-full"></div>
+        <div  class="h-full">
+            <KunCard v-if="!paginatedItems.length" class="h-full flex justify-center items-center" :title="noDataText" titleSize="text-4xl" />
+        </div>
+
         <!-- Footer Fijo -->
         <div v-if="!hideDefaultFooter" class="sticky bottom-0 z-10">
             <KunTableFooter

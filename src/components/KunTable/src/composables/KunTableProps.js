@@ -55,8 +55,8 @@ export default () => ({
     rowClass: { type: String, default: '' },
 
     // Misc
-    noDataText: { type: String, default: 'No data available' },
-    loadingText: { type: String, default: 'Loading...' },
+    noDataText: { type: String, default: 'No hay elementos disponibles' },
+    loadingText: { type: String, default: 'Cargando...' },
 
     // Slots control
     showTopSlot: { type: Boolean, default: false },
