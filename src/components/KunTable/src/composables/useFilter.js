@@ -50,7 +50,7 @@ export default function useFilter(props, debounceTime) {
 
     const setSearch = debounce((value) => {
         appliedFilters.search = value?.toString().toLowerCase() || ''
-    }, debounceTime) // Delay configurable
+    }, debounceTime)
 
     const setColumnFilter = (key, value) => {
         appliedFilters.byColumn[key] = value;

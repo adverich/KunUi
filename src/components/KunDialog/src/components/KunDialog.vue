@@ -108,12 +108,9 @@ onBeforeUnmount(() => {
 
 // Manejador de eventos de teclado
 function handleKeydown(event) {
-  console.log(event);
   event.stopPropagation();
   if (event.key === "Escape") {
-    console.log('y se');
     if (!props.persistent) {
-      console.log('y seeee');
       emits('update:modelValue', false)
     }
   }

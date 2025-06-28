@@ -20,6 +20,10 @@ export default () => ({
     pageOptions: { type: Array, default: () => [5, 10, 25, 50, 100] },
 
     searchable: { type: Boolean, default: false },
+    search: {
+        type: String,
+        default: ''
+    },
     searchableKeys: { type: Array, default: null },
     searchPosition: {
         type: String,

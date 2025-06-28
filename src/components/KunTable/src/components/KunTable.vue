@@ -144,7 +144,7 @@ import useFilter from '../composables/useFilter';
 
 import kunTableProps from '../composables/KunTableProps';
 
-const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy', 'update:selectedItems']);
+const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy', 'update:selectedItems', 'update:search']);
 const props = defineProps(kunTableProps());
 const propsRefs = toRefs(props);
 
@@ -164,11 +164,19 @@ const {
 } = propsRefs;
 
 // Estado de búsqueda
-const searchQuery = ref('');
+const searchQuery = ref(props.search);
+watch(() => props.search, (val) => {
+  if (val !== searchQuery.value) {
+    searchQuery.value = val;
+  }
+});
+
 const { filteredItems, setSearch, modalFilter, applyColumnFilters, clearFilters, appliedFilters } = useFilter(propsRefs, debounceTime);
+
 // Sincronizar búsqueda
-watch(searchQuery, (q) => {
-  setSearch(q);
+watch(searchQuery, (val) => {
+  emits('update:search', val);   // opcional: si querés que sea bidireccional
+  setSearch(val);
 });
 
 const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems);
