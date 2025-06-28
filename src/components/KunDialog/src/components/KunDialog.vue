@@ -118,9 +118,7 @@ function handleKeydown(event) {
 
 // Agregar listener cuando el componente se monta
 onMounted(() => {
-  if (props.modelValue) {
-    window.addEventListener("keydown", handleKeydown);
-  }
+  window.addEventListener("keydown", handleKeydown);
 });
 
 // Eliminar listener cuando el componente se desmonta

@@ -26,7 +26,7 @@ export default () => ({
         default: 'end', // 'start' | 'center' | 'end'
         validator: v => ['start', 'center', 'end'].includes(v),
     },
-    searchPlaceholder: { type: String, default: 'Search...' },
+    searchPlaceholder: { type: String, default: 'Buscar...' },
     debounceTime: { type: Number, default: 300 },
 
     showSelect: { type: Boolean, default: false },
