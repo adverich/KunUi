@@ -24,21 +24,17 @@
 </template>
 
 <script setup>
-import { ref, provide, watch } from 'vue'
-import { useKunList } from '../composables/useKunList' 
+import { ref, provide, computed } from 'vue'
 
 const props = defineProps({
   nav: Boolean,
   sub: Boolean,
   dense: Boolean,
-  selectable: {
-    type: [Boolean, String],
-    default: false,
-    validator: v => ['single', 'multiple', true, false].includes(v),
-  },
-  selected: {
-    type: [Array, String, Number, Boolean, Object, null],
-    default: null
+  selectable: { type: Boolean, default: true },
+  selectionMode: {
+    type: String,
+    default: 'single',
+    validator: v => ['single', 'multiple'].includes(v),
   },
   bgList: {
     type: String,
@@ -55,33 +51,43 @@ const emit = defineEmits(['keyDown', 'click:select', 'update:selected'])
 const ulRef = ref(null)
 const itemRefs = ref([])
 
-// Usa useKunList para manejar selección
-const { selectedValues } = useKunList(props)
-
-watch(
-  () => props.selected,
-  (val) => {
-    selectedValues.value = props.selectable === 'multiple'
-      ? Array.isArray(val) ? [...val] : []
-      : val != null ? [val] : []
-  },
-  { immediate: true }
-)
-
-watch(
-  selectedValues,
-  (val) => {
-    emit(
-      'update:selected',
-      props.selectable === 'multiple' ? [...val] : val[0] ?? null
-    )
-  }
-)
+const selectedItems = defineModel('selected', {
+  type: [Array, String, Number, Object, null],
+  default: () => [],
+})
 
 provide('registerListItemRef', el => {
   if (el && !itemRefs.value.includes(el)) {
     itemRefs.value.push(el)
   }
+})
+
+const isMultiple = computed(() => props.selectable && props.selectionMode === 'multiple')
+
+function toggleItem(value) {
+  if (!props.selectable || value == null) return
+
+  if (isMultiple.value) {
+  const exists = selectedItems.value.includes(value)
+  selectedItems.value = exists
+    ? selectedItems.value.filter(v => v !== value)
+    : [...selectedItems.value, value]
+  } else {
+    selectedItems.value = value
+  }
+}
+
+function isSelected(value) {
+  if (!props.selectable || value == null) return false
+  return isMultiple.value
+  ? selectedItems.value?.includes?.(value)
+  : selectedItems.value === value
+}
+
+// 🔴🔴 ESTE PROVIDE FALTABA
+provide('kunListContext', {
+  toggleItem,
+  isSelected
 })
 
 function onKeydown(e) {
