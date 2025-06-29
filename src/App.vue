@@ -46,43 +46,29 @@
       </template>
     </KunDrawer>
 
-    <div class="w-full h-full flex flex-col" style="overflow: hidden!important;">
-      <div class="flex w-1/2 py-2">
-        <KunAutocomplete v-model="selected" activator="parent" :items="products" item-title="name" item-value="id"
-          item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"
-        />
-        <div class="flex w-1/2 py-2">
-          <KunBadge text="12">
-            <KunBtn text="CUACK" @click="doSomething"/>
-          </KunBadge>
-        </div>
+    <div>
+      <KunRow style="overflow: hidden!important;">
+        <KunCol cols="3">
+          <KunAutocomplete v-model="selected" activator="parent" :items="products" item-title="name" item-value="id"
+            item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"
+          />
+        </KunCol>
 
-        <KunAutocomplete v-model="testFalse"
-            :items="trueOrFalse" item-title="name" item-text="name" item-value="value"
-          max-height="300" label="Trabajar sin internet" :hide-details="false" />
+        <KunCol cols="9">a</KunCol>
 
-          <KunTooltip location="top">
-            <template #activator="{ props }">
-              <KunIcon v-bind="props" :icon="IconPencil" size="text-2xl ml-2" />
-            </template>
-            <span> El sistema funcionara sin internet, esto utilizara mas recursos de su pc</span>
-          </KunTooltip>
+        <KunCol cols="3">
+          <KunTextarea auto-grow v-model="testingArea" bgColor="bg-red-800" />
+        </KunCol>
 
-          <div class="ml-4">
-            <KunTooltip text="Editar" location="top" :dist="{ y: 16 }">
-              <template #activator="{ props }">
-                <KunBtn v-bind="props" size="xxs">
-                  <KunIcon :icon="IconPencil" size="text-xs" />
-                </KunBtn>
-              </template>
-            </KunTooltip>
-          </div>
+        <KunCol cols="9">a</KunCol>
 
-          <div class="px-4 w-full">
-            <KunTextarea auto-grow v-model="testingArea" bgColor="bg-red-800" />
-          </div>
-      </div>
+        <KunCol cols="3">
+          <KunNumberField noArrows v-model="numTest" />
+        </KunCol>
+      </KunRow>
+    </div>
 
+      <!-- <div>
         <div class="h-full w-full overflow-auto">
           <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect 
           :searchableKeys="['name']" show-expand hasActions :action-loading-map="actionLoading" sort-by="fullName">
@@ -137,7 +123,7 @@
           </KunTable>
         </div>
         <KunMultipleModalFooter v-model:messages="footerMessages" class="px-6"/>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -163,10 +149,14 @@ import KunMultipleModalFooter from './components/KunModalFooter/src/components/K
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
 import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
 
+import KunRow from './components/KunRow/src/components/KunRow.vue';
+import KunCol from './components/KunCol/src/components/KunCol.vue';
+import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
+
 const menuModel = ref(false);
 const avatarRef = ref(null);
 const leftDrawerStatus = ref(false);
-
+const numTest = ref()
 const testingArea = ref('');
 
 const footerMessages = ref([]);

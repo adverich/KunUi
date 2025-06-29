@@ -67,7 +67,8 @@ function resetValidation() {
 }
 
 // Submit handler
-function handleSubmit() {
+function handleSubmit(event) {
+  event?.preventDefault(); // importante para evitar el error
   validate().then(({ valid }) => {
     if (valid) {
       emits('submit');
