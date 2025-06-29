@@ -7,7 +7,7 @@
 
         <div class="h-15 w-max" ref="avatarRef">
           <KunAvatar class="bg-transparent" @click="menuModel = true">
-            <KunIcon :icon="IconAccountOutline" />
+            <KunIcon :icon="IconAccountOutline" color="text-red-500" />
             <KunMenu activator="parent" v-model="menuModel" :parent-ref="avatarRef" z-index="z-[2000]"
               location="bottom" origin="bottom right" 
               minWidth="min-w-48" width="w-64" maxWidth="max-w-64"
@@ -67,63 +67,6 @@
         </KunCol>
       </KunRow>
     </div>
-
-      <!-- <div>
-        <div class="h-full w-full overflow-auto">
-          <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect 
-          :searchableKeys="['name']" show-expand hasActions :action-loading-map="actionLoading" sort-by="fullName">
-
-            <template #prependSearch>
-              <div class="w-full bg-red-800 flex justify-center">
-                <KunBtn text="HOLA MUNDO" />
-              </div>
-            </template>
-
-            <template #expand="{ item }">
-              <div class="bg-slate-800 text-blue-500 text-center py-1">{{ item.name }}</div>
-            </template>
-
-            <template #item.invoice_payments="{ item, header }">
-              <div class="flex flex-wrap gap-2">
-                <KunBadge
-                  v-for="(obj, i) in item[header.chipsProps.source]"
-                  :key="i"
-                  :content="obj[header.chipsProps.subtitle]"
-                  color="green-darken-3"
-                  location="top right"
-                  offset-y="-5"
-                >
-                  <KunChip
-                    color="green-darken-4"
-                    density="comfortable"
-                    variant="flat"
-                    elevation="5"
-                  >
-                    {{ obj[header.chipsProps.title] }}
-                  </KunChip>
-                </KunBadge>
-              </div>
-            </template>
-
-            <template #item.actions="{ item, loading }">
-              <div class="flex gap-x-2">
-                <KunTooltip text="Editar" location="top">
-                  <template #activator="{ props }">
-                    <KunBtn v-bind="props" @click="editItem(item)" :loading="loading?.edit" :disabled="loading?.delete" size="xxs">
-                      <KunIcon :icon="IconPencil" size="text-xs" />
-                    </KunBtn>
-                  </template>
-                </KunTooltip>
-
-                <KunBtn @click="deleteItem(item)" :loading="loading?.delete" :disabled="loading?.edit" size="xxs">
-                  <KunIcon :icon="IconTrashOutline" />
-                </KunBtn>
-              </div>
-            </template>
-          </KunTable>
-        </div>
-        <KunMultipleModalFooter v-model:messages="footerMessages" class="px-6"/>
-    </div> -->
   </div>
 </template>
 

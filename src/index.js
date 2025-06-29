@@ -21,6 +21,7 @@ import KunCurrency from './components/KunCurrency/src/components/KunCurrency.vue
 import KunDialog from './components/KunDialog/src/components/KunDialog.vue';
 import KunDivider from './components/KunDivider/src/components/KunDivider.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
+import KunFileInput from './components/KunFileInput/src/components/KunFileInput.vue';
 import KunForm from './components/KunForm/src/components/KunForm.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import KunList from './components/KunList/src/components/KunList.vue';
@@ -73,6 +74,7 @@ const components = {
   KunDialog,
   KunDivider,
   KunDrawer,
+  KunFileInput,
   KunForm,
   KunIcon,
   KunList,
@@ -124,6 +126,7 @@ export {
   KunDialog,
   KunDivider,
   KunDrawer,
+  KunFileInput,
   KunForm,
   KunIcon,
   KunList,

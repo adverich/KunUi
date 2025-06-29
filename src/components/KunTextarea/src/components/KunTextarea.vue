@@ -126,7 +126,7 @@
 </template>
 
 <script setup>
-import { ref, h, resolveComponent, computed, defineProps } from 'vue'
+import { ref, computed, defineProps } from 'vue'
 import { kunTextareaProps } from '../composables/kunTextareaProps'
 import { useKunTextarea } from '../composables/useKunTextareaComposable'
 import { renderIconSlot } from '@/utils/renderIcon'
