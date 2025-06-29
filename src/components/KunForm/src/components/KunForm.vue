@@ -73,7 +73,7 @@ function handleSubmit(event) {
   }
   validate().then(({ valid }) => {
     if (valid) {
-      emits('submit');
+      emits('submit', event);
     }
   });
 }
