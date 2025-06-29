@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, provide } from 'vue'
+import { ref, provide, watch } from 'vue'
 import { useKunList } from '../composables/useKunList' 
 
 const props = defineProps({
