@@ -24,7 +24,8 @@
 </template>
 
 <script setup>
-import { ref, provide, computed } from 'vue'
+import { ref, provide } from 'vue'
+import { useKunList } from '../composables/useKunList' 
 
 const props = defineProps({
   nav: Boolean,
@@ -34,6 +35,10 @@ const props = defineProps({
     type: [Boolean, String],
     default: false,
     validator: v => ['single', 'multiple', true, false].includes(v),
+  },
+  selected: {
+    type: [Array, String, Number, Boolean, Object, null],
+    default: null
   },
   bgList: {
     type: String,
@@ -50,38 +55,33 @@ const emit = defineEmits(['keyDown', 'click:select', 'update:selected'])
 const ulRef = ref(null)
 const itemRefs = ref([])
 
-const selectedItems = ref([])
+// Usa useKunList para manejar selección
+const { selectedValues } = useKunList(props)
+
+watch(
+  () => props.selected,
+  (val) => {
+    selectedValues.value = props.selectable === 'multiple'
+      ? Array.isArray(val) ? [...val] : []
+      : val != null ? [val] : []
+  },
+  { immediate: true }
+)
+
+watch(
+  selectedValues,
+  (val) => {
+    emit(
+      'update:selected',
+      props.selectable === 'multiple' ? [...val] : val[0] ?? null
+    )
+  }
+)
 
 provide('registerListItemRef', el => {
   if (el && !itemRefs.value.includes(el)) {
     itemRefs.value.push(el)
   }
-})
-
-const isMultiple = computed(() =>
-  props.selectable === 'multiple' || props.selectable === true
-)
-
-function toggleItem(value) {
-  if (!props.selectable || value == null) return
-
-  if (isMultiple.value) {
-    const exists = selectedItems.value.includes(value)
-    if (exists) {
-      selectedItems.value = selectedItems.value.filter(v => v !== value)
-    } else {
-      selectedItems.value.push(value)
-    }
-    emit('update:selected', [...selectedItems.value])
-  } else {
-    selectedItems.value = [value]
-    emit('update:selected', value)
-  }
-}
-
-// 🔴🔴 ESTE PROVIDE FALTABA
-provide('kunListContext', {
-  toggleItem
 })
 
 function onKeydown(e) {

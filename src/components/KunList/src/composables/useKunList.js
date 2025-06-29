@@ -6,20 +6,26 @@ export function useKunList(props) {
     const selectedValues = ref([])
 
     function toggleItem(value) {
-        if (!props.selectable || props.disabled) return
+        if (!props.selectable || props.disabled || value == null) return
 
         const isMultiple = props.selectable === 'multiple'
         const isSingle = props.selectable === 'single'
 
         if (isSingle) {
-            selectedValues.value = selectedValues.value[0] === value ? [] : [value]
+            // Solo cambia si el valor es distinto
+            if (selectedValues.value[0] !== value) {
+                selectedValues.value = [value]
+            }
         } else if (isMultiple) {
             const index = selectedValues.value.indexOf(value)
-            index === -1
-                ? selectedValues.value.push(value)
-                : selectedValues.value.splice(index, 1)
+            if (index === -1) {
+                selectedValues.value = [...selectedValues.value, value]
+            } else {
+                selectedValues.value = selectedValues.value.filter(v => v !== value)
+            }
         }
     }
+
 
     function isSelected(value) {
         return selectedValues.value.includes(value)
