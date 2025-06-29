@@ -25,6 +25,7 @@
             :fullscreen="fullscreen"
             :scrollable="scrollable"
             :width="width"
+            :min-width="minWidth"
             :max-width="maxWidth"
             :height="height"
             :max-height="maxHeigh"
@@ -67,6 +68,7 @@ const props = defineProps({
   height: { type: String, default: 'h-fit' },
   maxHeigh: { type: String, default: 'max-h-[100vh]' },
   width: { type: String, default: 'w-full' },
+  minWidth: { type: String, default: 'min-w-1/3' },
   maxWidth: { type: String, default: 'max-w-1/3' },
 })
 

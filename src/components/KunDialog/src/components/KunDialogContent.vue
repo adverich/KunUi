@@ -12,6 +12,7 @@ const props = defineProps({
   contentClass: String,
   bgColor: String,
   width: String,
+  minWidth: String,
   maxWidth: String,
   height: String,
   maxHeight: String,
@@ -31,7 +32,8 @@ const mergedClass = computed(() => [
   props.contentClass,
   props.bgColor,
   props.width,
-  props.maxWidth,
+  props.width,
+  props.minWidth,
   props.height,
   props.maxHeight
 ])
