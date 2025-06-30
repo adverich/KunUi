@@ -16,6 +16,7 @@ export function getValue(header, item) {
 }
 
 export function formatValue(header, value) {
+    if (value === null || value === undefined) return 'Sin datos';
     const formatter = formatters[header.columnFormat] || formatters.default;
     return formatter(value);
 }

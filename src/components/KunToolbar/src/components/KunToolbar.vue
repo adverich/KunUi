@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-appbar h-10 flex flex-row items-center py-2 px-2">
+    <div class="h-10 flex flex-row items-center py-2 px-2" v-bind="$attrs">
         <KunToolbarTitle v-if="title" :title="title" />
         <slot :density="density"></slot>
     </div>
