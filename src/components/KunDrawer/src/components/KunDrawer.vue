@@ -70,11 +70,9 @@ const props = defineProps({
     default: 'nav',
   },
   temporary: Boolean,
-  width: {
-    type: String,
-    default: 'w-[256px]',
-  },
+  width: { type: String, default: 'w-[256px]' },
   fullHeight: Boolean,
+  scrollable: { type: Boolean, default: true },
 })
 
 const attrs = useAttrs()
@@ -139,7 +137,8 @@ const computedClass = computed(() => {
     borderClass.value,
     props.elevation ? `shadow-${props.elevation}` : '',
     roundedClass.value,
-    props.color ?? 'bg-white dark:bg-slate-800'
+    props.color ?? 'bg-white dark:bg-slate-800',
+    props.scrollable ? 'overflow-auto' : ''
   ];
   if (attrs.class) base.push(attrs.class);
   return base;
