@@ -6,12 +6,7 @@
       :is="tag"
       class="fixed z-[2001] flex flex-col transition-transform duration-300 ease-in-out"
       :class="[
-        positionClass,
-        widthClass,
-        elevationClass,
-        roundedClass,
-        borderClass,
-        bgColorClass,
+        computedClass,
         absolute ? 'absolute' : 'fixed',
         floating ? 'border-none' : '',
         {
@@ -42,7 +37,7 @@
 
 
 <script setup>
-import { computed, watch, onMounted } from 'vue'
+import { computed, useAttrs } from 'vue'
 import { useAppbarHeight } from '@/utils/useLayout'
 
 const emits = defineEmits(['update:model-value'])
@@ -82,6 +77,8 @@ const props = defineProps({
   },
   fullHeight: Boolean,
 })
+
+const attrs = useAttrs()
 
 const appbarHeight = useAppbarHeight();
 const computedTop = computed(() =>
@@ -144,6 +141,19 @@ const roundedClass = computed(() => {
 
 // Background color class
 const bgColorClass = computed(() => { return props.color ?? 'bg-white dark:bg-slate-800' })
+
+const computedClass = computed(() => {
+  const base = [
+    positionClass,
+    widthClass,
+    elevationClass,
+    roundedClass,
+    borderClass,
+    bgColorClass,
+  ];
+  if (attrs.class) base.push(attrs.class);
+  return base;
+})
 
 // Close method (only if temporary and not persistent)
 const close = () => {
