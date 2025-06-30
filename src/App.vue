@@ -60,7 +60,9 @@
           <KunTextarea auto-grow v-model="testingArea" bgColor="bg-red-800" />
         </KunCol>
 
-        <KunCol cols="9">a</KunCol>
+        <KunCol cols="9">
+          <KunFileInput v-model="file" />
+        </KunCol>
 
         <KunCol cols="3">
           <KunNumberField noArrows v-model="numTest" />
@@ -75,32 +77,25 @@ import { ref, computed } from 'vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import IconAccountOutline from './icons/IconAccountOutline.vue';
-import IconPencil from './icons/IconPencil.vue';
-import IconTrashOutline from './icons/IconTrashOutline.vue';
 import KunList from './components/KunList/src/components/KunList.vue';
 import KunListItem from './components/KunListItem/src/components/KunListItem.vue';
 import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
-import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
 import KunAvatar from './components/KunAvatar/src/components/KunAvatar.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
-import KunTable from './components/KunTable/src/components/KunTable.vue';
-import KunTooltip from './components/KunTooltip/src/components/KunTooltip.vue';
-import KunBadge from './components/KunBadge/src/components/KunBadge.vue';
-import KunChip from './components/KunChip/src/components/KunChip.vue';
-import KunMultipleModalFooter from './components/KunModalFooter/src/components/KunMultipleModalFooter.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
 import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
-
 import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
+import KunFileInput from './components/KunFileInput/src/components/KunFileInput.vue';
 
 const menuModel = ref(false);
 const avatarRef = ref(null);
 const leftDrawerStatus = ref(false);
 const numTest = ref()
 const testingArea = ref('');
+const file = ref();
 
 const footerMessages = ref([]);
 function doSomething(){
@@ -144,7 +139,6 @@ const trueOrFalse = [
   { id: 1, value: true, name: "Si" },
   { id: 2, value: false, name: "No" },
 ];
-const testFalse = ref(false);
 
 function getTotalAmount(item){
   return Number(item.stock) * Number(item.price_base);
