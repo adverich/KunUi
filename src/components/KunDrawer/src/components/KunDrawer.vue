@@ -17,7 +17,6 @@
       ]"
       :style="{ top: computedTop, height: computedHeight }"
       @click.stop
-      v-bind="$attrs"
     >
       <slot name="prepend" />
       <slot />
@@ -125,12 +124,6 @@ const borderClass = computed(() => {
   return 'border'
 })
 
-// Elevation class
-const elevationClass = computed(() => {
-  if (!props.elevation) return ''
-  return `shadow-${props.elevation}`
-})
-
 // Rounded class
 const roundedClass = computed(() => {
   if (props.rounded === true) return 'rounded-r';
@@ -139,17 +132,14 @@ const roundedClass = computed(() => {
   return ''
 })
 
-// Background color class
-const bgColorClass = computed(() => { return props.color ?? 'bg-white dark:bg-slate-800' })
-
 const computedClass = computed(() => {
   const base = [
-    positionClass,
-    widthClass,
-    elevationClass,
-    roundedClass,
-    borderClass,
-    bgColorClass,
+    positionClass.value,
+    widthClass.value,
+    borderClass.value,
+    props.elevation ? `shadow-${props.elevation}` : '',
+    roundedClass.value,
+    props.color ?? 'bg-white dark:bg-slate-800'
   ];
   if (attrs.class) base.push(attrs.class);
   return base;
