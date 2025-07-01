@@ -1,5 +1,5 @@
 import { ref, computed, watch, nextTick } from 'vue';
-import { isObject, isArray } from '../../../../utils/utils.js'
+import { isObject, isArray, fullCopy } from '../../../../utils/utils.js'
 
 export function useAutocomplete(props, emits, modelValue, items) {
     const selectedItem = ref(null);
@@ -93,7 +93,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
     function getSelectedItem(item) {
         try {
             let updated = null;
-            selectedItem.value = item;
+            selectedItem.value = fullCopy(item);
             if (!props.multiple) {
                 if (props.returnObject) {
                     updated = item;
@@ -125,15 +125,16 @@ export function useAutocomplete(props, emits, modelValue, items) {
                 }
             }
             if (modelValue.value !== updated) {
+                console.log('a');
                 modelValue.value = updated;
             }
             // emits('update:modelValue', updated);
             emits('selectedItem', selectedItem.value);
-            if (props.clearOnSelect) clearSelection();
             // setValue();
         } catch (e) {
             console.log(e)
         } finally {
+            lightReset();
             focusTextField();
         }
     }
@@ -183,6 +184,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
 
     function lightReset(event) {
         props.clearSearchOnSelect ? (search.value = "") : "";
+        if (props.clearOnSelect) clearSelection();
         props.focusOnSelect ? focusTextField() : "";
     }
 

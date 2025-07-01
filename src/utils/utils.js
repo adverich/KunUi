@@ -28,3 +28,7 @@ export function debounce(fn, delay = 100) {
         timeout = setTimeout(() => fn(...args), delay)
     }
 }
+
+export function fullCopy(item) {
+    return JSON.parse(JSON.stringify(item));
+}

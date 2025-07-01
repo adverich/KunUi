@@ -51,6 +51,7 @@
         <KunCol cols="3">
           <KunAutocomplete v-model="selected" activator="parent" :items="products" item-title="name" item-value="id"
             item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"
+            @update:model-value="vModelUpdated" :clear-on-select="true"
           />
         </KunCol>
 
@@ -98,8 +99,9 @@ const testingArea = ref('');
 const file = ref();
 
 const footerMessages = ref([]);
-function doSomething(){
-  showMessage("TESTEANDO ALERTA");
+function vModelUpdated(value){
+  console.log('Actualizado');
+  console.log(value);
 }
 
 function showMessage(message, color = "green", time = 30000) {
