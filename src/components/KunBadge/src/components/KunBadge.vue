@@ -11,7 +11,7 @@
 import { computed } from 'vue';
 
 const props = defineProps({
-  text: { type: String, default: '' },
+  text: { type: [ String, Number ], default: '' },
   bgColor: { type: String, default: 'bg-red-500' },
   textColor: { type: String, default: 'text-white' },
   textSize: { type: String, default: 'text-xs' },
