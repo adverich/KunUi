@@ -124,8 +124,10 @@ export function useAutocomplete(props, emits, modelValue, items) {
                     if (item) removeFromArray(item);
                 }
             }
-            modelValue.value = updated;
-            emits('update:modelValue', updated);
+            if (modelValue.value !== updated) {
+                modelValue.value = updated;
+            }
+            // emits('update:modelValue', updated);
             emits('selectedItem', selectedItem.value);
             if (props.clearOnSelect) clearSelection();
             // setValue();
@@ -176,7 +178,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
             const index = updated.indexOf(value[props.itemValue]);
             updated.splice(index, 1);
         }
-        emits('update:modelValue', updated);
+        // emits('update:modelValue', updated);
     }
 
     function lightReset(event) {
@@ -247,9 +249,15 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     function clearSelection() {
-        search.value = "";
-        modelValue.value = null;
-        selectedItem.value = null;
+        if (search.value !== "") search.value = "";
+
+        if (modelValue.value !== null) {
+            modelValue.value = null;
+        }
+
+        if (selectedItem.value !== null) {
+            selectedItem.value = null;
+        }
         // if (isArray(modelValue.value)) {
         //     selectedItem.value = [];
         // }
