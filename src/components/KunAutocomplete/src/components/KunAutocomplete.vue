@@ -27,7 +27,7 @@
       <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :z-index="zIndex"
         :parent-ref="parentRef" location="bottom" origin="bottom left" @handleEscape="handleEscape"
         :close-on-content-click="closeOnSelect" :max-height="maxHeight" :hide-details="hideDetails">
-        <KunList @update:selected="getSelectedItem" ref="listRef" @keyDown="handleKeyList">
+        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList">
           <KunListItem v-if="hasCreateItem">
             <KunBtn @click="createItem" class="w-full" color="bg-green-400">
               Crear item
@@ -82,7 +82,7 @@ const modelValue = defineModel({ default: null });
 const items = defineModel('items', { default: [], type: Array, required: true });
 
 const props = defineProps(KunAutocompleteProps);
-const emits = defineEmits(["selectedItem", "createItem", "validation", "search"]);
+const emits = defineEmits(["update:modelValue", "selectedItem", "createItem", "validation", "search"]);
 
 const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, closeMenu, toggleMenu, onMenuKeydown,
   getSelectedItem, textArr, getItemText, isAlphanumeric,

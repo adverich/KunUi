@@ -100,8 +100,8 @@ const file = ref();
 
 const footerMessages = ref([]);
 function vModelUpdated(value){
-  console.log('Actualizado');
-  console.log(value);
+  // console.log('Actualizado');
+  // console.log(value);
 }
 
 function showMessage(message, color = "green", time = 30000) {

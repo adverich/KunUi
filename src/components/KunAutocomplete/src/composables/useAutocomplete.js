@@ -124,15 +124,17 @@ export function useAutocomplete(props, emits, modelValue, items) {
                     if (item) removeFromArray(item);
                 }
             }
-            modelValue.value = updated;
-            // emits('update:modelValue', updated);
+
+            if (modelValue.value === updated) emits("update:modelValue", updated)
+            else modelValue.value = updated;
+
             emits('selectedItem', selectedItem.value);
-            // setValue();
         } catch (e) {
             console.log(e)
         } finally {
-            lightReset();
-            focusTextField();
+            nextTick(() => {
+                lightReset();
+            });
         }
     }
 
@@ -176,7 +178,6 @@ export function useAutocomplete(props, emits, modelValue, items) {
             const index = updated.indexOf(value[props.itemValue]);
             updated.splice(index, 1);
         }
-        // emits('update:modelValue', updated);
     }
 
     function lightReset(event) {
@@ -248,6 +249,8 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     function clearSelection() {
+        console.log(modelValue.value);
+
         if (search.value !== "") search.value = "";
 
         if (modelValue.value !== null) {
