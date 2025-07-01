@@ -124,10 +124,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
                     if (item) removeFromArray(item);
                 }
             }
-            if (modelValue.value !== updated) {
-                console.log('a');
-                modelValue.value = updated;
-            }
+            modelValue.value = updated;
             // emits('update:modelValue', updated);
             emits('selectedItem', selectedItem.value);
             // setValue();
