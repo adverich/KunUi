@@ -6,6 +6,7 @@
     tabindex="-1"
     @keydown.prevent="onKeydown"
     @select="e => emit('click:select', e.detail)"
+    :selectable="selectable"
     :class="[
       bgList,
       borderColor,

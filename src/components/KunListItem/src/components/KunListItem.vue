@@ -124,6 +124,7 @@ const props = defineProps({
     type: String,
     default: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300',
   },
+  selectable: { type: Boolean, default: false },
 
   variant: { type: String, default: 'text' },
   density: { type: String, default: 'default' },
@@ -175,7 +176,7 @@ function handleClick(e, navigateFn = null) {
     el.dispatchEvent(new CustomEvent('select', { detail: props.value, bubbles: true }))
   }
 
-  if (listContext && props.value !== null) {
+if (listContext && props.selectable && props.value !== null) {
     listContext.toggleItem?.(props.value)
     if (el?.dispatchEvent) {
       el.dispatchEvent(new CustomEvent('selected', { detail: props.value, bubbles: true }))
@@ -222,7 +223,7 @@ const mergedItemClass = computed(() => [
   props.itemPosition,
   {
     'cursor-not-allowed opacity-50': props.disabled,
-    [`cursor-pointer ${props.hoverBg}`]: !props.disabled,
+    [`cursor-pointer ${props.hoverBg}`]: props.selectable && !props.disabled,
     [props.activeClass]: isItemSelected.value || isActive.value,
     'px-4': !props.noGutters,
   },
