@@ -41,7 +41,9 @@
           :readonly="readonly" :disabled="disabled" :maxlength="maxlength" autocomplete="off"
           class="w-full h-full bg-transparent rounded focus:outline-none" :aria-invalid="error ? 'true' : 'false'"
           :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '']"
-        @input="updateValue($event.target.value)" @focus="handleFocus" @blur="handleBlur" />
+          @input="updateValue($event.target.value)" @blur="handleBlur" @focus="handleFocus" 
+          @keydown="emits('keyDown', $event)" @keyup="emits('keyUp', $event)" 
+        />
 
         <!-- Clearable -->
         <button v-if="clearable && inputValue != null" type="button" @click="onClear" class="ml-2" :class="textColor"
@@ -126,7 +128,14 @@ import { useKunNumberField } from '../composables/useKunNumberFieldComposable';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 const props = defineProps(KunNumberFieldProps);
-const emit = defineEmits(['update:modelValue']);
+const emits = defineEmits([
+  'update:modelValue',
+  'focusInput',
+  'blurInput',
+  'handleClick',
+  'keyDown',
+  'keyUp'
+]);
 
 const uid = `number-input-${getCurrentInstance().uid}`;
 const slots = useSlots();

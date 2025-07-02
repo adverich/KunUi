@@ -26,8 +26,8 @@
           class="w-full h-full bg-transparent focus:outline-none" :aria-invalid="hasError ? 'true' : 'false'"
           :class="[inputDensity, textColor, placeholderColor, rounded, textCenter ? 'text-center' : '']"
           :aria-describedby="hasError ? `error-${uid}` : null" 
-          @input="handleInput" @blur="handleBlur" 
-          @focus="focusInput" @click.stop="emits('handleClick')" 
+          @input="handleInput" @blur="handleBlur" @focus="focusInput" 
+          @click.stop="emits('handleClick')" 
           @keydown="emits('keyDown', $event)" @keyup="emits('keyUp', $event)" 
         />
 
