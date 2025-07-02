@@ -187,7 +187,7 @@ onBeforeUnmount(() => {
 })
 
 const isComponent = val => typeof val === 'object' || typeof val === 'function';
-const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar || slots.prepend));
+const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar));
 const hasAppend = computed(() => !!(props.appendIcon || props.appendAvatar));
 const isItemSelected = computed(() => listContext?.isSelected?.(props.value) ?? false);
 const isActive = computed(() => props.active);
