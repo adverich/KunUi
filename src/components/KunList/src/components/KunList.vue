@@ -29,7 +29,7 @@ const props = defineProps({
   nav: Boolean,
   sub: Boolean,
   dense: Boolean,
-  selectable: { type: Boolean, default: true },
+  selectable: { type: Boolean, default: false },
   selectionMode: {
     type: String,
     default: 'single',
