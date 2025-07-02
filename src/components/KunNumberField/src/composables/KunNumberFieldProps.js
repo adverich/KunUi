@@ -13,6 +13,7 @@ export const KunNumberFieldProps = {
   appendIcon: String,
 
   // Estilo y diseño
+  inputClass: { type: String, default: '' },
   rounded: { type: String, default: 'rounded' },
   borderColor: { type: String, default: 'border-gray-300 dark:border-gray-700' },
   textColor: { type: String, default: 'text-black dark:text-white' },

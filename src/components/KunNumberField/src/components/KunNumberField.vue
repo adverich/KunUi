@@ -27,7 +27,7 @@
         <div v-if="prefix" class="mr-2">{{ prefix }}</div>
 
         <!-- Prepend -->
-        <div v-if="prependIcon || prependIconSlot" class="flex items-center justify-center min-w-[32px] h-full px-1">
+        <div v-if="prependIcon || prependIconSlot" class="flex items-center justify-center h-full px-1">
           <template v-if="prependIcon">
             <KunIcon :icon="prependIcon" />
           </template>
@@ -40,8 +40,8 @@
         <input :id="uid" ref="numberInput" :key="inputKey" type="text" :value="inputValue" :placeholder="placeholder"
           :readonly="readonly" :disabled="disabled" :maxlength="maxlength" autocomplete="off"
           class="w-full h-full bg-transparent rounded focus:outline-none p-3" :aria-invalid="error ? 'true' : 'false'"
-          :class="[textColor, placeholderColor, textCenter ? 'text-center' : '']"
-          @input="updateValue($event.target.value)" @focus="handleFocus" @blur="handleBlur" />
+          :class="[inputClass, textColor, placeholderColor, textCenter ? 'text-center' : '']"
+        @input="updateValue($event.target.value)" @focus="handleFocus" @blur="handleBlur" />
 
         <!-- Clearable -->
         <button v-if="clearable && inputValue != null" type="button" @click="onClear" class="ml-2" :class="textColor"
@@ -82,9 +82,13 @@
         </template>
 
         <!-- Append icon -->
-        <div v-if="appendIcon || appendIconSlot" class="flex items-center justify-center min-w-[32px] h-full px-1">
-          <KunIcon v-if="appendIcon" />
-          <slot v-else name="append-icon" />
+        <div v-if="appendIcon || appendIconSlot" class="flex items-center justify-center h-full px-1">
+          <template v-if="appendIcon">
+            <KunIcon :icon="appendIcon" />
+          </template>
+          <template v-else>
+            <slot name="append-icon" />
+          </template>
         </div>
 
         <!-- Control + (SPLIT end) -->
