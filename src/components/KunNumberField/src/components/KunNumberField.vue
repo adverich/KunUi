@@ -154,7 +154,7 @@ const {
   handleFocus,
   isActive,
   handleBlur
-} = useKunNumberField(props, emit);
+} = useKunNumberField(props, emits);
 
 const inputDensity = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");
 </script>

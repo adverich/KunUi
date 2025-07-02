@@ -4,7 +4,7 @@ import {
     normalizeNumber,
 } from './numberFormatUtils';
 
-export function useKunNumberField(props, emit) {
+export function useKunNumberField(props, emits) {
     const inputValue = ref(props.modelValue);
     const numberInput = ref(null);
     const inputKey = ref(0);
@@ -12,7 +12,7 @@ export function useKunNumberField(props, emit) {
     function updateValue(val) {
         if (!val) {
             inputValue.value = '0'; // Mostrar "0" en el input
-            emit('update:modelValue', 0); // Asegurar que el modelo siempre maneja números
+            emits('update:modelValue', 0); // Asegurar que el modelo siempre maneja números
             return;
         }
 
@@ -39,7 +39,7 @@ export function useKunNumberField(props, emit) {
             inputValue.value = formattedInput;
         }
 
-        emit('update:modelValue', formattedInput || 0);
+        emits('update:modelValue', formattedInput || 0);
     }
 
     // Función auxiliar para actualizar `inputKey` y restaurar foco
@@ -60,7 +60,7 @@ export function useKunNumberField(props, emit) {
 
     function onClear() {
         inputValue.value = null;
-        emit('update:modelValue', null);
+        emits('update:modelValue', null);
     }
 
     const focus = ref(false);
