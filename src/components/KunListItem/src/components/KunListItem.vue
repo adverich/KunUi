@@ -46,10 +46,10 @@
         <div class="flex flex-col min-w-0 flex-1">
           <slot>
             <slot name="title">
-              <div v-if="title" class="font-medium truncate">{{ title }}</div>
+              <div v-if="title" class="truncate" :class="titleClass">{{ title }}</div>
             </slot>
             <slot name="subtitle">
-              <div v-if="subtitle" class="text-sm text-gray-500 dark:text-gray-400 truncate">
+              <div v-if="subtitle" class="truncate" :class="subtitleClass">
                 {{ subtitle }}
               </div>
             </slot>
@@ -84,34 +84,34 @@
     <!-- CONTENIDO -->
     <div class="flex w-full items-center">
       <!-- Prepend -->
-        <div v-if="hasPrepend || $slots.prepend" class="shrink-0 flex items-center gap-2 me-2">
-          <slot name="prepend">
-            <img v-if="prependAvatar" :src="prependAvatar" class="rounded-full" :class="prependClass" />
+      <div v-if="hasPrepend || $slots.prepend" class="shrink-0 flex items-center gap-2 me-2">
+        <slot name="prepend">
+          <img v-if="prependAvatar" :src="prependAvatar" class="rounded-full" :class="prependClass" />
 
-            <!-- Permitir componente personalizado -->
-            <component
-              v-else-if="isComponent(prependIcon)"
-              :is="prependIcon"
-              :class="prependClass"
-            />
-            
-            <!-- Si es string, lo pasás a KunIcon -->
-            <KunIcon
-              v-else-if="typeof prependIcon === 'string'"
-              :icon="prependIcon"
-              :class="prependClass"
-            />
-          </slot>
-        </div>
+          <!-- Permitir componente personalizado -->
+          <component
+            v-else-if="isComponent(prependIcon)"
+            :is="prependIcon"
+            :class="prependClass"
+          />
+          
+          <!-- Si es string, lo pasás a KunIcon -->
+          <KunIcon
+            v-else-if="typeof prependIcon === 'string'"
+            :icon="prependIcon"
+            :class="prependClass"
+          />
+        </slot>
+      </div>
 
       <!-- Contenido central -->
       <div class="flex flex-col min-w-0 flex-1">
         <slot>
           <slot name="title">
-            <div v-if="title" class="font-medium truncate">{{ title }}</div>
+            <div v-if="title" class="truncate" :class="titleClass">{{ title }}</div>
           </slot>
           <slot name="subtitle">
-            <div v-if="subtitle" class="text-sm text-gray-500 dark:text-gray-400 truncate">
+            <div v-if="subtitle" class="truncate" :class="subtitleClass">
               {{ subtitle }}
             </div>
           </slot>
@@ -170,7 +170,9 @@ const props = defineProps({
   appendAvatar: String,
   appendClass: String,
   title: [String, Number, Boolean],
+  titleClass: { type: String, default: 'font-medium' },
   subtitle: [String, Number, Boolean],
+  subtitleClass: { type: String, default: 'text-sm text-slate-800 dark:text-slate-200' },
 })
 
 const emits = defineEmits(['click'])
