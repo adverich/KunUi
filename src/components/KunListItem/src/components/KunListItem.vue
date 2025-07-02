@@ -131,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, onBeforeUnmount, computed, useSlots } from 'vue'
+import { ref, inject, onMounted, onBeforeUnmount, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const props = defineProps({
@@ -185,8 +185,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (registerRef) registerRef(null)
 })
-
-const slots = useSlots()
 
 const isComponent = val => typeof val === 'object' || typeof val === 'function';
 const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar || slots.prepend));
