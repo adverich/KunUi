@@ -22,13 +22,13 @@
       <!-- CONTENIDO -->
       <div class="flex w-full items-center">
         <!-- Prepend -->
-        <div v-if="hasPrepend" class="shrink-0 flex items-center gap-2 me-3">
-          <slot name="prepend">
+        <slot name="prepend">
+            <div class="shrink-0 flex items-center gap-2 me-3">
             <img v-if="prependAvatar" :src="prependAvatar" class="w-8 h-8 rounded-full" />
             <component v-if="isComponent(prependIcon)" :is="prependIcon" class="w-5 h-5" />
-            <i v-else-if="prependIcon" :class="prependIcon" class="text-xl leading-none" />
+            <i v-else-if="prependIcon" :class="prependClass" class="text-xl leading-none" />
+          </div>
           </slot>
-        </div>
 
         <!-- Contenido central -->
         <div class="flex flex-col min-w-0 flex-1">
@@ -49,7 +49,7 @@
           <slot name="append">
             <img v-if="appendAvatar" :src="appendAvatar" class="w-8 h-8 rounded-full" />
             <component v-if="isComponent(appendIcon)" :is="appendIcon" class="w-5 h-5" />
-            <i v-else-if="appendIcon" :class="appendIcon" class="text-xl leading-none" />
+            <i v-else-if="appendIcon" :class="appendClass" class="text-xl leading-none" />
           </slot>
         </div>
       </div>
@@ -140,9 +140,11 @@ const props = defineProps({
   itemClass: String,
 
   prependIcon: [String, Object, Function],
-  appendIcon: [String, Object, Function],
   prependAvatar: String,
+  prependClass: String,
+  appendIcon: [String, Object, Function],
   appendAvatar: String,
+  appendClass: String,
   title: [String, Number, Boolean],
   subtitle: [String, Number, Boolean],
 })
