@@ -28,8 +28,12 @@
 
         <!-- Prepend -->
         <div v-if="prependIcon || prependIconSlot" class="flex items-center justify-center min-w-[32px] h-full px-1">
-          <KunIcon v-if="prependIcon" />
-          <slot v-else name="prepend-icon" />
+          <template v-if="prependIcon">
+            <KunIcon :icon="prependIcon" />
+          </template>
+          <template v-else>
+            <slot name="prepend-icon" />
+          </template>
         </div>
 
         <!-- Input -->
