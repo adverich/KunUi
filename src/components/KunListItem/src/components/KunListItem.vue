@@ -84,13 +84,25 @@
     <!-- CONTENIDO -->
     <div class="flex w-full items-center">
       <!-- Prepend -->
-      <div v-if="hasPrepend" class="shrink-0 flex items-center gap-2 me-3">
-        <slot name="prepend">
-          <img v-if="prependAvatar" :src="prependAvatar" class="w-8 h-8 rounded-full" />
-          <component v-if="isComponent(prependIcon)" :is="prependIcon" class="w-5 h-5" />
-          <i v-else-if="prependIcon" :class="prependIcon" class="text-xl leading-none" />
-        </slot>
-      </div>
+        <div v-if="hasPrepend || $slots.prepend" class="shrink-0 flex items-center gap-2 me-2">
+          <slot name="prepend">
+            <img v-if="prependAvatar" :src="prependAvatar" class="rounded-full" :class="prependClass" />
+
+            <!-- Permitir componente personalizado -->
+            <component
+              v-else-if="isComponent(prependIcon)"
+              :is="prependIcon"
+              :class="prependClass"
+            />
+            
+            <!-- Si es string, lo pasás a KunIcon -->
+            <KunIcon
+              v-else-if="typeof prependIcon === 'string'"
+              :icon="prependIcon"
+              :class="prependClass"
+            />
+          </slot>
+        </div>
 
       <!-- Contenido central -->
       <div class="flex flex-col min-w-0 flex-1">
@@ -119,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, inject, onMounted, onBeforeUnmount, computed, useSlots } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const props = defineProps({
@@ -174,12 +186,14 @@ onBeforeUnmount(() => {
   if (registerRef) registerRef(null)
 })
 
-const isComponent = val => typeof val === 'object' || typeof val === 'function'
-const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar))
-const hasAppend = computed(() => !!(props.appendIcon || props.appendAvatar))
-const isItemSelected = computed(() => listContext?.isSelected?.(props.value) ?? false)
-const isActive = computed(() => props.active)
-const isLink = computed(() => !!props.to)
+const slots = useSlots()
+
+const isComponent = val => typeof val === 'object' || typeof val === 'function';
+const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar || slots.prepend));
+const hasAppend = computed(() => !!(props.appendIcon || props.appendAvatar));
+const isItemSelected = computed(() => listContext?.isSelected?.(props.value) ?? false);
+const isActive = computed(() => props.active);
+const isLink = computed(() => !!props.to);
 
 function handleClick(e, navigateFn = null) {
   if (props.disabled) return
