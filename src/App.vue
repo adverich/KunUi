@@ -55,7 +55,7 @@
           />
         </KunCol>
 
-        <KunCol cols="9">a</KunCol>
+        <KunCol cols="9">aca hay un col</KunCol>
 
         <KunCol cols="3">
           <KunTextarea auto-grow v-model="testingArea" bgColor="bg-red-800" />

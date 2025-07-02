@@ -39,8 +39,8 @@
         <!-- Input -->
         <input :id="uid" ref="numberInput" :key="inputKey" type="text" :value="inputValue" :placeholder="placeholder"
           :readonly="readonly" :disabled="disabled" :maxlength="maxlength" autocomplete="off"
-          class="w-full h-full bg-transparent rounded focus:outline-none p-3" :aria-invalid="error ? 'true' : 'false'"
-          :class="[inputClass, textColor, placeholderColor, textCenter ? 'text-center' : '']"
+          class="w-full h-full bg-transparent rounded focus:outline-none" :aria-invalid="error ? 'true' : 'false'"
+          :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '']"
         @input="updateValue($event.target.value)" @focus="handleFocus" @blur="handleBlur" />
 
         <!-- Clearable -->
@@ -120,7 +120,7 @@
 
 
 <script setup>
-import { getCurrentInstance, useSlots } from 'vue';
+import { getCurrentInstance, computed, useSlots } from 'vue';
 import { KunNumberFieldProps } from '../composables/KunNumberFieldProps';
 import { useKunNumberField } from '../composables/useKunNumberFieldComposable';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
@@ -146,4 +146,6 @@ const {
   isActive,
   handleBlur
 } = useKunNumberField(props, emit);
+
+const inputDensity = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");
 </script>

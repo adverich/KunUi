@@ -23,8 +23,8 @@
         <!-- Input -->
         <input ref="inputField" :type="inputType" :value="inputValue" :id="uid" :placeholder="placeholder"
           :disabled="disabled" :readonly="readonly" :maxlength="maxlength" autocomplete="off"
-          class="w-full h-full bg-transparent focus:outline-none p-3" :aria-invalid="hasError ? 'true' : 'false'"
-          :class="[textColor, placeholderColor, rounded, textCenter ? 'text-center' : '']"
+          class="w-full h-full bg-transparent focus:outline-none" :aria-invalid="hasError ? 'true' : 'false'"
+          :class="[inputDensity, textColor, placeholderColor, rounded, textCenter ? 'text-center' : '']"
           :aria-describedby="hasError ? `error-${uid}` : null" 
           @input="handleInput" @blur="handleBlur" 
           @focus="focusInput" @click.stop="emits('handleClick')" 
@@ -127,4 +127,6 @@ const inputType = computed(() => {
   if (props.type === 'password') return showPass.value ? 'text' : 'password';
   return props.type;
 });
+
+const inputDensity = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");
 </script>
