@@ -22,13 +22,25 @@
       <!-- CONTENIDO -->
       <div class="flex w-full items-center">
         <!-- Prepend -->
-        <slot name="prepend">
-            <div class="shrink-0 flex items-center gap-2 me-3">
-            <img v-if="prependAvatar" :src="prependAvatar" class="w-8 h-8 rounded-full" />
-            <component v-if="isComponent(prependIcon)" :is="prependIcon" class="w-5 h-5" />
-            <i v-else-if="prependIcon" :class="prependClass" class="text-xl leading-none" />
-          </div>
+        <div v-if="hasPrepend || $slots.prepend" class="shrink-0 flex items-center gap-2 me-2">
+          <slot name="prepend">
+            <img v-if="prependAvatar" :src="prependAvatar" class="rounded-full" :class="prependClass" />
+
+            <!-- Permitir componente personalizado -->
+            <component
+              v-else-if="isComponent(prependIcon)"
+              :is="prependIcon"
+              :class="prependClass"
+            />
+            
+            <!-- Si es string, lo pasás a KunIcon -->
+            <KunIcon
+              v-else-if="typeof prependIcon === 'string'"
+              :icon="prependIcon"
+              :class="prependClass"
+            />
           </slot>
+        </div>
 
         <!-- Contenido central -->
         <div class="flex flex-col min-w-0 flex-1">
