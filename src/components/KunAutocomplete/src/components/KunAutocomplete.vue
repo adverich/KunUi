@@ -28,7 +28,7 @@
         :parent-ref="parentRef" location="bottom" origin="bottom left" @handleEscape="handleEscape"
         :close-on-content-click="closeOnSelect" :max-height="maxHeight" :hide-details="hideDetails">
         <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="true">
-          <KunListItem v-if="hasCreateItem" :selectable="true">
+          <KunListItem v-if="hasCreateItem">
             <KunBtn @click="createItem" class="w-full" color="bg-green-400">
               Crear item
             </KunBtn>
@@ -37,7 +37,7 @@
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="{ item, index, empty }">
             <template v-if="!empty && item">
               <KunListItem :value="item" :key="item.id?.toString() ?? item.name" :disabled="checkDisabled(item)"
-                :class="itemListBg(item)" :density="density" :id="item.id?.toString() ?? item.name">
+                :class="itemListBg(item)" :density="density" :id="item.id?.toString() ?? item.name" :selectable="true">
                 <KunListItemTitle class="text-wrap">
                   {{ itemToString(item, itemTitle ?? textArr, 'hasDefault') }}
                 </KunListItemTitle>
