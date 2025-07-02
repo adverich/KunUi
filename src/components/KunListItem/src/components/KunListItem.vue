@@ -132,6 +132,7 @@
 
 <script setup>
 import { ref, inject, onMounted, onBeforeUnmount, computed } from 'vue'
+import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
 import { RouterLink } from 'vue-router'
 
 const props = defineProps({

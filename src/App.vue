@@ -66,7 +66,11 @@
         </KunCol>
 
         <KunCol cols="3">
-          <KunNumberField noArrows v-model="numTest" />
+          <KunNumberField noArrows v-model="numTest">
+            <template #prepend-icon>
+              <KunIcon color="text-green-500" :icon="IconAccountOutline" size="text-xl"/>
+            </template>
+          </KunNumberField>
         </KunCol>
       </KunRow>
     </div>
