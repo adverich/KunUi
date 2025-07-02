@@ -28,7 +28,7 @@
         :parent-ref="parentRef" location="bottom" origin="bottom left" @handleEscape="handleEscape"
         :close-on-content-click="closeOnSelect" :max-height="maxHeight" :hide-details="hideDetails">
         <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="true">
-          <KunListItem v-if="hasCreateItem">
+          <KunListItem v-if="hasCreateItem" :selectable="true">
             <KunBtn @click="createItem" class="w-full" color="bg-green-400">
               Crear item
             </KunBtn>
