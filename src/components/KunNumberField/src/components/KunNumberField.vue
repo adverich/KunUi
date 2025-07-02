@@ -24,7 +24,7 @@
         </div>
 
         <!-- Prefix -->
-        <div v-if="prefix" class="mr-2">{{ prefix }}</div>
+        <div v-if="prefix" class="mx-2">{{ prefix }}</div>
 
         <!-- Prepend -->
         <div v-if="prependIcon || prependIconSlot" class="flex items-center justify-center h-full pl-1">
