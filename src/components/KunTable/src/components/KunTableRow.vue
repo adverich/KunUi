@@ -69,7 +69,7 @@ const props = defineProps({
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 
 const baseRowClass = 'hover:bg-slate-300 dark:hover:bg-slate-600 border-t border-slate-300 dark:border-slate-700';
-const baseTrClass = '';
+const baseTrClass = 'bg-slate-100 dark:bg-slate-900';
 const mergedTableClass = [
   baseRowClass, baseTrClass, props.rowClass, props.trClass, props.stripedClass, props.isSelected ? props.selectedClass : ''
 ];

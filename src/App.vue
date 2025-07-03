@@ -46,6 +46,9 @@
       </template>
     </KunDrawer>
 
+    <div class="h-full">
+      <KunTable :items="products" :headers="headers" />
+    </div>
     <div>
       <KunRow style="overflow: hidden!important;">
         <KunCol cols="3">
@@ -94,6 +97,8 @@ import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
 import KunFileInput from './components/KunFileInput/src/components/KunFileInput.vue';
+
+import KunTable from './components/KunTable/src/components/KunTable.vue';
 
 const menuModel = ref(false);
 const avatarRef = ref(null);
