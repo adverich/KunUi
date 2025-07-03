@@ -1,8 +1,6 @@
 import { ref, computed, watch } from 'vue';
 
-export default function useSelect(props, emits, paginatedItems, selectedItems) {
-    // const selectedItems = ref([]);
-
+export default function useSelect(paginatedItems, selectedItems) {
     const isSelected = (item) => selectedItems.value.includes(item);
 
     const toggleSelect = (item) => {

@@ -47,7 +47,7 @@
     </KunDrawer>
 
     <div class="h-full">
-      <KunTable :items="products" :headers="headers" />
+      <KunTable :items="products" :headers="headers" showSelect />
     </div>
     <div>
       <KunRow style="overflow: hidden!important;">
