@@ -1,7 +1,7 @@
 import { computed, reactive, watch, ref } from 'vue';
 import { debounce } from '../../../../utils/utils.js'
 
-export default function useFilter(props) {
+export default function useFilter(props, debounceTime) {
     const appliedFilters = reactive({
         search: '',
         byColumn: {},
@@ -50,7 +50,7 @@ export default function useFilter(props) {
 
     const setSearch = debounce((value) => {
         appliedFilters.search = value?.toString().toLowerCase() || ''
-    }, props.debounceTime)
+    }, debounceTime.value)
 
     const setColumnFilter = (key, value) => {
         appliedFilters.byColumn[key] = value;
