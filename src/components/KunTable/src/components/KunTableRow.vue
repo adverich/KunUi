@@ -27,7 +27,7 @@
     <td
       v-for="header in headers"
       :key="header.value"
-      :class="[mergedTdClass, header.align === 'right' ? 'text-right' : header.align === 'center' ? 'text-center' : 'text-left']"
+      :class="[mergedTdClass, header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center']"
     >
       <slot 
         :name="`item.${header.value}`"

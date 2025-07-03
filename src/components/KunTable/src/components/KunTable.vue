@@ -167,7 +167,7 @@ watch(() => props.search, (val) => {
   }
 });
 
-const { filteredItems, setSearch, modalFilter, applyColumnFilters, clearFilters, appliedFilters } = useFilter(propsRefs, debounceTime);
+const { filteredItems, setSearch, modalFilter, applyColumnFilters, clearFilters, appliedFilters } = useFilter(propsRefs);
 
 // Sincronizar búsqueda
 watch(searchQuery, (val) => {

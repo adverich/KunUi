@@ -32,7 +32,7 @@
       <th
         v-for="header in headers"
         :key="header.key"
-        :class="[mergedThClass, header.headerAlign === 'right' ? 'text-right' : header.headerAlign === 'center' ? 'text-center' : 'text-left']"
+        :class="[mergedThClass, header.headerAlign === 'right' ? 'text-right' : header.headerAlign === 'left' ? 'text-left' : 'text-center']"
         @click="toggleSort(header)"
         :style="{ cursor: header.sortable ? 'pointer' : 'default' }"
       >
