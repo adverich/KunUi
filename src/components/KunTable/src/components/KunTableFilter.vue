@@ -1,14 +1,14 @@
 <template>
     <KunDialog v-if="filterDialog" v-model="filterDialog" yPosition="top" maxWidth="max-w-1/2">
         <div class="w-full">
-            <div class="flex justify-end">
+            <div class="flex justify-end px-1">
                 <KunBtn @click="closeDialog" rounded="rounded-full" size="xxs" bgColor="bg-transparent">
-                    <KunIcon color="text-red-500" :icon="IconClose" />
+                    <KunIcon color="text-red-500" :icon="IconClose" size="text-lg" />
                 </KunBtn>
             </div>
             <KunRow>
-                <KunCol cols="4" v-for="filter in filters">
-                    <KunAutocomplete multiple v-model="selectedFilters[filter.value]" :items="filter.items" item-value="id" :item-title="filter.title" z-index="z-250" :text-no-items="filter.textNoItem ?? `No hay (${filter.name ?? 'elementos' }) disponibles`" />
+                <KunCol cols="4" v-for="filter in filters" class="px-2">
+                    <KunAutocomplete multiple v-model="selectedFilters[filter.value]" :items="filter.items" item-value="id" :item-title="filter.title ?? filter.text" z-index="z-250" :text-no-items="filter.textNoItem ?? `No hay ${filter.name ?? 'elementos' } disponibles`" />
                 </KunCol>
             </KunRow>
             <div class="flex justify-end mt-8 p-2 gap-x-2">
