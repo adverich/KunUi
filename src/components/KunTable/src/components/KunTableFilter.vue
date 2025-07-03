@@ -10,7 +10,8 @@
                 <KunCol cols="4" v-for="filter in filters" class="px-2">
                     <KunAutocomplete multiple v-model="selectedFilters[filter.value]" :items="filter.items" z-index="z-250" 
                         item-value="id" :item-title="filter.title ?? filter.text" item-text="filter.text" 
-                        :text-no-items="`No hay ${filter.name ?? 'elementos' } disponibles`" 
+                        :text-no-items="filter.textNoItem ?? `No hay ${filter.name ?? 'elementos' } disponibles`"
+                        :placeholder-text="filter.placeholderText ?? 'Seleccionar'"
                     />
                 </KunCol>
             </KunRow>
