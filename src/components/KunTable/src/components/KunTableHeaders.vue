@@ -38,7 +38,7 @@
       >
         <slot :name="`header.${header.key}`" :header="header">
           <span>{{ header.label ?? header.text }}</span>
-          <span v-if="header.sortable" class="inline-flex items-center gap-1 ml-1">
+          <span v-if="header.sortable" class="inline-flex items-center gap-1 ml-1 print:hidden">
             <component :is="getSortIcon(header)" class="w-4 h-4 text-gray-500" />
           </span>
         </slot>
