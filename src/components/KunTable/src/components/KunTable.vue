@@ -139,9 +139,10 @@ import useFilter from '../composables/useFilter';
 
 import kunTableProps from '../composables/KunTableProps';
 
-const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy', 'update:selectedItems', 'update:search']);
+const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy', 'update:search']);
 const props = defineProps(kunTableProps());
 const propsRefs = toRefs(props);
+const selectedItems = defineModel('items', { type: Array, default: () => [] })
 
 const {
   headers,
@@ -175,7 +176,7 @@ watch(searchQuery, (val) => {
 });
 
 const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems);
-const { isSelected, toggleSelect, toggleSelectAll, allSelected, someSelected } = useSelect(propsRefs, emits, paginatedItems);
+const { isSelected, toggleSelect, toggleSelectAll, allSelected, someSelected } = useSelect(propsRefs, emits, paginatedItems, selectedItems);
 const { isExpanded, toggleExpand } = useExpand();
 
 const slotProps = computed(() => ({

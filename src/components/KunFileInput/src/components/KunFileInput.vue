@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, defineEmits, defineExpose } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { renderIconSlot } from '@/utils/renderIcon'
 
 const props = defineProps({

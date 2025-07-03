@@ -1,5 +1,6 @@
 export default () => ({
     items: { type: Array, default: () => [] },
+    selected: { type: Array, default: () => [] },
     headers: { type: Array, default: () => [] },
     hasActions: { type: Boolean, default: false },
     actionLabel: { type: String, default: 'Acciones' },

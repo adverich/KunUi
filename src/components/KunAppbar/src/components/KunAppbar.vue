@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, ref, onMounted, onUpdated, nextTick } from 'vue'
+import { computed, ref, onMounted, onUpdated, nextTick } from 'vue'
 import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'

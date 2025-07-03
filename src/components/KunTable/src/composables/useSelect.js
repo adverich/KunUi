@@ -1,7 +1,7 @@
 import { ref, computed, watch } from 'vue';
 
-export default function useSelect(props, emits, paginatedItems) {
-    const selectedItems = ref([]);
+export default function useSelect(props, emits, paginatedItems, selectedItems) {
+    // const selectedItems = ref([]);
 
     const isSelected = (item) => selectedItems.value.includes(item);
 
