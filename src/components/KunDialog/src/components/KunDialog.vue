@@ -24,8 +24,8 @@
           <KunDialogContent
             :fullscreen="fullscreen"
             :scrollable="scrollable"
-            :width="width"
             :min-width="minWidth"
+            :width="width"
             :max-width="maxWidth"
             :height="height"
             :max-height="maxHeigh"
@@ -67,8 +67,8 @@ const props = defineProps({
   bgColor: { type: String, default: 'bg-slate-100 dark:bg-slate-900' },
   height: { type: String, default: 'h-fit' },
   maxHeigh: { type: String, default: 'max-h-[100vh]' },
-  width: { type: String, default: 'w-full' },
   minWidth: { type: String, default: 'min-w-1/3' },
+  width: { type: String, default: 'w-full' },
   maxWidth: { type: String, default: 'max-w-1/3' },
 })
 

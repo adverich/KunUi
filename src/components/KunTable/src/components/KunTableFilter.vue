@@ -8,7 +8,7 @@
             </div>
             <KunRow>
                 <KunCol cols="4" v-for="filter in filters">
-                    <KunAutocomplete multiple v-model="selectedFilters[filter.value]" :items="filter.items" item-value="id" :item-title="filter.title" z-index="z-250" :text-no-items="filter.textNoItem" />
+                    <KunAutocomplete multiple v-model="selectedFilters[filter.value]" :items="filter.items" item-value="id" :item-title="filter.title" z-index="z-250" :text-no-items="filter.textNoItem ?? `No hay (${filter.name} ?? elementos) disponibles`" />
                 </KunCol>
             </KunRow>
             <div class="flex justify-end mt-8 p-2 gap-x-2">

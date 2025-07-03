@@ -11,8 +11,8 @@ const props = defineProps({
   scrollable: Boolean,
   contentClass: String,
   bgColor: String,
-  width: String,
   minWidth: String,
+  width: String,
   maxWidth: String,
   height: String,
   maxHeight: String,
@@ -31,9 +31,9 @@ const mergedClass = computed(() => [
   baseClass.value,
   props.contentClass,
   props.bgColor,
-  props.width,
-  props.width,
   props.minWidth,
+  props.width,
+  props.maxWidth,
   props.height,
   props.maxHeight
 ])
