@@ -12,17 +12,17 @@ export default function useSelect(props, emits, paginatedItems, selectedItems) {
         } else {
             selectedItems.value.splice(index, 1);
         }
-        emits?.('update:selectedItems', selectedItems.value);
+        // emits?.('update:selectedItems', selectedItems.value);
     };
 
     const selectAll = () => {
         selectedItems.value = [...paginatedItems.value];
-        emits?.('update:selectedItems', selectedItems.value);
+        // emits?.('update:selectedItems', selectedItems.value);
     };
 
     const clearSelection = () => {
         selectedItems.value = [];
-        emits?.('update:selectedItems', selectedItems.value);
+        // emits?.('update:selectedItems', selectedItems.value);
     };
 
     const toggleSelectAll = () => {
