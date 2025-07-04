@@ -13,8 +13,8 @@
 
     <!-- Si es una string, la interpreta como clase o SVG raw (dependiendo del consumidor) -->
     <span v-else 
-      v-html="isSvg ? resolvedIcon : ''" 
       :class="[!isSvg ? resolvedIcon : '', color, normalizedSize, contentClass]"
+      v-html="isSvg ? resolvedIcon : ''" 
     />
   </span>
 </template>

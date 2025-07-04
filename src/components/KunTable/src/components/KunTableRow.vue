@@ -34,6 +34,7 @@
         :item="item"
         :value="getValue(header, item)"
         :index="index"
+        :header="header"
       >
         {{ formatValue(header, getValue(header, item)) }}
       </slot>
