@@ -1,5 +1,5 @@
 <template>
-  <component :is="teleport ? Teleport : 'div'" :to="teleport ? 'body' : undefined">
+  <Teleport to="body">
     <transition name="fade" appear>
       <div
         v-if="modelValue"
@@ -38,17 +38,16 @@
         </transition>
       </div>
     </transition>
-  </component>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-import { Teleport, watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
+import { watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
 import KunDialogOverlay from './KunDialogOverlay.vue'
 import KunDialogContent from './KunDialogContent.vue'
 
 const props = defineProps({
   modelValue: Boolean,
-  teleport: { type: Boolean, default: true },
   overlay: { type: Boolean, default: true },
   fullscreen: { type: Boolean, default: false },
   scrollable: { type: Boolean, default: false },
