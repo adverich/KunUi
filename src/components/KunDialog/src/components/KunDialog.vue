@@ -1,5 +1,5 @@
 <template>
-  <Teleport :is="teleport ? Teleport : 'div'" :to="teleport ? 'body' : undefined">
+  <component :is="teleport ? Teleport : 'div'" :to="teleport ? 'body' : undefined">
     <transition name="fade" appear>
       <div
         v-if="modelValue"
@@ -38,7 +38,7 @@
         </transition>
       </div>
     </transition>
-  </Teleport>
+  </component>
 </template>
 
 <script setup lang="ts">
