@@ -46,6 +46,8 @@
       </template>
     </KunDrawer>
 
+    <KunToolbar bgColor="bg-red-800"/>
+
     <div class="h-full">
       <KunTable :items="products" :headers="headers" showSelect />
     </div>
@@ -99,6 +101,7 @@ import KunNumberField from './components/KunNumberField/src/components/KunNumber
 import KunFileInput from './components/KunFileInput/src/components/KunFileInput.vue';
 
 import KunTable from './components/KunTable/src/components/KunTable.vue';
+import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
 
 const menuModel = ref(false);
 const avatarRef = ref(null);

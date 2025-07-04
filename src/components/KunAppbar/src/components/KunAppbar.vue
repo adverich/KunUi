@@ -19,8 +19,8 @@
           <KunBtn
             v-if="showDrawerButton"
             :class="buttonClass"
-            minWidth="fit-content"
-            bgColor="bg-transparent"
+            min-width="fit-content"
+            bg-cClor="bg-transparent"
             textColor="text-black dark:text-white"
             @click="$emit('toggle-drawer')"
           >
@@ -85,94 +85,37 @@ import IconMenuRounded from '../../../../icons/IconMenuRounded.vue'
 import { setAppbarHeight } from '@/utils/useLayout'
 
 const props = defineProps({
-  bgColor: {
-    type: String,
-    default: 'bg-transparent'
-  },
+  bgColor: { type: String, default: 'bg-transparent' },
   title: String,
   titleImage: String,
-  titleSize: {
-    type: String,
-    default: 'text-base'
-  },
-  titleWeight: {
-    type: String,
-    default: 'font-medium'
-  },
+  titleSize: { type: String, default: 'text-base' },
+  titleWeight: { type: String, default: 'font-medium' },
   titlePosition: {
     type: String,
     default: 'center',
     validator: val => ['left', 'center', 'right'].includes(val)
   },
-  density: {
-    type: String,
-    default: 'default'
-  },
-  elevation: {
-    type: String,
-    default: 'md'
-  },
-  bordered: {
-    type: Boolean,
-    default: false
-  },
-  borderColor: {
-    type: String,
-    default: 'border-b border-slate-200 dark:border-slate-800'
-  },
-  showDrawerButton: {
-    type: Boolean,
-    default: true
-  },
-  buttonClass: {
-    type: String,
-    default: 'bg-transparent px-2'
-  },
-  leftSectionClass: {
-    type: String,
-    default: 'flex items-center gap-2'
-  },
-  rightSectionClass: {
-    type: String,
-    default: 'flex items-center gap-2 justify-end ml-auto'
-  },
-  zIndex: {
-    type: [String, Number],
-    default: 2000
-  },
-  fixed: {
-    type: Boolean,
-    default: false
-  },
-  sticky: {
-    type: Boolean,
-    default: false
-  },
-  glass: {
-    type: Boolean,
-    default: false
-  },
-  autoHideOnScroll: {
-    type: Boolean,
-    default: false
-  },
-  responsiveCollapse: {
-    type: Boolean,
-    default: false
-  },
-  collapseBreakpoint: {
-    type: Number,
-    default: 768
-  },
+  density: { type: String, default: 'default' },
+  elevation: { type: String, default: 'md' },
+  bordered: { type: Boolean, default: false },
+  borderColor: { type: String, default: 'border-b border-slate-200 dark:border-slate-800' },
+  showDrawerButton: { type: Boolean, default: true },
+  buttonClass: { type: String, default: 'bg-transparent px-2' },
+  leftSectionClass: { type: String, default: 'flex items-center gap-2' },
+  rightSectionClass: { type: String, default: 'flex items-center gap-2 justify-end ml-auto' },
+  zIndex: { type: String, default: 'z-1000' },
+  fixed: { type: Boolean, default: false },
+  sticky: { type: Boolean, default: false },
+  glass: { type: Boolean, default: false },
+  autoHideOnScroll: { type: Boolean, default: false },
+  responsiveCollapse: { type: Boolean, default: false },
+  collapseBreakpoint: { type: Number, default: 768 },
   transition: {
     type: String,
     default: 'fade-slide',
     validator: val => ['fade-slide', 'fade', 'scale'].includes(val)
   },
-  animationClass: {
-    type: String,
-    default: ''
-  }
+  animationClass: { type: String, default: '' }
 })
 defineOptions({ inheritAttrs: false })
 

@@ -1,18 +1,8 @@
 <template>
   <component
     :is="tag"
-    class="w-full flex flex-col"
-    :class="[
-      'relative',
-      floating ? 'inline-flex' : '',
-      flat ? '' : `shadow-md`,
-      absolute ? 'absolute inset-0' : '',
-      roundedClass,
-      borderClass,
-      colorClass,
-      heightClass,
-      elevationClass
-    ]"
+    class="w-full flex flex-col relative"
+    :class="mergedClass"
     v-bind="$attrs"
   >
     <!-- Imagen de fondo -->
@@ -71,32 +61,30 @@ import { computed, ref, useSlots } from 'vue'
 import KunToolbarTitle from './KunToolbarTitle.vue'
 
 const props = defineProps({
-  absolute: Boolean,
-  border: [String, Number, Boolean],
-  collapse: Boolean,
-  color: String,
-  density: {
-    type: String,
-    default: 'default',
-  },
-  elevation: [String, Number],
-  extended: Boolean,
-  extensionHeight: {
-    type: [String, Number],
-    default: 48,
-  },
-  flat: Boolean,
-  floating: Boolean,
-  height: [String, Number],
-  image: String,
-  rounded: [String, Number, Boolean],
-  tag: {
-    type: String,
-    default: 'header',
-  },
-  theme: String,
-  tile: Boolean,
-  title: String,
+    absolute: Boolean,
+    bgColor: String,
+    bordered: { type: Boolean, default: false },
+    borderColor: String,
+    collapse: Boolean,
+    density: {
+        type: String,
+        default: 'default',
+    },
+    elevation: [String, Number],
+    extended: Boolean,
+    extensionHeight: {
+        type: [String, Number],
+        default: 48,
+    },
+    flat: Boolean,
+    floating: Boolean,
+    height: [String, Number],
+    image: String,
+    rounded: [String, Boolean],
+    tag: { type: String, default: 'header' },
+    theme: String,
+    tile: Boolean,
+    title: String,
 })
 
 const slots = useSlots()
@@ -122,20 +110,21 @@ const elevationClass = computed(() =>
   props.elevation ? `shadow-[${props.elevation}]` : ''
 )
 
-const colorClass = computed(() =>
-  props.color ? `bg-${props.color}` : 'bg-white'
-)
-
-const borderClass = computed(() => {
-  if (props.border === true) return 'border'
-  if (typeof props.border === 'string') return `border-${props.border}`
-  return ''
-})
-
 const roundedClass = computed(() => {
   if (props.tile) return 'rounded-none'
   if (props.rounded === true) return 'rounded'
-  if (typeof props.rounded === 'string') return `rounded-${props.rounded}`
+  if (typeof props.rounded === 'string') return props.rounded
   return ''
 })
+
+const mergedClass = computed(() => 
+    props.bgColor ? props.bgColor : 'bg-transparent',
+    props.floating ? 'inline-flex' : '',
+    props.flat ? '' : `shadow-md`,
+    props.absolute ? 'absolute inset-0' : '',
+    roundedClass.value,
+    props.bordered ? props.borderColor : 'border-b border-slate-200 dark:border-slate-800',
+    heightClass,
+    elevationClass
+)
 </script>
