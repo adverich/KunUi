@@ -253,7 +253,7 @@ const mergedClass = computed(() =>
   props.sticky ? 'sticky top-0' : '',
   props.glass ? 'backdrop-blur-md' : '',
   responsiveCollapsed.value ? 'justify-between px-2' : '',
-  animationClass.value
+  props.animationClass
 )
 
 const transitionMap = {
