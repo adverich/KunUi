@@ -47,10 +47,10 @@
           <slot name="title">
             <KunToolbarTitle v-if="title" :text="title" />
           </slot>
-
-          <!-- Append -->
-          <slot name="append" />
         </div>
+
+        <!-- Append -->
+        <slot name="append" />
       </div>
     </div>
 
