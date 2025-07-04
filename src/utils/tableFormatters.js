@@ -11,6 +11,12 @@ export function getValue(header, item) {
         return safeValue(value);
     }
 
+    // ESTO ES TEMPORAL
+    if (header.columnFormat === 'function') {
+        const value = header.columnRowText?.(item, header);
+        return safeValue(value);
+    }
+
     const value = item?.[header.value];
     return safeValue(value);
 }
