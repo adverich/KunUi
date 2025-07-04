@@ -18,41 +18,39 @@
         'px-4',
       ]"
     >
-      <!-- Título izquierda -->
-      <div v-if="titlePosition === 'left'" class="flex justify-center items-center">
-        <slot name="title">
-          <KunToolbarTitle v-if="title" :text="title" />
-        </slot>
-      </div>
-
-      <!-- Prepend -->
-      <div class="flex items-center gap-2">
+      <div :class="leftSectionClass">
+        <!-- Prepend -->
         <slot name="prepend" />
+
+        <!-- Título izquierda -->
+        <div v-if="titlePosition === 'left'" class="pl-2">
+          <slot name="title">
+            <KunToolbarTitle v-if="title" :text="title" />
+          </slot>
+        </div>
       </div>
 
       <!-- Contenido principal -->
-      <div class="flex items-center gap-2">
-        <slot />
-      </div>
+      <slot />
 
-      <div v-if="titlePosition === 'center'" class="flex justify-center items-center">
+      <div v-if="titlePosition === 'center'" class="flex-1 flex justify-center items-center">
         <slot name="title">
           <KunToolbarTitle v-if="title" :text="title" />
         </slot>
       </div>
 
-      <!-- Toolbar Items -->
-      <slot name="items" />
+      <div :class="rightSectionClass">
+        <!-- Toolbar Items -->
+        <slot name="items" />
 
-      <!-- Append -->
-      <div class="flex items-center gap-2">
-        <slot name="append" />
-      </div>
+        <div v-if="titlePosition === 'right'" class="pr-2">
+          <slot name="title">
+            <KunToolbarTitle v-if="title" :text="title" />
+          </slot>
 
-      <div v-if="titlePosition === 'right'" class="flex justify-center items-center">
-        <slot name="title">
-          <KunToolbarTitle v-if="title" :text="title" />
-        </slot>
+          <!-- Append -->
+          <slot name="append" />
+        </div>
       </div>
     </div>
 
@@ -95,6 +93,8 @@ const props = defineProps({
     theme: String,
     tile: Boolean,
     title: String,
+    leftSectionClass: { type: String, default: 'flex items-center gap-2' },
+    rightSectionClass: { type: String, default: 'flex items-center gap-2 justify-end ml-auto' },
 })
 
 const slots = useSlots()

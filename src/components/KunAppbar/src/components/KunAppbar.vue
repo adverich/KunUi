@@ -19,8 +19,8 @@
           <KunBtn
             v-if="showDrawerButton"
             :class="buttonClass"
-            min-width="fit-content"
-            bg-cClor="bg-transparent"
+            minWidth="fit-content"
+            bgColor="bg-transparent"
             textColor="text-black dark:text-white"
             @click="$emit('toggle-drawer')"
           >
