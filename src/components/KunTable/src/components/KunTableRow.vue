@@ -25,7 +25,7 @@
 
     <!-- Dynamic cells -->
     <td
-      v-for="header in headers"
+      v-for="header in resolvedHeaders"
       :key="header.value"
       :class="[mergedTdClass, header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center']"
     >
@@ -63,7 +63,7 @@ import { getValue, formatValue } from '@/utils/tableFormatters';
 const props = defineProps({
   item: Object,
   index: Number,
-  headers: Array,
+  resolvedHeaders: Array,
   showExpand: Boolean,
   showSelect: Boolean,
   isExpanded: Boolean,

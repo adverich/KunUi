@@ -52,7 +52,7 @@
                 <slot name="body.prepend" v-bind="slotProps" />
                 <KunTableRows 
                     :items="paginatedItems"
-                    :headers="resolvedHeaders"
+                    :resolvedHeaders="resolvedHeaders"
                     :tbody-class="tbodyClass"
                     :row-class="rowClass"
                     :tr-class="trClass"
