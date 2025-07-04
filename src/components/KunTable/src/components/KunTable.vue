@@ -52,7 +52,7 @@
                 <slot name="body.prepend" v-bind="slotProps" />
                 <KunTableRows 
                     :items="paginatedItems"
-                    :headers="headers"
+                    :headers="resolvedHeaders"
                     :tbody-class="tbodyClass"
                     :row-class="rowClass"
                     :tr-class="trClass"
@@ -199,11 +199,26 @@ const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
 const baseTableClass = 'table-auto w-full h-fit text-sm text-left';
 const mergedTableClass = [baseTableClass, tableClass.value];
 
-const fullColspan = computed(() => {
-  let total = props.headers?.length || 0;
-  if (props.showSelect) total += 1;
-  if (props.showExpand) total += 1;
-  if (props.hasActions) total += 1;
-  return total;
+const resolvedHeaders = computed(() => {
+  return props.headers.map(header => {
+    const newHeader = { ...header };
+
+    if (
+      header.columnType === 'function' &&
+      typeof header.columnFunction === 'string'
+    ) {
+      const resolvedFn = props.functionMap?.[header.columnFunction];
+      if (typeof resolvedFn === 'function') {
+        newHeader.columnFunction = resolvedFn;
+      } else {
+        console.warn(
+          `[KunTable] No se encontró la función "${header.columnFunction}" en functionMap`
+        );
+        newHeader.columnFunction = () => ''; // fallback para evitar errores
+      }
+    }
+
+    return newHeader;
+  });
 });
 </script>
