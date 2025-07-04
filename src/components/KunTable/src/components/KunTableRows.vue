@@ -4,7 +4,7 @@
       <KunTableRow
         :item="item"
         :index="index"
-        :resolvedHeaders="resolvedHeaders"
+        :headers="headers"
         :showExpand="showExpand"
         :showSelect="showSelect"
         :is-selected="isSelected(item)"
@@ -54,7 +54,7 @@ const props = defineProps({
     type: Function,
     default: (_, index) => index,
   },
-  resolvedHeaders: Array,
+  headers: Array,
   showExpand: Boolean,
   showSelect: Boolean,
   hasActions: Boolean,
@@ -68,7 +68,7 @@ const mergedTbodyClass = [baseTbodyClass, props.tbodyClass];
 
 // Total de columnas visibles (data + selección + expand)
 const fullColspan = computed(() => {
-  let total = props.resolvedHeaders?.length || 0;
+  let total = props.headers?.length || 0;
   if (props.showSelect) total += 1;
   if (props.showExpand) total += 1;
   if (props.hasActions) total += 1;
