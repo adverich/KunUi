@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="body">
+  <Teleport :is="teleport ? Teleport : 'div'" :to="teleport ? 'body' : undefined">
     <transition name="fade" appear>
       <div
         v-if="modelValue"
@@ -48,6 +48,7 @@ import KunDialogContent from './KunDialogContent.vue'
 
 const props = defineProps({
   modelValue: Boolean,
+  teleport: { type: Boolean, default: true },
   overlay: { type: Boolean, default: true },
   fullscreen: { type: Boolean, default: false },
   scrollable: { type: Boolean, default: false },
