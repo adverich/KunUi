@@ -13,9 +13,7 @@ export function getValue(header, item) {
 
     // ESTO ES TEMPORAL
     if (header.columnFormat === 'function') {
-        console.log(header.columnRowText);
         const value = header.columnRowText?.(item, header);
-        console.log(`valor: ${value}`);
         return safeValue(value);
     }
 
