@@ -9,17 +9,7 @@
       v-show="isVisible"
       ref="el"
       class="w-full flex transition-all duration-300"
-      :class="[
-        heightClass,
-        bgColor,
-        elevationClass,
-        bordered ? borderColor : '',
-        fixed ? 'fixed top-0 left-0 right-0' : '',
-        sticky ? 'sticky top-0' : '',
-        glass ? 'backdrop-blur-md bg-white/30 dark:bg-black/30' : '',
-        responsiveCollapsed ? 'justify-between px-2' : '',
-        animationClass
-      ]"
+      :class="mergedClass"
       :style="{ zIndex }"
       v-bind="$attrs"
     >
@@ -128,7 +118,7 @@ const props = defineProps({
   },
   borderColor: {
     type: String,
-    default: 'border-b border-gray-200'
+    default: 'border-b border-slate-200 dark:border-slate-800'
   },
   showDrawerButton: {
     type: Boolean,
@@ -253,6 +243,18 @@ const elevationClass = computed(() => {
     ? ''
     : `shadow-${props.elevation}`
 })
+
+const mergedClass = computed(() => 
+  heightClass.value,
+  props.bgColor,
+  elevationClass.value,
+  props.bordered ? props.borderColor : '',
+  props.fixed ? 'fixed top-0 left-0 right-0' : '',
+  props.sticky ? 'sticky top-0' : '',
+  props.glass ? 'backdrop-blur-md' : '',
+  responsiveCollapsed.value ? 'justify-between px-2' : '',
+  animationClass.value
+)
 
 const transitionMap = {
   'fade-slide': {
