@@ -13,8 +13,8 @@
 
     <!-- Si es una string, la interpreta como clase o SVG raw (dependiendo del consumidor) -->
     <span v-else 
+      v-html="isSvg ? resolvedIcon : ''" 
       :class="[!isSvg ? resolvedIcon : '', color, normalizedSize, contentClass]"
-      v-html="[isSvg ? resolvedIcon : '']" 
     />
   </span>
 </template>
@@ -52,7 +52,11 @@ function handleClick(event) {
   if (!props.disabled) emit('click', event);
 }
 
-const isSvg = computed(() => typeof resolvedIcon.value === 'string' && resolvedIcon.value.trim().startsWith('<svg'));
+const isSvg = computed(() =>
+  typeof resolvedIcon.value === 'string' &&
+  resolvedIcon.value.trim().toLowerCase().startsWith('<svg')
+)
+
 const resolvedIcon = computed(() => {
   if (Array.isArray(props.icon)) return props.icon[0];
   if (typeof props.icon === 'string' && props.icon.startsWith('$')) {
