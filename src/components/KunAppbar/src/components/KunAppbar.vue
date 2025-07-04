@@ -1,30 +1,60 @@
 <template>
-  <header
-    ref="el"
-    class="w-full flex"
-    :class="[heightClass, bgColor, elevationClass, bordered ? borderColor : '']"
-    :style="{ zIndex }"
-    v-bind="$attrs"
+  <transition
+    :enter-active-class="transitionMap[transition].enterActive"
+    :enter-from-class="transitionMap[transition].enterFrom"
+    :leave-active-class="transitionMap[transition].leaveActive"
+    :leave-to-class="transitionMap[transition].leaveTo"
   >
-    <!-- IZQUIERDA: Drawer + prepend + title (left) -->
-    <div :class="leftSectionClass">
-      <slot name="appbarButton">
-        <KunBtn
-          v-if="showDrawerButton"
-          :class="buttonClass"
-          minWidth="fit-content"
-          bgColor="bg-transparent"
-          textColor="text-black dark:text-white"
-          @click="$emit('toggle-drawer')"
-        >
-          <KunIcon :icon="IconMenuRounded" size="text-3xl"  />
-        </KunBtn>
-      </slot>
+    <header
+      v-show="isVisible"
+      ref="el"
+      class="w-full flex transition-all duration-300"
+      :class="[
+        heightClass,
+        bgColor,
+        elevationClass,
+        bordered ? borderColor : '',
+        fixed ? 'fixed top-0 left-0 right-0' : '',
+        sticky ? 'sticky top-0' : '',
+        glass ? 'backdrop-blur-md bg-white/30 dark:bg-black/30' : '',
+        responsiveCollapsed ? 'justify-between px-2' : '',
+        animationClass
+      ]"
+      :style="{ zIndex }"
+      v-bind="$attrs"
+    >
+      <!-- IZQUIERDA -->
+      <div :class="leftSectionClass">
+        <slot name="appbarButton">
+          <KunBtn
+            v-if="showDrawerButton"
+            :class="buttonClass"
+            minWidth="fit-content"
+            bgColor="bg-transparent"
+            textColor="text-black dark:text-white"
+            @click="$emit('toggle-drawer')"
+          >
+            <KunIcon :icon="IconMenuRounded" size="text-3xl" />
+          </KunBtn>
+        </slot>
 
-      <slot name="prepend" />
+        <slot name="prepend" />
 
-      <!-- Custom title slot LEFT -->
-      <template v-if="titlePosition === 'left'">
+        <template v-if="titlePosition === 'left'">
+          <slot name="title">
+            <KunAppbarTitle
+              v-if="title"
+              :title="title"
+              :titleImage="titleImage"
+              :textSize="titleSize"
+              :fontWeight="titleWeight"
+            />
+          </slot>
+        </template>
+      </div>
+
+      <!-- CENTRO -->
+      <div v-if="titlePosition === 'center'" class="flex-1 flex justify-center">
         <slot name="title">
           <KunAppbarTitle
             v-if="title"
@@ -34,44 +64,30 @@
             :fontWeight="titleWeight"
           />
         </slot>
-      </template>
-    </div>
+      </div>
 
-    <!-- CENTRO -->
-    <div v-if="titlePosition === 'center'" class="flex-1 flex justify-center">
-      <slot name="title">
-        <KunAppbarTitle
-          v-if="title"
-          :title="title"
-          :titleImage="titleImage"
-          :textSize="titleSize"
-          :fontWeight="titleWeight"
-        />
-      </slot>
-    </div>
+      <!-- DERECHA -->
+      <div :class="rightSectionClass">
+        <slot name="actions" />
 
-    <!-- DERECHA -->
-    <div :class="rightSectionClass">
-      <slot name="actions" />
-
-      <!-- Custom title slot RIGHT -->
-      <template v-if="titlePosition === 'right'">
-        <slot name="title">
-          <KunAppbarTitle
-            v-if="title"
-            :title="title"
-            :titleImage="titleImage"
-            :textSize="titleSize"
-            :fontWeight="titleWeight"
-          />
-        </slot>
-      </template>
-    </div>
-  </header>
+        <template v-if="titlePosition === 'right'">
+          <slot name="title">
+            <KunAppbarTitle
+              v-if="title"
+              :title="title"
+              :titleImage="titleImage"
+              :textSize="titleSize"
+              :fontWeight="titleWeight"
+            />
+          </slot>
+        </template>
+      </div>
+    </header>
+  </transition>
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUpdated, nextTick } from 'vue'
+import { computed, ref, onMounted, onUpdated, nextTick, watch, onBeforeUnmount, defineExpose } from 'vue'
 import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
@@ -83,14 +99,8 @@ const props = defineProps({
     type: String,
     default: 'bg-transparent'
   },
-  title: {
-    type: String,
-    default: ''
-  },
-  titleImage: {
-    type: String,
-    default: ''
-  },
+  title: String,
+  titleImage: String,
   titleSize: {
     type: String,
     default: 'text-base'
@@ -139,9 +149,92 @@ const props = defineProps({
   zIndex: {
     type: [String, Number],
     default: 2000
+  },
+  fixed: {
+    type: Boolean,
+    default: false
+  },
+  sticky: {
+    type: Boolean,
+    default: false
+  },
+  glass: {
+    type: Boolean,
+    default: false
+  },
+  autoHideOnScroll: {
+    type: Boolean,
+    default: false
+  },
+  responsiveCollapse: {
+    type: Boolean,
+    default: false
+  },
+  collapseBreakpoint: {
+    type: Number,
+    default: 768
+  },
+  transition: {
+    type: String,
+    default: 'fade-slide',
+    validator: val => ['fade-slide', 'fade', 'scale'].includes(val)
+  },
+  animationClass: {
+    type: String,
+    default: ''
   }
 })
 defineOptions({ inheritAttrs: false })
+
+const el = ref(null)
+const isVisible = ref(true)
+const responsiveCollapsed = ref(false)
+
+function updateHeight() {
+  nextTick(() => {
+    if (el.value) {
+      const rect = el.value.getBoundingClientRect()
+      setAppbarHeight(Math.round(rect.height))
+    }
+  })
+}
+
+function handleScroll() {
+  if (!props.autoHideOnScroll) return
+  const current = window.scrollY
+  isVisible.value = current < lastScroll.value || current < 10
+  lastScroll.value = current
+}
+
+function handleResize() {
+  if (!props.responsiveCollapse) return
+  responsiveCollapsed.value = window.innerWidth < props.collapseBreakpoint
+}
+
+const lastScroll = ref(0)
+
+onMounted(() => {
+  updateHeight()
+  if (props.autoHideOnScroll) {
+    window.addEventListener('scroll', handleScroll)
+  }
+  if (props.responsiveCollapse) {
+    window.addEventListener('resize', handleResize)
+    handleResize()
+  }
+})
+
+onUpdated(updateHeight)
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', handleResize)
+})
+
+defineExpose({
+  el,
+  updateHeight
+})
 
 const heightClass = computed(() => {
   switch (props.density) {
@@ -161,16 +254,24 @@ const elevationClass = computed(() => {
     : `shadow-${props.elevation}`
 })
 
-const el = ref(null)
-async function updateHeight() {
-  await nextTick()
-  // if (el.value) setAppbarHeight(el.value.offsetHeight);
-  if (el.value) {
-    const rect = el.value.getBoundingClientRect()
-    setAppbarHeight(Math.round(rect.height))
+const transitionMap = {
+  'fade-slide': {
+    enterActive: 'transition-all duration-300 ease-out',
+    enterFrom: 'opacity-0 -translate-y-full',
+    leaveActive: 'transition-all duration-300 ease-in',
+    leaveTo: 'opacity-0 -translate-y-full'
+  },
+  'fade': {
+    enterActive: 'transition-opacity duration-300',
+    enterFrom: 'opacity-0',
+    leaveActive: 'transition-opacity duration-300',
+    leaveTo: 'opacity-0'
+  },
+  'scale': {
+    enterActive: 'transition-transform duration-300',
+    enterFrom: 'scale-95 opacity-0',
+    leaveActive: 'transition-transform duration-300',
+    leaveTo: 'scale-95 opacity-0'
   }
 }
-
-onMounted(updateHeight)
-onUpdated(updateHeight)
 </script>

@@ -1,14 +1,20 @@
 <template>
-    <p class="text-xl w-fit text-nowrap">
-        {{ title }} 
-    </p>
+  <component :is="tag" class="text-xl font-medium whitespace-nowrap">
+    <slot name="text">
+      {{ text }}
+    </slot>
+  </component>
 </template>
 
 <script setup>
 const props = defineProps({
-    title: {
-        type: String,
-        default: ''
-    },
+  tag: {
+    type: String,
+    default: 'div',
+  },
+  text: {
+    type: String,
+    default: '',
+  },
 })
 </script>
