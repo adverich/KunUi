@@ -18,21 +18,27 @@
         'px-4',
       ]"
     >
-      <!-- Prepend -->
-      <div class="flex items-center gap-2">
-        <slot name="prepend" />
-      </div>
-
-      <!-- Título -->
-      <div class="flex-1 flex justify-start">
+      <!-- Título izquierda -->
+      <div v-if="titlePosition === 'left'" class="flex justify-center items-center">
         <slot name="title">
           <KunToolbarTitle v-if="title" :text="title" />
         </slot>
       </div>
 
+      <!-- Prepend -->
+      <div class="flex items-center gap-2">
+        <slot name="prepend" />
+      </div>
+
       <!-- Contenido principal -->
       <div class="flex items-center gap-2">
         <slot />
+      </div>
+
+      <div v-if="titlePosition === 'center'" class="flex justify-center items-center">
+        <slot name="title">
+          <KunToolbarTitle v-if="title" :text="title" />
+        </slot>
       </div>
 
       <!-- Toolbar Items -->
@@ -41,6 +47,12 @@
       <!-- Append -->
       <div class="flex items-center gap-2">
         <slot name="append" />
+      </div>
+
+      <div v-if="titlePosition === 'right'" class="flex justify-center items-center">
+        <slot name="title">
+          <KunToolbarTitle v-if="title" :text="title" />
+        </slot>
       </div>
     </div>
 
@@ -63,13 +75,11 @@ import KunToolbarTitle from './KunToolbarTitle.vue'
 const props = defineProps({
     absolute: Boolean,
     bgColor: String,
+    titlePosition: { type: String, default: 'left' },
     bordered: { type: Boolean, default: false },
     borderColor: String,
     collapse: Boolean,
-    density: {
-        type: String,
-        default: 'default',
-    },
+    density: { type: String, default: 'default' },
     elevation: [String, Number],
     extended: Boolean,
     extensionHeight: {
@@ -102,8 +112,8 @@ const densityClass = computed(() => {
   }
 })
 
-const heightClass = computed(() =>
-  props.height ? `h-[${props.height}px]` : ''
+const heightClass = computed(() => 
+    props.height ? typeof props.height === 'number' ? `h-[${props.height}px]` : props.height : ''
 )
 
 const elevationClass = computed(() =>
@@ -124,7 +134,7 @@ const mergedClass = computed(() =>
     props.absolute ? 'absolute inset-0' : '',
     roundedClass.value,
     props.bordered ? props.borderColor : 'border-b border-slate-200 dark:border-slate-800',
-    heightClass,
-    elevationClass
+    heightClass.value,
+    elevationClass.value
 )
 </script>

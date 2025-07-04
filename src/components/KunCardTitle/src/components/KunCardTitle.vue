@@ -45,8 +45,8 @@ const computedClass = computed(() => [
 ].filter(Boolean))
 
 const computedStyle = computed(() => ({
-  height: typeof props.height === 'number' ? `${props.height}px` : props.height,
-  width: typeof props.width === 'number' ? `${props.width}px` : props.width
+  height: props.height ? typeof props.height === 'number' ? `h-[${props.height}px]` : props.height : '',
+  width: props.width ? typeof props.width === 'number' ? `h-[${props.width}px]` : props.width : ''
 }))
 
 const titleClass = [props.dense ? 'font-medium' : 'font-semibold', props.titleSize]
