@@ -12,6 +12,7 @@
         :has-actions="hasActions"
         :loading="actionLoadingMap[item.id] || false"
         v-bind="$attrs"
+        :customSlots="customSlots"
       >
         <template
           v-for="(_, name) in $slots"
@@ -59,6 +60,7 @@ const props = defineProps({
   hasActions: Boolean,
   loading: Boolean,
   actionLoadingMap: Object,
+  customSlots: Object,
 });
 
 const baseTbodyClass = 'table-auto w-full text-sm text-left';

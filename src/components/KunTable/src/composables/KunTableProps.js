@@ -60,6 +60,7 @@ export default () => ({
     loadingText: { type: String, default: 'Cargando...' },
 
     // Slots control
+    customSlots: Object,
     showTopSlot: { type: Boolean, default: false },
     showBottomSlot: { type: Boolean, default: false },
 });

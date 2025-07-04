@@ -29,15 +29,26 @@
       :key="header.value"
       :class="[mergedTdClass, header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center']"
     >
-      <slot 
-        :name="`item.${header.value}`"
-        :item="item"
-        :value="getValue(header, item)"
-        :index="index"
-        :header="header"
-      >
-        {{ formatValue(header, getValue(header, item)) }}
-      </slot>
+      <template v-if="customSlots?.[`item.${header.value}`]">
+        <component
+          :is="customSlots[`item.${header.value}`]"
+          :item="item"
+          :value="getValue(header, item)"
+          :index="index"
+          :header="header"
+        />
+      </template>
+      <template v-else>
+        <slot 
+          :name="`item.${header.value}`"
+          :item="item"
+          :value="getValue(header, item)"
+          :index="index"
+          :header="header"
+        >
+          {{ formatValue(header, getValue(header, item)) }}
+        </slot>
+      </template>
     </td>
 
     <!-- Action space -->
@@ -65,6 +76,7 @@ const props = defineProps({
   hasActions: Boolean,
   actionsAlign: String,
   loading: Boolean,
+  customSlots: Object,
 });
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
