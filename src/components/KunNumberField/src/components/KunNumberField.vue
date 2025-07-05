@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex flex-col relative">
+  <div class="w-full flex flex-col relative" ref="rootRef">
     <!-- Label -->
     <label v-if="label" :for="uid" :class="[labelColor,
       'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
@@ -154,6 +154,11 @@ const {
   isActive,
   handleBlur
 } = useKunNumberField(props, emits);
+
+defineExpose({
+  numberInput,
+  rootRef
+});
 
 const inputDensity = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");
 </script>

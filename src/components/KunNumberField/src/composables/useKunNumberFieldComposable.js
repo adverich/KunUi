@@ -7,6 +7,7 @@ import {
 export function useKunNumberField(props, emits) {
     const inputValue = ref(props.modelValue);
     const numberInput = ref(null);
+    const rootRef = ref(null)
     const inputKey = ref(0);
 
     function updateValue(val) {
@@ -83,6 +84,7 @@ export function useKunNumberField(props, emits) {
     return {
         inputValue,
         numberInput,
+        rootRef,
         inputKey,
         updateValue,
         onIncrement,
