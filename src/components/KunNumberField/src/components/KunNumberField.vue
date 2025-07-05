@@ -144,6 +144,7 @@ const appendIconSlot = !!slots['append-icon'];
 const {
   inputValue,
   numberInput,
+  rootRef,
   inputKey,
   updateValue,
   onIncrement,
