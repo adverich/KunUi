@@ -11,12 +11,6 @@ export function useKunNumberField(props, emits) {
     const inputKey = ref(0);
 
     function updateValue(val) {
-        if (!val) {
-            inputValue.value = '0'; // Mostrar "0" en el input
-            emits('update:modelValue', 0); // Asegurar que el modelo siempre maneja números
-            return;
-        }
-
         const normalizedInput = normalizeNumber(val, props.separator);
         const parts = normalizedInput.split(props.separator);
 
@@ -40,7 +34,7 @@ export function useKunNumberField(props, emits) {
             inputValue.value = formattedInput;
         }
 
-        emits('update:modelValue', formattedInput || 0);
+        emits('update:modelValue', formattedInput);
     }
 
     // Función auxiliar para actualizar `inputKey` y restaurar foco
