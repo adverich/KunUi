@@ -12,7 +12,7 @@
         >
             <slot name="prependSearch" />
 
-            <KunBtn v-if="filterable" @click="modalFilter = true" text="Filtrar" bgColor="bg-slate-300 dark:bg-slate-700" />
+            <KunBtn v-if="filterable" @click="modalFilter = true" text="Filtros" bgColor="bg-green-200 dark:bg-green-800 px-2" />
 
             <input
                 v-if="searchable"
@@ -106,7 +106,7 @@
         </div>
 
         <!-- Footer Fijo -->
-        <div v-if="!hideDefaultFooter" class="sticky bottom-0 z-10">
+        <div v-if="!hideDefaultFooter" class="sticky bottom-0 z-10 print:hidden">
             <KunTableFooter
                 :items-length="items.length"
                 :items-per-page="options.itemsPerPage"
