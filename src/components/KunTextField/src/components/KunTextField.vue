@@ -107,7 +107,8 @@ defineExpose({
   reset,
   resetValidation,
   inputField,
-  rootRef
+  rootRef,
+  focus: () => inputField.value?.focus()
 });
 
 const uid = `input-${getCurrentInstance().uid}`;
