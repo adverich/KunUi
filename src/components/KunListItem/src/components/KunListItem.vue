@@ -14,7 +14,7 @@
       :aria-selected="isItemSelected || isActive || linkActive"
       :aria-disabled="disabled"
       tabindex="-1"
-      :class="mergedItemClass"
+      :class="mergedItemClass"1
       @click="e => handleClick(e, navigate)"
       @keydown.enter.prevent="e => handleClick(e, navigate)"
       v-bind="$attrs"
@@ -76,7 +76,7 @@
     :aria-selected="isItemSelected || isActive"
     :aria-disabled="disabled"
     tabindex="-1"
-    :class="mergedItemClass"
+    :class="[mergedItemClass]"
     @click="handleClick"
     @keydown.enter.prevent="handleClick"
     v-bind="$attrs"
@@ -152,10 +152,7 @@ const props = defineProps({
 
   disabled: Boolean,
   active: Boolean,
-  activeClass: {
-    type: String,
-    default: 'bg-slate-300 dark:bg-slate-700',
-  },
+  activeClass: { type: String, default: 'bg-slate-300 dark:bg-slate-700' },
   selectable: { type: Boolean, default: false },
 
   variant: { type: String, default: 'text' },
@@ -166,7 +163,7 @@ const props = defineProps({
 
   bgItems: { type: String, default: 'bg-transparent' },
   textColor: { type: String, default: 'text-black dark:text-white' },
-  hoverBg: { type: String, default: 'hover:bg-gray-100 dark:hover:bg-gray-600' },
+  hoverBg: { type: String, default: 'hover:bg-red-300 dark:hover:bg-slate-700' },
   noGutters: Boolean,
   itemPosition: { type: String, default: 'items-start' },
 
@@ -224,14 +221,14 @@ if (listContext && props.selectable && props.value !== null) {
 
 const baseItemClass = 'w-full flex transition duration-150 ease-in-out'
 const variantClass = computed(() => {
-  switch (props.variant) {
-    case 'outlined': return 'border border-gray-300 dark:border-gray-700'
-    case 'elevated': return 'shadow-md'
-    case 'tonal': return 'bg-gray-100 dark:bg-gray-800'
-    case 'flat': return 'bg-transparent'
-    case 'plain': return ''
-    default: return ''
-  }
+  // switch (props.variant) {
+  //   case 'outlined': return 'border border-gray-300 dark:border-gray-700'
+  //   case 'elevated': return 'shadow-md'
+  //   case 'tonal': return 'bg-gray-100 dark:bg-gray-800'
+  //   case 'flat': return 'bg-transparent'
+  //   case 'plain': return ''
+  //   default: return ''
+  // }
 })
 const densityClass = computed(() => {
   switch (props.density) {
@@ -255,16 +252,16 @@ const mergedItemClass = computed(() => {
     densityClass.value,
     roundedClass.value,
     rippleClass.value,
-    props.bgItems,
     props.textColor,
     props.itemPosition,
+    props.bgItems,
     {
       'cursor-not-allowed opacity-50': props.disabled,
       [`cursor-pointer ${props.hoverBg}`]: props.selectable && !props.disabled,
       [props.activeClass]: isItemSelected.value || isActive.value,
       'px-4': !props.noGutters,
     },
-    props.containerClass
+    props.containerClass,
   ]
 })
 </script>

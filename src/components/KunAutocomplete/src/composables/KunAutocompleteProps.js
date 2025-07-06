@@ -95,14 +95,9 @@ export const KunAutocompleteProps = {
     type: Boolean,
     default: true,
   },
-  bgItemListColor: {
-    type: String,
-    default: "bg-transparent",
-  },
-  selectedColor: {
-    type: String,
-    default: "bg-green-200",
-  },
+  bgItemListColor: { type: String, default: "bg-transparent" },
+  selectedItemListColor: { type: String, default: "bg-slate-100 dark:bg-slate-900" },
+  hoverItemListColor: { type: String, default: "hover:bg-slate-300 dark:hover:bg-slate-700" },
   attach: {
     type: Boolean,
     default: false
@@ -110,5 +105,5 @@ export const KunAutocompleteProps = {
   rules: {
     type: Array,
     default: () => [],
-  }
+  },
 };

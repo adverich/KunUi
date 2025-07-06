@@ -4,21 +4,6 @@
       <template #actions>
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
           icon-color="bg-blue-500" @update:model-value="setTheme" />
-
-        <!-- <div class="h-15 w-max" ref="avatarRef">
-          <KunAvatar class="bg-transparent" @click="menuModel = true">
-            <KunIcon :icon="IconAccountOutline" color="text-red-500" />
-            <KunMenu activator="parent" v-model="menuModel" :parent-ref="avatarRef" z-index="z-[2000]"
-              location="bottom" origin="bottom right" 
-              minWidth="min-w-48" width="w-64" maxWidth="max-w-64"
-            >
-              <KunList>
-                <KunListItem class="hover:bg-red-800">Hola mundo</KunListItem>
-                <KunListItem class="hover:bg-blue-800">Hola mundo dos</KunListItem>
-              </KunList>
-            </KunMenu>
-          </KunAvatar>
-        </div> -->
       </template>
     </KunAppbar>
 
@@ -49,36 +34,7 @@
     <div class="h-24"></div>
 
     <div class="flex justify-center bg-gray-400">
-      <div class="w-max bg-amber-300" ref="avatarRef">
-        <KunAvatar class="bg-transparent" @click="menuModel = true">
-          <KunIcon :icon="IconAccountOutline" color="text-red-500" />
-          <KunMenu activator="parent" v-model="menuModel" :parent-ref="avatarRef" z-index="z-[2000]"
-            location="left" origin="bottom center" 
-          >
-            <KunList>
-              <KunListItem class="hover:bg-blue-800">Hola mundo dos</KunListItem>
-            </KunList>
-          </KunMenu>
-        </KunAvatar>
-      </div>
-    </div>
-
-    <div class="h-24"></div>
-
-    <div class="flex justify-center bg-gray-400">
-      <div class="w-max bg-amber-300" ref="avatarRefTwo">
-        <KunAvatar class="bg-transparent" @click="menuModelTwo = true">
-          <KunIcon :icon="IconAccountOutline" color="text-red-500" />
-        </KunAvatar>
-
-        <KunMenu activator="parent" v-model="menuModelTwo" :parent-ref="avatarRefTwo" z-index="z-[2000]"
-          location="left" origin="bottom center" transition="slide-right"
-        >
-          <KunList>
-            <KunListItem class="hover:bg-blue-800">Hola mundo dos</KunListItem>
-          </KunList>
-        </KunMenu>
-      </div>
+      <KunAutocomplete :items="products" label="hola"/>
     </div>
 
     <div class="h-24"></div>

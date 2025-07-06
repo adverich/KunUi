@@ -1,7 +1,7 @@
 export default {
   modelValue: { type: [String, Number], default: '' },
   type: { type: String, default: 'text' },
-  placeholder: { type: String, default: '' },
+  placeholder: { type: [String, Number], default: '' },
   label: { type: String, default: '' },
   dirty: { type: Boolean, default: false },
 

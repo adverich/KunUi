@@ -29,7 +29,7 @@
         :close-on-content-click="closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails">
         <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="true">
           <KunListItem v-if="hasCreateItem">
-            <KunBtn @click="createItem" class="w-full" color="bg-green-400">
+            <KunBtn @click="createItem" class="w-full" bgColor="bg-green-500">
               Crear item
             </KunBtn>
           </KunListItem>
@@ -37,11 +37,12 @@
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="{ item, index, empty }">
             <template v-if="!empty && item">
               <KunListItem :value="item" :key="item.id?.toString() ?? item.name" :disabled="checkDisabled(item)"
-                :class="itemListBg(item)" :density="density" :id="item.id?.toString() ?? item.name" :selectable="true">
+              :bg-items="bgItemListColor" :hover-bg="hoverItemListColor" :activeClass="selectedItemListColor"
+              :density="density" :id="item.id?.toString() ?? item.name" :selectable="true">
                 <KunListItemTitle class="text-wrap">
                   {{ itemToString(item, itemTitle ?? textArr, 'hasDefault') }}
                 </KunListItemTitle>
-                <KunListItemSubtitle v-text="itemSubtitle ? itemToString(item, itemSubtitle) : ''" />
+                <KunListItemSubtitle :text="itemSubtitle ? itemToString(item, itemSubtitle) : ''" />
               </KunListItem>
             </template>
             <template v-else>
@@ -94,17 +95,6 @@ onMounted(() => {
 });
 
 const parentRef = ref(null);
-// watchEffect(() => {
-//   if (textFieldRef.value?.rootRef) {
-//     parentRef.value = textFieldRef.value.rootRef;
-//   }
-// });
-
-function itemListBg(item) {
-  if (modelValue.value === null || modelValue.value === undefined) return props.bgItemListColor;
-  if (!props.multiple) return placeholder.value === item[props.itemTitle] ? props.selectedColor : props.bgItemListColor;
-  return modelValue.value.find((i) => i[props.itemValue] === item[props.itemValue]) ? props.selectedColor : props.bgItemListColor;
-}
 
 // Estado interno del error
 const internalError = ref('');
