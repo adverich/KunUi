@@ -163,7 +163,6 @@ const props = defineProps({
   hoverBg: { type: String, default: 'hover:bg-gray-100 dark:hover:bg-gray-600' },
   noGutters: Boolean,
   itemPosition: { type: String, default: 'items-start' },
-  itemClass: String,
 
   prependIcon: [String, Object, Function],
   prependAvatar: String,
@@ -242,22 +241,24 @@ const roundedClass = computed(() => {
 })
 const rippleClass = computed(() => props.ripple ? 'relative overflow-hidden' : '')
 
-const mergedItemClass = computed(() => [
-  baseItemClass,
-  variantClass.value,
-  densityClass.value,
-  roundedClass.value,
-  rippleClass.value,
-  props.bgItems,
-  props.textColor,
-  props.itemPosition,
-  {
-    'cursor-not-allowed opacity-50': props.disabled,
-    [`cursor-pointer ${props.hoverBg}`]: props.selectable && !props.disabled,
-    [props.activeClass]: isItemSelected.value || isActive.value,
-    'px-4': !props.noGutters,
-  },
-  props.itemClass,
-  attrs.class
-])
+const mergedItemClass = computed(() => {
+  const externalClass = attrs.class;
+  return [
+    baseItemClass,
+    variantClass.value,
+    densityClass.value,
+    roundedClass.value,
+    rippleClass.value,
+    props.bgItems,
+    props.textColor,
+    props.itemPosition,
+    {
+      'cursor-not-allowed opacity-50': props.disabled,
+      [`cursor-pointer ${props.hoverBg}`]: props.selectable && !props.disabled,
+      [props.activeClass]: isItemSelected.value || isActive.value,
+      'px-4': !props.noGutters,
+    },
+    ...(Array.isArray(externalClass) ? externalClass : [externalClass])
+  ]
+})
 </script>
