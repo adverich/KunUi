@@ -14,7 +14,7 @@
       :aria-selected="isItemSelected || isActive || linkActive"
       :aria-disabled="disabled"
       tabindex="-1"
-      :class="mergedItemClass"1
+      :class="mergedItemClass" 
       @click="e => handleClick(e, navigate)"
       @keydown.enter.prevent="e => handleClick(e, navigate)"
       v-bind="$attrs"
@@ -221,14 +221,14 @@ if (listContext && props.selectable && props.value !== null) {
 
 const baseItemClass = 'w-full flex transition duration-150 ease-in-out'
 const variantClass = computed(() => {
-  // switch (props.variant) {
-  //   case 'outlined': return 'border border-gray-300 dark:border-gray-700'
-  //   case 'elevated': return 'shadow-md'
-  //   case 'tonal': return 'bg-gray-100 dark:bg-gray-800'
-  //   case 'flat': return 'bg-transparent'
-  //   case 'plain': return ''
-  //   default: return ''
-  // }
+  switch (props.variant) {
+    case 'outlined': return 'border border-gray-300 dark:border-gray-700'
+    case 'elevated': return 'shadow-md'
+    case 'tonal': return 'bg-gray-100 dark:bg-gray-800'
+    case 'flat': return 'bg-transparent'
+    case 'plain': return ''
+    default: return ''
+  }
 })
 const densityClass = computed(() => {
   switch (props.density) {
