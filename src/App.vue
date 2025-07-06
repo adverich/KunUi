@@ -46,7 +46,14 @@
       </template>
     </KunDrawer>
 
-    <div>
+    <div class="">
+      <KunList >
+        <KunListItem class="flex flex-row bg-red-800">
+          <div>khe</div>
+          <div>Hola mundo</div>
+        </KunListItem>
+        <!-- <KunListItem>Hola mundo dos</KunListItem> -->
+      </KunList>
     </div>
   </div>
 </template>

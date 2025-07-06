@@ -43,7 +43,7 @@
         </div>
 
         <!-- Contenido central -->
-        <div class="flex flex-col min-w-0 flex-1">
+        <div class="flex flex-col min-w-0 flex-1" :class="contentClass" v-bind="otherAttrs">
           <slot>
             <slot name="title">
               <div v-if="title" class="truncate" :class="titleClass">{{ title }}</div>
@@ -105,7 +105,7 @@
       </div>
 
       <!-- Contenido central -->
-      <div class="flex flex-col min-w-0 flex-1">
+      <div class="flex flex-col min-w-0 flex-1" :class="contentClass" v-bind="otherAttrs">
         <slot>
           <slot name="title">
             <div v-if="title" class="truncate" :class="titleClass">{{ title }}</div>
@@ -136,6 +136,12 @@ import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
 import { RouterLink } from 'vue-router'
 
 const attrs = useAttrs();
+const contentClass = computed(() => attrs.class)
+const otherAttrs = computed(() => {
+  const { class: _class, ...rest } = attrs
+  return rest
+})
+
 const props = defineProps({
   value: [String, Number, Boolean, Object, Array, null],
   to: [String, Object],
@@ -174,6 +180,7 @@ const props = defineProps({
   titleClass: { type: String, default: 'font-medium' },
   subtitle: [String, Number, Boolean],
   subtitleClass: { type: String, default: 'text-sm text-slate-800 dark:text-slate-200' },
+  containerClass: { type: [String, Array, Object], default: '' },
 })
 
 const emits = defineEmits(['click'])
@@ -242,9 +249,7 @@ const roundedClass = computed(() => {
 const rippleClass = computed(() => props.ripple ? 'relative overflow-hidden' : '')
 
 const mergedItemClass = computed(() => {
-  const externalClass = attrs.class;
   return [
-    ...(Array.isArray(externalClass) ? externalClass : [externalClass]),
     baseItemClass,
     variantClass.value,
     densityClass.value,
@@ -258,7 +263,8 @@ const mergedItemClass = computed(() => {
       [`cursor-pointer ${props.hoverBg}`]: props.selectable && !props.disabled,
       [props.activeClass]: isItemSelected.value || isActive.value,
       'px-4': !props.noGutters,
-    }
+    },
+    props.containerClass
   ]
 })
 </script>
