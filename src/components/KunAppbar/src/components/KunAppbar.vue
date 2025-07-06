@@ -77,12 +77,12 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUpdated, nextTick, watch, onBeforeUnmount, defineExpose } from 'vue'
-import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue'
-import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
-import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
-import IconMenuRounded from '../../../../icons/IconMenuRounded.vue'
-import { setAppbarHeight } from '@/utils/useLayout'
+import { computed, ref, onMounted, onUpdated, nextTick, onBeforeUnmount, defineExpose } from 'vue';
+import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue';
+import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
+import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
+import IconMenuRounded from '../../../../icons/IconMenuRounded.vue';
+import { setAppbarHeight } from '@/utils/useLayout';
 
 const props = defineProps({
   bgColor: { type: String, default: 'bg-transparent' },
@@ -116,12 +116,12 @@ const props = defineProps({
     validator: val => ['fade-slide', 'fade', 'scale'].includes(val)
   },
   animationClass: { type: String, default: '' }
-})
-defineOptions({ inheritAttrs: false })
+});
+defineOptions({ inheritAttrs: false });
 
-const el = ref(null)
-const isVisible = ref(true)
-const responsiveCollapsed = ref(false)
+const el = ref(null);
+const isVisible = ref(true);
+const responsiveCollapsed = ref(false);
 
 function updateHeight() {
   nextTick(() => {
@@ -130,21 +130,21 @@ function updateHeight() {
       setAppbarHeight(Math.round(rect.height))
     }
   })
-}
+};
 
 function handleScroll() {
   if (!props.autoHideOnScroll) return
   const current = window.scrollY
   isVisible.value = current < lastScroll.value || current < 10
   lastScroll.value = current
-}
+};
 
 function handleResize() {
   if (!props.responsiveCollapse) return
   responsiveCollapsed.value = window.innerWidth < props.collapseBreakpoint
-}
+};
 
-const lastScroll = ref(0)
+const lastScroll = ref(0);
 
 onMounted(() => {
   updateHeight()
@@ -155,19 +155,19 @@ onMounted(() => {
     window.addEventListener('resize', handleResize)
     handleResize()
   }
-})
+});
 
-onUpdated(updateHeight)
+onUpdated(updateHeight);
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
   window.removeEventListener('resize', handleResize)
-})
+});
 
 defineExpose({
   el,
   updateHeight
-})
+});
 
 const heightClass = computed(() => {
   switch (props.density) {
@@ -178,16 +178,16 @@ const heightClass = computed(() => {
     default:
       return 'h-[64px]'
   }
-})
+});
 
 const elevationClass = computed(() => {
   const allowed = ['sm', 'md', 'lg', 'xl', '2xl']
   return props.elevation === 'none' || !allowed.includes(props.elevation)
     ? ''
     : `shadow-${props.elevation}`
-})
+});
 
-const mergedClass = computed(() => 
+const mergedClass = computed(() => [
   heightClass.value,
   props.bgColor,
   elevationClass.value,
@@ -197,7 +197,7 @@ const mergedClass = computed(() =>
   props.glass ? 'backdrop-blur-md' : '',
   responsiveCollapsed.value ? 'justify-between px-2' : '',
   props.animationClass
-)
+]);
 
 const transitionMap = {
   'fade-slide': {
@@ -218,5 +218,5 @@ const transitionMap = {
     leaveActive: 'transition-transform duration-300',
     leaveTo: 'scale-95 opacity-0'
   }
-}
+};
 </script>

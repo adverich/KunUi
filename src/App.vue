@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-dvh text-black dark:text-white overflow-hidden" style="overflow: hidden!important;">
-    <KunAppbar bgColor="bg-slate-400 dark:bg-slate-800" @toggle-drawer="leftDrawerStatus = !leftDrawerStatus" showDrawerButton>
+    <KunAppbar bg-color="bg-slate-400 dark:bg-slate-800" @toggle-drawer="leftDrawerStatus = !leftDrawerStatus" showDrawerButton>
       <template #actions>
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
           icon-color="bg-blue-500" @update:model-value="setTheme" />
@@ -46,45 +46,13 @@
       </template>
     </KunDrawer>
 
-    <KunToolbar bgColor="bg-red-800"/>
-
-    <div class="h-full">
-      <KunTable :items="products" :headers="headers" showSelect />
-    </div>
     <div>
-      <KunRow style="overflow: hidden!important;">
-        <KunCol cols="3">
-          <KunAutocomplete v-model="selected" activator="parent" :items="products" item-title="name" item-value="id"
-            item-text="name" :max-height="300" label="Seleccionar sucursal" :searchable-keys="['name']"
-            @update:model-value="vModelUpdated" :clear-on-select="true"
-          />
-        </KunCol>
-
-        <KunCol cols="9">aca hay un col</KunCol>
-
-        <KunCol cols="3">
-          <KunTextarea auto-grow v-model="testingArea" bgColor="bg-red-800" />
-        </KunCol>
-
-        <KunCol cols="9">
-          <KunFileInput v-model="file" />
-        </KunCol>
-
-        <KunCol cols="3">
-          <KunNumberField noArrows v-model="numTest">
-            <template #prepend-icon>
-              <KunIcon color="text-green-500" :icon="IconAccountOutline" size="text-xl"/>
-            </template>
-          </KunNumberField>
-        </KunCol>
-      </KunRow>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import IconAccountOutline from './icons/IconAccountOutline.vue';
 import KunList from './components/KunList/src/components/KunList.vue';
@@ -94,41 +62,12 @@ import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
 import KunAvatar from './components/KunAvatar/src/components/KunAvatar.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
-import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
-import KunRow from './components/KunRow/src/components/KunRow.vue';
-import KunCol from './components/KunCol/src/components/KunCol.vue';
-import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
-import KunFileInput from './components/KunFileInput/src/components/KunFileInput.vue';
-
-import KunTable from './components/KunTable/src/components/KunTable.vue';
-import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
 
 const menuModel = ref(false);
 const avatarRef = ref(null);
 const leftDrawerStatus = ref(false);
-const numTest = ref()
-const testingArea = ref('');
-const file = ref();
 
 const footerMessages = ref([]);
-function vModelUpdated(value){
-  // console.log('Actualizado');
-  // console.log(value);
-}
-
-function showMessage(message, color = "green", time = 30000) {
-  const id = Date.now();
-  // Crear el mensaje con su timeout
-  const newMessage = {
-    id,
-    text: message,
-    color,
-    modelValue: true,
-    timeout: setTimeout(() => removeMessage(id), time) // Almacena el timeout en el objeto
-  };
-
-  footerMessages.value = [...footerMessages.value, newMessage];
-}
 
 const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
@@ -137,10 +76,8 @@ const productMkups = ref(generateFakeMkups(5));
 const products = ref(generateFakeProductsFull(20));
 
 const currentTheme = ref('dark')
-const loader = ref(false)
 const selected = ref(74983)
 
-const value = ref(5);
 const minQuantity = ref(0);
 function setMin() {
   setTimeout(() => {
@@ -148,11 +85,6 @@ function setMin() {
   }, 2500);
 }
 setMin();
-
-const trueOrFalse = [
-  { id: 1, value: true, name: "Si" },
-  { id: 2, value: false, name: "No" },
-];
 
 function getTotalAmount(item){
   return Number(item.stock) * Number(item.price_base);
@@ -370,17 +302,6 @@ function generateFakeProductsFull(count = 100) {
   }
 
   return products;
-}
-
-const actionLoading = ref({})
-function editItem(value){
-  if (!actionLoading.value[value.id]) actionLoading.value[value.id] = {};
-  actionLoading.value[value.id].edit = true;
-}
-
-function deleteItem(value){
-  if (!actionLoading.value[value.id]) actionLoading.value[value.id] = {};
-  actionLoading.value[value.id].delete = true;
 }
 
 function setTheme(theme) {
