@@ -244,6 +244,7 @@ const rippleClass = computed(() => props.ripple ? 'relative overflow-hidden' : '
 const mergedItemClass = computed(() => {
   const externalClass = attrs.class;
   return [
+    ...(Array.isArray(externalClass) ? externalClass : [externalClass]),
     baseItemClass,
     variantClass.value,
     densityClass.value,
@@ -257,8 +258,7 @@ const mergedItemClass = computed(() => {
       [`cursor-pointer ${props.hoverBg}`]: props.selectable && !props.disabled,
       [props.activeClass]: isItemSelected.value || isActive.value,
       'px-4': !props.noGutters,
-    },
-    ...(Array.isArray(externalClass) ? externalClass : [externalClass])
+    }
   ]
 })
 </script>
