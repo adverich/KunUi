@@ -42,8 +42,8 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
 
             console.log(props.hideDetails);
             const pxHideDetails = props.hideDetails ? 0 : 19;
-            const contentWidth = menuRect.width;
-            const contentHeight = menuRect.height;
+            const contentWidth = menuEl.offsetWidth;
+            const contentHeight = menuEl.offsetHeight;
 
             let top = 0;
             let left = 0;
@@ -82,8 +82,11 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
                 },
                 menu: {
                     height: contentHeight,
+                    offsetHeight: menuEl.offsetHeight,
+                    rectHeight: menuRect.height,
                 },
                 calculatedTop: top,
+                expectedTop: parentRect.top - contentHeight,
             });
         });
     }

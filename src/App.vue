@@ -63,7 +63,7 @@
       </div>
     </div>
 
-        <div class="h-24"></div>
+    <div class="h-24"></div>
 
     <div class="flex justify-center bg-gray-400">
       <div class="w-max bg-amber-300" ref="avatarRefTwo">
@@ -84,7 +84,7 @@
     <div class="h-24"></div>
 
     <div class="flex justify-center bg-gray-400">
-      <KunMenu v-model="pija" location="left" origin="bottom center" transition="slide-down">
+      <KunMenu v-model="pija" origin="top center" transition="slide-down">
         <template v-slot:activator="{ props }">
           <KunBtn bgColor="bg-amber-300" :icon="IconAccountOutline" v-bind="props" class="mx-2" @click="pija = true" />
         </template>
