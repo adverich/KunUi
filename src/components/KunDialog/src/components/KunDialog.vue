@@ -69,7 +69,7 @@ const props = defineProps({
   maxHeigh: { type: String, default: 'max-h-[100vh]' },
   minWidth: { type: String, default: 'min-w-1/3' },
   width: { type: String, default: 'w-full' },
-  maxWidth: { type: String, default: 'max-w-1/3' },
+  maxWidth: { type: String, default: 'max-w-full' },
 })
 
 const emits = defineEmits(['update:modelValue']);
