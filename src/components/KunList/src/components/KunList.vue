@@ -35,14 +35,8 @@ const props = defineProps({
     default: 'single',
     validator: v => ['single', 'multiple'].includes(v),
   },
-  bgList: {
-    type: String,
-    default: 'bg-transparent',
-  },
-  borderColor: {
-    type: String,
-    default: 'border-gray-300 dark:border-gray-700'
-  }
+  bgList: { type: String, default: 'bg-transparent' },
+  borderColor: { type: String, default: 'border-gray-300 dark:border-gray-700' }
 })
 
 const emit = defineEmits(['keyDown', 'click:select', 'update:selected'])

@@ -131,10 +131,11 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
 import { RouterLink } from 'vue-router'
 
+const attrs = useAttrs();
 const props = defineProps({
   value: [String, Number, Boolean, Object, Array, null],
   to: [String, Object],
@@ -257,5 +258,6 @@ const mergedItemClass = computed(() => [
     'px-4': !props.noGutters,
   },
   props.itemClass,
+  attrs.class
 ])
 </script>
