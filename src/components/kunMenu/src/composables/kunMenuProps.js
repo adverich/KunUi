@@ -29,13 +29,10 @@ export const kunMenuProps = {
     maxHeight: [String, Number],
     width: {
         type: [String, Number],
-        default: 'w-full'
+        default: 'w-fit'
     },
     minWidth: [String, Number],
-    maxWidth: {
-        type: [String, Number],
-        default: 'w-full'
-    },
+    maxWidth: [String, Number],
     zIndex: { type: String, default: "z-50" },
     offset: [String, Number, Array],
     openDelay: {
@@ -67,8 +64,10 @@ export const kunMenuProps = {
     },
     transition: {
         type: String,
-        default: 'scale',
-        validator: value => ['fade', 'slide-y', 'slide-x', 'scale'].includes(value),
+        default: 'fade-scale', // animación por defecto
+        validator: val => [
+            'fade', 'fade-scale', 'slide-down', 'slide-up', 'slide-left', 'slide-right', 'none'
+        ].includes(val)
     },
     persistent: Boolean,
     zIndex: [String, Number],
@@ -83,6 +82,6 @@ export const kunMenuProps = {
     },
     hideDetails: {
         type: Boolean,
-        default: false,
+        default: true,
     },
 }

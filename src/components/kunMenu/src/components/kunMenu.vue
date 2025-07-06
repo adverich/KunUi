@@ -1,7 +1,18 @@
 <template>
   <Teleport v-if="attach !== true" :to="attach || 'body'">
-    <transition :name="transition">
-      <div v-show="menuVisible" ref="contentEl" role="menu" tabindex="-1"
+    <transition
+      enter-active-class="transition ease-out duration-150"
+      leave-active-class="transition ease-in duration-100"
+      :enter-from-class="enterFromClass"
+      :enter-to-class="enterToClass"
+      :leave-from-class="leaveFromClass"
+      :leave-to-class="leaveToClass"
+    >
+      <div 
+        v-show="menuVisible" 
+        ref="contentEl" 
+        role="menu" 
+        tabindex="-1"
         class="relative shadow-xl rounded-b overflow-y-auto focus:outline-none bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
         :class="[props.class, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex]"
         :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }" 
@@ -11,10 +22,14 @@
       </div>
     </transition>
   </Teleport>
+
+  <span ref="activatorEl" v-if="$slots.activator">
+    <slot name="activator" />
+  </span>
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, watch, nextTick, onBeforeUnmount } from 'vue'
+import { onMounted, onUnmounted, watch, nextTick, onBeforeUnmount, computed } from 'vue'
 import { useKunMenu } from '../composables/useKunMenu'
 import { kunMenuProps } from '../composables/kunMenuProps'
 import { useKunMenuStyles } from '../composables/useKunMenuStyles'
@@ -36,6 +51,7 @@ const {
   initializeMenu,
   repositionMenu,
   contentEl,
+  activatorEl,
   originClass,
   computedMaxHeight,
   menuPositionStyle,
@@ -106,44 +122,20 @@ function cleanupActivatorListeners() {
 onBeforeUnmount(() => {
   cleanupActivatorListeners()
 })
+
+const enterFromClass = computed(() => {
+  switch (props.transition) {
+    case 'fade': return 'opacity-0';
+    case 'fade-scale': return 'opacity-0 scale-95';
+    case 'slide-down': return '-translate-y-2 opacity-0';
+    case 'slide-up': return 'translate-y-2 opacity-0';
+    case 'slide-left': return 'translate-x-2 opacity-0';
+    case 'slide-right': return '-translate-x-2 opacity-0';
+    default: return '';
+  }
+})
+
+const enterToClass = computed(() => 'opacity-100 scale-100 translate-x-0 translate-y-0');
+const leaveFromClass = enterToClass;
+const leaveToClass = enterFromClass;
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.slide-y-enter-active,
-.slide-y-leave-active {
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.slide-y-enter-from,
-.slide-y-leave-to {
-  transform: translateY(-8px);
-  opacity: 0;
-}
-
-/* Scrollbar estilizado para todos los navegadores modernos */
-div::-webkit-scrollbar {
-  width: 8px;
-}
-
-div::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-div::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 116, 139, 0.5);
-  /* gris semi-transparente */
-  border-radius: 9999px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-</style>

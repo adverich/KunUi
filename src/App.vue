@@ -5,7 +5,7 @@
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
           icon-color="bg-blue-500" @update:model-value="setTheme" />
 
-        <div class="h-15 w-max" ref="avatarRef">
+        <!-- <div class="h-15 w-max" ref="avatarRef">
           <KunAvatar class="bg-transparent" @click="menuModel = true">
             <KunIcon :icon="IconAccountOutline" color="text-red-500" />
             <KunMenu activator="parent" v-model="menuModel" :parent-ref="avatarRef" z-index="z-[2000]"
@@ -13,12 +13,12 @@
               minWidth="min-w-48" width="w-64" maxWidth="max-w-64"
             >
               <KunList>
-                <KunListItem>Hola mundo</KunListItem>
-                <KunListItem>Hola mundo dos</KunListItem>
+                <KunListItem class="hover:bg-red-800">Hola mundo</KunListItem>
+                <KunListItem class="hover:bg-blue-800">Hola mundo dos</KunListItem>
               </KunList>
             </KunMenu>
           </KunAvatar>
-        </div>
+        </div> -->
       </template>
     </KunAppbar>
 
@@ -46,14 +46,52 @@
       </template>
     </KunDrawer>
 
-    <div class="">
-      <KunList >
-        <KunListItem class="flex flex-row bg-red-800">
-          <div>khe</div>
-          <div>Hola mundo</div>
-        </KunListItem>
-        <!-- <KunListItem>Hola mundo dos</KunListItem> -->
-      </KunList>
+    <div class="h-24"></div>
+
+    <div class="flex justify-center bg-gray-400">
+      <div class="w-max bg-amber-300" ref="avatarRef">
+        <KunAvatar class="bg-transparent" @click="menuModel = true">
+          <KunIcon :icon="IconAccountOutline" color="text-red-500" />
+          <KunMenu activator="parent" v-model="menuModel" :parent-ref="avatarRef" z-index="z-[2000]"
+            location="left" origin="bottom center" 
+          >
+            <KunList>
+              <KunListItem class="hover:bg-blue-800">Hola mundo dos</KunListItem>
+            </KunList>
+          </KunMenu>
+        </KunAvatar>
+      </div>
+    </div>
+
+        <div class="h-24"></div>
+
+    <div class="flex justify-center bg-gray-400">
+      <div class="w-max bg-amber-300" ref="avatarRefTwo">
+        <KunAvatar class="bg-transparent" @click="menuModelTwo = true">
+          <KunIcon :icon="IconAccountOutline" color="text-red-500" />
+        </KunAvatar>
+
+        <KunMenu activator="parent" v-model="menuModelTwo" :parent-ref="avatarRefTwo" z-index="z-[2000]"
+          location="left" origin="bottom center" transition="slide-right"
+        >
+          <KunList>
+            <KunListItem class="hover:bg-blue-800">Hola mundo dos</KunListItem>
+          </KunList>
+        </KunMenu>
+      </div>
+    </div>
+
+    <div class="h-24"></div>
+
+    <div class="flex justify-center bg-gray-400">
+      <KunMenu v-model="pija" location="left" origin="bottom center" transition="slide-down">
+        <template v-slot:activator="{ props }">
+          <KunBtn bgColor="bg-amber-300" :icon="IconAccountOutline" v-bind="props" class="mx-2" @click="pija = true" />
+        </template>
+        <KunList>
+          <KunListItem class="hover:bg-red-800">Hola mundo</KunListItem>
+        </KunList>
+      </KunMenu>
     </div>
   </div>
 </template>
@@ -69,12 +107,16 @@ import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
 import KunAvatar from './components/KunAvatar/src/components/KunAvatar.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
+import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
+import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 
 const menuModel = ref(false);
 const avatarRef = ref(null);
+const menuModelTwo = ref(false);
+const avatarRefTwo = ref(null);
 const leftDrawerStatus = ref(false);
 
-const footerMessages = ref([]);
+const pija = ref(false);
 
 const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
