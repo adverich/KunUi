@@ -154,7 +154,7 @@ const props = defineProps({
   active: Boolean,
   activeClass: {
     type: String,
-    default: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300',
+    default: 'bg-slate-300 dark:bg-slate-700',
   },
   selectable: { type: Boolean, default: false },
 
