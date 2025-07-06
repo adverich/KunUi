@@ -40,7 +40,6 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
             const origin = props.origin || defaultOriginFromLocation(props.location);
             const [verticalOrigin, horizontalOrigin] = origin.split(' ');
 
-            console.log(props.hideDetails);
             const pxHideDetails = props.hideDetails ? 0 : 19;
             const contentWidth = menuEl.offsetWidth;
             const contentHeight = menuEl.offsetHeight;
@@ -73,21 +72,21 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
                 width: props.width === 'w-full' ? `${parentRect.width}px` : undefined,
             };
 
-            console.log('[KunMenu] Debug:', {
-                origin,
-                parent: {
-                    top: parentRect.top,
-                    bottom: parentRect.bottom,
-                    height: parentRect.height,
-                },
-                menu: {
-                    height: contentHeight,
-                    offsetHeight: menuEl.offsetHeight,
-                    rectHeight: menuRect.height,
-                },
-                calculatedTop: top,
-                expectedTop: parentRect.top - contentHeight,
-            });
+            // console.log('[KunMenu] Debug:', {
+            //     origin,
+            //     parent: {
+            //         top: parentRect.top,
+            //         bottom: parentRect.bottom,
+            //         height: parentRect.height,
+            //     },
+            //     menu: {
+            //         height: contentHeight,
+            //         offsetHeight: menuEl.offsetHeight,
+            //         rectHeight: menuRect.height,
+            //     },
+            //     calculatedTop: top,
+            //     expectedTop: parentRect.top - contentHeight,
+            // });
         });
     }
 
