@@ -61,6 +61,11 @@ const { onClickOutside } = useKunMenuComposable()
 const { addEventListeners, removeEventListeners } = onClickOutside(
   contentEl,
   () => {
+    const activator = props.parentRef || activatorEl.value;
+    const lastEvent = window.__lastClickEvent;
+
+    if (activator?.contains?.(lastEvent?.target)) return;
+
     hideMenu()
     emits('click:outside')
   },
