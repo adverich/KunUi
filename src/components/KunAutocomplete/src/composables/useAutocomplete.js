@@ -138,13 +138,16 @@ export function useAutocomplete(props, emits, modelValue, items) {
         }
     }
 
-    watch(() => items.value, () => {
-        selectedItem.value = findItemByValue(modelValue.value);
-    }, { immediate: true });
-
-    watch(() => modelValue.value, () => {
-        selectedItem.value = findItemByValue(modelValue.value);
-    }, { immediate: true });
+    watch(
+        [() => modelValue.value, () => items.value],
+        ([model]) => {
+            const newSelected = findItemByValue(model);
+            if (JSON.stringify(selectedItem.value) !== JSON.stringify(newSelected)) {
+                selectedItem.value = newSelected;
+            }
+        },
+        { immediate: true }
+    );
 
     function findItemByValue(value) {
         if (value === undefined || value === null) return null;
