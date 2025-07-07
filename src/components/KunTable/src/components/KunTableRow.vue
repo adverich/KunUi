@@ -1,7 +1,7 @@
 <template>
   <tr :class="mergedTableClass" @click="emits('row-click', { item, index, event: $event })">
     <!-- Expand Icon -->
-    <td v-if="showExpand" :class="resolveTdClass(item, 'expand')">
+    <td v-if="showExpand" :class="resolveTdClass(item, 'expand', index)">
       <slot v-if="$slots.expandIcon" name="expand-icon" :item="item" :index="index" />
       <button v-else @click="emits('toggle-expand', item)">
         <span v-if="isExpanded">−</span>
@@ -12,7 +12,7 @@
     <!-- Selection Checkbox -->
     <td
       v-if="showSelect"
-      :class="resolveTdClass(item, 'checkbox')"
+      :class="resolveTdClass(item, 'checkbox', index)"
       class="h-full w-10 flex flex-col items-center justify-center"
     >
       <input
@@ -29,7 +29,7 @@
       :key="header.value"
       :class="[
         baseTdClass,
-        resolveTdClass(item, header),
+        resolveTdClass(item, header, index),
         header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center'
       ]"
     >
@@ -56,7 +56,7 @@
     </td>
 
     <!-- Action space -->
-    <td v-if="hasActions" :class="[resolveTdClass(item, 'actions'), mergedActionsClass]">
+    <td v-if="hasActions" :class="[resolveTdClass(item, 'actions', index), mergedActionsClass]">
       <slot name="item.actions" :item="item" :index="index" :loading="loading" />
     </td>
   </tr>
@@ -94,14 +94,9 @@ const mergedTableClass = computed(() => [
 
 const baseTdClass = 'px-3 py-2 whitespace-nowrap text-sm text-black dark:text-white';
 
-function resolveTdClass(header = null, value = null) {
+function resolveTdClass(item, header, index) {
   if (typeof props.tdClass === 'function') {
-    return props.tdClass({
-      item: props.item,
-      header,
-      value,
-      index: props.index,
-    });
+    return props.tdClass({ item, header, index});
   }
   return props.tdClass;
 }
