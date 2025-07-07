@@ -142,6 +142,10 @@ export function useAutocomplete(props, emits, modelValue, items) {
         selectedItem.value = findItemByValue(modelValue.value);
     }, { immediate: true });
 
+    watch(() => modelValue.value, () => {
+        selectedItem.value = findItemByValue(modelValue.value);
+    }, { immediate: true });
+
     function findItemByValue(value) {
         if (value === undefined || value === null) return null;
         // Si es un objeto
