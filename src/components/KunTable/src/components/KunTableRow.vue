@@ -1,7 +1,7 @@
 <template>
   <tr :class="mergedTableClass" @click="emits('row-click', { item, index, event: $event })">
     <!-- Expand Icon -->
-    <td v-if="showExpand" :class="mergedTdClass">
+    <td v-if="showExpand" :class="getValue(item, 'expand')">
       <slot v-if="$slots.expandIcon" name="expand-icon" :item="item" :index="index" />
       <button v-else @click="emits('toggle-expand', item)">
         <span v-if="isExpanded">−</span>
@@ -12,7 +12,7 @@
     <!-- Selection Checkbox -->
     <td
       v-if="showSelect"
-      :class="mergedTdClass"
+      :class="getValue(item, 'checkbox')"
       class="h-full w-10 flex flex-col items-center justify-center"
     >
       <input
@@ -29,13 +29,10 @@
       :key="header.value"
       :class="[
         baseTdClass,
-        typeof tdClass === 'function'
-          ? tdClass(item, header)
-          : tdClass,
+        resolveTdClass(header, getValue(item, header)),
         header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center'
       ]"
     >
-    <!-- :class="[mergedTdClass, header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center']" -->
       <template v-if="customSlots?.[`item.${header.value}`]">
         <component
           :is="customSlots[`item.${header.value}`]"
@@ -59,7 +56,7 @@
     </td>
 
     <!-- Action space -->
-    <td v-if="hasActions" :class="[mergedTdClass, mergedActionsClass]">
+    <td v-if="hasActions" :class="[resolveTdClass(header, getValue(item, 'actions')),, mergedActionsClass]">
       <slot name="item.actions" :item="item" :index="index" :loading="loading" />
     </td>
   </tr>
@@ -96,6 +93,18 @@ const mergedTableClass = computed(() => [
 ]);
 
 const baseTdClass = 'px-3 py-2 whitespace-nowrap text-sm text-black dark:text-white';
-const mergedTdClass = computed(() => [baseTdClass, props.tdClass]);
+
+function resolveTdClass(header = null, value = null) {
+  if (typeof props.tdClass === 'function') {
+    return props.tdClass({
+      item: props.item,
+      header,
+      value,
+      index: props.index,
+    });
+  }
+  return props.tdClass;
+}
+
 const mergedActionsClass = computed(() => ['text-center', props.actionsAlign]);
 </script>
