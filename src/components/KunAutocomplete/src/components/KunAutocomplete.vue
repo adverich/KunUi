@@ -91,6 +91,7 @@ const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clea
 } = useAutocomplete(props, emits, modelValue, items);
 
 onMounted(() => {
+  console.log(selectedItem.value);
   if (props.focusOnRender) textFieldRef.value.focus();
 });
 
