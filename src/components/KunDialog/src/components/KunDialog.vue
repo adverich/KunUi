@@ -27,9 +27,9 @@
             :min-width="minWidth"
             :width="width"
             :max-width="maxWidth"
-            :min-height="minHeigh"
+            :min-height="minHeight"
             :height="height"
-            :max-height="maxHeigh"
+            :max-height="maxHeight"
             :bg-color="bgColor"
             :content-class="contentClass"
             @close="close"
@@ -66,9 +66,9 @@ const props = defineProps({
   },
   contentClass: { type: String, default: '' },
   bgColor: { type: String, default: 'bg-slate-100 dark:bg-slate-900' },
-  minHeigh: { type: String, default: 'h-fit' },
+  minHeight: { type: String, default: 'h-fit' },
   height: { type: String, default: 'h-fit' },
-  maxHeigh: { type: String, default: 'max-h-[100vh]' },
+  maxHeight: { type: String, default: 'max-h-[100vh]' },
   minWidth: { type: String, default: 'min-w-1/3' },
   width: { type: String, default: 'w-full' },
   maxWidth: { type: String, default: 'max-w-full' },
