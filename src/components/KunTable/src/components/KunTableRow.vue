@@ -1,7 +1,7 @@
 <template>
   <tr :class="mergedTableClass" @click="emits('row-click', { item, index, event: $event })">
     <!-- Expand Icon -->
-    <td v-if="showExpand" :class="getValue(item, 'expand')">
+    <td v-if="showExpand" :class="resolveTdClass(item, 'expand')">
       <slot v-if="$slots.expandIcon" name="expand-icon" :item="item" :index="index" />
       <button v-else @click="emits('toggle-expand', item)">
         <span v-if="isExpanded">−</span>
@@ -12,7 +12,7 @@
     <!-- Selection Checkbox -->
     <td
       v-if="showSelect"
-      :class="getValue(item, 'checkbox')"
+      :class="resolveTdClass(item, 'checkbox')"
       class="h-full w-10 flex flex-col items-center justify-center"
     >
       <input
@@ -29,7 +29,7 @@
       :key="header.value"
       :class="[
         baseTdClass,
-        resolveTdClass(header, getValue(item, header)),
+        resolveTdClass(item, header),
         header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center'
       ]"
     >
@@ -56,7 +56,7 @@
     </td>
 
     <!-- Action space -->
-    <td v-if="hasActions" :class="[resolveTdClass(header, getValue(item, 'actions')),, mergedActionsClass]">
+    <td v-if="hasActions" :class="[resolveTdClass(item, 'actions'), mergedActionsClass]">
       <slot name="item.actions" :item="item" :index="index" :loading="loading" />
     </td>
   </tr>
