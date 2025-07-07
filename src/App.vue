@@ -34,7 +34,7 @@
     <div class="h-24"></div>
 
     <div class="flex justify-center bg-gray-400">
-      <KunTable :headers="headers" :items="products" td-class="bg-blue-900" />
+      <KunTable :headers="headers" :items="products" :td-class="checkType" />
     </div>
 
     <div class="h-24"></div>
@@ -82,6 +82,11 @@ const products = ref(generateFakeProductsFull(20));
 
 const currentTheme = ref('dark')
 const selected = ref(74983)
+
+function checkType(item, header){
+  console.log(item)
+  return item.name.includes('Prueba 1') ? 'bg-red-700' : ''
+}
 
 const minQuantity = ref(0);
 function setMin() {

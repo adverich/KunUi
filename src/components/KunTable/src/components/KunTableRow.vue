@@ -27,8 +27,15 @@
     <td
       v-for="header in headers"
       :key="header.value"
-      :class="[mergedTdClass, header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center']"
+      :class="[
+        baseTdClass,
+        typeof tdClass === 'function'
+          ? tdClass(item, header)
+          : tdClass,
+        header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center'
+      ]"
     >
+    <!-- :class="[mergedTdClass, header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center']" -->
       <template v-if="customSlots?.[`item.${header.value}`]">
         <component
           :is="customSlots[`item.${header.value}`]"
@@ -70,7 +77,7 @@ const props = defineProps({
   isExpanded: Boolean,
   rowClass: String, 
   trClass: String,
-  tdClass: String,
+  tdClass: [String, Function],
   selectedClass: String,
   stripedClass: String,
   isSelected: Boolean,
