@@ -34,7 +34,7 @@
     <div class="h-24"></div>
 
     <div class="flex justify-center bg-gray-400">
-      <KunAutocomplete :items="products" label="hola"/>
+      <KunTable :headers="headers" :items="products" td-class="bg-blue-900" />
     </div>
 
     <div class="h-24"></div>
@@ -60,7 +60,7 @@ import KunList from './components/KunList/src/components/KunList.vue';
 import KunListItem from './components/KunListItem/src/components/KunListItem.vue';
 import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
-import KunAvatar from './components/KunAvatar/src/components/KunAvatar.vue';
+import KunTable from './components/KunTable/src/components/KunTable.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';

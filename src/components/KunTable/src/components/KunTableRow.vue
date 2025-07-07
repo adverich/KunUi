@@ -59,6 +59,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { getValue, formatValue } from '@/utils/tableFormatters';
 const props = defineProps({
   item: Object,
@@ -83,11 +84,11 @@ const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 
 const baseRowClass = 'hover:bg-slate-300 dark:hover:bg-slate-600 border-t border-slate-300 dark:border-slate-700';
 const baseTrClass = 'bg-slate-100 dark:bg-slate-900';
-const mergedTableClass = [
+const mergedTableClass = computed(() => [
   baseRowClass, baseTrClass, props.rowClass, props.trClass, props.stripedClass, props.isSelected ? props.selectedClass : ''
-];
+]);
 
 const baseTdClass = 'px-3 py-2 whitespace-nowrap text-sm text-black dark:text-white';
-const mergedTdClass = [baseTdClass, props.tdClass];
-const mergedActionsClass = ['text-center', props.actionsAlign]
+const mergedTdClass = computed(() => [baseTdClass, props.tdClass]);
+const mergedActionsClass = computed(() => ['text-center', props.actionsAlign]);
 </script>
