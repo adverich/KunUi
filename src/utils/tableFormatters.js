@@ -49,10 +49,9 @@ export const formatters = {
     percentage: value => `${parseFloat(value ?? 0)}%`,
 
     date: value => {
-        if (!value || value === "0000-00-00") return "Nunca";
-        const date = Date.parse(value);
+        if (!value || value === "0000-00-00" || !isValidDate(value)) return "Nunca";
+        const date = new Date(value);
         return new Intl.DateTimeFormat("es-MX", {
-            locale: "es-ES",
             weekday: "short",
             day: "numeric",
             month: "short",
@@ -61,8 +60,8 @@ export const formatters = {
     },
 
     dateTime: value => {
-        if (!value || value === "0000-00-00") return "Nunca";
-        const date = Date.parse(value);
+        if (!value || value === "0000-00-00" || !isValidDate(value)) return "Nunca";
+        const date = new Date(value);
         return new Intl.DateTimeFormat("es-MX", {
             day: "numeric",
             month: "short",
@@ -92,4 +91,9 @@ function safeValue(value) {
     if (value === null || value === undefined) return undefined;
     if (value === 'null' || value === 'undefined') return undefined;
     return value;
+}
+
+function isValidDate(value) {
+    const date = new Date(value);
+    return !isNaN(date.getTime());
 }
