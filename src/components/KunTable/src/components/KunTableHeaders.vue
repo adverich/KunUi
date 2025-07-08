@@ -19,7 +19,7 @@
           :checked="allSelected"
           :aria-checked="someSelected && !allSelected ? 'mixed' : allSelected ? 'true' : 'false'"
           @change="toggleSelectAll"
-          class="h-6 w-6 text-blue-600 transition-all duration-200 ease-in-out rounded 
+          class="h-6 w-6 text-blue-600 transition-all duration-200 ease-in-out rounded print:hidden 
           border-gray-300 dark:border-slate-600 
           checked:bg-blue-600 
           checked:border-blue-600 

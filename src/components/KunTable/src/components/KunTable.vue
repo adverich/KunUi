@@ -3,7 +3,7 @@
         <!-- Barra de búsqueda -->
         <div
             v-if="searchable || filterable || $slots.prependSearch || $slots.appendSearch"
-            class="p-2 bg-slate-200 dark:bg-slate-800"
+            class="p-2 bg-slate-200 dark:bg-slate-800 print:hidden"
             :class="{
                 'justify-start flex': searchPosition === 'start',
                 'justify-center flex': searchPosition === 'center',
