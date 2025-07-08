@@ -13,6 +13,7 @@ export function getValue(header, item) {
 
     // ESTO ES TEMPORAL
     if (header.columnFormat === 'function') {
+        console.log(header);
         const value = header.columnFunction?.(item, header);
         return safeValue(value);
     }
