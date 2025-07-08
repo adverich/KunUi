@@ -204,7 +204,7 @@ const resolvedHeaders = computed(() => {
     const newHeader = { ...header };
 
     if (
-      header.columnType === 'function' &&
+      (header.columnType === 'function' || header.columnType == 'objectFunction' || header.columnType == 'simpleFunction') && 
       typeof header.columnFunction === 'string'
     ) {
       const resolvedFn = props.functionMap?.[header.columnFunction];
@@ -218,10 +218,7 @@ const resolvedHeaders = computed(() => {
       }
     }
 
-    if (
-      header.columnFormat === 'function' &&
-      typeof header.columnRowText === 'string'
-    ) {
+    if (header.columnFormat === 'function' && typeof header.columnRowText === 'string') {
       const resolvedFn = props.functionMap?.[header.columnRowText];
       if (typeof resolvedFn === 'function') {
         newHeader.columnRowText = resolvedFn;
