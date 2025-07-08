@@ -13,7 +13,7 @@ export function getValue(header, item) {
 
     // ESTO ES TEMPORAL
     if (header.columnFormat === 'function') {
-        const value = header.columnRowText?.(item, header);
+        const value = header.columnFunction?.(item, header);
         return safeValue(value);
     }
 
@@ -23,6 +23,17 @@ export function getValue(header, item) {
 
 export function formatValue(header, value) {
     if (value === null || value === undefined) return 'Sin datos';
+
+    if (header.columnType === 'dateTime') {
+        const formatter = formatters[header.columnType] || formatters.default;
+        return formatter(value);
+    }
+
+    if (header.columnType === 'date') {
+        const formatter = formatters[header.columnType] || formatters.default;
+        return formatter(value);
+    }
+
     const formatter = formatters[header.columnFormat] || formatters.default;
     return formatter(value);
 }
