@@ -45,7 +45,7 @@
       </th>
 
       <!-- Headers actions -->
-      <th v-if="hasActions" :class="[mergedThClass]" class="text-center">
+      <th v-if="hasActions" :class="[mergedThClass]" class="text-center print:hidden">
         {{ actionLabel }}
       </th>
     </tr>
