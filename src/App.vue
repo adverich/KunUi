@@ -53,11 +53,11 @@
 
     <KunDialog v-if="modaDialgo" v-model="modaDialgo" :fullscreen="true" minWidth="min-w-full" persistent>
       <div class="flex-shrink overflow-hidden">
-        <KunToolbar rightSectionClass="bg-red-900" titlePosition="left" title="hola mundo arroba jaja" bgColor="bg-primary-200 dark:bg-primary-920" density="compact">
+        <KunToolbar rightSectionClass="bg-red-900" titlePosition="left" title="consumidor finalhola mundo arroba jaja" bgColor="bg-primary-200 dark:bg-primary-920" density="compact">
           <template #append>
               <div class="flex gap-x-2">
                   <slot name="tolbar-buttons"/>
-                  <KunBtn @click="menuModel = false" bgColor="bg-error" size="xs" text="X" />
+                  <KunBtn rounded="rounded-xl" @click="menuModel = false" bgColor="bg-error" text="X" />
               </div>
           </template>
         </KunToolbar>

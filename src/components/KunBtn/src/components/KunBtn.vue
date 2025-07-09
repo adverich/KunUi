@@ -65,7 +65,7 @@ const props = defineProps({
     default: 'md',
     validator: v => ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'].includes(v)
   },
-  minWidth: { type: String, default: 'min-w-[4rem]' },
+  minWidth: { type: String, default: 'min-w-[3rem]' },
   fontWeight: { type: String, default: 'font-medium' },
   rounded: { type: String, default: 'rounded-lg' },
   textAlign: { type: String, default: 'text-center' },

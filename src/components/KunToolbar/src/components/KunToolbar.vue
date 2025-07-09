@@ -18,7 +18,7 @@
         'px-2',
       ]"
     >
-      <div :class="leftSectionClass">
+      <div :class="[leftSectionClass, titleMaxWidth]">
         <!-- Prepend -->
         <slot name="prepend" />
 
@@ -33,13 +33,13 @@
       <!-- Contenido principal -->
       <slot />
 
-      <div v-if="titlePosition === 'center'" class="flex justify-center items-center truncate">
+      <div v-if="titlePosition === 'center'" class="flex justify-center items-center truncate" :class="titleMaxWidth">
         <slot name="title">
           <KunToolbarTitle v-if="title" :text="title" />
         </slot>
       </div>
 
-      <div :class="rightSectionClass">
+      <div :class="[rightSectionClass, titleMaxWidth]">
         <!-- Toolbar Items -->
         <slot name="items" />
 
@@ -93,6 +93,7 @@ const props = defineProps({
     theme: String,
     tile: Boolean,
     title: String,
+    titleMaxWidth: { type: String, default: 'max-w-3/4' },
     leftSectionClass: { type: String, default: 'flex items-center gap-x-2' },
     rightSectionClass: { type: String, default: 'flex items-center gap-x-2 justify-end' },
 })
