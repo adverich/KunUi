@@ -23,7 +23,7 @@
         <slot name="prepend" />
 
         <!-- Título izquierda -->
-        <div v-if="titlePosition === 'left'" class="pl-2 max-w-1/2">
+        <div v-if="titlePosition === 'left'" class="pl-2 max-w-1/2 truncate">
           <slot name="title">
             <KunToolbarTitle v-if="title" :text="title" />
           </slot>
@@ -33,7 +33,7 @@
       <!-- Contenido principal -->
       <slot />
 
-      <div v-if="titlePosition === 'center'" class="flex-1 flex justify-center items-center max-w-1/2">
+      <div v-if="titlePosition === 'center'" class="flex-1 flex justify-center items-center max-w-1/2 truncate">
         <slot name="title">
           <KunToolbarTitle v-if="title" :text="title" />
         </slot>
@@ -43,7 +43,7 @@
         <!-- Toolbar Items -->
         <slot name="items" />
 
-        <div v-if="titlePosition === 'right'" class="pr-2 max-w-1/2">
+        <div v-if="titlePosition === 'right'" class="pr-2 max-w-1/2 truncate">
           <slot name="title">
             <KunToolbarTitle v-if="title" :text="title" />
           </slot>
