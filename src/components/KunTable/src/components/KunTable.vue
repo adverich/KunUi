@@ -106,7 +106,7 @@
       </table>
 
       <div v-if="!paginatedItems.length" class="h-full">
-        <KunCard  class="h-full flex justify-center items-center" :title="noDataText" titleSize="text-4xl" />
+        <KunCard  class="h-full flex justify-center items-center text-center" :title="noDataText" titleSize="text-4xl" />
       </div>
     </div>
 

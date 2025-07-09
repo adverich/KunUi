@@ -47,14 +47,26 @@
             'text-left': header.align === 'left' || !header.align,
           }"
         >
-          <slot
-            :name="`item.${header.value}`"
-            :item="item"
-            :value="getValue(header, item)"
-            :index="index"
-          >
-            {{ formatValue(header, getValue(header, item)) }}
-          </slot>
+          <template v-if="customSlots?.[`item.${header.value}`]">
+            <component
+              :is="customSlots[`item.${header.value}`]"
+              :item="item"
+              :value="getValue(header, item)"
+              :index="index"
+              :header="header"
+            />
+          </template>
+
+          <template v-else>
+            <slot
+              :name="`item.${header.value}`"
+              :item="item"
+              :value="getValue(header, item)"
+              :index="index"
+            >
+              {{ formatValue(header, getValue(header, item)) }}
+            </slot>
+          </template>
         </div>
       </div>
     </div>
