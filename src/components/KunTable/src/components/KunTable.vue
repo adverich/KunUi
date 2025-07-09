@@ -14,13 +14,20 @@
 
       <KunBtn v-if="filterable && filters.length" @click="modalFilter = true" text="Filtros" bgColor="bg-green-200 dark:bg-green-800 px-2" />
 
-      <input
-        v-if="searchable"
-        v-model="searchQuery"
-        type="text"
-        :placeholder="searchPlaceholder"
-        class="border mx-2 px-3 py-1 rounded w-full max-w-sm text-sm"
-      />
+      <div v-if="searchable" class="rounded flex mx-2" :class="[searchClass]">
+        <input
+          v-model="searchQuery"
+          v-show="showSearch"
+          type="text"
+          :placeholder="searchPlaceholder"
+          class="w-full text-sm"
+          :class="isMobile ? 'px-1' : 'px-2 py-1'"
+          ref="searchRef"
+          @focus="hideIconSearch"
+          @blur="showIconSearch"
+        />
+        <KunIcon :icon="IconSearch" @click="focusOnSearch" v-show="showSearchBtn"/>
+      </div>
 
       <slot name="appendSearch" />
     </div>
@@ -128,8 +135,10 @@
 </template>
 
 <script setup>
-import { computed, ref, toRefs, watch } from 'vue';
+import { computed, onMounted, ref, toRefs, watch, nextTick } from 'vue';
 import { isMobile } from '@/utils/_platform';
+import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
+import IconSearch from '../../../../icons/IconSearch.vue';
 import KunTableHeaders from './KunTableHeaders.vue';
 import KunTableFooter from './KunTableFooter.vue';
 import KunTableRows from './KunTableRows.vue';
@@ -238,4 +247,30 @@ const resolvedHeaders = computed(() => {
     return newHeader;
   });
 });
+
+onMounted(() => showIconSearch());
+const searchRef = ref(null);
+const showSearch = ref(true);
+const showSearchBtn = ref(false);
+
+function focusOnSearch(){
+  if(!isMobile.value) return;
+  hideIconSearch();
+  nextTick(() => {
+    searchRef.value.focus();
+  })
+}
+function showIconSearch(){
+  if(!isMobile.value) return;
+  searchClass.value = "w-fit";
+  showSearch.value = false;
+  showSearchBtn.value = true;
+}
+function hideIconSearch(){
+  if(!isMobile.value) return;
+  searchClass.value = "w-full border";
+  showSearchBtn.value = false;
+  showSearch.value = true;
+}
+const searchClass = ref("w-full border max-w-sm");
 </script>
