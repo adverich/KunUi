@@ -2,6 +2,7 @@
   <div class="flex flex-col h-dvh text-black dark:text-white overflow-hidden" style="overflow: hidden!important;">
     <KunAppbar bg-color="bg-slate-400 dark:bg-slate-800" @toggle-drawer="leftDrawerStatus = !leftDrawerStatus" showDrawerButton>
       <template #actions>
+        <KunBtn @click="modaDialgo = true" text="dialgo"/>
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
           icon-color="bg-blue-500" @update:model-value="setTheme" />
       </template>
@@ -33,9 +34,9 @@
 
     <!-- <div class="h-24"></div> -->
 
-    <div class="h-full flex overflow-auto justify-center bg-gray-900">
+    <!-- <div class="h-full flex overflow-auto justify-center bg-gray-900">
       <KunTable :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/>
-    </div>
+    </div> -->
 
     <!-- <div class="h-24"></div> -->
 
@@ -49,6 +50,19 @@
         </KunList>
       </KunMenu>
     </div> -->
+
+    <KunDialog v-if="modaDialgo" v-model="modaDialgo" :fullscreen="true" minWidth="min-w-full" persistent>
+      <div class="flex-shrink overflow-hidden">
+        <KunToolbar rightSectionClass="bg-red-900" titlePosition="left" title="hola mundo arroba jaja" bgColor="bg-primary-200 dark:bg-primary-920" density="compact">
+          <template #append>
+              <div class="flex gap-x-2">
+                  <slot name="tolbar-buttons"/>
+                  <KunBtn @click="menuModel = false" bgColor="bg-error" size="xs" text="X" />
+              </div>
+          </template>
+        </KunToolbar>
+        </div>
+    </KunDialog>
   </div>
 </template>
 
@@ -65,6 +79,8 @@ import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
+import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
+import KunDialog from './components/KunDialog/src/components/KunDialog.vue';
 
 const menuModel = ref(false);
 const avatarRef = ref(null);
@@ -72,7 +88,7 @@ const menuModelTwo = ref(false);
 const avatarRefTwo = ref(null);
 const leftDrawerStatus = ref(false);
 
-const pija = ref(false);
+const modaDialgo = ref(false);
 
 const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
