@@ -105,7 +105,7 @@ const headers = [
   {value: 'amount_content', label: 'contenido', align: 'center', headerAlign: 'center', sortable: true },
   {value: 'measurement_unit_id', label: 'Unidad', align: 'center', headerAlign: 'center' },
   // {value: 'product_brand', label: 'Marca', align: 'center', headerAlign: 'center' },
-  {value: 'price_base', label: 'Precio', align: 'center', headerAlign: 'center' },
+  {value: 'price_base', label: 'Precio', align: 'center', headerAlign: 'center', columnFormat: 'function', columnFunction: getTotalAmount },
   {value: 'total_price', label: 'Precio total', align: 'center', headerAlign: 'center', columnType: 'function', columnFunction: getTotalAmount, columnFormat: 'money' },
   {value: 'created_at', label: 'Fecha', align: 'center', headerAlign: 'center', columnFormat: 'dateTime' },
 ]

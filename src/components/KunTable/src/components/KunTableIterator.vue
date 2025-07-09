@@ -86,10 +86,7 @@ const props = defineProps({
   hasActions: Boolean,
   loading: Boolean,
   rowClass: String,
-  border: {
-    type: String,
-    default: 'border border-slate-300 dark:border-slate-700'
-  },
+  border: { type: String, default: 'border border-slate-300 dark:border-slate-700' },
   rounded: { type: String, default: 'rounded-sm'},
   rowClassCondition: [String, Function],
   customSlots: Object,
