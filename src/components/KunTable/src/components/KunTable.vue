@@ -12,7 +12,7 @@
     >
       <slot name="prependSearch" />
 
-      <KunBtn v-if="filterable" @click="modalFilter = true" text="Filtros" bgColor="bg-green-200 dark:bg-green-800 px-2" />
+      <KunBtn v-if="filterable && filters.length" @click="modalFilter = true" text="Filtros" bgColor="bg-green-200 dark:bg-green-800 px-2" />
 
       <input
         v-if="searchable"

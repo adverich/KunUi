@@ -5,7 +5,7 @@
   </span>
 
   <!-- Tooltip -->
-  <teleport to="body">
+  <teleport to="body" v-if="!disabled">
     <transition :name="transition">
       <div
         v-show="isVisible"
@@ -28,8 +28,7 @@ import {
   computed,
   onMounted,
   onBeforeUnmount,
-  nextTick,
-  watch,
+  nextTick
 } from 'vue'
 
 const props = defineProps({
@@ -64,6 +63,7 @@ const props = defineProps({
     type: [Number, Object],
     default: () => ({ x: 0, y: 8 })
   },
+  disabled: Boolean,
 })
 
 const isVisible = ref(false)
