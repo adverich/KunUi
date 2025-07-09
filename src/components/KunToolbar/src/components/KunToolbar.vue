@@ -15,7 +15,7 @@
       :class="[
         densityClass,
         extended ? 'min-h-[96px]' : '',
-        'px-4',
+        'px-2',
       ]"
     >
       <div :class="leftSectionClass">
@@ -33,7 +33,7 @@
       <!-- Contenido principal -->
       <slot />
 
-      <div v-if="titlePosition === 'center'" class="flex-1 flex justify-center items-center max-w-1/2 truncate">
+      <div v-if="titlePosition === 'center'" class="flex justify-center items-center max-w-1/2 truncate">
         <slot name="title">
           <KunToolbarTitle v-if="title" :text="title" />
         </slot>
@@ -93,8 +93,8 @@ const props = defineProps({
     theme: String,
     tile: Boolean,
     title: String,
-    leftSectionClass: { type: String, default: 'flex items-center gap-2' },
-    rightSectionClass: { type: String, default: 'flex items-center gap-2 justify-end ml-auto' },
+    leftSectionClass: { type: String, default: 'flex items-center gap-x-2' },
+    rightSectionClass: { type: String, default: 'flex items-center gap-x-2 justify-end' },
 })
 
 const slots = useSlots()
