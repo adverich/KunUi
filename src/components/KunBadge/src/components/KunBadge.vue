@@ -34,8 +34,8 @@ const props = defineProps({
         'bottom left', 'bottom center', 'bottom right'
       ].includes(val)
   },
-  ejeX: { type: [Number, String], default: 5 }, // desplazamiento horizontal
-  ejeY: { type: [Number, String], default: 20 }  // desplazamiento vertical
+  ejeX: { type: [Number, String], default: 25 }, // desplazamiento horizontal
+  ejeY: { type: [Number, String], default: -15 }  // desplazamiento vertical
 });
 
 defineOptions({ inheritAttrs: false })
