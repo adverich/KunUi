@@ -11,6 +11,9 @@
         :is-expanded="isExpanded(item)"
         :has-actions="hasActions"
         :loading="actionLoadingMap[item.id] || false"
+        @toggle-expand="emits('toggle-expand', item)"
+        @toggle-select="emits('toggle-select', item)"
+        @row-click="emits('row-click', $event)"
         v-bind="$attrs"
         :customSlots="customSlots"
       >
@@ -63,7 +66,9 @@ const props = defineProps({
   customSlots: Object,
 });
 
-const baseTbodyClass = 'table-auto w-full text-sm text-left';
+const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
+
+const baseTbodyClass = 'table-auto h-full w-full text-sm text-left';
 const mergedTbodyClass = [baseTbodyClass, props.tbodyClass];
 
 // Total de columnas visibles (data + selección + expand)

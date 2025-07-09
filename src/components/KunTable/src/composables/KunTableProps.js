@@ -11,8 +11,8 @@ export default () => ({
     customFilter: { type: Function, default: null },
 
     // Features
-    itemsPerPage: { type: Number, default: 10 },
-    page: { type: Number, default: 1 },
+    itemsPerPage: { type: [Number, String], default: 10 },
+    page: { type: [Number, String], default: 1 },
     sortBy: {
         type: [Array, String],
         default: () => []
@@ -54,6 +54,7 @@ export default () => ({
     stripedClass: { type: String, default: '' },
     tfootClass: { type: String, default: '', },
     rowClass: { type: String, default: '' },
+    rowClassCondition: { type: [String, Function], default: '' },
 
     // Misc
     noDataText: { type: String, default: 'No hay elementos disponibles' },

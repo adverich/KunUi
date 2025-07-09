@@ -31,15 +31,15 @@
       </template>
     </KunDrawer>
 
-    <div class="h-24"></div>
+    <!-- <div class="h-24"></div> -->
 
-    <div class="flex justify-center bg-gray-400">
-      <KunTable :headers="headers" :items="products" :td-class="checkType" />
+    <div class="h-full flex overflow-auto justify-center bg-gray-900">
+      <KunTable :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/>
     </div>
 
-    <div class="h-24"></div>
+    <!-- <div class="h-24"></div> -->
 
-    <div class="flex justify-center bg-gray-400">
+    <!-- <div class="flex justify-center bg-gray-400">
       <KunMenu v-model="pija" origin="top center" transition="slide-down">
         <template v-slot:activator="{ props }">
           <KunBtn bgColor="bg-amber-300" :icon="IconAccountOutline" v-bind="props" class="mx-2" @click="pija = true" />
@@ -48,7 +48,7 @@
           <KunListItem class="hover:bg-red-800">Hola mundo</KunListItem>
         </KunList>
       </KunMenu>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -78,13 +78,12 @@ const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
 const productFamilies = ref(generateFakeFamilies(100));
 const productMkups = ref(generateFakeMkups(5));
-const products = ref(generateFakeProductsFull(20));
+const products = ref(generateFakeProductsFull(10));
 
 const currentTheme = ref('dark')
 const selected = ref(74983)
 
-function checkType(item, header){
-  console.log(item)
+function checkType({item}){
   return item.name.includes('Prueba 1') ? 'bg-red-700' : ''
 }
 

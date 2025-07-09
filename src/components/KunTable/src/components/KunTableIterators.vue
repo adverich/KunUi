@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="h-full w-full flex flex-col bg-blue-800">
     <template v-for="(item, index) in items" :key="itemKey(item, index)">
       <KunTableIterator
         :item="item"
@@ -14,6 +14,8 @@
         @toggle-expand="emits('toggle-expand', item)"
         @toggle-select="emits('toggle-select', item)"
         @row-click="emits('row-click', $event)"
+        v-bind="$attrs"
+        :customSlots="customSlots"
       >
         <template v-for="(_, name) in $slots" #[name]="slotProps">
           <slot :name="name" v-bind="{ ...slotProps, item, index, loading: actionLoadingMap?.[item.id] || false }" />
@@ -45,6 +47,7 @@ const props = defineProps({
     type: Function,
     default: (_, index) => index,
   },
+  customSlots: Object,
 });
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);

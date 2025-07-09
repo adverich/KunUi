@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 const props = defineProps({
   itemsLength: Number,
-  itemsPerPage: Number,
+  itemsPerPage: [Number, String],
   currentPage: Number,
   pageOptions: {
     type: Array,

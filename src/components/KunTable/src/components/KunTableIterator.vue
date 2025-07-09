@@ -1,15 +1,15 @@
 <template>
   <div
-    :class="mergedContainerClass"
     @click="emits('row-click', { item, index, event: $event })"
+    :class="mergedContainerClass"
   >
     <!-- Cabecera de controles -->
-    <div class="flex items-center justify-between gap-2 mb-2">
+    <div class="flex items-center justify-between gap-2 mb-2 print:hidden">
       <!-- Expand -->
       <div v-if="showExpand">
         <slot name="expand-icon" :item="item" :index="index">
           <button
-            class="text-xl font-bold focus:outline-none"
+            class="text-xl font-bold focus:outline-none "
             @click.stop="emits('toggle-expand', item)"
           >
             <span v-if="isExpanded">−</span>
@@ -72,6 +72,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { getValue, formatValue } from '@/utils/tableFormatters';
 
 const props = defineProps({
@@ -85,12 +86,36 @@ const props = defineProps({
   hasActions: Boolean,
   loading: Boolean,
   rowClass: String,
+  border: {
+    type: String,
+    default: 'border border-slate-300 dark:border-slate-700'
+  },
+  rounded: { type: String, default: 'rounded-sm'},
+  rowClassCondition: [String, Function],
+  customSlots: Object,
 });
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 
-const mergedContainerClass = [
-  'border border-slate-300 dark:border-slate-700 rounded p-4 bg-white dark:bg-slate-900 shadow-sm',
-  props.rowClass,
-];
+function resolveTdClass(item, index) {
+  const result = typeof props.rowClassCondition === 'function'
+    ? props.rowClassCondition({ item, index })
+    : props.rowClassCondition;
+
+  return result?.trim() || '';
+}
+
+const defaultContainerClass = 'p-4 shadow-sm';
+const baseRowClass = 'bg-slate-100 dark:bg-slate-900';
+const rowClass = computed(() => props.rowClass || baseRowClass);
+const conditionalRowClass = computed(() => resolveTdClass(props.item, props.index));
+
+const mergedContainerClass = computed(() => [ 
+  defaultContainerClass,
+  conditionalRowClass.value || rowClass.value,
+  props.isSelected ? props.selectedClass : '',
+  props.border,
+  props.rounded
+]);
+
 </script>
