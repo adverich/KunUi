@@ -55,6 +55,7 @@
           :action-label="actionLabel"
           @sort="updateSort"
           @toggle-select-all="toggleSelectAll"
+          :customHeaders="customSlots"
         />
         <slot v-else name="thead" v-bind="slotProps" />
 

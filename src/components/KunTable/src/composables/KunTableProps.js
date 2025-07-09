@@ -62,6 +62,7 @@ export default () => ({
 
     // Slots control
     customSlots: { type: Object, default: () => ({}) },
+    customHeaders: { type: Object, default: () => ({}) },
     showTopSlot: { type: Boolean, default: false },
     showBottomSlot: { type: Boolean, default: false },
     functionMap: { type: Object, default: () => ({}) },

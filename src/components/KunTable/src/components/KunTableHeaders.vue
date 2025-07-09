@@ -36,9 +36,9 @@
         @click="toggleSort(header)"
         :style="{ cursor: header.sortable ? 'pointer' : 'default' }"
       >
-        <template v-if="customSlots?.[`header.${header.value}`]">
+        <template v-if="customHeaders?.[`header.${header.value}`]">
           <component
-            :is="customSlots[`header.${header.value}`]"
+            :is="customHeaders[`header.${header.value}`]"
             :header="header"
           />
         </template>
@@ -80,7 +80,7 @@ const props = defineProps({
   thClass: String,
   hasActions: Boolean,
   actionLabel: String,
-  customSlots: Object,
+  customHeaders: Object,
 });
 
 const emits = defineEmits(['toggle-select-all', 'sort', 'expandAll', 'collapseAll']);
