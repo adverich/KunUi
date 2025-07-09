@@ -13,7 +13,7 @@
       <slot name="prependSearch" />
 
       <KunBtn v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-green-200 dark:bg-green-800">
-        <KunIcon :icon="IconFilter" size="text-lg" />
+        <KunIcon class="h-fit" :icon="IconFilter" size="text-lg" />
       </KunBtn>
 
       <div v-if="searchable" class="rounded flex mx-2" :class="[searchClass]">
