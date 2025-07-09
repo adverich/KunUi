@@ -35,7 +35,7 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
-      <KunTable searchable :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/>
+      <KunTable searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/>
     </div>
 
     <!-- <div class="h-24"></div> -->

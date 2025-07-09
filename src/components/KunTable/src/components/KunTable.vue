@@ -12,7 +12,9 @@
     >
       <slot name="prependSearch" />
 
-      <KunBtn v-if="filterable && filters.length" @click="modalFilter = true" text="Filtros" bgColor="bg-green-200 dark:bg-green-800 px-2" />
+      <KunBtn v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-green-200 dark:bg-green-800">
+        <KunIcon :icon="IconFilter" size="text-lg" />
+      </KunBtn>
 
       <div v-if="searchable" class="rounded flex mx-2" :class="[searchClass]">
         <input
@@ -138,6 +140,7 @@
 import { computed, onMounted, ref, toRefs, watch, nextTick } from 'vue';
 import { isMobile } from '@/utils/_platform';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
+import IconFilter from '../../../../icons/IconFilter.vue';
 import IconSearch from '../../../../icons/IconSearch.vue';
 import KunTableHeaders from './KunTableHeaders.vue';
 import KunTableFooter from './KunTableFooter.vue';
