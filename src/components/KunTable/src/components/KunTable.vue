@@ -35,7 +35,7 @@
     </div>
 
     <div class="flex-1 overflow-auto">
-      <table :class="mergedTableClass">
+      <table :class="mergedTableClass" v-if="paginatedItems.length">
         <template v-if="$slots.colgroup && !isMobile">
           <colgroup><slot name="colgroup" v-bind="slotProps" /></colgroup>
         </template>
@@ -59,7 +59,7 @@
         />
         <slot v-else name="thead" v-bind="slotProps" />
 
-        <template v-if="paginatedItems.length && !isMobile">
+        <template v-if="!isMobile">
           <slot name="body.prepend" v-bind="slotProps" />
           <KunTableRows 
             :items="paginatedItems"
@@ -88,7 +88,7 @@
           <slot name="body.append" v-bind="slotProps" />
         </template>
 
-        <template v-else-if="paginatedItems.length && isMobile">
+        <template v-else="isMobile">
           <KunTableIterators
             :items="paginatedItems"
             :headers="resolvedHeaders"
@@ -115,8 +115,10 @@
         </template>
       </table>
 
-      <div v-if="!paginatedItems.length" class="h-full">
-        <KunCard  class="h-full flex justify-center items-center text-center" :title="noDataText" titleSize="text-4xl" />
+      <div v-if="!paginatedItems.length" class="h-full flex justify-center items-center">
+        <div class="text-center text-4xl">
+          {{ noDataText }}
+        </div>
       </div>
     </div>
 
