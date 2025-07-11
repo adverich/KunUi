@@ -79,7 +79,7 @@ const props = defineProps({
   stripedClass: String,
   hasActions: Boolean,
   actionsAlign: String,
-  loading: Boolean,
+  loading: { type: [Boolean, Object], default: false },
   rowClassCondition: [String, Function],
   customSlots: Object,
 });
