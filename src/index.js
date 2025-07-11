@@ -2,7 +2,9 @@ import { defineAsyncComponent } from 'vue'
 import './styles/style.css'
 import './utils/utils.js'
 
-// Utilidad para obtener nombre del componente desde el path
+// Asíncrono para uso manual
+const asyncModules = import.meta.glob('./components/**/src/components/*.vue');
+
 function extractComponentName(path) {
   return path.split('/').at(-1).replace('.vue', '');
 }
