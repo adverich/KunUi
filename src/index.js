@@ -68,16 +68,14 @@ export { default as KunToolbarTitle } from './components/KunToolbar/src/componen
 export { default as KunTooltip } from './components/KunTooltip/src/components/KunTooltip.vue';
 
 // 4. Función de instalación global
-export function install(app) {
-  const components = import.meta.glob('./components/**/*.vue');
+export function install(app, { skipIfRegistered = true } = {}) {
+  const components = import.meta.glob('./components/**/*.vue', { eager: true });
 
   Object.entries(components).forEach(([path, component]) => {
     const name = path.split('/')[2];
-    const shouldRegister = !options.skipIfRegistered ||
-      !app._context.components[name];
 
-    if (shouldRegister) {
-      app.component(name, defineAsyncComponent(component));
+    if (!skipIfRegistered || !app._context.components[name]) {
+      app.component(name, component.default);
     }
   });
 }
