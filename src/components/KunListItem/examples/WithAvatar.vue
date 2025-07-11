@@ -22,7 +22,7 @@
 
 <script setup>
 import KunListItem from '../src/components/KunListItem.vue'
-import KunListItemText from '../../../../KunListItemText/src/components/KunListItemText.vue'
-import KunListItemSubtitle from '../../../../KunListItemSubtitle/src/components/KunListItemSubtitle.vue'
-import KunListItemAvatar from '../../../src/components/KunListItemAvatar.vue'
+import KunListItemText from '../../KunListItemText/src/components/KunListItemText.vue'
+import KunListItemSubtitle from '../../KunListItemSubtitle/src/components/KunListItemSubtitle.vue'
+import KunListItemAvatar from '../../KunListItemAvatar/src/components/KunListItemAvatar.vue'
 </script>

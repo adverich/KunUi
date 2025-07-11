@@ -18,6 +18,6 @@
 </template>
 
 <script setup>
-import KunCardActions from '../src/KunCardActions.vue'
-import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
+import KunCardActions from '../src/components/KunCardActions.vue'
+import KunBtn from '../../KunBtn/src/components/KunBtn.vue'
 </script>

@@ -23,10 +23,10 @@
 </template>
 
 <script setup>
-import KunList from '../src/components/KunListGroup.vue'
-import KunListGroup from '../../../src/components/KunListGroup.vue'
-import KunListItem from '../../../../KunListItem/src/components/KunListItem.vue'
-import KunListItemText from '../../../../KunListItem/src/components/KunListItem.vue'
-import KunListItemAction from '../../../../KunListItem/src/components/KunListItem.vue'
+import KunList from '../src/components/KunList.vue'
+import KunListGroup from '../../KunListGroup/src/components/KunListGroup.vue'
+import KunListItem from '../../KunListItem/src/components/KunListItem.vue'
+import KunListItemText from '../../KunListItem/src/components/KunListItem.vue'
+import KunListItemAction from '../../KunListItem/src/components/KunListItem.vue'
 
 </script>

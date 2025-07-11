@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import KunSlider from '../KunSlider.vue'
+import KunSlider from '../src/components/KunSlider.vue'
 import { ref } from 'vue'
 
 const rangeValue = ref([20, 80])

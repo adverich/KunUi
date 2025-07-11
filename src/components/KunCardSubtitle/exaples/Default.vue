@@ -13,5 +13,5 @@
 </template>
 
 <script setup>
-import KunCardSubtitle from '../src/KunCardSubtitle.vue'
+import KunCardSubtitle from '../src/components/KunCardSubtitle.vue'
 </script>

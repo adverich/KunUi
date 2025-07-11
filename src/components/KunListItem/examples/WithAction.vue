@@ -35,7 +35,7 @@
 
 <script setup>
 import KunListItem from '../src/components/KunListItem.vue'
-import KunListItemText from '../../../../KunListItemText/src/components/KunListItemText.vue'
-import KunListItemAvatar from '../../../../KunListItemAvatar/src/components/KunListItemAvatar.vue'
-import KunListItemAction from '../../../src/components/KunListItemAction.vue'
+import KunListItemText from '../../KunListItemText/src/components/KunListItemText.vue'
+import KunListItemAvatar from '../../KunListItemAvatar/src/components/KunListItemAvatar.vue'
+import KunListItemAction from '../../KunListItemAction/src/components/KunListItemAction.vue'
 </script>

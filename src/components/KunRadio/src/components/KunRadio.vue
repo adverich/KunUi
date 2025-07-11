@@ -1,8 +1,7 @@
 <script setup>
 import { computed, inject } from 'vue'
-import KunIcon from '@/components/KunIcon.vue'
-import radioboxMarked from '@/icons/radioboxMarked'
-import radioboxBlank from '@/icons/radioboxBlank'
+import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
+import { icons } from "@/icons"
 
 const props = defineProps({
   modelValue: [String, Number, Boolean, Object],
@@ -31,7 +30,7 @@ const isSelected = computed(() => {
 })
 
 const icon = computed(() =>
-  isSelected.value ? (props.trueIcon ?? radioboxMarked) : (props.falseIcon ?? radioboxBlank)
+  isSelected.value ? (props.trueIcon ?? icons.radioboxMarked) : (props.falseIcon ?? icons.radioboxBlank)
 )
 
 const colorClass = computed(() =>

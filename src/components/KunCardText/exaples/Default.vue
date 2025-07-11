@@ -13,5 +13,5 @@
 </template>
 
 <script setup>
-import KunCardText from '../src/KunCardText.vue'
+import KunCardText from '../src/components/KunCardText.vue'
 </script>

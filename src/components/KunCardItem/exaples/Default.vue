@@ -17,8 +17,8 @@
 </template>
 
 <script setup>
-import KunCardItem from '../src/KunCardItem.vue'
-import KunCardTitle from '../../../KunCardTitle/src/KunCardTitle.vue'
-import KunCardSubtitle from '../../../KunCardSubtitle/src/KunCardSubtitle.vue'
-import KunCardText from '../../../KunCardText/src/KunCardText.vue'
+import KunCardItem from '../src/components/KunCardItem.vue'
+import KunCardTitle from '../../KunCardTitle/src/components/KunCardTitle.vue'
+import KunCardSubtitle from '../../KunCardSubtitle/src/components/KunCardSubtitle.vue'
+import KunCardText from '../../KunCardText/src/components/KunCardText.vue'
 </script>

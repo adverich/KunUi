@@ -18,5 +18,5 @@
 
 <script setup>
 import KunListSubheader from '../src/components/KunListSubheader.vue'
-import KunListItem from '../../../../KunListItem/src/components/KunListItem.vue'
+import KunListItem from '../../KunListItem/src/components/KunListItem.vue'
 </script>

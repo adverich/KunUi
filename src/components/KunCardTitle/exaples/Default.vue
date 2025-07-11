@@ -17,5 +17,5 @@
 </template>
 
 <script setup>
-import KunCardTitle from '../src/KunCardTitle.vue'
+import KunCardTitle from '../src/components/KunCardTitle.vue'
 </script>

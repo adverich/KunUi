@@ -13,7 +13,7 @@
 <script setup>
 import { ref } from 'vue'
 import KunList from '../src/components/KunList.vue'
-import KunListItem from '../../../../KunListItem/src/components/KunListItem.vue'
+import KunListItem from '../../KunListItem/src/components/KunListItem.vue'
 
 const selected = ref([])
 </script>

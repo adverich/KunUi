@@ -22,5 +22,5 @@
 
 <script setup>
 import KunListGroup from '../src/components/KunListGroup.vue'
-import KunListItem from '../../../../KunListItem/src/components/KunListItem.vue'
+import KunListItem from '../../KunListItem/src/components/KunListItem.vue'
 </script>

@@ -5,6 +5,6 @@
 </template>
 
 <script setup>
-import KunBadge from '@/components/KunBudge/src/components/KunBudge.vue';
+import KunBadge from '../src/components/KunBadge.vue';
 import KunBtn from '../../KunBtn/src/components/KunBtn.vue';
 </script>
