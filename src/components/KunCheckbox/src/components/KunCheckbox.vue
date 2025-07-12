@@ -17,7 +17,7 @@ const props = defineProps({
   modelValue: [Boolean, Array, String, Number, Object],
   trueValue: { type: null, default: true },
   falseValue: { type: null, default: false },
-  value: null, // nuevo: para representación de valores específicos
+  value: null,
   indeterminate: Boolean,
   multiple: Boolean,
   disabled: Boolean,
@@ -51,10 +51,8 @@ const props = defineProps({
   width: [String, Number],
   minWidth: [String, Number],
   maxWidth: [String, Number],
+  direction: { type: String, default: 'horizontal' } // 'vertical' o 'horizontal'
 })
-
-const uid = `kun-checkbox-${Math.random().toString(36).substring(2, 8)}`
-const checkboxId = computed(() => props.id || uid)
 
 const isFocused = ref(props.focused ?? false)
 watch(() => props.focused, v => isFocused.value = v)
@@ -69,8 +67,7 @@ const {
   errorMessages,
   isValid,
   validate,
-  resetValidation,
-  blurHandler
+  resetValidation
 } = useValidation(props, internalValue)
 
 defineExpose({ validate, resetValidation })
@@ -91,40 +88,37 @@ const densityClass = computed(() => ({
 const iconClass = computed(() => {
   const classes = []
   if (typeof props.iconColor === 'string') classes.push(`text-${props.iconColor}`)
-  classes.push(props.glow && isFocused.value ? 'opacity-100' : 'opacity-70')
+  if (props.glow && isFocused.value) classes.push('opacity-100')
+  else classes.push('opacity-70')
   return classes
 })
 
-function onBlur() {
-  isFocused.value = false
-  emit('update:focused', false)
-  if (props.validateOn?.includes('blur')) validate()
-}
+const containerClass = computed(() => ({
+  'kun-checkbox': true,
+  'kun-disabled': props.disabled,
+  'kun-readonly': props.readonly,
+  'kun-error': props.error || !isValid.value,
+  'kun-focused': isFocused.value,
+  'kun-checked': isChecked.value,
+  'kun-indeterminate': props.indeterminate,
+  [`kun-direction-${props.direction}`]: true,
+  [densityClass.value]: true,
+  [`text-${props.color}`]: !!props.color,
+  [`border-${props.baseColor}`]: !!props.baseColor,
+  'items-center': props.centerAffix,
+}))
 </script>
 
 <template>
   <div
-    :class="[
-      'kun-checkbox',
-      densityClass,
-      centerAffix && 'items-center',
-      props.color && `text-${props.color}`,
-      props.baseColor && `border-${props.baseColor}`,
-      {
-        'kun-checked': isChecked,
-        'kun-indeterminate': props.indeterminate,
-        'kun-disabled': props.disabled,
-        'kun-error': props.error || !isValid,
-        'kun-focused': isFocused,
-      }
-    ]"
+    :class="containerClass"
     :style="{
       width: props.width ? props.width + 'px' : undefined,
       minWidth: props.minWidth ? props.minWidth + 'px' : undefined,
       maxWidth: props.maxWidth ? props.maxWidth + 'px' : undefined
     }"
   >
-    <!-- Hidden input for native form submission -->
+    <!-- Hidden input for form submit -->
     <input
       v-if="props.name"
       type="checkbox"
@@ -140,23 +134,20 @@ function onBlur() {
       <KunIcon v-if="props.prependIcon" :icon="props.prependIcon" />
     </div>
 
-    <!-- Input box -->
+    <!-- Checkbox input -->
     <div
       class="kun-checkbox__input"
-      v-ripple="props.ripple"
+      v-ripple="props.ripple && !props.readonly && !props.disabled"
       role="checkbox"
       :aria-checked="props.indeterminate ? 'mixed' : isChecked"
-      :aria-disabled="props.disabled"
+      :aria-disabled="props.disabled || props.readonly"
       :tabindex="props.disabled ? -1 : 0"
-      @click="toggle"
+      @click="!props.readonly && toggle()"
       @focus="() => { isFocused = true; emit('update:focused', true) }"
-      @blur="onBlur"
-      @keydown.space.prevent="toggle"
+      @blur="() => { isFocused = false; emit('update:focused', false); if (props.validateOn?.includes('blur')) validate() }"
+      @keydown.space.prevent="!props.readonly && toggle()"
     >
-      <KunIcon
-        :icon="iconToRender"
-        :class="iconClass"
-      />
+      <KunIcon :icon="iconToRender" :class="iconClass" />
       <slot name="input" />
     </div>
 
@@ -193,6 +184,10 @@ function onBlur() {
   display: flex;
   gap: 0.5rem;
 }
+.kun-direction-vertical {
+  flex-direction: column;
+  align-items: flex-start;
+}
 .kun-checkbox__input {
   cursor: pointer;
   user-select: none;
@@ -207,7 +202,8 @@ function onBlur() {
 .kun-checkbox__label {
   cursor: pointer;
 }
-.kun-disabled {
+.kun-disabled,
+.kun-readonly {
   opacity: 0.5;
   pointer-events: none;
 }

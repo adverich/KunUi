@@ -26,7 +26,6 @@ export function useValidation(props, model) {
     const validate = () => {
         const value = props.validationValue !== undefined ? props.validationValue : model.value
         const messages = runRules(value)
-
         errorMessages.value = messages
         isValid.value = messages.length === 0
         return isValid.value
@@ -38,7 +37,7 @@ export function useValidation(props, model) {
     }
 
     watch(model, () => {
-        if (props.validateOn?.includes('input')) {
+        if (props.validateOn === 'input' || props.validateOn?.includes('input')) {
             validate()
         }
     })
@@ -47,11 +46,6 @@ export function useValidation(props, model) {
         errorMessages,
         isValid,
         validate,
-        resetValidation,
-        blurHandler: () => {
-            if (props.validateOn?.includes('blur')) {
-                validate()
-            }
-        }
+        resetValidation
     }
 }
