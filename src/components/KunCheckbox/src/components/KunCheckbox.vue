@@ -31,6 +31,7 @@ const props = defineProps({
   validateOn: String,
   ripple: { type: [Boolean, Object], default: true },
   density: { type: String, default: 'default' },
+  direction: { type: String, default: 'horizontal' },
   color: String,
   iconColor: [String, Boolean],
   baseColor: String,
@@ -51,7 +52,7 @@ const props = defineProps({
   width: [String, Number],
   minWidth: [String, Number],
   maxWidth: [String, Number],
-  direction: { type: String, default: 'horizontal' } // 'vertical' o 'horizontal'
+  size: { type: String, default: 'md' } // 'sm', 'md', 'lg' o clases personalizadas
 })
 
 const isFocused = ref(props.focused ?? false)
@@ -79,46 +80,38 @@ const iconToRender = computed(() => {
     : (props.falseIcon || icons.checkboxBlank)
 })
 
-const densityClass = computed(() => ({
-  default: 'kun-density-default',
-  comfortable: 'kun-density-comfortable',
-  compact: 'kun-density-compact'
-}[props.density] || 'kun-density-default'))
+const iconClass = computed(() => [
+  typeof props.iconColor === 'string' ? `text-${props.iconColor}` : '',
+  props.glow && isFocused.value ? 'opacity-100' : 'opacity-70',
+])
 
-const iconClass = computed(() => {
-  const classes = []
-  if (typeof props.iconColor === 'string') classes.push(`text-${props.iconColor}`)
-  if (props.glow && isFocused.value) classes.push('opacity-100')
-  else classes.push('opacity-70')
-  return classes
-})
-
-const containerClass = computed(() => ({
-  'kun-checkbox': true,
-  'kun-disabled': props.disabled,
-  'kun-readonly': props.readonly,
-  'kun-error': props.error || !isValid.value,
-  'kun-focused': isFocused.value,
-  'kun-checked': isChecked.value,
-  'kun-indeterminate': props.indeterminate,
-  [`kun-direction-${props.direction}`]: true,
-  [densityClass.value]: true,
-  [`text-${props.color}`]: !!props.color,
-  [`border-${props.baseColor}`]: !!props.baseColor,
-  'items-center': props.centerAffix,
-}))
+const iconSizeClass = computed(() => ({
+  sm: 'w-4 h-4 text-sm',
+  md: 'w-5 h-5 text-base',
+  lg: 'w-6 h-6 text-lg'
+}[props.size] || props.size)) // permite string personalizada tipo "w-6 h-6"
 </script>
 
 <template>
   <div
-    :class="containerClass"
+    :class="[
+      'kun-checkbox',
+      'flex',
+      direction === 'vertical' ? 'flex-col items-start' : 'flex-row items-center',
+      'gap-2',
+      props.color && `text-${props.color}`,
+      {
+        'opacity-50 pointer-events-none': props.disabled || props.readonly,
+        'text-red-600': props.error || !isValid,
+        'focus-within:ring-2 ring-primary-500': isFocused,
+      }
+    ]"
     :style="{
-      width: props.width ? props.width + 'px' : undefined,
-      minWidth: props.minWidth ? props.minWidth + 'px' : undefined,
-      maxWidth: props.maxWidth ? props.maxWidth + 'px' : undefined
+      width: props.width && `${props.width}px`,
+      minWidth: props.minWidth && `${props.minWidth}px`,
+      maxWidth: props.maxWidth && `${props.maxWidth}px`
     }"
   >
-    <!-- Hidden input for form submit -->
     <input
       v-if="props.name"
       type="checkbox"
@@ -128,44 +121,40 @@ const containerClass = computed(() => ({
       class="hidden"
     />
 
-    <!-- Prepend -->
-    <div class="kun-checkbox__prepend" @click="$emit('click:prepend')">
+    <div class="flex items-center gap-2" @click="$emit('click:prepend')">
       <slot name="prepend" />
       <KunIcon v-if="props.prependIcon" :icon="props.prependIcon" />
     </div>
 
-    <!-- Checkbox input -->
     <div
-      class="kun-checkbox__input"
-      v-ripple="props.ripple && !props.readonly && !props.disabled"
+      class="relative inline-flex items-center justify-center cursor-pointer"
+      :class="[iconSizeClass]"
+      v-ripple="props.ripple"
       role="checkbox"
       :aria-checked="props.indeterminate ? 'mixed' : isChecked"
-      :aria-disabled="props.disabled || props.readonly"
+      :aria-disabled="props.disabled"
       :tabindex="props.disabled ? -1 : 0"
-      @click="!props.readonly && toggle()"
+      @click="toggle"
       @focus="() => { isFocused = true; emit('update:focused', true) }"
       @blur="() => { isFocused = false; emit('update:focused', false); if (props.validateOn?.includes('blur')) validate() }"
-      @keydown.space.prevent="!props.readonly && toggle()"
+      @keydown.space.prevent="toggle"
     >
-      <KunIcon :icon="iconToRender" :class="iconClass" />
+      <KunIcon :icon="iconToRender" :class="[...iconClass, iconSizeClass]" />
       <slot name="input" />
     </div>
 
-    <!-- Label -->
-    <div class="kun-checkbox__label" v-if="props.label || $slots.label">
+    <div class="cursor-pointer" v-if="props.label || $slots.label">
       <slot name="label" :label="props.label">{{ props.label }}</slot>
     </div>
 
-    <!-- Append -->
-    <div class="kun-checkbox__append" @click="$emit('click:append')">
+    <div class="flex items-center gap-2" @click="$emit('click:append')">
       <slot name="append" />
       <KunIcon v-if="props.appendIcon" :icon="props.appendIcon" />
     </div>
 
-    <!-- Messages -->
     <div
-      class="kun-checkbox__messages"
       v-if="!props.hideDetails && (errorMessages?.length || props.hint || props.persistentHint)"
+      class="text-xs text-gray-500 mt-1"
     >
       <slot name="details">
         <div v-if="(props.error || !isValid) && errorMessages?.length">
@@ -173,50 +162,10 @@ const containerClass = computed(() => ({
             {{ msg }}
           </slot>
         </div>
-        <div v-else-if="props.hint || props.persistentHint">{{ props.hint }}</div>
+        <div v-else-if="props.hint || props.persistentHint">
+          {{ props.hint }}
+        </div>
       </slot>
     </div>
   </div>
 </template>
-
-<style scoped>
-.kun-checkbox {
-  display: flex;
-  gap: 0.5rem;
-}
-.kun-direction-vertical {
-  flex-direction: column;
-  align-items: flex-start;
-}
-.kun-checkbox__input {
-  cursor: pointer;
-  user-select: none;
-  position: relative;
-  border: 1px solid currentColor;
-  border-radius: 0.25rem;
-  padding: 0.25rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.kun-checkbox__label {
-  cursor: pointer;
-}
-.kun-disabled,
-.kun-readonly {
-  opacity: 0.5;
-  pointer-events: none;
-}
-.kun-error {
-  color: var(--error-color, red);
-}
-.kun-density-default {
-  height: 40px;
-}
-.kun-density-comfortable {
-  height: 32px;
-}
-.kun-density-compact {
-  height: 24px;
-}
-</style>

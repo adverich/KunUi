@@ -24,9 +24,13 @@ export function useValidation(props, model) {
     }
 
     const validate = () => {
-        const value = props.validationValue !== undefined ? props.validationValue : model.value
+        const value =
+            props.validationValue !== undefined
+                ? props.validationValue
+                : model.value
+
         const messages = runRules(value)
-        errorMessages.value = messages
+        errorMessages.value = messages.slice(0, Number(props.maxErrors ?? 1))
         isValid.value = messages.length === 0
         return isValid.value
     }
