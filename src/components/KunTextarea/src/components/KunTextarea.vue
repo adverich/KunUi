@@ -139,6 +139,7 @@ const textareaRef = ref(null)
 const {
   isFocused,
   internalValue,
+  rootRef,
   updateValue,
   handleClear,
   adjustHeight,
