@@ -111,6 +111,7 @@ const iconSizeClass = computed(() => ({
       minWidth: props.minWidth && `${props.minWidth}px`,
       maxWidth: props.maxWidth && `${props.maxWidth}px`
     }"
+    v-bind="$attrs"
   >
     <input
       v-if="props.name"

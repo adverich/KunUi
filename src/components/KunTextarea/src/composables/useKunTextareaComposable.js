@@ -3,6 +3,7 @@ import { ref, watch, computed, onMounted, nextTick } from 'vue'
 export function useKunTextarea(props, emit, textareaRef) {
     const isFocused = ref(false)
     const rawModelValue = ref(props.modelValue)
+    const rootRef = ref(null);
 
     const formatInputValue = (v) => {
         if (props.formatModel === 'raw') return String(v ?? '')
@@ -119,6 +120,7 @@ export function useKunTextarea(props, emit, textareaRef) {
     return {
         isFocused,
         internalValue,
+        rootRef,
         updateValue,
         handleClear,
         adjustHeight,

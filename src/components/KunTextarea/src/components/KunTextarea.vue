@@ -1,5 +1,5 @@
 <template>
-  <div :class="wrapperClasses">
+  <div :class="wrapperClasses" ref="rootRef">
     <!-- Label -->
     <slot name="label" v-bind="{ label, isFocused, isActive: !!internalValue, controlRef: textareaRef, focus: () => textareaRef?.focus(), blur: () => textareaRef?.blur(), props }">
       <label v-if="label" class="block text-sm font-medium mb-1">
@@ -234,5 +234,7 @@ defineExpose({
   resetValidation,
   errorMessages: displayedMessages,
   isValid: computed(() => !hasError.value),
+  rootRef,
+  focus: () => textareaRef.value?.focus()
 })
 </script>
