@@ -4,6 +4,9 @@ import IconArrowDownUp from './IconArrowDownUp.vue'
 import IconArrowUp from './IconArrowUp.vue'
 import IconAsterisk from './IconAsterisk.vue'
 import IconCheck from './IconCheck.vue'
+import IconCheckBlankOutline from './IconCheckBlankOutline.vue'
+import IconCheckIndetOutline from './IconCheckIndetOutline.vue'
+import IconCheckOnOutline from './IconCheckOnOutline.vue'
 import IconClose from './IconClose.vue'
 import IconDelete from './IconDelete.vue'
 import IconEdit from './IconEdit.vue'
@@ -26,6 +29,9 @@ export const icons = {
     arrowUp: IconArrowUp,
     asterisk: IconAsterisk,
     check: IconCheck,
+    checkboxBlank: IconCheckBlankOutline,
+    checkboxIndeterminate: IconCheckIndetOutline,
+    checkboxOn: IconCheckOnOutline,
     close: IconClose,
     delete: IconDelete,
     edit: IconEdit,

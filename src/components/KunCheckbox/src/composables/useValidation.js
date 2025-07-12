@@ -38,7 +38,7 @@ export function useValidation(props, model) {
     }
 
     watch(model, () => {
-        if (props.validateOn === 'input' || props.validateOn?.includes('input')) {
+        if (props.validateOn?.includes('input')) {
             validate()
         }
     })
@@ -47,6 +47,11 @@ export function useValidation(props, model) {
         errorMessages,
         isValid,
         validate,
-        resetValidation
+        resetValidation,
+        blurHandler: () => {
+            if (props.validateOn?.includes('blur')) {
+                validate()
+            }
+        }
     }
 }

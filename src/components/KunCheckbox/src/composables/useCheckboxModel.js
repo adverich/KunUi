@@ -8,31 +8,29 @@ export function useCheckboxModel(props, emit) {
     })
 
     const comparator = props.valueComparator || ((a, b) => a === b)
+    const checkedValue = props.value ?? props.trueValue
 
     const isChecked = computed(() => {
         if (props.indeterminate) return false
-
         if (props.multiple && Array.isArray(internalValue.value)) {
-            return internalValue.value.some(v => comparator(v, props.trueValue))
+            return internalValue.value.some(v => comparator(v, checkedValue))
         }
-
-        return comparator(internalValue.value, props.trueValue)
+        return comparator(internalValue.value, checkedValue)
     })
 
     function toggle() {
         if (props.disabled || props.readonly) return
 
         let newValue
-
         if (props.indeterminate) {
-            newValue = props.trueValue
+            newValue = checkedValue
         } else if (props.multiple && Array.isArray(internalValue.value)) {
-            const exists = internalValue.value.some(v => comparator(v, props.trueValue))
+            const exists = internalValue.value.some(v => comparator(v, checkedValue))
             newValue = exists
-                ? internalValue.value.filter(v => !comparator(v, props.trueValue))
-                : [...internalValue.value, props.trueValue]
+                ? internalValue.value.filter(v => !comparator(v, checkedValue))
+                : [...internalValue.value, checkedValue]
         } else {
-            newValue = isChecked.value ? props.falseValue : props.trueValue
+            newValue = isChecked.value ? props.falseValue : checkedValue
         }
 
         internalValue.value = newValue

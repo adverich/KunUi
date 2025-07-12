@@ -1,9 +1,10 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 import { useCheckboxModel } from '../composables/useCheckboxModel'
 import { useValidation } from '../composables/useValidation'
 import { vRipple } from '@/directives/ripple.js'
+import { icons } from '@/icons'
 
 const emit = defineEmits([
   'update:modelValue',
@@ -16,6 +17,7 @@ const props = defineProps({
   modelValue: [Boolean, Array, String, Number, Object],
   trueValue: { type: null, default: true },
   falseValue: { type: null, default: false },
+  value: null, // nuevo: para representación de valores específicos
   indeterminate: Boolean,
   multiple: Boolean,
   disabled: Boolean,
@@ -28,16 +30,13 @@ const props = defineProps({
   rules: Array,
   validateOn: String,
   ripple: { type: [Boolean, Object], default: true },
-  density: {
-    type: String,
-    default: 'default'
-  },
+  density: { type: String, default: 'default' },
   color: String,
   iconColor: [String, Boolean],
   baseColor: String,
-  trueIcon: { type: null, default: '$checkboxOn' },
-  falseIcon: { type: null, default: '$checkboxOff' },
-  indeterminateIcon: { type: null, default: '$checkboxIndeterminate' },
+  trueIcon: { type: null, default: undefined },
+  falseIcon: { type: null, default: undefined },
+  indeterminateIcon: { type: null, default: undefined },
   prependIcon: { type: null, default: undefined },
   appendIcon: { type: null, default: undefined },
   name: String,
@@ -47,16 +46,23 @@ const props = defineProps({
   centerAffix: { type: Boolean, default: true },
   valueComparator: Function,
   validationValue: null,
+  focused: Boolean,
+  maxErrors: { type: [String, Number], default: 1 },
+  width: [String, Number],
+  minWidth: [String, Number],
+  maxWidth: [String, Number],
 })
 
-const uid = `kun-checkbox-${Math.random().toString(36).substr(2, 8)}`
+const uid = `kun-checkbox-${Math.random().toString(36).substring(2, 8)}`
 const checkboxId = computed(() => props.id || uid)
-const isFocused = ref(false)
+
+const isFocused = ref(props.focused ?? false)
+watch(() => props.focused, v => isFocused.value = v)
 
 const {
   isChecked,
   toggle,
-  internalValue,
+  internalValue
 } = useCheckboxModel(props, emit)
 
 const {
@@ -66,13 +72,42 @@ const {
   resetValidation,
   blurHandler
 } = useValidation(props, internalValue)
+
+defineExpose({ validate, resetValidation })
+
+const iconToRender = computed(() => {
+  if (props.indeterminate) return props.indeterminateIcon || icons.checkboxIndeterminate
+  return isChecked.value
+    ? (props.trueIcon || icons.checkboxOn)
+    : (props.falseIcon || icons.checkboxBlank)
+})
+
+const densityClass = computed(() => ({
+  default: 'kun-density-default',
+  comfortable: 'kun-density-comfortable',
+  compact: 'kun-density-compact'
+}[props.density] || 'kun-density-default'))
+
+const iconClass = computed(() => {
+  const classes = []
+  if (typeof props.iconColor === 'string') classes.push(`text-${props.iconColor}`)
+  classes.push(props.glow && isFocused.value ? 'opacity-100' : 'opacity-70')
+  return classes
+})
+
+function onBlur() {
+  isFocused.value = false
+  emit('update:focused', false)
+  if (props.validateOn?.includes('blur')) validate()
+}
 </script>
 
 <template>
   <div
     :class="[
       'kun-checkbox',
-      `kun-density-${props.density}`,
+      densityClass,
+      centerAffix && 'items-center',
       props.color && `text-${props.color}`,
       props.baseColor && `border-${props.baseColor}`,
       {
@@ -81,47 +116,69 @@ const {
         'kun-disabled': props.disabled,
         'kun-error': props.error || !isValid,
         'kun-focused': isFocused,
-      },
+      }
     ]"
+    :style="{
+      width: props.width ? props.width + 'px' : undefined,
+      minWidth: props.minWidth ? props.minWidth + 'px' : undefined,
+      maxWidth: props.maxWidth ? props.maxWidth + 'px' : undefined
+    }"
   >
+    <!-- Hidden input for native form submission -->
+    <input
+      v-if="props.name"
+      type="checkbox"
+      :name="props.name"
+      :checked="isChecked"
+      :value="props.value ?? props.trueValue"
+      class="hidden"
+    />
+
+    <!-- Prepend -->
     <div class="kun-checkbox__prepend" @click="$emit('click:prepend')">
       <slot name="prepend" />
       <KunIcon v-if="props.prependIcon" :icon="props.prependIcon" />
     </div>
 
+    <!-- Input box -->
     <div
       class="kun-checkbox__input"
       v-ripple="props.ripple"
+      role="checkbox"
+      :aria-checked="props.indeterminate ? 'mixed' : isChecked"
+      :aria-disabled="props.disabled"
+      :tabindex="props.disabled ? -1 : 0"
       @click="toggle"
       @focus="() => { isFocused = true; emit('update:focused', true) }"
-      @blur="() => { isFocused = false; emit('update:focused', false); blurHandler?.() }"
+      @blur="onBlur"
+      @keydown.space.prevent="toggle"
     >
       <KunIcon
-        :icon="props.indeterminate ? props.indeterminateIcon : isChecked ? props.trueIcon : props.falseIcon"
-        :class="[
-          props.iconColor ? `text-${props.iconColor}` : '',
-          props.glow && isFocused ? 'opacity-100' : 'opacity-70'
-        ]"
+        :icon="iconToRender"
+        :class="iconClass"
       />
       <slot name="input" />
     </div>
 
+    <!-- Label -->
     <div class="kun-checkbox__label" v-if="props.label || $slots.label">
       <slot name="label" :label="props.label">{{ props.label }}</slot>
     </div>
 
+    <!-- Append -->
     <div class="kun-checkbox__append" @click="$emit('click:append')">
       <slot name="append" />
       <KunIcon v-if="props.appendIcon" :icon="props.appendIcon" />
     </div>
 
+    <!-- Messages -->
     <div
       class="kun-checkbox__messages"
       v-if="!props.hideDetails && (errorMessages?.length || props.hint || props.persistentHint)"
     >
       <slot name="details">
         <div v-if="(props.error || !isValid) && errorMessages?.length">
-          <slot name="message" v-for="msg in errorMessages" :message="msg">
+          <slot name="message" v-for="msg in errorMessages.slice(0, Number(props.maxErrors))" :message="msg">
             {{ msg }}
           </slot>
         </div>
@@ -134,7 +191,6 @@ const {
 <style scoped>
 .kun-checkbox {
   display: flex;
-  align-items: center;
   gap: 0.5rem;
 }
 .kun-checkbox__input {
