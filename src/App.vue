@@ -54,7 +54,7 @@
     </div> -->
 
     <KunDialog v-if="modaDialgo" v-model="modaDialgo" :fullscreen="true" minWidth="min-w-full" persistent>
-      <div class="flex-shrink overflow-hidden">
+      <div class="h-full flex-shrink">
         <KunToolbar rightSectionClass="bg-red-900" titlePosition="left" title="consumidor finalhola mundo arroba jaja" bgColor="bg-primary-200 dark:bg-primary-920" density="compact">
           <template #append>
               <div class="flex gap-x-2">
@@ -63,7 +63,26 @@
               </div>
           </template>
         </KunToolbar>
-        </div>
+
+        <KunRow class="h-full overflow-auto">
+          <KunCol cols="12">5</KunCol>
+          <KunCol cols="12">3</KunCol>
+          <KunCol cols="12">2</KunCol>
+          <KunCol cols="12">1</KunCol>
+          <KunCol cols="12">5</KunCol>
+          <KunCol cols="12">8</KunCol>
+          <KunCol cols="12">4</KunCol>
+          <KunCol cols="12">3</KunCol>
+          <KunCol cols="12">1</KunCol>
+          <KunCol cols="12">2</KunCol>
+          <KunCol cols="12">1</KunCol>
+          <KunCol cols="12">5</KunCol>
+          <KunCol cols="12">8</KunCol>
+          <KunCol cols="12">4</KunCol>
+          <KunCol cols="12">3</KunCol>
+          <KunCol cols="12">1</KunCol>
+        </KunRow>
+      </div>
     </KunDialog>
   </div>
 </template>
@@ -83,8 +102,8 @@ import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
 import KunDialog from './components/KunDialog/src/components/KunDialog.vue';
-import KunCheckbox from './components/KunCheckbox/src/components/KunCheckbox.vue';
-
+import KunRow from './components/KunRow/src/components/KunRow.vue';
+import KunCol from './components/KunCol/src/components/KunCol.vue';
 
 const menuModel = ref(false);
 const avatarRef = ref(null);
