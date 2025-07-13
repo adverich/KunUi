@@ -6,9 +6,11 @@ export default function useSelect(paginatedItems, selectedItems) {
     const toggleSelect = (item) => {
         const index = selectedItems.value.indexOf(item);
         if (index === -1) {
-            selectedItems.value.push(item);
+            // selectedItems.value.push(item);
+            selectedItems.value = [...selectedItems.value, item];
         } else {
-            selectedItems.value.splice(index, 1);
+            // selectedItems.value.splice(index, 1);
+            selectedItems.value = selectedItems.value.filter(i => i.id !== item.id);
         }
         // emits?.('update:selectedItems', selectedItems.value);
     };

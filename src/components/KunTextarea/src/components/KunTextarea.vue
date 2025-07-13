@@ -1,5 +1,5 @@
 <template>
-  <div :class="wrapperClasses" ref="rootRef">
+  <div :class="wrapperClasses" ref="rootRef" v-bind="$attrs">
     <!-- Label -->
     <slot name="label" v-bind="{ label, isFocused, isActive: !!internalValue, controlRef: textareaRef, focus: () => textareaRef?.focus(), blur: () => textareaRef?.blur(), props }">
       <label v-if="label" class="block text-sm font-medium mb-1">
