@@ -35,21 +35,9 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
-      <div>
-        <KunCheckbox
-          label="khe lo khe"
-          v-model="test"
-          color="green"
-          :true-value="1"
-          :false-value="0"
-          hide-details
-          class="rounded-t"
-          style="border-style: solid!important; border-color: #6E668E!important;"
-        />
-        <div style="height: 0.5px; margin-top: -9px; background-color: #7a7a7a" />
-      </div>
+      <KunAutocomplete :items="[1,2,3,4,5]" v-model="testing"/>
 
-      <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/>
+      <!-- <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/> -->
     </div>
 
     <!-- <div class="h-24"></div> -->
@@ -104,6 +92,7 @@ const menuModelTwo = ref(false);
 const avatarRefTwo = ref(null);
 const leftDrawerStatus = ref(false);
 const test = ref(1)
+const testing = ref(1);
 
 const modaDialgo = ref(false);
 

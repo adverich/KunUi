@@ -86,7 +86,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
             }
             return item;
         } else {
-            return item;
+            return item?.toString?.() ?? '';
         }
     }
 
@@ -151,14 +151,20 @@ export function useAutocomplete(props, emits, modelValue, items) {
 
     function findItemByValue(value) {
         if (value === undefined || value === null) return null;
+
+        // Si es múltiple, buscar cada objeto en items
+        if (props.multiple && Array.isArray(value)) {
+            return props.returnObject ? value : value.map(val => items.value.find(item => item[props.itemValue] === val)).filter(Boolean);
+        }
+
         // Si es un objeto
         if (props.returnObject) return value;
 
-        // Si es múltiple, buscar cada objeto en items
-        if (props.multiple && Array.isArray(value)) return value.map(val => items.value.find(item => item[props.itemValue] === val)).filter(Boolean);
-
         // Single value: buscar en items el objeto cuyo itemValue coincida con value
-        const item = items.value.find(item => item[props.itemValue] === value) || null;
+        const item = items.value.find(item =>
+            typeof item === 'object' ? item[props.itemValue] === value : item === value
+        ) ?? value;
+
         return item;
     }
 
