@@ -13,19 +13,16 @@
       <!-- Checkbox de selección -->
       <th v-if="showSelect" :class="mergedThClass" 
       class="h-full w-10 flex flex-col items-center justify-center">
-        <input
-          ref="checkboxRef"
-          type="checkbox"
-          :checked="allSelected"
-          :aria-checked="someSelected && !allSelected ? 'mixed' : allSelected ? 'true' : 'false'"
-          @change="toggleSelectAll"
-          class="h-6 w-6 text-blue-600 transition-all duration-200 ease-in-out rounded print:hidden 
-          border-gray-300 dark:border-slate-600 
-          checked:bg-blue-600 
-          checked:border-blue-600 
-          indeterminate:bg-blue-400 
-          indeterminate:border-blue-400"
-        >
+        <KunCheckbox
+          :model-value="allSelected"
+          @update:modelValue="toggleSelectAll"
+          :indeterminate="someSelected"
+          :ripple="false"
+          :true-value="true"
+          :false-value="false"
+          :color="someSelected && !allSelected ? 'text-yellow-600 dark:text-yellow-400' : allSelected ? 'text-green-600 dark:text-green-400' : ''"
+          hide-details
+        />
       </th>
 
       <!-- Headers dinámicos -->
@@ -66,6 +63,7 @@ import { ref, watch, onMounted } from 'vue';
 import arrowUp from '@/icons/IconArrowUp.vue'
 import arrowDown from '@/icons/IconArrowDown.vue'
 import arrowDownUp from '@/icons/IconArrowDownUp.vue'
+import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue"
 
 const props = defineProps({
   headers: Array,

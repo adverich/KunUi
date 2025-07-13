@@ -49,7 +49,7 @@
         <div style="height: 0.5px; margin-top: -9px; background-color: #7a7a7a" />
       </div>
 
-      <KunTable searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/>
+      <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/>
     </div>
 
     <!-- <div class="h-24"></div> -->

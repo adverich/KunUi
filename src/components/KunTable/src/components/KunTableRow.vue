@@ -15,11 +15,14 @@
       :class="mergedTdClass"
       class="h-full w-10 flex flex-col items-center justify-center print:hidden"
     >
-      <input
-        type="checkbox"
-        :checked="isSelected"
-        @change.stop="emits('toggle-select', item)"
-        class="h-5 w-5 text-blue-600 transition-all duration-200 ease-in-out rounded"
+      <KunCheckbox
+        :model-value="isSelected"
+        @update:modelValue="emits('toggle-select', item)"
+        :ripple="false"
+        :true-value="true"
+        :false-value="false"
+        :color="isSelected ? 'text-green-600 dark:text-green-400' : ''"
+        hide-details
       />
     </td>
 
@@ -63,6 +66,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue"
 import { getValue, formatValue } from '@/utils/tableFormatters';
 const props = defineProps({
   item: Object,

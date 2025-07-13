@@ -99,11 +99,10 @@ const iconSizeClass = computed(() => ({
       'flex',
       direction === 'vertical' ? 'flex-col items-start' : 'flex-row items-center',
       'gap-2',
-      props.color && `text-${props.color}`,
+      props.color,
       {
         'opacity-50 pointer-events-none': props.disabled || props.readonly,
         'text-red-600': props.error || !isValid,
-        'focus-within:ring-2 ring-primary-500': isFocused,
       }
     ]"
     :style="{
