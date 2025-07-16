@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, toRaw, watchEffect  } from 'vue'
 import { getNestedValue } from '@/utils/tableFormatters'
 import KunVirtualScroller from '@/components/KunVirtualScroller/src/components/KunVirtualScroller.vue'
 import KunCheckbox from '@/components/KunCheckbox/src/components/KunCheckbox.vue'
@@ -54,8 +54,16 @@ const internalModel = computed(() => {
   return result
 })
 
+watchEffect(() => {
+  console.log('internalModel:', JSON.stringify(toRaw(internalModel.value), null, 2))
+})
+
 function toggle(rowId, colId, checked) {
-  const clone = structuredClone(internalModel.value)
+  const clone = structuredClone(props.modelValue && Object.keys(props.modelValue).length
+    ? props.modelValue
+    : internalModel.value
+  )
+
   if (!Array.isArray(clone[rowId])) clone[rowId] = []
 
   if (checked) {
@@ -132,5 +140,6 @@ function relationIncludes(row, col) {
         </div>
       </template>
     </KunVirtualScroller>
+    <pre class="text-xs p-2">{{ internalModel }}</pre>
   </div>
 </template>
