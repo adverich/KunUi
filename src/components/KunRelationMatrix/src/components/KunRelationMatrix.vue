@@ -12,7 +12,7 @@ const props = defineProps({
   columnKey: { type: String, default: 'id' },
   rowLabel: { type: String, default: 'name' },
   columnLabel: { type: String, default: 'name' },
-  relationPath: String, // ej: 'entity.entity_employee.invoice_types'
+  relationPath: String,
   relationKey: { type: String, default: 'id' },
   modelValue: {
     type: Object,
@@ -24,7 +24,7 @@ const props = defineProps({
   },
   border: { type: String, default: 'border border-slate-200 dark:border-slate-800' },
   rounded: { type: String, default: 'rounded' },
-  relationDirection: { type: String, default: 'row' },
+  relationDirection: { type: String, default: 'row' }, // 'row' o 'column'
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -46,7 +46,9 @@ const internalModel = computed(() => {
     const related = getNestedValue(item, props.relationPath)
     if (!Array.isArray(related)) continue
 
-    result[id] = related.map(r => getNestedValue(r, props.relationKey)).filter(Boolean)
+    result[id] = related
+      .map(r => getNestedValue(r, props.relationKey))
+      .filter(Boolean)
   }
 
   return result
@@ -65,11 +67,14 @@ function toggle(rowId, colId, checked) {
   emit('update:modelValue', clone)
 }
 
-function relationIncludes(row, colId) {
+function relationIncludes(row, col) {
+  const rowId = getNestedValue(row, rowKey.value)
+  const colId = getNestedValue(col, columnKey.value)
+
   if (props.relationDirection === 'column') {
-    const related = getNestedValue(colId, props.relationPath)
+    const related = getNestedValue(col, props.relationPath)
     if (!Array.isArray(related)) return false
-    return related.some(rel => getNestedValue(rel, props.relationKey) === row[rowKey.value])
+    return related.some(rel => getNestedValue(rel, props.relationKey) === rowId)
   }
 
   const related = getNestedValue(row, props.relationPath)
@@ -82,13 +87,13 @@ function relationIncludes(row, colId) {
   <div class="overflow-auto" :class="[border, rounded]">
     <!-- Header -->
     <div class="sticky top-0 z-10 flex border-b text-sm font-semibold">
-      <div class="p-2 border-r min-w-[12rem]">
+      <div class="p-2 border-r w-[16rem] shrink-0">
         <slot name="row-header">{{ relationTitle }}</slot>
       </div>
       <div
         v-for="col in columns"
         :key="col[columnKey]"
-        class="p-2 border-r text-center min-w-[6rem]"
+        class="p-2 border-r text-center w-[8rem] shrink-0"
       >
         <slot name="column-header" :column="col">
           {{ getNestedValue(col, columnLabel) }}
@@ -100,7 +105,7 @@ function relationIncludes(row, colId) {
     <KunVirtualScroller :items="rows" :estimatedItemHeight="48">
       <template #default="{ item: row }">
         <div class="flex border-b text-sm">
-          <div class="p-2 border-r flex-1">
+          <div class="p-2 border-r w-[16rem] shrink-0">
             <slot name="row-label" :row="row">
               {{ getNestedValue(row, rowLabel) }}
             </slot>
@@ -108,18 +113,19 @@ function relationIncludes(row, colId) {
           <div
             v-for="col in columns"
             :key="col[columnKey]"
-            :class="['p-2 border-r text-center min-w-[12rem]', cellClass]"
+            :class="['p-2 border-r text-center w-[8rem] shrink-0', cellClass]"
           >
             <slot
               name="cell"
               :row="row"
               :column="col"
-              :checked="relationIncludes(row, col[columnKey])"
-              :toggle="checked => toggle(row[rowKey], col[columnKey], checked)"
+              :checked="relationIncludes(row, col)"
+              :toggle="checked => toggle(getNestedValue(row, rowKey), getNestedValue(col, columnKey), checked)"
             >
               <KunCheckbox
-                :modelValue="relationIncludes(row, col[columnKey])"
-                @update:modelValue="checked => toggle(row[rowKey], col[columnKey], checked)"
+                :modelValue="relationIncludes(row, col)"
+                @update:modelValue="checked =>
+                  toggle(getNestedValue(row, rowKey), getNestedValue(col, columnKey), checked)"
               />
             </slot>
           </div>
