@@ -23,7 +23,8 @@ const props = defineProps({
     default: ''
   },
   border: { type: String, default: 'border border-slate-200 dark:border-slate-800' },
-  rounded: { type: String, default: 'rounded' }
+  rounded: { type: String, default: 'rounded' },
+  relationDirection: { type: String, default: 'row' },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -36,16 +37,18 @@ const columnLabel = computed(() => props.columnLabel)
 const internalModel = computed(() => {
   if (Object.keys(props.modelValue).length) return props.modelValue
 
+  const source = props.relationDirection === 'column' ? props.columns : props.rows
+  const key = props.relationDirection === 'column' ? props.columnKey : props.rowKey
+
   const result = {}
-  for (const row of props.rows) {
-    const rowId = getNestedValue(row, props.rowKey)
-    const related = getNestedValue(row, props.relationPath)
+  for (const item of source) {
+    const id = getNestedValue(item, key)
+    const related = getNestedValue(item, props.relationPath)
     if (!Array.isArray(related)) continue
 
-    result[rowId] = related
-      .map(r => getNestedValue(r, props.relationKey))
-      .filter(Boolean)
+    result[id] = related.map(r => getNestedValue(r, props.relationKey)).filter(Boolean)
   }
+
   return result
 })
 
@@ -63,13 +66,14 @@ function toggle(rowId, colId, checked) {
 }
 
 function relationIncludes(row, colId) {
-  if (!props.relationPath) {
-    return (internalModel.value?.[row[rowKey.value]] ?? []).includes(colId)
+  if (props.relationDirection === 'column') {
+    const related = getNestedValue(colId, props.relationPath)
+    if (!Array.isArray(related)) return false
+    return related.some(rel => getNestedValue(rel, props.relationKey) === row[rowKey.value])
   }
 
   const related = getNestedValue(row, props.relationPath)
   if (!Array.isArray(related)) return false
-
   return related.some(rel => getNestedValue(rel, props.relationKey) === colId)
 }
 </script>
@@ -78,13 +82,13 @@ function relationIncludes(row, colId) {
   <div class="overflow-auto" :class="[border, rounded]">
     <!-- Header -->
     <div class="sticky top-0 z-10 flex border-b text-sm font-semibold">
-      <div class="p-2 border-r flex-1">
-        <slot name="row-header"> {{ relationTitle }} </slot>
+      <div class="p-2 border-r min-w-[12rem]">
+        <slot name="row-header">{{ relationTitle }}</slot>
       </div>
       <div
         v-for="col in columns"
         :key="col[columnKey]"
-        class="p-2 border-r text-center"
+        class="p-2 border-r text-center min-w-[6rem]"
       >
         <slot name="column-header" :column="col">
           {{ getNestedValue(col, columnLabel) }}
@@ -104,7 +108,7 @@ function relationIncludes(row, colId) {
           <div
             v-for="col in columns"
             :key="col[columnKey]"
-            :class="['p-2 border-r text-center', cellClass]"
+            :class="['p-2 border-r text-center min-w-[12rem]', cellClass]"
           >
             <slot
               name="cell"
