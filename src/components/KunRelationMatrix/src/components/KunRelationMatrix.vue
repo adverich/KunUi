@@ -1,5 +1,5 @@
 <script setup>
-import { computed, toRaw, watchEffect  } from 'vue'
+import { computed, toRaw, watchEffect } from 'vue'
 import { getNestedValue } from '@/utils/tableFormatters'
 import KunVirtualScroller from '@/components/KunVirtualScroller/src/components/KunVirtualScroller.vue'
 import KunCheckbox from '@/components/KunCheckbox/src/components/KunCheckbox.vue'
@@ -34,67 +34,72 @@ const columnKey = computed(() => props.columnKey)
 const rowLabel = computed(() => props.rowLabel)
 const columnLabel = computed(() => props.columnLabel)
 
+const useColumnAsBase = computed(() => props.relationDirection === 'column')
+
+// Construye el modelo interno automáticamente si modelValue está vacío
 const internalModel = computed(() => {
   if (Object.keys(props.modelValue).length) return props.modelValue
 
-  const source = props.relationDirection === 'column' ? props.columns : props.rows
-  const key = props.relationDirection === 'column' ? props.columnKey : props.rowKey
+  const baseItems = useColumnAsBase.value ? props.columns : props.rows
+  const key = useColumnAsBase.value ? props.columnKey : props.rowKey
 
   const result = {}
-  for (const item of source) {
+  for (const item of baseItems) {
     const id = getNestedValue(item, key)
     const related = getNestedValue(item, props.relationPath)
     if (!Array.isArray(related)) continue
 
     result[id] = related
       .map(r => getNestedValue(r, props.relationKey))
-      .filter(Boolean)
+      .filter(val => val !== undefined && val !== null)
   }
 
   return result
 })
 
-watchEffect(() => {
-  console.log('internalModel:', JSON.stringify(toRaw(internalModel.value), null, 2))
-})
+// Se usa tanto para mostrar como para comparar los datos
+function isChecked(row, col) {
+  const rowId = getNestedValue(row, rowKey.value)
+  const colId = getNestedValue(col, columnKey.value)
 
-function toggle(rowId, colId, checked) {
-  const clone = structuredClone(props.modelValue && Object.keys(props.modelValue).length
-    ? props.modelValue
-    : internalModel.value
-  )
+  if (useColumnAsBase.value) {
+    return internalModel.value?.[colId]?.includes(rowId) || false
+  } else {
+    return internalModel.value?.[rowId]?.includes(colId) || false
+  }
+}
 
-  if (!Array.isArray(clone[rowId])) clone[rowId] = []
+// Modifica el modelo de relación actual
+function toggle(row, col, checked) {
+  const rowId = getNestedValue(row, rowKey.value)
+  const colId = getNestedValue(col, columnKey.value)
+
+  const baseId = useColumnAsBase.value ? colId : rowId
+  const relId = useColumnAsBase.value ? rowId : colId
+
+  const clone = structuredClone(internalModel.value)
+
+  if (!Array.isArray(clone[baseId])) clone[baseId] = []
 
   if (checked) {
-    if (!clone[rowId].includes(colId)) clone[rowId].push(colId)
+    if (!clone[baseId].includes(relId)) clone[baseId].push(relId)
   } else {
-    clone[rowId] = clone[rowId].filter(id => id !== colId)
+    clone[baseId] = clone[baseId].filter(id => id !== relId)
   }
 
   emit('update:modelValue', clone)
 }
 
-function relationIncludes(row, col) {
-  const rowId = getNestedValue(row, rowKey.value)
-  const colId = getNestedValue(col, columnKey.value)
-
-  if (props.relationDirection === 'column') {
-    const related = getNestedValue(col, props.relationPath)
-    if (!Array.isArray(related)) return false
-    return related.some(rel => getNestedValue(rel, props.relationKey) === rowId)
-  }
-
-  const related = getNestedValue(row, props.relationPath)
-  if (!Array.isArray(related)) return false
-  return related.some(rel => getNestedValue(rel, props.relationKey) === colId)
-}
+// Debug interno
+watchEffect(() => {
+  console.log('[KunRelationMatrix] internalModel:', toRaw(internalModel.value))
+})
 </script>
 
 <template>
   <div class="overflow-auto" :class="[border, rounded]">
     <!-- Header -->
-    <div class="sticky top-0 z-10 flex border-b text-sm font-semibold">
+    <div class="sticky top-0 z-10 flex border-b text-sm font-semibold bg-white">
       <div class="p-2 border-r w-[16rem] shrink-0">
         <slot name="row-header">{{ relationTitle }}</slot>
       </div>
@@ -127,19 +132,17 @@ function relationIncludes(row, col) {
               name="cell"
               :row="row"
               :column="col"
-              :checked="relationIncludes(row, col)"
-              :toggle="checked => toggle(getNestedValue(row, rowKey), getNestedValue(col, columnKey), checked)"
+              :checked="isChecked(row, col)"
+              :toggle="checked => toggle(row, col, checked)"
             >
               <KunCheckbox
-                :modelValue="relationIncludes(row, col)"
-                @update:modelValue="checked =>
-                  toggle(getNestedValue(row, rowKey), getNestedValue(col, columnKey), checked)"
+                :modelValue="isChecked(row, col)"
+                @update:modelValue="checked => toggle(row, col, checked)"
               />
             </slot>
           </div>
         </div>
       </template>
     </KunVirtualScroller>
-    <pre class="text-xs p-2">{{ internalModel }}</pre>
   </div>
 </template>
