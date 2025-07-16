@@ -35,7 +35,18 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
-      <KunAutocomplete :items="[1,2,3,4,5]" v-model="testing"/>
+      <KunRelationMatrix 
+        :columns="companies"
+        :rows="accountUsers"
+        row-key="id"
+        column-key="id"
+        row-label="email"
+        column-label="fantasy_name"
+        relation-key="users"
+        relation-title="Test relacion" 
+        relationDirection="column"
+        @update:columns="val => companies = val"
+      />
 
       <!-- <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/> -->
     </div>
@@ -99,19 +110,36 @@ import KunTable from './components/KunTable/src/components/KunTable.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
-import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
+import KunRelationMatrix from './components/KunRelationMatrix/src/components/KunRelationMatrix.vue';
 import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
 import KunDialog from './components/KunDialog/src/components/KunDialog.vue';
 import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 
 const menuModel = ref(false);
-const avatarRef = ref(null);
-const menuModelTwo = ref(false);
-const avatarRefTwo = ref(null);
 const leftDrawerStatus = ref(false);
-const test = ref(1)
-const testing = ref(1);
+
+const accountUsers = ref([
+  { id: 1, email: "facu.ft@gmail.com" },
+  { id: 6, email: "adverich@gmail.com" },
+  { id: 158, email: "testing@neopos.ar " },
+  { id: 39, email: "santiagoaloi@gmail.com"}
+]);
+
+const companies = ref([
+  { id: 1, fantasy_name: "SAFTCloud", 
+    users: [
+      { id: 1, email: "facu.ft@gmail.com" },
+      { id: 6, email: "adverich@gmail.com" }
+    ] 
+  },
+  { id: 3, fantasy_name: "Pimplin", 
+    users: [
+      { id: 158, email: "richard@gmail.com" },
+    ] 
+  }
+]);
+
 
 const modaDialgo = ref(false);
 
