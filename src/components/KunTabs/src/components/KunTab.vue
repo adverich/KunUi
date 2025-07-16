@@ -12,6 +12,7 @@
     ]"
     @click="onClick"
     ref="tabRef"
+    v-bind="$attrs"
   >
     <slot name="prepend" v-if="prependIcon">
       <KunIcon :icon="prependIcon" />

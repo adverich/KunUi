@@ -6,6 +6,7 @@
       bgColor,
     ]"
     :style="{ height: heightPx }"
+    v-bind="$attrs"
   >
     <!-- Prev arrow -->
     <KunBtn
