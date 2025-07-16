@@ -33,8 +33,24 @@ const columnKey = computed(() => props.columnKey)
 const rowLabel = computed(() => props.rowLabel)
 const columnLabel = computed(() => props.columnLabel)
 
+const internalModel = computed(() => {
+  if (Object.keys(props.modelValue).length) return props.modelValue
+
+  const result = {}
+  for (const row of props.rows) {
+    const rowId = getNestedValue(row, props.rowKey)
+    const related = getNestedValue(row, props.relationPath)
+    if (!Array.isArray(related)) continue
+
+    result[rowId] = related
+      .map(r => getNestedValue(r, props.relationKey))
+      .filter(Boolean)
+  }
+  return result
+})
+
 function toggle(rowId, colId, checked) {
-  const clone = structuredClone(props.modelValue)
+  const clone = structuredClone(internalModel.value)
   if (!Array.isArray(clone[rowId])) clone[rowId] = []
 
   if (checked) {
@@ -48,7 +64,7 @@ function toggle(rowId, colId, checked) {
 
 function relationIncludes(row, colId) {
   if (!props.relationPath) {
-    return (props.modelValue?.[row[rowKey.value]] ?? []).includes(colId)
+    return (internalModel.value?.[row[rowKey.value]] ?? []).includes(colId)
   }
 
   const related = getNestedValue(row, props.relationPath)
