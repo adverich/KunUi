@@ -26,13 +26,14 @@
 
       <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :z-index="zIndex"
         :parent-ref="parentRef" location="bottom" origin="bottom left" @handleEscape="handleEscape"
-        :close-on-content-click="closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails">
+        :close-on-content-click="closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
+      >
         <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="true">
-          <KunListItem v-if="hasCreateItem">
+          <div v-if="hasCreateItem" class="p-2">
             <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass" >
               {{ btnCreateText }}
             </KunBtn>
-          </KunListItem>
+          </div>
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="{ item, index, empty }">
             <template v-if="!empty && item">

@@ -109,6 +109,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
                     }
                 }
                 menuModel.value = false;
+                focusTextField();
             } else {
                 if (!checkIfValueExist(item)) {
                     const val = props.returnObject
@@ -273,21 +274,6 @@ export function useAutocomplete(props, emits, modelValue, items) {
         if (selectedItem.value !== null) {
             selectedItem.value = null;
         }
-        // if (isArray(modelValue.value)) {
-        //     selectedItem.value = [];
-        // }
-        // if (isObject(modelValue.value)) {
-        //     selectedItem.value = null;
-        // }
-        // if (typeof modelValue.value === "number" && modelValue.value) {
-        //     selectedItem.value = null;
-        // }
-        // if (typeof modelValue.value === "string" && modelValue.value) {
-        //     selectedItem.value = null;
-        // }
-        // if (typeof modelValue.value == "boolean") {
-        //     selectedItem.value = false;
-        // }
     }
 
     function checkDisabled(item) {

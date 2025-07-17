@@ -35,7 +35,7 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
-      <KunAutocomplete :items="[1,2,3,4]" :has-create-item="true" />
+      <KunAutocomplete :items="[1,2,3,4]" :has-create-item="true" v-model="selected" />
       <!-- <KunRelationMatrix 
         :columns="companies"
         :rows="products"
