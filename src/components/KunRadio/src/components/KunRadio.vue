@@ -20,7 +20,7 @@ const props = defineProps({
   id: String,
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue', 'focus', 'blur'])
 
 const radioGroup = inject('kun-radio-group', null)
 
@@ -50,18 +50,18 @@ function handleChange() {
   if (radioGroup) {
     radioGroup.update(val)
   } else {
-    emit('update:modelValue', val)
+    emits('update:modelValue', val)
   }
 }
 </script>
 
 <template>
-  <label
-    :for="inputId"
-    class="inline-flex items-center cursor-pointer gap-2 select-none"
+  <div
+    class="inline-flex items-center gap-2 select-none cursor-pointer"
     :class="{ 'opacity-50 pointer-events-none': disabled || readonly }"
+    @click="handleChange"
   >
-    <input
+    <!-- <input
       class="absolute w-0 h-0 opacity-0"
       type="radio"
       :id="inputId"
@@ -69,8 +69,18 @@ function handleChange() {
       :disabled="disabled"
       :checked="isSelected"
       @change="handleChange"
-      @focus="$emit('focus')"
-      @blur="$emit('blur')"
+      @focus="emits('focus')"
+      @blur="emits('blur')"
+    /> -->
+
+    <input
+      class="sr-only"
+      type="radio"
+      :id="inputId"
+      :name="name"
+      :disabled="disabled"
+      :checked="isSelected"
+      @change="handleChange"
     />
 
     <KunIcon
@@ -80,12 +90,12 @@ function handleChange() {
       :aria-checked="isSelected"
       :class="[colorClass, 'text-xl transition-colors focus:ring-2 ring-primary rounded-full']"
       @keydown.enter.space.prevent="handleChange"
-      @focus="$emit('focus')"
-      @blur="$emit('blur')"
+      @focus="emits('focus')"
+      @blur="emits('blur')"
     />
 
     <slot name="label">
       <span v-if="label" class="text-sm">{{ label }}</span>
     </slot>
-  </label>
+  </div>
 </template>
