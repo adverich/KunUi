@@ -54,17 +54,17 @@ export default function useKunTextField(props, emits) {
 
     const handleBlur = async () => {
         inputFocused.value = false
-        emits('blurInput')
 
         if (props.validateOnBlur) {
             const result = await runValidations()
             validationError.value = result === true ? '' : result
         }
+        emits('blur');
     }
 
     const focusInput = () => {
         inputFocused.value = true
-        emits('focusInput')
+        emits('focus')
     }
 
     const clearInput = () => {

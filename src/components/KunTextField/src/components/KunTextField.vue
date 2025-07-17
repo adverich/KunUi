@@ -79,8 +79,8 @@ import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 const props = defineProps({ ...inputProps });
 const emits = defineEmits([
   'update:modelValue',
-  'focusInput',
-  'blurInput',
+  'focus',
+  'blur',
   'handleClick',
   'keyDown',
   'keyUp'

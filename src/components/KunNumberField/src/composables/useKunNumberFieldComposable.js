@@ -62,11 +62,13 @@ export function useKunNumberField(props, emits) {
     function handleFocus() {
         focus.value = true;
         if (!inputValue.value) inputValue.value = '';
+        emits('focus');
     }
 
     function handleBlur() {
         focus.value = false;
         if (!inputValue.value) inputValue.value = 0;
+        emits('blur')
     }
 
     const isActive = computed(() => focus.value || !!props.modelValue || props.dirty);

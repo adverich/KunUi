@@ -40,8 +40,11 @@
           :readonly="readonly" :disabled="disabled" :maxlength="maxlength" autocomplete="off"
           class="w-full h-full bg-transparent rounded focus:outline-none" :aria-invalid="error ? 'true' : 'false'"
           :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '']"
-          @input="updateValue($event.target.value)" @blur="handleBlur" @focus="handleFocus" 
-          @keydown="emits('keyDown', $event)" @keyup="emits('keyUp', $event)" 
+          @blur="handleBlur" 
+          @focus="handleFocus" 
+          @input="updateValue($event.target.value)" 
+          @keydown="emits('keyDown', $event)" 
+          @keyup="emits('keyUp', $event)" 
         />
 
         <!-- Clearable -->
@@ -129,8 +132,8 @@ import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 const props = defineProps(KunNumberFieldProps);
 const emits = defineEmits([
   'update:modelValue',
-  'focusInput',
-  'blurInput',
+  'focus',
+  'blur',
   'handleClick',
   'keyDown',
   'keyUp'
