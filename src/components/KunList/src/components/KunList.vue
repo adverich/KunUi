@@ -3,7 +3,6 @@
     ref="ulRef"
     role="list"
     class="w-full kun-list"
-    tabindex="-1"
     @keydown.prevent="onKeydown"
     @select="e => emit('click:select', e.detail)"
     :class="[
