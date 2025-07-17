@@ -1,49 +1,59 @@
 <template>
-  <div class="overflow-auto w-full">
-    <table class="min-w-full text-sm">
-      <thead>
-        <tr>
-          <th class="border px-2 py-1"> {{ relationTitle }} </th>
-          <th v-for="col in columns"
-            :key="col[columnKey]"
-            class="border px-2 py-1 font-medium text-center"
+  <div class="w-full h-full overflow-hidden">
+    <div class="w-full h-full">
+      <!-- Encabezado de columnas -->
+      <div
+        class="grid sticky top-0 z-10"
+        :style="`grid-template-columns: repeat(${columns.length + 1}, minmax(120px, 1fr))`"
+      >
+        <div class="px-2 py-1 font-bold border-b">{{ relationTitle }}</div>
+        <div
+          v-for="col in columns"
+          :key="col[columnKey]"
+          class="px-2 py-1 font-bold text-center border-b"
+        >
+          {{ getNestedValue(col, columnLabel) }}
+        </div>
+      </div>
+
+      <div class="h-full pb-9">
+      <!-- Cuerpo virtualizado -->
+      <KunVirtualScroller :items="rows" :estimatedItemHeight="36" class="w-full">
+        <template #default="{ item: row }">
+          <div
+            class="grid items-center hover:bg-slate-200 dark:hover:bg-slate-800"
+            :style="`grid-template-columns: repeat(${columns.length + 1}, minmax(120px, 1fr))`"
           >
-            <slot name="column-header" :column="col">
-              {{ getNestedValue(col, columnLabel) }}
-            </slot>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="row in rows" :key="row[rowKey]">
-          <th class="border px-2 py-1 font-medium text-left">
-            <slot name="row-header" :row="row">
+            <div class="px-2 py-1 border-b font-medium text-lg">
               {{ getNestedValue(row, rowLabel) }}
-            </slot>
-          </th>
-          <td
-            v-for="col in columns"
-            :key="col[columnKey]"
-            class="align-center justify-center border"
-          >
-            <div class="w-full flex justify-center">
+            </div>
+            <div
+              v-for="col in columns"
+              :key="col[columnKey]"
+              class="flex justify-center items-center px-2 py-1 border-b h-full"
+            >
               <KunCheckbox
                 :modelValue="hasRelation(row, col)"
+                :color="hasRelation(row, col) ? 'text-green-600 dark:text-green-400' : ''"
                 @update:modelValue="checked => onCheckboxChange(row, col, checked)"
-                size="sm"
+                size="lg"
                 :label="''"
               />
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </template>
+      </KunVirtualScroller>
+      </div>
+    </div>
   </div>
 </template>
+
+
 
 <script setup>
 import KunCheckbox from '@/components/KunCheckbox/src/components/KunCheckbox.vue'
 import { getNestedValue } from '@/utils/tableFormatters.js'
+import KunVirtualScroller from '@/components/KunVirtualScroller/src/components/KunVirtualScroller.vue'
 
 const props = defineProps({
   relationTitle: { type: String, default: 'Relaciones' },
@@ -57,10 +67,10 @@ const props = defineProps({
   relationDirection: {
     type: String,
     default: 'column',
-    validator: v => ['column', 'row'].includes(v)
+    validator: v => ['column', 'row'].includes(v),
   },
   getRelatedEntities: Function,
-  onToggleRelation: Function,
+  onToggleRelation: Function
 })
 
 function getSource(row, col) {
@@ -82,10 +92,7 @@ function hasRelation(row, col) {
   const targetId = getTargetId(row, col)
   const related = props.getRelatedEntities?.(row, col) ?? getNestedValue(source, props.relationKey)
   const list = Array.isArray(related) ? related : []
-
-  const result = list.some(r => r?.id === targetId)
-
-  return result
+  return list.some(r => r?.id === targetId)
 }
 
 function onCheckboxChange(row, col, checked) {

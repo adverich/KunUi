@@ -37,10 +37,10 @@
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
       <KunRelationMatrix 
         :columns="companies"
-        :rows="accountUsers"
+        :rows="products"
         row-key="id"
         column-key="id"
-        row-label="email"
+        row-label="name"
         column-label="fantasy_name"
         relation-key="users"
         relation-title="Test relacion" 
@@ -147,7 +147,7 @@ const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
 const productFamilies = ref(generateFakeFamilies(100));
 const productMkups = ref(generateFakeMkups(5));
-const products = ref(generateFakeProductsFull(10));
+const products = ref(generateFakeProductsFull(25));
 
 const currentTheme = ref('dark')
 const selected = ref(74983)
