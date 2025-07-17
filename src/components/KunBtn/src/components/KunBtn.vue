@@ -254,4 +254,9 @@ const computedClass = computed(() => {
 const isIconOnly = computed(() => {
   return !!props.icon && !props.text && !slots.default
 })
+
+const rootEl = ref(null)
+defineExpose({
+  focus: () => rootEl.value?.focus?.()
+})
 </script>
