@@ -35,7 +35,8 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
-      <KunRelationMatrix 
+      <KunAutocomplete :items="[1,2,3,4]" :has-create-item="true" />
+      <!-- <KunRelationMatrix 
         :columns="companies"
         :rows="products"
         row-key="id"
@@ -46,7 +47,7 @@
         relation-title="Test relacion" 
         relationDirection="column"
         @update:columns="val => companies = val"
-      />
+      /> -->
 
       <!-- <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/> -->
     </div>
@@ -115,6 +116,7 @@ import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
 import KunDialog from './components/KunDialog/src/components/KunDialog.vue';
 import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
+import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 
 const menuModel = ref(false);
 const leftDrawerStatus = ref(false);

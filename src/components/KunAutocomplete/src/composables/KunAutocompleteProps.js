@@ -51,32 +51,18 @@ export const KunAutocompleteProps = {
     default: true,
   },
 
-  closeOnSelect: {
-    type: Boolean,
-    default: true,
-  },
+  closeOnSelect: { type: Boolean, default: true },
 
-  startEmtpy: {
-    type: Boolean,
-    default: false,
-  },
-  placeholderText: {
-    type: String,
-    default: "Seleccionar",
-  },
-  textNoItems: {
-    type: String,
-    default: "No hay elementos",
-  },
+  startEmtpy: { type: Boolean, default: false },
+  placeholderText: { type: String, default: "Seleccionar" },
+  textNoItems: { type: String, default: "No hay elementos" },
 
-  hasCreateItem: {
-    type: Boolean,
-    default: false,
-  },
-  multiple: {
-    type: Boolean,
-    default: false,
-  },
+  hasCreateItem: { type: Boolean, default: false },
+  btnCreateClass: { type: String, default: "w-full" },
+  btnCreateBg: { typer: String, default: "bg-green-700" },
+  btnCreateText: { typer: String, default: "Crear item" },
+
+  multiple: { type: Boolean, default: false },
   required: {
     type: Boolean,
     default: false,

@@ -29,8 +29,8 @@
         :close-on-content-click="closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails">
         <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="true">
           <KunListItem v-if="hasCreateItem">
-            <KunBtn @click="createItem" class="w-full" bgColor="bg-green-500">
-              Crear item
+            <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass" >
+              {{ btnCreateText }}
             </KunBtn>
           </KunListItem>
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
@@ -87,7 +87,7 @@ const emits = defineEmits(["update:modelValue", "selectedItem", "createItem", "v
 
 const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, closeMenu, toggleMenu, onMenuKeydown,
   getSelectedItem, textArr, getItemText, isAlphanumeric,
-  createItem, checkDisabled, itemToString, placeholder, hasCreateItem,
+  createItem, checkDisabled, itemToString, placeholder, 
 } = useAutocomplete(props, emits, modelValue, items);
 
 onMounted(() => {
