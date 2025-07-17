@@ -28,12 +28,12 @@
         :parent-ref="parentRef" location="bottom" origin="bottom left" @handleEscape="handleEscape"
         :close-on-content-click="closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
       >
+        <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b">
+          <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass" >
+            {{ btnCreateText }}
+          </KunBtn>
+        </div>
         <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="true">
-          <div v-if="hasCreateItem" class="p-2">
-            <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass" >
-              {{ btnCreateText }}
-            </KunBtn>
-          </div>
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="{ item, index, empty }">
             <template v-if="!empty && item">
