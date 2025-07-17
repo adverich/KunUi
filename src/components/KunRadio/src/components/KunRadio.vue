@@ -62,16 +62,27 @@ function handleChange() {
     :class="{ 'opacity-50 pointer-events-none': disabled || readonly }"
   >
     <input
-      class="sr-only"
+      class="absolute w-0 h-0 opacity-0"
       type="radio"
       :id="inputId"
       :name="name"
       :disabled="disabled"
       :checked="isSelected"
       @change="handleChange"
+      @focus="$emit('focus')"
+      @blur="$emit('blur')"
     />
 
-    <KunIcon :icon="icon" :class="[colorClass, 'text-xl transition-colors']" />
+    <KunIcon
+      :icon="icon"
+      tabindex="0"
+      role="radio"
+      :aria-checked="isSelected"
+      :class="[colorClass, 'text-xl transition-colors focus:ring-2 ring-primary rounded-full']"
+      @keydown.enter.space.prevent="handleChange"
+      @focus="$emit('focus')"
+      @blur="$emit('blur')"
+    />
 
     <slot name="label">
       <span v-if="label" class="text-sm">{{ label }}</span>

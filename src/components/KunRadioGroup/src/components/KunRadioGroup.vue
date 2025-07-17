@@ -31,7 +31,7 @@ provide('kun-radio-group', {
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full" role="radiogroup">
     <slot name="label">
       <label v-if="label" class="block mb-1 text-sm font-medium">{{ label }}</label>
     </slot>
