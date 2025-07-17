@@ -1,5 +1,6 @@
 <template>
   <component
+    ref="rootEl"
     :is="componentTag"
     v-bind="componentAttrs"
     :class="computedClass"
