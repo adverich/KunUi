@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref, provide, computed } from 'vue'
+import { ref, provide, computed, onUpdated } from 'vue'
 
 const props = defineProps({
   nav: Boolean,
@@ -50,8 +50,20 @@ const selectedItems = defineModel('selected', {
 })
 
 provide('registerListItemRef', el => {
-  if (el && !itemRefs.value.includes(el)) {
-    itemRefs.value.push(el)
+  if (el) {
+    console.log(el)
+    // Agregar solo si está conectado y no existe ya
+    if (el.isConnected && !itemRefs.value.includes(el)) {
+      itemRefs.value.push(el);
+      itemRefs.value.sort((a, b) => {
+        const idA = a.id ?? '';
+        const idB = b.id ?? '';
+        return idA.localeCompare(idB, undefined, { numeric: true, sensitivity: 'base' });
+      });
+    }
+  } else {
+    // Eliminar referencias muertas
+    itemRefs.value = itemRefs.value.filter(r => r && r.isConnected)
   }
 })
 
@@ -70,6 +82,10 @@ function toggleItem(value) {
   }
 }
 
+onUpdated(() => {
+  itemRefs.value = itemRefs.value.filter(r => r && r.isConnected)
+})
+
 function isSelected(value) {
   if (!props.selectable || value == null) return false
   return isMultiple.value
@@ -86,7 +102,7 @@ provide('kunListContext', {
 function onKeydown(e) {
   emit('keyDown', e)
   const key = e.key
-  const items = itemRefs.value.filter(Boolean)
+  const items = itemRefs.value.filter(el => el && el.isConnected)
 
   if (!items.length || !['ArrowUp', 'ArrowDown', 'Enter'].includes(key)) return
 
@@ -102,13 +118,17 @@ function onKeydown(e) {
     let nextIndex = -1
 
     if (currentIndex === -1) {
+      console.log(1)
       nextIndex = key === 'ArrowDown' ? 0 : items.length - 1
     } else if (key === 'ArrowDown') {
+      console.log(2)
       nextIndex = (currentIndex + 1) % items.length
     } else if (key === 'ArrowUp') {
+      console.log(3)
       nextIndex = (currentIndex - 1 + items.length) % items.length
     }
 
+    console.log(`currentIndex: ${nextIndex}`);
     const el = items[nextIndex]
     el?.focus?.()
     return
@@ -117,7 +137,8 @@ function onKeydown(e) {
 
 function focusWithKey(key = 'ArrowDown') {
   const items = itemRefs.value.filter(Boolean)
-  if (!items.length) return
+  if (!items.length) return;
+  
   const index = key === 'ArrowDown' ? 0 : items.length - 1
   const el = items[index]
   el?.focus?.()

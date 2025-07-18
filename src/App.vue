@@ -35,7 +35,10 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
-      <KunAutocomplete :items="[1,2,3,4,5,6,7,8,9,5,3,2,354,32,5,346,543,6,4356,324,6,54,76,456,7]" :has-create-item="true" v-model="selected" />
+      <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name"
+        :has-create-item="true" 
+        :items="products" :searchable-keys="['name', 'fullName']"
+         />
       <!-- <KunRelationMatrix 
         :columns="companies"
         :rows="products"
@@ -152,7 +155,7 @@ const productMkups = ref(generateFakeMkups(5));
 const products = ref(generateFakeProductsFull(25));
 
 const currentTheme = ref('dark')
-const selected = ref(74983)
+const selected = ref(null)
 
 function checkType({item}){
   return item.name.includes('Prueba 1') ? 'bg-red-700' : ''

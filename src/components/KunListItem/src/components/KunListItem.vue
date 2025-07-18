@@ -8,6 +8,7 @@
   >
     <component
       :is="tag"
+      :id="computedId"
       ref="liRef"
       :href="href"
       role="option"
@@ -70,6 +71,7 @@
 
   <component
     v-else
+    :id="computedId"
     :is="tag"
     ref="liRef"
     role="option"
@@ -131,7 +133,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs } from 'vue'
+import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs, getCurrentInstance } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
 import { RouterLink } from 'vue-router'
 
@@ -178,6 +180,8 @@ const props = defineProps({
   subtitle: [String, Number, Boolean],
   subtitleClass: { type: String, default: 'text-sm text-slate-800 dark:text-slate-200' },
   containerClass: { type: [String, Array, Object], default: '' },
+
+  id: [String, Number],
 })
 
 const emits = defineEmits(['click'])
@@ -185,6 +189,11 @@ const emits = defineEmits(['click'])
 const liRef = ref(null)
 const registerRef = inject('registerListItemRef', null)
 const listContext = inject('kunListContext', null)
+
+const computedId = computed(() => {
+  if (props.id) return props.id
+  return `kun-list-item-${getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2, 7)}`
+})
 
 onMounted(() => {
   if (registerRef && liRef.value) registerRef(liRef.value)
