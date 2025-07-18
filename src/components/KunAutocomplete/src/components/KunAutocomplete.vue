@@ -37,9 +37,9 @@
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="{ item, index, empty }">
             <template v-if="!empty && item">
-              <KunListItem :value="item" :key="item.id?.toString() ?? item.name" :disabled="checkDisabled(item)"
+              <KunListItem :value="item" :key="index + 1" :id="index + 1" :disabled="checkDisabled(item)" 
               :bg-items="bgItemListColor" :hover-bg="hoverItemListColor" :activeClass="selectedItemListColor"
-              :density="density" :id="item.id?.toString() ?? item.name" :selectable="true">
+              :density="density" :selectable="true">
                 <KunListItemTitle class="text-wrap">
                   {{ itemToString(item, itemTitle ?? textArr, 'hasDefault') }}
                 </KunListItemTitle>

@@ -51,7 +51,6 @@ const selectedItems = defineModel('selected', {
 
 provide('registerListItemRef', el => {
   if (el) {
-    console.log(el)
     // Agregar solo si está conectado y no existe ya
     if (el.isConnected && !itemRefs.value.includes(el)) {
       itemRefs.value.push(el);
@@ -118,17 +117,13 @@ function onKeydown(e) {
     let nextIndex = -1
 
     if (currentIndex === -1) {
-      console.log(1)
       nextIndex = key === 'ArrowDown' ? 0 : items.length - 1
     } else if (key === 'ArrowDown') {
-      console.log(2)
       nextIndex = (currentIndex + 1) % items.length
     } else if (key === 'ArrowUp') {
-      console.log(3)
       nextIndex = (currentIndex - 1 + items.length) % items.length
     }
 
-    console.log(`currentIndex: ${nextIndex}`);
     const el = items[nextIndex]
     el?.focus?.()
     return
