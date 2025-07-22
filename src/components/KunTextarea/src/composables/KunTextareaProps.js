@@ -5,6 +5,7 @@ export const kunTextareaProps = {
     default: 'auto', // auto | raw | json
   },
   label: String,
+  dirty: { type: Boolean, default: false },
   placeholder: String,
   rows: { type: [String, Number], default: 1 },
   autoGrow: Boolean,

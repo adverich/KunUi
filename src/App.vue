@@ -35,8 +35,10 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
+      <KunTextarea v-model="testTxtArea" variant="outlined" label="pepe" dirty />
+
       <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name"
-        :has-create-item="true" 
+        :has-create-item="true"  label="hola mundo"
         :items="products" :searchable-keys="['name', 'fullName']"
          />
       <!-- <KunRelationMatrix 
@@ -120,6 +122,7 @@ import KunDialog from './components/KunDialog/src/components/KunDialog.vue';
 import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
+import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
 
 const menuModel = ref(false);
 const leftDrawerStatus = ref(false);
@@ -156,6 +159,7 @@ const products = ref(generateFakeProductsFull(25));
 
 const currentTheme = ref('dark')
 const selected = ref(null)
+const testTxtArea = ref('')
 
 function checkType({item}){
   return item.name.includes('Prueba 1') ? 'bg-red-700' : ''

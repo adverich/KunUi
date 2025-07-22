@@ -1,8 +1,10 @@
 <template>
   <div :class="wrapperClasses" ref="rootRef" v-bind="$attrs">
     <!-- Label -->
-    <slot name="label" v-bind="{ label, isFocused, isActive: !!internalValue, controlRef: textareaRef, focus: () => textareaRef?.focus(), blur: () => textareaRef?.blur(), props }">
-      <label v-if="label" class="block text-sm font-medium mb-1">
+    <slot name="label" :for="uid" v-bind="{ label, isFocused, isActive: !!internalValue, controlRef: textareaRef, focus: () => textareaRef?.focus(), blur: () => textareaRef?.blur(), props }">
+      <label v-if="label" class="absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10"
+        :class="isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'"
+      >
         {{ label }}
       </label>
     </slot>
@@ -40,6 +42,7 @@
         @click="$emit('click:control', $event)"
         @mousedown="$emit('mousedown:control', $event)"
         :class="[variantClass, densityClass, inputClasses]"
+        class="py-3"
       />
 
       <!-- Clear -->
@@ -126,7 +129,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { getCurrentInstance, ref, computed } from 'vue'
 import { kunTextareaProps } from '../composables/kunTextareaProps'
 import { useKunTextarea } from '../composables/useKunTextareaComposable'
 import { renderIconSlot } from '@/utils/renderIcon'
@@ -135,6 +138,8 @@ const props = defineProps(kunTextareaProps)
 const emits = defineEmits(['update:modelValue', 'click:clear', 'click:control', 'update:focused', 'mousedown:control'])
 
 const textareaRef = ref(null)
+const uid = `textarea-${getCurrentInstance().uid}`;
+const isActive = computed(() => (isFocused.value || !!internalValue.value) || props.dirty);
 
 const {
   isFocused,
@@ -174,13 +179,7 @@ const variantClass = computed(() => {
   }
 })
 
-const densityClass = computed(() => {
-  switch (props.density) {
-    case 'comfortable': return 'py-2'
-    case 'compact': return 'py-1 text-sm'
-    default: return ''
-  }
-})
+const densityClass = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");
 
 const inputClasses = computed(() => [
   'w-full resize-none p-2 transition-colors duration-150',
@@ -203,7 +202,7 @@ const inputClasses = computed(() => [
 ])
 
 const wrapperClasses = computed(() => [
-  'relative w-full',
+  'relative w-full flex flex-col',
   props.class,
   props.wrapperClass,
 ])
