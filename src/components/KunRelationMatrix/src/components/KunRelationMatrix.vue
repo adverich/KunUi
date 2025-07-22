@@ -70,7 +70,8 @@ const props = defineProps({
     validator: v => ['column', 'row'].includes(v),
   },
   getRelatedEntities: Function,
-  onToggleRelation: Function
+  onToggleRelation: Function,
+  returnObject: { type: Boolean, default: false },
 })
 
 function getSource(row, col) {
@@ -114,7 +115,14 @@ function onCheckboxChange(row, col, checked) {
   }
 
   if (checked) {
-    related.push({ id: target.id, email: target.email })
+    const alreadyExists = related.some(r => r?.id === targetId)
+    if (!alreadyExists) {
+      if (props.returnObject) {
+        related.push(target)
+      } else {
+        related.push({ id: targetId })
+      }
+    }
   } else {
     const index = related.findIndex(r => r.id === targetId)
     if (index !== -1) related.splice(index, 1)
