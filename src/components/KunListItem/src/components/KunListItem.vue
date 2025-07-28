@@ -213,6 +213,13 @@ function handleClick(e, navigateFn = null) {
   if (props.disabled) return
   emits('click', e)
 
+  // Nueva pestaña si Ctrl/Cmd está presionado y el ítem es un enlace
+  if ((e.ctrlKey || e.metaKey) && props.to) {
+    const route = typeof props.to === 'string' ? props.to : props.to.path
+    window.open(route, '_blank')
+    return
+  }
+
   const el = liRef.value?.$el ?? liRef.value
   if (el?.dispatchEvent) {
     el.dispatchEvent(new CustomEvent('select', { detail: props.value, bubbles: true }))

@@ -48,8 +48,6 @@
   </div>
 </template>
 
-
-
 <script setup>
 import KunCheckbox from '@/components/KunCheckbox/src/components/KunCheckbox.vue'
 import { getNestedValue } from '@/utils/tableFormatters.js'

@@ -42,7 +42,7 @@
   </Teleport>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
 import KunDialogOverlay from './KunDialogOverlay.vue'
 import KunDialogContent from './KunDialogContent.vue'
