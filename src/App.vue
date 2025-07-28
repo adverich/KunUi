@@ -37,8 +37,8 @@
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
       <KunTextarea v-model="testTxtArea" variant="outlined" label="pepe" dirty />
 
-      <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name"
-        :has-create-item="true"  label="hola mundo"
+      <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name" item-value="id"
+        :has-create-item="true"  label="hola mundo" return-object multiple
         :items="products" :searchable-keys="['name', 'fullName']"
          />
       <!-- <KunRelationMatrix 
@@ -158,7 +158,7 @@ const productMkups = ref(generateFakeMkups(5));
 const products = ref(generateFakeProductsFull(25));
 
 const currentTheme = ref('dark')
-const selected = ref(null)
+const selected = ref([])
 const testTxtArea = ref('')
 
 function checkType({item}){

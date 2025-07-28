@@ -123,6 +123,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
                     updated = [...(modelValue.value || []), val];
                 } else {
                     if (item) removeFromArray(item);
+                    return;
                 }
             }
 
@@ -170,28 +171,29 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     function checkIfValueExist(value) {
-        if (modelValue.value === null) return false;
-        if (!value) return true;
+        if (!modelValue.value || !value) return false;
 
-        return modelValue.value.some((i) =>
-            props.returnObject ?
-                i[props.itemValue] === value[props.itemValue]
-                : i === value[props.itemValue]
-        );
+        const compareValue = props.returnObject
+            ? value[props.itemValue]
+            : value;
+
+        return modelValue.value.some((i) => {
+            const current = props.returnObject ? i[props.itemValue] : i;
+            return current === compareValue;
+        });
     }
 
     function removeFromArray(value) {
-        let updated = [...modelValue.value]; // crear una nueva copia
-        if (props.returnObject) {
-            const index = updated.findIndex(
-                (i) => i[props.itemValue] === value[props.itemValue]
-            );
-            if (index !== -1) updated.splice(index, 1);
-        } else {
-            const index = updated.indexOf(value[props.itemValue]);
-            if (index !== -1) updated.splice(index, 1);
-        }
-        modelValue.value = updated; // reemplazo total para que sea reactivo
+        const val = props.returnObject
+            ? value[props.itemValue]
+            : value;
+
+        const updated = modelValue.value.filter((i) => {
+            const current = props.returnObject ? i[props.itemValue] : i;
+            return current !== val;
+        });
+
+        modelValue.value = updated;
     }
 
     function lightReset(event) {
@@ -263,8 +265,6 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     function clearSelection() {
-        console.log(modelValue.value);
-
         if (search.value !== "") search.value = "";
 
         if (modelValue.value !== null) {
