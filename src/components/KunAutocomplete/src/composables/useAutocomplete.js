@@ -181,17 +181,17 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     function removeFromArray(value) {
-        let updated = modelValue.value;
+        let updated = [...modelValue.value]; // crear una nueva copia
         if (props.returnObject) {
-            const item = updated.find(
+            const index = updated.findIndex(
                 (i) => i[props.itemValue] === value[props.itemValue]
             );
-            const index = updated.indexOf(item);
-            updated.splice(index, 1);
+            if (index !== -1) updated.splice(index, 1);
         } else {
             const index = updated.indexOf(value[props.itemValue]);
-            updated.splice(index, 1);
+            if (index !== -1) updated.splice(index, 1);
         }
+        modelValue.value = updated; // reemplazo total para que sea reactivo
     }
 
     function lightReset(event) {
