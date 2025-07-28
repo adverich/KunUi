@@ -1,10 +1,6 @@
 {
   "name": "adverich-kun-ui",
-<<<<<<< HEAD
-  "version": "0.1.361",
-=======
   "version": "0.1.365",
->>>>>>> ad19f69232f28f0048573aad34698d912139b67b
   "type": "module",
   "description": "Una librería de componentes Vue.js con Tailwind CSS",
   "main": "dist/index.js",
