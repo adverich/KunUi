@@ -127,7 +127,7 @@
 
 
 <script setup>
-import { getCurrentInstance, computed, useSlots } from 'vue';
+import { getCurrentInstance, computed, watch, useSlots } from 'vue';
 import { KunNumberFieldProps } from '../composables/KunNumberFieldProps';
 import { useKunNumberField } from '../composables/useKunNumberFieldComposable';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
