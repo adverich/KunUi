@@ -21,7 +21,7 @@
         </div>
 
         <!-- Input -->
-        <input ref="inputField" :type="inputType" :value="inputValue" :id="uid" :placeholder="placeholder"
+        <input v-if="inputValue" ref="inputField" :type="inputType" :value="inputValue" :id="uid" :placeholder="placeholder"
           :disabled="disabled" :readonly="readonly" :maxlength="maxlength" autocomplete="off"
           class="w-full h-full bg-transparent focus:outline-none" :aria-invalid="hasError ? 'true' : 'false'"
           :class="[inputDensity, textColor, placeholderColor, rounded, textCenter ? 'text-center' : '']"
@@ -31,18 +31,19 @@
           @keydown="emits('keyDown', $event)" @keyup="emits('keyUp', $event)" 
         />
 
+        <div v-else
+          class="w-full h-full bg-transparent focus:outline-none flex items-center"
+          :class="[inputDensity, textColor, placeholderColor, rounded, textCenter ? 'justify-center' : '']"
+        >
+          <slot />
+        </div>
+
         <!-- Clearable -->
         <button v-if="clearable && inputValue" type="button" @click="clearInput"
           class="ml-2" :class="textColor" :disabled="disabled || readonly">
           &times;
         </button>
 
-        <div
-          class="w-full h-full bg-transparent focus:outline-none flex items-center"
-          :class="[inputDensity, textColor, placeholderColor, rounded, textCenter ? 'justify-center' : '']"
-        >
-          <slot />
-        </div>
 
         <div v-if="type === 'password' && showPasswordToggle" class="flex items-center justify-center min-w-[32px] h-full px-1">
           <KunIcon :icon="passIcon" @click="fnShowPass" />
