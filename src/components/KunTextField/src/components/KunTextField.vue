@@ -37,7 +37,12 @@
           &times;
         </button>
 
-        <slot />
+        <div
+          class="w-full h-full bg-transparent focus:outline-none flex items-center"
+          :class="[inputDensity, textColor, placeholderColor, rounded, textCenter ? 'justify-center' : '']"
+        >
+          <slot />
+        </div>
 
         <div v-if="type === 'password' && showPasswordToggle" class="flex items-center justify-center min-w-[32px] h-full px-1">
           <KunIcon :icon="passIcon" @click="fnShowPass" />
