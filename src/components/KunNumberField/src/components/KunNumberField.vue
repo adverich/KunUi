@@ -30,7 +30,7 @@
                autocomplete="off"
                :aria-invalid="hasError ? 'true' : 'false'"
                :aria-describedby="hasError ? `error-${uid}` : null"
-               :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '', 'w-full h-full bg-transparent focus:outline-none']"
+               :class="[computedDensity, textColor, placeholderColor, textCenter ? 'text-center' : '', 'w-full h-full bg-transparent focus:outline-none']"
                @input="handleInput"
                @blur="handleBlur"
                @focus="focusInput"
@@ -69,7 +69,7 @@
 <script setup>
 import { getCurrentInstance, computed, ref, watch } from 'vue'
 import { KunNumberFieldProps } from '../composables/KunNumberFieldProps.js'
-import { normalizeNumber, parseNumber } from '../composables/numberFormatUtils.js'
+import { parseNumber } from '../composables/numberFormatUtils.js'
 
 const props = defineProps(KunNumberFieldProps)
 const emits = defineEmits([
@@ -108,6 +108,12 @@ watch(() => props.modelValue, (newVal) => {
   if (formatted !== rawInput.value) {
     rawInput.value = formatted
   }
+})
+
+const computedDensity = computed(() => {
+  if (props.density === 'compact') return 'p-1'
+  if (props.density === 'comfortable') return 'p-2'
+  return 'p-3' // default
 })
 
 function handleInput(e) {
