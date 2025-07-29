@@ -1,9 +1,9 @@
 <template>
-  <div class="w-full flex flex-col relative" ref="rootRef">
+  <div class="w-full flex flex-col relative h-fit" ref="rootRef">
     <!-- Label -->
     <label v-if="label" :for="uid" :class="[labelColor,
       'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
-      isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'
+      '-top-2.25 text-xs opacity-80'
     ]">
       {{ label }}
     </label>
@@ -36,15 +36,13 @@
         </div>
 
         <!-- Input -->
-        <input :id="uid" ref="numberInput" :key="inputKey + modelValue" type="text" :value="inputValue" :placeholder="placeholder"
+        <input :id="uid" ref="numberInput" type="text" :value="inputValue" :placeholder="placeholder"
           :readonly="readonly" :disabled="disabled" :maxlength="maxlength" autocomplete="off"
           class="w-full h-full bg-transparent rounded focus:outline-none" :aria-invalid="error ? 'true' : 'false'"
           :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '']"
-          @keypress="validateKey($event)"
           @blur="handleBlur" 
           @focus="handleFocus" 
-          @input="updateValue($event.target.value)" 
-          @keydown="emits('keyDown', $event)" 
+          @keydown="validateKey($event), emits('keyDown', $event)" 
           @keyup="emits('keyUp', $event)" 
           inputmode="decimal"
           pattern="[0-9]+([\.,][0-9]+)?"
@@ -136,6 +134,7 @@ const props = defineProps(KunNumberFieldProps);
 const emits = defineEmits([
   'update:modelValue',
   'focus',
+  'input',
   'blur',
   'handleClick',
   'keyDown',
@@ -151,8 +150,6 @@ const {
   inputValue,
   numberInput,
   rootRef,
-  inputKey,
-  updateValue,
   onIncrement,
   onDecrement,
   onClear,
@@ -167,10 +164,6 @@ defineExpose({
   numberInput,
   rootRef,
   focus: () => numberInput.value?.focus()
-});
-
-watch(() => props.modelValue, (newVal) => {
-  inputValue.value = newVal;
 });
 
 const inputDensity = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");

@@ -1,102 +1,109 @@
-import { computed, ref, watch, nextTick } from 'vue';
-import {
-    parseNumber,
-    normalizeNumber,
-} from './numberFormatUtils';
+// useKunNumberFieldComposable.js
+import { ref, watch } from 'vue';
+import * as nf from './numberFormatUtils';
 
 export function useKunNumberField(props, emits) {
-    const inputValue = ref(props.modelValue);
+    const inputValue = ref('');
     const numberInput = ref(null);
-    const rootRef = ref(null)
-    const inputKey = ref(0);
+    const rootRef = ref(null);
+    const isActive = ref(false);
 
-    function updateValue(val) {
-        const normalizedInput = normalizeNumber(val, props.separator);
-        const parts = normalizedInput.split(props.separator);
+    let rawNumberString = '';
 
-        // Bloquear múltiples separadores
-        if (parts.length > 2) {
-            updateInputKey();
+    watch(
+        () => props.modelValue,
+        (newVal) => {
+            if (newVal == null || isNaN(newVal)) {
+                inputValue.value = nf.format(0, props);
+                rawNumberString = '';
+            } else {
+                const fixed = nf.toRawNumberString(newVal, props.precision);
+                rawNumberString = fixed;
+                inputValue.value = nf.format(parseFloat(newVal), props);
+            }
+        },
+        { immediate: true }
+    );
+
+    function validateKey(event) {
+        const key = event.key;
+        const isDigit = /^[0-9]$/.test(key);
+        const isBackspace = key === 'Backspace';
+
+        if (!isDigit && !isBackspace) {
+            event.preventDefault();
             return;
         }
 
-        // Limitar cantidad de decimales
-        if (parts.length === 2 && parts[1].length > props.precision) {
-            parts[1] = parts[1].slice(0, props.precision);
+        if (isDigit) {
+            rawNumberString += key;
+        } else if (isBackspace) {
+            rawNumberString = rawNumberString.slice(0, -1);
         }
 
-        const formattedInput = parts.join(props.separator);
+        const padded = rawNumberString.padStart(props.precision + 1, '0');
+        const integerPart = padded.slice(0, -props.precision);
+        const decimalPart = padded.slice(-props.precision);
+        const newValue = parseFloat(`${integerPart}.${decimalPart}`);
 
-        // Si el valor no cambió, forzar actualización visual
-        if (formattedInput === inputValue.value) {
-            updateInputKey();
-        } else {
-            inputValue.value = formattedInput;
-        }
+        const clamped = nf.clamp(newValue, props.min, props.max);
 
-        emits('update:modelValue', formattedInput);
-    }
+        inputValue.value = nf.format(clamped, props);
+        emits('input', clamped);
+        emits('update:modelValue', clamped);
 
-    // Función auxiliar para actualizar `inputKey` y restaurar foco
-    function updateInputKey() {
-        inputKey.value++;
-        nextTick(() => {
-            numberInput.value?.focus();
-        });
-    }
-
-    function onIncrement() {
-        updateValue((inputValue.value || 0) + props.step);
-    }
-
-    function onDecrement() {
-        updateValue((inputValue.value || 0) - props.step);
-    }
-
-    function onClear() {
-        inputValue.value = null;
-        emits('update:modelValue', null);
-    }
-
-    function validateKey(event) {
-        const allowedChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '‚', ',', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'];
-        if (!allowedChars.includes(event.key)) {
-            event.preventDefault();
-        }
-    }
-
-    const focus = ref(false);
-    function handleFocus() {
-        focus.value = true;
-        if (!inputValue.value) inputValue.value = '';
-        emits('focus');
+        event.preventDefault();
     }
 
     function handleBlur() {
-        focus.value = false;
-        if (!inputValue.value) inputValue.value = 0;
-        emits('blur')
+        isActive.value = false;
+
+        const finalValue = nf.fromRawString(rawNumberString, props.precision);
+        const clamped = nf.clamp(finalValue, props.min, props.max);
+        rawNumberString = nf.toRawNumberString(clamped, props.precision);
+        inputValue.value = nf.format(clamped, props);
+        emits('update:modelValue', clamped);
+        emits('blur');
     }
 
-    const isActive = computed(() => focus.value || !!props.modelValue || props.dirty);
+    function handleFocus() {
+        isActive.value = true;
+        emits('focus');
+    }
 
-    watch(() => props.modelValue, (val) => {
-        inputValue.value = val;
-    });
+    function onIncrement() {
+        let current = nf.fromRawString(rawNumberString, props.precision) || 0;
+        current = nf.clamp(current + Number(props.step), props.min, props.max);
+        rawNumberString = nf.toRawNumberString(current, props.precision);
+        inputValue.value = nf.format(current, props);
+        emits('update:modelValue', current);
+    }
+
+    function onDecrement() {
+        let current = nf.fromRawString(rawNumberString, props.precision) || 0;
+        current = nf.clamp(current - Number(props.step), props.min, props.max);
+        rawNumberString = nf.toRawNumberString(current, props.precision);
+        inputValue.value = nf.format(current, props);
+        emits('update:modelValue', current);
+    }
+
+    function onClear() {
+        rawNumberString = '';
+        inputValue.value = nf.format(0, props);
+        emits('update:modelValue', null);
+    }
 
     return {
         inputValue,
         numberInput,
         rootRef,
-        inputKey,
-        updateValue,
+        validateKey,
+        handleFocus,
+        handleBlur,
         onIncrement,
         onDecrement,
         onClear,
-        validateKey,
-        focus,
-        handleFocus,
         isActive,
-        handleBlur
+        focus: isActive
     };
 }

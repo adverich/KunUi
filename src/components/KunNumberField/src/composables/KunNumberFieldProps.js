@@ -46,7 +46,7 @@ export const KunNumberFieldProps = {
   max: { type: [Number, String], default: Infinity },
   step: { type: [Number, String], default: 1 },
   locale: { type: String, default: 'es-AR' },
-  separator: { type: String, default: '.' },
+  separator: { type: String, default: ',' },
   useGrouping: { type: Boolean, default: true },
   precision: { type: [Number, String], default: 2 },
 };
