@@ -36,15 +36,18 @@
         </div>
 
         <!-- Input -->
-        <input :id="uid" ref="numberInput" :key="inputKey" type="text" :value="inputValue" :placeholder="placeholder"
+        <input :id="uid" ref="numberInput" :key="inputKey + modelValue" type="text" :value="inputValue" :placeholder="placeholder"
           :readonly="readonly" :disabled="disabled" :maxlength="maxlength" autocomplete="off"
           class="w-full h-full bg-transparent rounded focus:outline-none" :aria-invalid="error ? 'true' : 'false'"
           :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '']"
+          @keypress="validateKey($event)"
           @blur="handleBlur" 
           @focus="handleFocus" 
           @input="updateValue($event.target.value)" 
           @keydown="emits('keyDown', $event)" 
           @keyup="emits('keyUp', $event)" 
+          inputmode="decimal"
+          pattern="[0-9]+([\.,][0-9]+)?"
         />
 
         <!-- Clearable -->
@@ -153,6 +156,7 @@ const {
   onIncrement,
   onDecrement,
   onClear,
+  validateKey,
   focus,
   handleFocus,
   isActive,
@@ -163,6 +167,10 @@ defineExpose({
   numberInput,
   rootRef,
   focus: () => numberInput.value?.focus()
+});
+
+watch(() => props.modelValue, (newVal) => {
+  inputValue.value = newVal;
 });
 
 const inputDensity = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");

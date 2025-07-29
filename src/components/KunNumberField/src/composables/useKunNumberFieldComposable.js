@@ -58,6 +58,13 @@ export function useKunNumberField(props, emits) {
         emits('update:modelValue', null);
     }
 
+    function validateKey(event) {
+        const allowedChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '‚', ',', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'];
+        if (!allowedChars.includes(event.key)) {
+            event.preventDefault();
+        }
+    }
+
     const focus = ref(false);
     function handleFocus() {
         focus.value = true;
@@ -86,6 +93,7 @@ export function useKunNumberField(props, emits) {
         onIncrement,
         onDecrement,
         onClear,
+        validateKey,
         focus,
         handleFocus,
         isActive,
