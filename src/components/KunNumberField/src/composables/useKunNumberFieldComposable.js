@@ -49,9 +49,11 @@ export function useKunNumberField(props, emits) {
         const clamped = nf.clamp(newValue, props.min, props.max);
 
         inputValue.value = nf.format(clamped, props);
-        emits('input', clamped);
         emits('update:modelValue', clamped);
 
+        setTimeout(() => {
+            emits('input', clamped);
+        }, 100);
         event.preventDefault();
     }
 
