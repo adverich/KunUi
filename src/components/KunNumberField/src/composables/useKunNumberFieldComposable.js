@@ -1,94 +1,133 @@
-import { computed, ref, watch, nextTick } from 'vue';
-import {
-    parseNumber,
-    normalizeNumber,
-} from './numberFormatUtils';
+import { ref, computed, watch, inject, onUnmounted } from 'vue'
+import { debounce } from '@/utils/utils'
+import { parseNumber, normalizeNumber, formatNumber } from './numberFormatUtils'
 
-export function useKunNumberField(props, emits) {
-    const inputValue = ref(props.modelValue);
-    const numberInput = ref(null);
+export default function useKunNumberField(props, emits) {
+    const rawInput = ref(formatNumber(props.modelValue, props.separator, props.precision))
+    const inputValue = ref(props.modelValue) // número real
+    const inputFocused = ref(false)
+    const validationError = ref('')
+    const isTouched = ref(false)
+    const inputField = ref(null)
     const rootRef = ref(null)
-    const inputKey = ref(0);
+    const syncing = ref(false)
 
-    function updateValue(val) {
-        const normalizedInput = normalizeNumber(val, props.separator);
-        const parts = normalizedInput.split(props.separator);
+    const registerField = inject('registerField', null)
+    const unregisterField = inject('unregisterField', null)
 
-        // Bloquear múltiples separadores
-        if (parts.length > 2) {
-            updateInputKey();
-            return;
+    const hasError = computed(() => props.error || (!!validationError.value && isTouched.value))
+
+    const runValidations = async () => {
+        for (const rule of props.rules) {
+            const result = await Promise.resolve(rule(inputValue.value))
+            if (result !== true) return result
         }
+        return true
+    }
 
-        // Limitar cantidad de decimales
-        if (parts.length === 2 && parts[1].length > props.precision) {
-            parts[1] = parts[1].slice(0, props.precision);
+    const debouncedValidate = debounce(async () => {
+        const result = await runValidations()
+        validationError.value = result === true ? '' : result
+    }, props.debounce ?? 300)
+
+    // v-model externo => actualiza el modelo interno
+    watch(() => props.modelValue, (newVal) => {
+        if (newVal !== inputValue.value) {
+            syncing.value = true
+            inputValue.value = newVal
+            rawInput.value = formatNumber(newVal, props.separator, props.precision)
         }
+    })
 
-        const formattedInput = parts.join(props.separator);
+    // input de usuario
+    function handleInput(e) {
+        const val = normalizeNumber(e.target.value, props.separator)
+        rawInput.value = val
 
-        // Si el valor no cambió, forzar actualización visual
-        if (formattedInput === inputValue.value) {
-            updateInputKey();
-        } else {
-            inputValue.value = formattedInput;
+        const num = parseNumber(val, props.separator)
+        if (!isNaN(num)) {
+            inputValue.value = num
+            emits('update:modelValue', num)
+            if (!props.validateOnBlur) debouncedValidate()
         }
-
-        emits('update:modelValue', formattedInput);
-    }
-
-    // Función auxiliar para actualizar `inputKey` y restaurar foco
-    function updateInputKey() {
-        inputKey.value++;
-        nextTick(() => {
-            numberInput.value?.focus();
-        });
-    }
-
-    function onIncrement() {
-        updateValue((inputValue.value || 0) + props.step);
-    }
-
-    function onDecrement() {
-        updateValue((inputValue.value || 0) - props.step);
-    }
-
-    function onClear() {
-        inputValue.value = null;
-        emits('update:modelValue', null);
-    }
-
-    const focus = ref(false);
-    function handleFocus() {
-        focus.value = true;
-        if (!inputValue.value) inputValue.value = '';
-        emits('focus');
     }
 
     function handleBlur() {
-        focus.value = false;
-        if (!inputValue.value) inputValue.value = 0;
+        inputFocused.value = false
+        rawInput.value = formatNumber(inputValue.value, props.separator, props.precision)
+        if (props.validateOnBlur) validate()
         emits('blur')
     }
 
-    const isActive = computed(() => focus.value || !!props.modelValue || props.dirty);
+    function focusInput() {
+        inputFocused.value = true
+        emits('focus')
+    }
 
-    watch(() => props.modelValue, (val) => {
-        inputValue.value = val;
-    });
+    function clearInput() {
+        rawInput.value = ''
+        inputValue.value = null
+        emits('update:modelValue', null)
+        isTouched.value = true
+        if (!props.validateOnBlur) debouncedValidate()
+    }
+
+    function onIncrement() {
+        let number = inputValue.value || 0
+        number += Number(props.step)
+        inputValue.value = number
+        rawInput.value = formatNumber(number, props.separator, props.precision)
+        emits('update:modelValue', number)
+    }
+
+    function onDecrement() {
+        let number = inputValue.value || 0
+        number -= Number(props.step)
+        inputValue.value = number
+        rawInput.value = formatNumber(number, props.separator, props.precision)
+        emits('update:modelValue', number)
+    }
+
+    async function validate() {
+        isTouched.value = true
+        const result = await runValidations()
+        validationError.value = result === true ? '' : result
+        return result === true
+    }
+
+    function reset() {
+        inputValue.value = props.modelValue
+        rawInput.value = formatNumber(props.modelValue, props.separator, props.precision)
+        isTouched.value = false
+        validationError.value = ''
+    }
+
+    function resetValidation() {
+        isTouched.value = false
+        validationError.value = ''
+    }
+
+    if (registerField) registerField({ validate })
+    onUnmounted(() => {
+        if (unregisterField) unregisterField({ validate })
+    })
 
     return {
+        rawInput,
         inputValue,
-        numberInput,
+        inputField,
         rootRef,
-        inputKey,
-        updateValue,
+        inputFocused,
+        validationError,
+        hasError,
+        handleInput,
+        handleBlur,
+        focusInput,
+        clearInput,
         onIncrement,
         onDecrement,
-        onClear,
-        focus,
-        handleFocus,
-        isActive,
-        handleBlur
-    };
+        validate,
+        reset,
+        resetValidation
+    }
 }

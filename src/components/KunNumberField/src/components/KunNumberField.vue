@@ -1,120 +1,58 @@
 <template>
   <div class="w-full flex flex-col relative" ref="rootRef">
-    <!-- Label -->
     <label v-if="label" :for="uid" :class="[labelColor,
       'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
-      isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'
-    ]">
+      isActive ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80']">
       {{ label }}
     </label>
 
     <div class="w-full flex flex-col justify-center relative" v-bind="$attrs">
-      <div class="flex items-center w-full h-full border" :class="[bgInput, rounded,
-        focus ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : borderColor,
-        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
-        error ? 'bg-red-200 dark:bg-red-900' : ''
-      ]">
+      <div class="flex items-center w-full border"
+           :class="[bgInput, rounded,
+             inputFocused ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : borderColor,
+             disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
+             hasError ? 'bg-red-200 dark:bg-red-900' : '']">
 
-        <!-- Control - (SPLIT start) -->
-        <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
-          <button type="button"
-            class="p-3 text-lg border-r border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
-            @click="onDecrement" :disabled="disabled || readonly">−</button>
-        </div>
-
-        <!-- Prefix -->
         <div v-if="prefix" class="mx-2">{{ prefix }}</div>
+        <slot name="prepend-inner" />
 
-        <!-- Prepend -->
-        <div v-if="prependIcon || prependIconSlot" class="flex items-center justify-center h-full pl-1">
-          <template v-if="prependIcon">
-            <KunIcon :icon="prependIcon" />
-          </template>
-          <template v-else>
-            <slot name="prepend-icon" />
-          </template>
-        </div>
-
-        <!-- Input -->
-        <input :id="uid" ref="numberInput" :key="inputKey" type="text" :value="inputValue" :placeholder="placeholder"
-          :readonly="readonly" :disabled="disabled" :maxlength="maxlength" autocomplete="off"
-          class="w-full h-full bg-transparent rounded focus:outline-none" :aria-invalid="error ? 'true' : 'false'"
-          :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '']"
-          @blur="handleBlur" 
-          @focus="handleFocus" 
-          @input="updateValue($event.target.value)" 
-          @keydown="emits('keyDown', $event)" 
+        <input ref="inputField"
+          :id="uid"
+          type="text"
+          :value="rawInput"
+          :placeholder="placeholder"
+          :disabled="disabled"
+          :readonly="readonly"
+          :maxlength="maxlength"
+          autocomplete="off"
+          :aria-invalid="hasError ? 'true' : 'false'"
+          :aria-describedby="hasError ? `error-${uid}` : null"
+          :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '', 'w-full h-full bg-transparent focus:outline-none']"
+          @input="handleInput"
+          @blur="handleBlur"
+          @focus="focusInput"
+          @keydown="emits('keyDown', $event)"
           @keyup="emits('keyUp', $event)" 
         />
 
-        <!-- Clearable -->
-        <button v-if="clearable && inputValue != null" type="button" @click="onClear" class="ml-2" :class="textColor"
-          :disabled="disabled || readonly">
+        <button v-if="clearable && rawInput" type="button" @click="clearInput" class="ml-2" :class="textColor">
           &times;
         </button>
 
-        <!-- Controls: DEFAULT -->
-        <template v-if="!noArrows">
-          <div v-if="controlVariant === 'default'" class="flex items-center h-full">
-            <button type="button"
-              class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
-              @click="onIncrement" :disabled="disabled || readonly">
-              ▲
-            </button>
-
-            <button type="button"
-              class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
-              @click="onDecrement" :disabled="disabled || readonly">
-              ▼
-            </button>
-          </div>
-
-          <!-- Controls: STACKED -->
-          <div v-if="controlVariant === 'stacked'"
-            class="flex flex-col items-center justify-center border-l border-slate-600">
-            <div class="border-b border-slate-600 pb-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onIncrement">
-              <button type="button"
-                class="text-xs text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer"
-                :disabled="disabled || readonly">▲</button>
-            </div>
-            <div class="border-t border-slate-600 pt-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onDecrement">
-              <button type="button"
-                class="text-xs text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer"
-                :disabled="disabled || readonly">▼</button>
-            </div>
-          </div>
-        </template>
-
-        <!-- Append icon -->
-        <div v-if="appendIcon || appendIconSlot" class="flex items-center justify-center h-full pr-1">
-          <template v-if="appendIcon">
-            <KunIcon :icon="appendIcon" />
-          </template>
-          <template v-else>
-            <slot name="append-icon" />
-          </template>
+        <div v-if="!noArrows" class="flex flex-col items-center justify-center border-l border-slate-600">
+          <button type="button" class="p-2" @click="onIncrement" :disabled="disabled || readonly">▲</button>
+          <button type="button" class="p-2" @click="onDecrement" :disabled="disabled || readonly">▼</button>
         </div>
 
-        <!-- Control + (SPLIT end) -->
-        <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
-          <button type="button"
-            class="p-3 text-lg border-l border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
-            @click="onIncrement" :disabled="disabled || readonly">+</button>
-        </div>
-
-        <!-- Suffix -->
+        <slot name="append-inner" />
         <div v-if="suffix" class="ml-2">{{ suffix }}</div>
       </div>
 
-      <!-- Details -->
       <div v-if="!hideDetails" class="h-[1.25rem]">
-        <div v-if="error || errorMessages" class="text-red-500 text-sm text-center">
-          <div v-if="Array.isArray(errorMessages)">
-            <div v-for="(msg, i) in errorMessages" :key="i">{{ msg }}</div>
-          </div>
-          <div v-else-if="typeof errorMessages === 'string'">{{ errorMessages }}</div>
+        <div v-if="hasError" :id="`error-${uid}`" class="text-red-500 text-sm text-center">
+          {{ validationError || errorMessage }}
         </div>
-        <div v-else-if="hint && (persistentHint || focus)" class="text-xs text-center">
+        <div v-else-if="hint && (persistentHint || inputFocused)" class="text-xs text-center">
           {{ hint }}
         </div>
       </div>
@@ -122,14 +60,12 @@
   </div>
 </template>
 
-
 <script setup>
-import { getCurrentInstance, computed, useSlots } from 'vue';
-import { KunNumberFieldProps } from '../composables/KunNumberFieldProps';
-import { useKunNumberField } from '../composables/useKunNumberFieldComposable';
-import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
+import { getCurrentInstance, computed, useSlots } from 'vue'
+import useKunNumberField from '../composables/useKunNumberFieldComposable'
+import { KunNumberFieldProps } from '../composables/KunNumberFieldProps'
 
-const props = defineProps(KunNumberFieldProps);
+const props = defineProps(KunNumberFieldProps)
 const emits = defineEmits([
   'update:modelValue',
   'focus',
@@ -137,33 +73,42 @@ const emits = defineEmits([
   'handleClick',
   'keyDown',
   'keyUp'
-]);
-
-const uid = `number-input-${getCurrentInstance().uid}`;
-const slots = useSlots();
-const prependIconSlot = !!slots['prepend-icon'];
-const appendIconSlot = !!slots['append-icon'];
+])
 
 const {
+  rawInput,
   inputValue,
-  numberInput,
+  inputField,
   rootRef,
-  inputKey,
-  updateValue,
+  inputFocused,
+  handleInput,
+  handleBlur,
+  focusInput,
+  clearInput,
+  validationError,
+  hasError,
   onIncrement,
   onDecrement,
-  onClear,
-  focus,
-  handleFocus,
-  isActive,
-  handleBlur
-} = useKunNumberField(props, emits);
+  validate,
+  reset,
+  resetValidation
+} = useKunNumberField(props, emits)
+
+const uid = `number-input-${getCurrentInstance().uid}`
+const isActive = computed(() => inputFocused.value || !!rawInput.value || props.dirty)
 
 defineExpose({
-  numberInput,
+  inputField,
   rootRef,
-  focus: () => numberInput.value?.focus()
-});
+  validate,
+  reset,
+  resetValidation,
+  focus: () => inputField.value?.focus()
+})
 
-const inputDensity = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");
+const slots = useSlots()
+const inputDensity = computed(() =>
+  props.density === 'compact' ? 'p-1' :
+  props.density === 'comfortable' ? 'p-2' : 'p-3'
+)
 </script>
