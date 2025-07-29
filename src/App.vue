@@ -35,8 +35,7 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
-      <KunNumberField text-center v-model="testTxtArea" variant="outlined" label="pepe" dirty noArrows 
-      />
+      <KunNumberField text-center v-model="testTxtArea" variant="outlined" label="pepe" dirty noArrows @update:model-value="checkItem"/>
 
       <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name" item-value="id"
         :has-create-item="true"  label="hola mundo" return-object multiple
@@ -106,7 +105,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import IconAccountOutline from './icons/IconAccountOutline.vue';
 import KunList from './components/KunList/src/components/KunList.vue';
@@ -129,6 +128,14 @@ import KunNumberField from './components/KunNumberField/src/components/KunNumber
 const menuModel = ref(false);
 const leftDrawerStatus = ref(false);
 
+function checkItem(value){
+  console.log(testTxtArea.value);
+  if(value > 10) {
+    nextTick(() => {
+      testTxtArea.value = 5;
+    })
+  };
+}
 
 const accountUsers = ref([
   { id: 1, email: "facu.ft@gmail.com" },
@@ -163,12 +170,6 @@ const products = ref(generateFakeProductsFull(25));
 const currentTheme = ref('dark')
 const selected = ref([])
 const testTxtArea = ref(null)
-
-watch(testTxtArea, (newVal, oldVal) => {
-  if (newVal > 10) {
-    testTxtArea.value = 5;
-  }
-});
 
 function checkType({item}){
   return item.name.includes('Prueba 1') ? 'bg-red-700' : ''

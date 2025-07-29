@@ -50,10 +50,8 @@ export function useKunNumberField(props, emits) {
 
         inputValue.value = nf.format(clamped, props);
         emits('update:modelValue', clamped);
+        emits('input', clamped);
 
-        setTimeout(() => {
-            emits('input', clamped);
-        }, 100);
         event.preventDefault();
     }
 
