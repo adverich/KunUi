@@ -5,10 +5,11 @@
       @blur="textFieldBlur" @keyDown="textKeyDown"
       :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
       :error="!!internalError" :error-messages="internalError">
-      <div v-if="isArray(modelValue)" class="flex justify-center align-center">
+
+      <div v-if="isArray(modelValue)" class="flex flex-wrap gap-1">
         <template v-for="item in modelValue" :key="item.id ?? item.name">
-          <KunChip size="small" class="ml-1">
-            <div class="flex justify-center align-center">
+          <KunChip size="small">
+            <div class="flex items-center">
               {{ getItemText(item, itemTitle) }}
               <KunIcon color="error" :icon="icons.close" size="small" class="ml-1" @click="removeItem(item)" />
             </div>
