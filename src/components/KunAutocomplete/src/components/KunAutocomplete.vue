@@ -6,7 +6,7 @@
       :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
       :error="!!internalError" :error-messages="internalError">
 
-      <div v-if="isArray(modelValue)" class="flex overflow-x-auto whitespace-nowrap space-x-1">
+      <div v-if="isArray(modelValue)" class="w-full flex overflow-x-auto whitespace-nowrap space-x-1">
         <template v-for="item in modelValue" :key="item.id ?? item.name">
           <KunChip size="small">
             <div class="flex items-center">
