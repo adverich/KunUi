@@ -130,11 +130,6 @@ const leftDrawerStatus = ref(false);
 
 function checkItem(value){
   console.log(testTxtArea.value);
-  if(value > 10) {
-    nextTick(() => {
-      testTxtArea.value = 5;
-    })
-  };
 }
 
 const accountUsers = ref([
