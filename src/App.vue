@@ -35,7 +35,7 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-full flex overflow-auto justify-center bg-gray-900">
-      <KunNumberField text-center v-model="testTxtArea" variant="outlined" label="pepe" dirty noArrows @update:model-value="checkItem"/>
+      <KunNumberField text-center v-model="testTxtArea" variant="outlined" label="pepe" precision="0" dirty noArrows @update:model-value="checkItem"/>
 
       <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name" item-value="id"
         :has-create-item="true"  label="hola mundo" return-object multiple
@@ -54,7 +54,7 @@
         @update:columns="val => companies = val"
       /> -->
 
-      <!-- <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/> -->
+      <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/>
     </div>
 
     <!-- <div class="h-24"></div> -->

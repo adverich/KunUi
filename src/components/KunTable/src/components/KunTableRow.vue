@@ -18,6 +18,7 @@
       <KunCheckbox
         :model-value="isSelected"
         @update:modelValue="emits('toggle-select', item)"
+
         :ripple="false"
         :true-value="true"
         :false-value="false"
@@ -32,7 +33,7 @@
       :key="header.value"
       :class="[
         mergedTdClass,
-        header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center'
+        header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center',
       ]"
     >
       <template v-if="customSlots?.[`item.${header.value}`]">
@@ -90,7 +91,7 @@ const props = defineProps({
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 
-const baseTdClass = 'px-3 py-2 whitespace-nowrap text-sm text-black dark:text-white';
+const baseTdClass = 'px-1 py-2 whitespace-normal word-break text-sm text-black dark:text-white';
 const mergedTdClass = computed(() => props.tdClass || baseTdClass);
 
 function resolveTdClass(item, index) {
