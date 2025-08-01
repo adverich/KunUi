@@ -1,5 +1,5 @@
 // useKunNumberFieldComposable.js
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch, computed, nextTick } from 'vue';
 import * as nf from './numberFormatUtils';
 
 export function useKunNumberField(props, emits) {
@@ -11,10 +11,13 @@ export function useKunNumberField(props, emits) {
 
     let rawNumberString = '';
 
-    const minLen = Number(props.precision) + 1;
+    const minLen = computed(() => Number(props.precision) > 0 ? Number(props.precision) + 1 : 1);
 
     function ensureMinLength(str) {
-        return str.padStart(minLen, '0');
+        if (Number(props.precision) === 0) {
+            return str === '' ? '0' : str.replace(/^0+(\d)/, '$1');
+        }
+        return str.padStart(minLen.value, '0');
     }
 
     watch(() => props.modelValue, (newVal) => {
