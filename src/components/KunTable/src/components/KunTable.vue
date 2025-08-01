@@ -259,8 +259,10 @@ const showSearch = ref(true);
 const showSearchBtn = ref(false);
 
 function handleSearchFocus(){
-  emits('focusOnSearch')
   focusOnSearch();
+  nextTick(() => {
+    emits('focusOnSearch', showSearch.value)
+  })
 }
 
 function focusOnSearch(){
