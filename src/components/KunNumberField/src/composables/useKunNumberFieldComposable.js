@@ -86,7 +86,7 @@ export function useKunNumberField(props, emits) {
             const rawPos = visualToRawPosition(inputValue.value, visualPos);
             const nextCursor = rawPos - 1;
 
-            if (rawNumberString.length <= 3) {
+            if (rawNumberString.length <= props.precision) {
                 // Borrar el dígito en rawPos - 1 pero no mover el cursor
                 const nextCursor = Math.max(0, rawPos - 1);
                 rawNumberString = rawNumberString.slice(0, nextCursor) + rawNumberString.slice(rawPos);
