@@ -34,13 +34,13 @@
 
     <!-- <div class="h-24"></div> -->
 
-    <div class="h-full flex overflow-auto justify-center bg-gray-900">
+    <div class="h-fit flex overflow-auto justify-center bg-gray-900">
       <KunNumberField text-center v-model="testTxtArea" variant="outlined" label="pepe" precision="0" dirty noArrows @update:model-value="checkItem"/>
 
       <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name" item-value="id"
         :has-create-item="true"  label="hola mundo" return-object multiple
         :items="products" :searchable-keys="['name', 'fullName']"
-         />
+      />
       <!-- <KunRelationMatrix 
         :columns="companies"
         :rows="products"
@@ -54,7 +54,10 @@
         @update:columns="val => companies = val"
       /> -->
 
-      <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/>
+      <!-- <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/> -->
+    </div>
+    <div>
+      <KunCard to="/examples/KunCard">HOla</KunCard>
     </div>
 
     <!-- <div class="h-24"></div> -->
@@ -122,7 +125,7 @@ import KunDialog from './components/KunDialog/src/components/KunDialog.vue';
 import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
-import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
+import KunCard from './components/KunCard/src/components/KunCard.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
 
 const menuModel = ref(false);

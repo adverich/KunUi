@@ -71,6 +71,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 import { kunCardProps } from '../composables/kunCardProps'
 
 import KunCardItem from '../../../KunCardItem/src/components/KunCardItem.vue'
@@ -98,11 +99,12 @@ const cardClass = computed(() => {
 
 function handleClick(e, navigate) {
   if (e.ctrlKey || e.metaKey || e.button === 1) {
-    // El navegador ya abrirá en nueva pestaña, no navegamos manualmente
+    // El navegador abrirá el link en nueva pestaña, no navegamos manualmente
     return
   }
 
-  e.preventDefault()
-  navigate(e)
+  // Se navega en la pestaña actual
+  e.preventDefault();
+  navigate();
 }
 </script>
