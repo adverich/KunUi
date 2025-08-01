@@ -260,9 +260,6 @@ const showSearchBtn = ref(false);
 
 function handleSearchFocus(){
   focusOnSearch();
-  nextTick(() => {
-    emits('focusOnSearch', showSearch.value)
-  })
 }
 
 function focusOnSearch(){
@@ -277,12 +274,14 @@ function showIconSearch(){
   searchClass.value = "w-fit";
   showSearch.value = false;
   showSearchBtn.value = true;
+  emits('focusOnSearch', false);
 }
 function hideIconSearch(){
   if(!isMobile.value) return;
   searchClass.value = "w-full border";
   showSearchBtn.value = false;
   showSearch.value = true;
+  emits('focusOnSearch', true);
 }
 const searchClass = ref("w-full border max-w-sm");
 </script>
