@@ -28,7 +28,7 @@
           @focus="hideIconSearch"
           @blur="showIconSearch"
         />
-        <KunIcon :icon="IconSearch" @click="focusOnSearch" v-show="showSearchBtn"/>
+        <KunIcon :icon="IconSearch" @click="handleSearchFocus" v-show="showSearchBtn"/>
       </div>
 
       <slot name="appendSearch" />
@@ -151,7 +151,6 @@ import KunTableRows from './KunTableRows.vue';
 import KunTableIterators from './KunTableIterators.vue';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunTableFilter from './KunTableFilter.vue';
-import KunCard from '../../../KunCard/src/components/KunCard.vue';
 
 import useExpand from '../composables/useExpand';
 import useOptions from '../composables/useOptions';
@@ -160,7 +159,7 @@ import useFilter from '../composables/useFilter';
 
 import kunTableProps from '../composables/KunTableProps';
 
-const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy', 'update:search']);
+const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy', 'update:search', 'focusOnSearch']);
 const props = defineProps(kunTableProps());
 const propsRefs = toRefs(props);
 const selectedItems = defineModel('selectedItems', { type: Array, default: () => [] })
@@ -258,6 +257,11 @@ onMounted(() => showIconSearch());
 const searchRef = ref(null);
 const showSearch = ref(true);
 const showSearchBtn = ref(false);
+
+function handleSearchFocus(){
+  emits('focusOnSearch')
+  focusOnSearch();
+}
 
 function focusOnSearch(){
   if(!isMobile.value) return;
