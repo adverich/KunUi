@@ -15,10 +15,12 @@
       v-bind="$attrs"
       @click="e => {
         if (e.ctrlKey || e.metaKey || e.button === 1) return
+        e.preventDefault()
         navigate(e)
       }"
       @keydown.enter.prevent="e => {
         if (e.ctrlKey || e.metaKey || e.button === 1) return
+        e.preventDefault()
         navigate(e)
       }"
     >
