@@ -5,24 +5,16 @@
     :replace="props.replace"
     :custom="true"
     v-slot="{ href, navigate }"
-    role="link"
-    tabindex="0"
   >
     <component
       :is="'a'"
       :href="href"
       :class="cardClass"
       v-bind="$attrs"
-      @click="e => {
-        if (e.ctrlKey || e.metaKey || e.button === 1) return
-        e.preventDefault()
-        navigate(e)
-      }"
-      @keydown.enter.prevent="e => {
-        if (e.ctrlKey || e.metaKey || e.button === 1) return
-        e.preventDefault()
-        navigate(e)
-      }"
+      @click="e => handleClick(e, navigate)"
+      @keydown.enter.prevent="e => handleClick(e, navigate)"
+      role="link"
+      tabindex="0"
     >
       <!-- Header -->
       <div v-if="$slots.title || title || subtitle">
@@ -103,4 +95,14 @@ const cardClass = computed(() => {
     isLink.value ? 'cursor-pointer' : ''
   ].filter(Boolean).join(' ')
 })
+
+function handleClick(e, navigate) {
+  if (e.ctrlKey || e.metaKey || e.button === 1) {
+    // El navegador ya abrirá en nueva pestaña, no navegamos manualmente
+    return
+  }
+
+  e.preventDefault()
+  navigate(e)
+}
 </script>
