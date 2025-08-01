@@ -11,7 +11,7 @@ export function useKunNumberField(props, emits) {
 
     let rawNumberString = '';
 
-    const minLen = props.precision + 1;
+    const minLen = Number(props.precision) + 1;
 
     function ensureMinLength(str) {
         return str.padStart(minLen, '0');
@@ -20,14 +20,14 @@ export function useKunNumberField(props, emits) {
     watch(() => props.modelValue, (newVal) => {
         if (newVal == null || isNaN(newVal)) {
             inputValue.value = nf.format(0, props);
-            rawNumberString = '0'.repeat(props.precision + 1); // ✅ +1
+            rawNumberString = '0'.repeat(Number(props.precision) + 1); // ✅ +1
         } else {
             const num = parseFloat(newVal);
             const clamped = nf.clamp(num, props.min, props.max);
-            rawNumberString = nf.toRawNumberString(clamped, props.precision);
+            rawNumberString = nf.toRawNumberString(clamped, Number(props.precision));
             // Asegurar longitud mínima
-            if (rawNumberString.length < props.precision + 1) {
-                rawNumberString = rawNumberString.padStart(props.precision + 1, '0');
+            if (rawNumberString.length < Number(props.precision) + 1) {
+                rawNumberString = rawNumberString.padStart(Number(props.precision) + 1, '0');
             }
             inputValue.value = nf.format(clamped, props);
         }
@@ -70,7 +70,7 @@ export function useKunNumberField(props, emits) {
         const visualPos = normalizeCursorPosition(inputValue.value, target.selectionStart);
         event.preventDefault();
 
-        const minLen = props.precision + 1;
+        const minLen = Number(props.precision) + 1;
 
         // Asegurar que rawNumberString tenga longitud mínima
         while (rawNumberString.length < minLen) {
@@ -86,7 +86,7 @@ export function useKunNumberField(props, emits) {
             const rawPos = visualToRawPosition(inputValue.value, visualPos);
             const nextCursor = rawPos - 1;
 
-            if (rawNumberString.length <= props.precision) {
+            if (rawNumberString.length <= (Number(props.precision) + 1)) {
                 // Borrar el dígito en rawPos - 1 pero no mover el cursor
                 const nextCursor = Math.max(0, rawPos - 1);
                 rawNumberString = rawNumberString.slice(0, nextCursor) + rawNumberString.slice(rawPos);
@@ -175,19 +175,19 @@ export function useKunNumberField(props, emits) {
 
     function updateValue() {
         // Asegurar que rawNumberString tenga al menos precision + 1 dígitos
-        const minLen = props.precision + 1;
+        const minLen = Number(props.precision) + 1;
         let padded = rawNumberString.padStart(minLen, '0');
 
         // Extraer partes
-        const integerDigits = Math.max(1, rawNumberString.length - props.precision);
+        const integerDigits = Math.max(1, rawNumberString.length - Number(props.precision));
         const integerPart = rawNumberString.slice(0, integerDigits) || '0';
-        const decimalPart = rawNumberString.slice(integerDigits).padEnd(props.precision, '0').slice(0, props.precision);
+        const decimalPart = rawNumberString.slice(integerDigits).padEnd(Number(props.precision), '0').slice(0, Number(props.precision));
 
         const numStr = `${integerPart}.${decimalPart}`;
         const num = parseFloat(numStr);
 
         const clamped = nf.clamp(num, props.min, props.max);
-        rawNumberString = nf.toRawNumberString(clamped, props.precision);
+        rawNumberString = nf.toRawNumberString(clamped, Number(props.precision));
 
         inputValue.value = nf.format(clamped, props);
 
@@ -218,9 +218,9 @@ export function useKunNumberField(props, emits) {
     function handleBlur() {
         isActive.value = false;
         rawNumberString = ensureMinLength(rawNumberString);
-        const finalValue = nf.fromRawString(rawNumberString, props.precision);
+        const finalValue = nf.fromRawString(rawNumberString, Number(props.precision));
         const clamped = nf.clamp(finalValue, props.min, props.max);
-        rawNumberString = nf.toRawNumberString(clamped, props.precision);
+        rawNumberString = nf.toRawNumberString(clamped, Number(props.precision));
         rawNumberString = ensureMinLength(rawNumberString);
         inputValue.value = nf.format(clamped, props);
         emits('update:modelValue', clamped);
@@ -235,24 +235,24 @@ export function useKunNumberField(props, emits) {
     }
 
     function onIncrement() {
-        let current = nf.fromRawString(rawNumberString, props.precision) || 0;
+        let current = nf.fromRawString(rawNumberString, Number(props.precision)) || 0;
         current = nf.clamp(current + Number(props.step), props.min, props.max);
-        rawNumberString = nf.toRawNumberString(current, props.precision);
+        rawNumberString = nf.toRawNumberString(current, Number(props.precision));
         inputValue.value = nf.format(current, props);
         emits('update:modelValue', current);
     }
 
     function onDecrement() {
-        let current = nf.fromRawString(rawNumberString, props.precision) || 0;
+        let current = nf.fromRawString(rawNumberString, Number(props.precision)) || 0;
         current = nf.clamp(current - Number(props.step), props.min, props.max);
-        rawNumberString = nf.toRawNumberString(current, props.precision);
+        rawNumberString = nf.toRawNumberString(current, Number(props.precision));
         inputValue.value = nf.format(current, props);
         emits('update:modelValue', current);
     }
 
     function onClear() {
-        rawNumberString = '0'.repeat(props.precision + 1);
-        cursorPosition.value = props.precision + 1; // al final
+        rawNumberString = '0'.repeat(Number(props.precision) + 1);
+        cursorPosition.value = Number(props.precision) + 1; // al final
         updateValue();
     }
 
