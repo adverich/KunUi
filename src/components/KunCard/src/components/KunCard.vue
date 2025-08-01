@@ -5,13 +5,22 @@
     :replace="props.replace"
     :custom="true"
     v-slot="{ href, navigate }"
+    role="link"
+    tabindex="0"
   >
     <component
       :is="'a'"
       :href="href"
       :class="cardClass"
       v-bind="$attrs"
-      @click="navigate"
+      @click="e => {
+        if (e.ctrlKey || e.metaKey || e.button === 1) return
+        navigate(e)
+      }"
+      @keydown.enter.prevent="e => {
+        if (e.ctrlKey || e.metaKey || e.button === 1) return
+        navigate(e)
+      }"
     >
       <!-- Header -->
       <div v-if="$slots.title || title || subtitle">
@@ -79,6 +88,8 @@ defineOptions({ inheritAttrs: false })
 
 const props = defineProps(kunCardProps)
 
+const isLink = computed(() => !!(props.to || props.href));
+
 const cardClass = computed(() => {
   return [
     'w-full',
@@ -86,9 +97,8 @@ const cardClass = computed(() => {
     props.textColor || 'text-black',
     props.outlined ? `border ${props.outlineColor}` : '',
     props.rounded === true ? 'rounded-lg' : props.rounded ? `rounded-${props.rounded}` : '',
-    props.flat ? 'shadow-none' : `shadow-${props.elevation}`
+    props.flat ? 'shadow-none' : `shadow-${props.elevation}`,
+    isLink.value ? 'cursor-pointer' : ''
   ].filter(Boolean).join(' ')
 })
-
-const isLink = computed(() => !!(props.to || props.href))
 </script>
