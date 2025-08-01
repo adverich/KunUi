@@ -7,7 +7,7 @@
     v-slot="{ href, navigate, isActive: linkActive }"
   >
     <component
-      :is="tag"
+      :is="isLink ? 'a' : tag"
       :id="computedId"
       ref="liRef"
       :href="href"
@@ -72,7 +72,7 @@
   <component
     v-else
     :id="computedId"
-    :is="tag"
+    :is="isLink ? 'a' : tag"
     ref="liRef"
     role="option"
     :aria-selected="isItemSelected || isActive"
