@@ -1,14 +1,54 @@
-// KunCard.vue
 <template>
-  <div :class="cardClass" v-bind="$attrs">
-    <!-- Header -->
+  <RouterLink
+    v-if="isLink"
+    :to="props.to"
+    :replace="props.replace"
+    :custom="true"
+    v-slot="{ href, navigate }"
+  >
+    <component
+      :is="'a'"
+      :href="href"
+      :class="cardClass"
+      v-bind="$attrs"
+      @click="navigate"
+    >
+      <!-- Header -->
+      <div v-if="$slots.title || title || subtitle">
+        <KunCardItem dense>
+          <KunCardTitle :title="title" :subtitle="subtitle" :titleSize="titleSize"/>
+        </KunCardItem>
+      </div>
+
+      <!-- Contenido -->
+      <div v-if="$slots.default || text">
+        <KunCardItem v-if="text">
+          <KunCardText :text="text" />
+        </KunCardItem>
+        <slot v-else />
+      </div>
+
+      <!-- Acciones -->
+      <div v-if="$slots.actions">
+        <KunCardActions>
+          <slot name="actions" />
+        </KunCardActions>
+      </div>
+    </component>
+  </RouterLink>
+
+  <component
+    v-else
+    :is="'div'"
+    :class="cardClass"
+    v-bind="$attrs"
+  >
     <div v-if="$slots.title || title || subtitle">
       <KunCardItem dense>
         <KunCardTitle :title="title" :subtitle="subtitle" :titleSize="titleSize"/>
       </KunCardItem>
     </div>
 
-    <!-- Contenido -->
     <div v-if="$slots.default || text">
       <KunCardItem v-if="text">
         <KunCardText :text="text" />
@@ -16,13 +56,14 @@
       <slot v-else />
     </div>
 
-    <!-- Acciones -->
     <div v-if="$slots.actions">
       <KunCardActions>
         <slot name="actions" />
       </KunCardActions>
     </div>
-  </div>
+  </component>
+
+
 </template>
 
 <script setup>
@@ -48,4 +89,6 @@ const cardClass = computed(() => {
     props.flat ? 'shadow-none' : `shadow-${props.elevation}`
   ].filter(Boolean).join(' ')
 })
+
+const isLink = computed(() => !!(props.to || props.href))
 </script>

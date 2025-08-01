@@ -31,4 +31,7 @@ export const kunCardProps = {
         default: 1,
         validator: v => ['0', '1', '2', '3', '4', '5', '', 0, 1, 2, 3, 4, 5].includes(v)
     },
+    to: [String, Object],
+    href: String,
+    replace: Boolean,
 }
