@@ -35,7 +35,10 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-fit flex overflow-auto justify-center bg-gray-900">
-      <KunNumberField text-center v-model="testTxtArea" variant="outlined" label="pepe" precision="0" dirty noArrows @update:model-value="checkItem"/>
+      <KunNumberField text-center v-model="testTxtArea" variant="outlined" 
+        label="pepe" precision="0" dirty noArrows @update:model-value="checkItem"
+        clearable
+      />
 
       <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name" item-value="id"
         :has-create-item="true"  label="hola mundo" return-object multiple

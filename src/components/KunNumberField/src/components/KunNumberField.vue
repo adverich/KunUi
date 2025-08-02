@@ -49,10 +49,11 @@
         />
 
         <!-- Clearable -->
-        <button v-if="clearable && inputValue != null" type="button" @click="onClear" class="ml-2" :class="textColor"
-          :disabled="disabled || readonly">
-          &times;
-        </button>
+         <div v-if="clearable && inputValue != null" class="px-2">
+           <KunBtn @click="onClear" rounded="rounded-full" bgColor="bg-red-500/75" :disabled="disabled || readonly" class="h-6 w-6">
+            <KunIcon :icon="IconClose" size="text-xs" />
+          </KunBtn>
+         </div>
 
         <!-- Controls: DEFAULT -->
         <template v-if="!noArrows">
@@ -128,7 +129,9 @@
 import { getCurrentInstance, computed, watch, useSlots } from 'vue';
 import { KunNumberFieldProps } from '../composables/KunNumberFieldProps';
 import { useKunNumberField } from '../composables/useKunNumberFieldComposable';
+import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
+import IconClose from '../../../../icons/IconClose.vue';
 
 const props = defineProps(KunNumberFieldProps);
 const emits = defineEmits([

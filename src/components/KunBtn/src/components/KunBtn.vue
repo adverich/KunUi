@@ -7,7 +7,7 @@
     :style="attrs.style"
     :disabled="isButton && (loading || disabled)"
   >
-    <div class="relative flex items-center justify-center w-full h-full">
+    <div :class="['relative flex items-center justify-center', hasCustomWidth ? '' : 'w-full', hasCustomHeight ? '' : 'h-full']">
       <!-- Loader encima sin opacidad -->
       <template v-if="loading">
         <slot name="loader">
@@ -28,10 +28,7 @@
         </template>
 
         <!-- Texto o ícono central -->
-        <span
-          v-if="text || $slots.default || icon"
-          class="truncate flex items-center justify-center"
-        >
+        <span v-if="text || $slots.default || icon" class="truncate flex items-center justify-center">
           <template v-if="icon && !text && !$slots.default">
             <component :is="renderIcon(icon)" />
           </template>
@@ -59,6 +56,8 @@ import KunLoaderCircular from '@/components/KunLoaderCircular/src/components/Kun
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 
 const slots = useSlots()
+const attrs = useAttrs()
+
 const props = defineProps({
   text: String,
   size: {
@@ -96,7 +95,6 @@ const props = defineProps({
   iconSize: { type: String, default: null }
 })
 
-const attrs = useAttrs()
 const isLink = computed(() => !!props.to || !!props.href)
 const isButton = computed(() => !isLink.value)
 
@@ -107,10 +105,7 @@ const componentTag = computed(() => {
 })
 
 const renderIcon = (icon) => {
-  // No renderizar si está explícitamente deshabilitado
   if (!icon || icon === false) return null;
-
-  // Si `true`, se espera que haya un ícono por slot o fallback; no lo manejamos acá
   if (icon === true && !props.icon) return null;
 
   return h(KunIcon, {
@@ -156,7 +151,6 @@ const buttonSize = (size) => {
 
 const resolvedIconSize = computed(() => {
   if (props.iconSize) return props.iconSize
-
   switch (props.size) {
     case 'xxs': return 'text-xs'
     case 'xs':  return 'text-xs'
@@ -174,35 +168,30 @@ const variantClasses = computed(() => {
   const text = props.textColor
 
   switch (props.variant) {
-    case 'default':
-      return `${bg} ${text} shadow hover:brightness-95`
-
-    case 'tonal':
-      // tonal tiene fondo claro, sin opacidad, y efecto sutil
-      return `${bg} ${text} shadow-sm hover:shadow-md`
-
-    case 'soft':
-      // soft tiene fondo con opacidad y sombra leve
-      return `${bg} ${text} hover:bg-opacity-30 shadow-sm`
-
-    case 'outlined':
-      // contorno + hover gris claro
-      return `bg-transparent ${text} border ${bg} border-opacity-40 hover:bg-black/5`
-
-    case 'plain':
-      // no hay fondo, pero click genera fondo negro opaco
-      return `bg-transparent ${text} hover:bg-transparent active:bg-black/10`
-
-    case 'text':
-      // solo texto, active levemente visible
-      return `${bg} ${text} hover:bg-opacity-10 active:bg-black/5`
-
-    default:
-      return `${bg} ${text}`
+    case 'default': return `${bg} ${text} shadow hover:brightness-95`
+    case 'tonal':   return `${bg} ${text} shadow-sm hover:shadow-md`
+    case 'soft':    return `${bg} ${text} hover:bg-opacity-30 shadow-sm`
+    case 'outlined':return `bg-transparent ${text} border ${bg} border-opacity-40 hover:bg-black/5`
+    case 'plain':   return `bg-transparent ${text} hover:bg-transparent active:bg-black/10`
+    case 'text':    return `${bg} ${text} hover:bg-opacity-10 active:bg-black/5`
+    default:        return `${bg} ${text}`
   }
 })
 
 const hasText = computed(() => !!props.text)
+
+const hasCustomWidth = computed(() => {
+  return attrs.class?.includes('w-') || attrs.class?.includes('min-w-') || attrs.class?.includes('max-w-');
+})
+
+const hasCustomHeight = computed(() => {
+  return attrs.class?.includes('h-') || attrs.class?.includes('min-h-') || attrs.class?.includes('max-h-');
+})
+
+const isIconOnly = computed(() => {
+  const isSingleCharText = props.text?.length === 1 && !slots.default && !props.icon;
+  return (!!props.icon && !props.text && !slots.default) || isSingleCharText;
+})
 
 const computedClass = computed(() => {
   const base = [
@@ -212,15 +201,13 @@ const computedClass = computed(() => {
     props.rounded,
     props.textAlign,
     variantClasses.value,
-    'relative' // 🔹 Hace que los hijos `absolute` se posicionen correctamente
+    'relative'
   ];
-  
+
   if (attrs.class) base.push(attrs.class);
 
-  // Si es botón solo con ícono
   if (isIconOnly.value) {
     base.push('aspect-square justify-center items-center');
-
     switch (props.size) {
       case 'xxs': base.push('p-1'); break;
       case 'xs':  base.push('p-1.5'); break;
@@ -243,21 +230,20 @@ const computedClass = computed(() => {
       'cursor-pointer'
     );
   } else {
-    base.push('pointer-events-none'); // 🔹 Evita interacción sin apagar el botón
-    if (props.disabled) base.push('opacity-50 cursor-not-allowed'); // 🔹 Mantiene opacidad solo para estado `disabled`
+    base.push('pointer-events-none');
+    if (props.disabled) base.push('opacity-50 cursor-not-allowed');
   }
 
-  if (hasText.value) base.push(props.minWidth);
+  // Solo aplicar minWidth si no hay clase de ancho personalizada
+  if (hasText.value && !isIconOnly.value && !hasCustomWidth.value) {
+    base.push(props.minWidth);
+  }
 
   return base.filter(Boolean);
 });
 
-const isIconOnly = computed(() => {
-  return !!props.icon && !props.text && !slots.default
-})
-
-const rootEl = ref(null)
+const rootEl = ref(null);
 defineExpose({
   focus: () => rootEl.value?.focus?.()
-})
+});
 </script>
