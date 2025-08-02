@@ -255,7 +255,9 @@ export function useKunNumberField(props, emits) {
 
     function onClear() {
         rawNumberString = '0'.repeat(Number(props.precision) + 1);
-        cursorPosition.value = Number(props.precision) + 1; // al final
+        cursorPosition.value = Number(props.precision) + 1;
+
+        handleFocus();
         updateValue();
     }
 
