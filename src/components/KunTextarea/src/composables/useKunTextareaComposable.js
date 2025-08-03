@@ -59,17 +59,24 @@ export default function useTextarea(props, emit) {
         const input = inputRef.value
         if (!input || !props.autoGrow) return
 
-        const cursor = input.selectionStart
-        input.style.height = 'auto'
-        resizeTimeout.value = requestAnimationFrame(() => {
-            input.style.height = `${Math.min(input.scrollHeight, props.maxHeight || 9999)}px`
+        nextTick(() => {
+            input.style.height = 'auto'
+
+            const minHeight = parseInt(getComputedStyle(input).lineHeight || '24') * (props.rows || 2)
+            const finalHeight = Math.min(input.scrollHeight, props.maxHeight || 9999)
+
+            input.style.height = `${Math.max(minHeight, finalHeight)}px`
+
+            const cursor = input.selectionStart
             input.setSelectionRange(cursor, cursor)
         })
     }
 
     onMounted(() => {
         internalValue.value = formatInputValue(props.modelValue)
-        if (props.autoGrow) nextTick(adjustHeight)
+        nextTick(() => {
+            if (props.autoGrow) adjustHeight()
+        })
     })
 
     onBeforeUnmount(() => {
