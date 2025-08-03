@@ -44,7 +44,6 @@
         @blur="handleBlur"
         @click="$emit('click:control', $event)"
         @mousedown="$emit('mousedown:control', $event)"
-        @keydown.enter.prevent="handleJsonEnter"
         :class="[textareaClasses]"
         style="width: 100%; box-sizing: border-box; overflow-y: hidden;"
       ></textarea>
@@ -130,6 +129,7 @@ import { useAttrs, computed, ref, getCurrentInstance, nextTick } from 'vue'
 import { kunTextareaProps } from '../composables/kunTextareaProps'
 import useTextarea from '../composables/useKunTextareaComposable'
 import { renderIconSlot } from '@/utils/renderIcon'
+import { debounce } from '@/utils/utils';
 
 const props = defineProps({ ...kunTextareaProps })
 const emits = defineEmits(['update:modelValue', 'click:clear', 'click:control', 'update:focused', 'mousedown:control'])
@@ -153,9 +153,14 @@ const {
 } = useTextarea(props, emits, textareaRef)
 
 const handleInput = (e) => {
-  updateModel(e.target.value)
+  internalValue.value = e.target.value  // Actualiza el texto de inmediato
+  debouncedUpdateModel(e.target.value) // Actualiza el modelo después del delay
+
   if (props.autoGrow) adjustHeight()
 }
+const debouncedUpdateModel = debounce((val) => {
+  updateModel(val)
+}, 2000)
 
 const handleFocus = () => {
   isFocused.value = true

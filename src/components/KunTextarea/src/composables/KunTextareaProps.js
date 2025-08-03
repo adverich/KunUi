@@ -6,10 +6,8 @@ export const kunTextareaProps = {
   class: String,
   bgColor: String,
   textColor: String,
-  textAlign: {
-    type: String,
-    default: 'left',
-  },
+  textAlign: { type: String, default: 'left' },
+  formatModel: { type: String, default: 'auto' },
 
   loading: Boolean,
 

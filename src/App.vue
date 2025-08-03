@@ -40,6 +40,8 @@
         clearable
       />
 
+      <KunTextarea v-model="textAreaTest" :auto-grow="true" formatModel="json"/>
+
       <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name" item-value="id"
         :has-create-item="true"  label="hola mundo" return-object multiple
         :items="products" :searchable-keys="['name', 'fullName']"
@@ -130,7 +132,20 @@ import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunCard from './components/KunCard/src/components/KunCard.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
+import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
 
+
+const textAreaTest = ref(
+{
+  "entity": {
+    "parentMenu": 1,
+    "relation": "entity",
+    "inputType": "number",
+    "dropdownItem": "name",
+    "required": true,
+    "route": "entity"
+  }
+})
 const menuModel = ref(false);
 const leftDrawerStatus = ref(false);
 

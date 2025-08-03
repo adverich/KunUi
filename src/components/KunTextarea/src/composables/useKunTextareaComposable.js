@@ -1,4 +1,4 @@
-import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
 
 export default function useTextarea(props, emit, textareaRef) {
     const internalValue = ref('')
@@ -37,7 +37,6 @@ export default function useTextarea(props, emit, textareaRef) {
         const parsed = parseInputValue(val)
         rawModelValue.value = parsed
         emit('update:modelValue', parsed)
-        emit('change', parsed)
     }
 
     // -------- WATCH PRINCIPAL ----------
@@ -77,7 +76,6 @@ export default function useTextarea(props, emit, textareaRef) {
     // -------- JSON: auto identación con tabulador ----------
     function handleJsonEnter(event) {
         if (!isJsonMode.value) return
-        if (event.key !== 'Enter') return
 
         const textarea = textareaRef.value
         if (!textarea) return
