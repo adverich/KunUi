@@ -1,14 +1,12 @@
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 
-export default function useTextarea(props, emit) {
-    const inputRef = ref(null)
+export default function useTextarea(props, emit, textareaRef) {
     const internalValue = ref('')
     const rawModelValue = ref(props.modelValue)
     const isFocused = ref(false)
     const errorMessages = ref([])
-    const resizeTimeout = ref(null)
 
-    // -------- FORMATO ----------
+    // -------- FORMATO JSON ----------
     const isJsonMode = computed(() => {
         return props.formatModel === 'json' || (props.formatModel === 'auto' && typeof props.modelValue === 'object')
     })
@@ -17,7 +15,7 @@ export default function useTextarea(props, emit) {
         if (isJsonMode.value && val != null) {
             try {
                 return JSON.stringify(val, null, 2)
-            } catch (e) {
+            } catch {
                 return ''
             }
         }
@@ -28,7 +26,7 @@ export default function useTextarea(props, emit) {
         if (isJsonMode.value && typeof val === 'string') {
             try {
                 return JSON.parse(val)
-            } catch (e) {
+            } catch {
                 return null
             }
         }
@@ -43,25 +41,29 @@ export default function useTextarea(props, emit) {
     }
 
     // -------- WATCH PRINCIPAL ----------
-    watch(() => props.modelValue, (val) => {
-        const incoming = JSON.stringify(val)
-        const current = JSON.stringify(rawModelValue.value)
+    watch(
+        () => props.modelValue,
+        (val) => {
+            const incoming = JSON.stringify(val)
+            const current = JSON.stringify(rawModelValue.value)
 
-        if (incoming !== current) {
-            rawModelValue.value = val
-            internalValue.value = formatInputValue(val)
-            if (props.autoGrow) nextTick(adjustHeight)
-        }
-    })
+            if (incoming !== current) {
+                rawModelValue.value = val
+                internalValue.value = formatInputValue(val)
+                if (props.autoGrow) nextTick(() => adjustHeight())
+            }
+        },
+        { immediate: true }
+    )
 
-    // -------- CRECIMIENTO AUTOMATICO ----------
+    // -------- CRECIMIENTO AUTOMÁTICO ----------
     const adjustHeight = () => {
         if (!textareaRef.value) return
         textareaRef.value.style.height = 'auto'
         textareaRef.value.style.overflowY = 'hidden'
 
         const scrollHeight = textareaRef.value.scrollHeight
-        const lineHeight = parseFloat(getComputedStyle(textareaRef.value).lineHeight || '24')
+        const lineHeight = parseFloat(getComputedStyle(textareaRef.value).lineHeight) || 24
         const maxRows = Number(props.maxRows || 0)
 
         if (props.maxRows && maxRows > 0) {
@@ -72,6 +74,34 @@ export default function useTextarea(props, emit) {
         }
     }
 
+    // -------- JSON: auto identación con tabulador ----------
+    function handleJsonEnter(event) {
+        if (!isJsonMode.value) return
+        if (event.key !== 'Enter') return
+
+        const textarea = textareaRef.value
+        if (!textarea) return
+
+        const start = textarea.selectionStart
+        const value = internalValue.value
+        const indent = '  '
+        const before = value.slice(0, start)
+        const after = value.slice(start)
+
+        const lineStart = before.lastIndexOf('\n') + 1
+        const currentLine = before.slice(lineStart)
+        const leadingSpaces = currentLine.match(/^\s*/)?.[0] ?? ''
+        const newIndent = `\n${leadingSpaces}${indent}`
+
+        internalValue.value = before + newIndent + after
+        nextTick(() => {
+            const newCursor = start + newIndent.length
+            textarea.setSelectionRange(newCursor, newCursor)
+        })
+
+        event.preventDefault()
+    }
+
     onMounted(() => {
         internalValue.value = formatInputValue(props.modelValue)
         nextTick(() => {
@@ -79,9 +109,7 @@ export default function useTextarea(props, emit) {
         })
     })
 
-    onBeforeUnmount(() => {
-        if (resizeTimeout.value) cancelAnimationFrame(resizeTimeout.value)
-    })
+    onBeforeUnmount(() => { })
 
     // -------- VALIDACIÓN ----------
     const hasError = computed(() => {
@@ -114,36 +142,7 @@ export default function useTextarea(props, emit) {
         errorMessages.value = []
     }
 
-    // -------- JSON: auto identación con tabulador ----------
-    function handleJsonEnter(event) {
-        if (!isJsonMode.value) return
-        if (event.key !== 'Enter') return
-
-        const input = inputRef.value
-        if (!input) return
-
-        const cursor = input.selectionStart
-        const value = internalValue.value
-        const indent = '  '
-        const before = value.slice(0, cursor)
-        const after = value.slice(cursor)
-
-        const lineStart = before.lastIndexOf('\n') + 1
-        const currentLine = before.slice(lineStart)
-        const leadingSpaces = currentLine.match(/^\s*/)?.[0] ?? ''
-        const newIndent = `\n${leadingSpaces}${indent}`
-
-        internalValue.value = before + newIndent + after
-        nextTick(() => {
-            const newCursor = cursor + newIndent.length
-            input.setSelectionRange(newCursor, newCursor)
-        })
-
-        event.preventDefault()
-    }
-
     return {
-        inputRef,
         internalValue,
         isFocused,
         hasError,

@@ -2,8 +2,12 @@
   <div :class="wrapperClasses" ref="rootRef" v-bind="restAttrs">
     <!-- Label -->
     <slot name="label" :for="uid" v-bind="labelSlotBindings">
-      <label v-if="label" class="absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10"
-        :class="isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'">
+      <label
+        v-if="label"
+        :for="uid"
+        class="absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10"
+        :class="isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'"
+      >
         {{ label }}
       </label>
     </slot>
@@ -31,23 +35,26 @@
       <textarea
         ref="textareaRef"
         :value="internalValue"
-        :rows="rows"
+        :rows="autoGrow ? undefined : rows"
         :disabled="disabled"
         :readonly="readonly"
         :placeholder="placeholder"
-        @input="e => { updateValue(e.target.value); if (autoGrow) adjustHeight() }"
-        @focus="isFocused = true; $emit('update:focused', true)"
-        @blur="isFocused = false; $emit('update:focused', false)"
+        @input="handleInput"
+        @focus="handleFocus"
+        @blur="handleBlur"
         @click="$emit('click:control', $event)"
         @mousedown="$emit('mousedown:control', $event)"
-        @keydown.enter="handleJsonEnter"
-        :class="[variantClass, densityClass, inputClasses]"
-        class="py-3"
-      />
+        @keydown.enter.prevent="handleJsonEnter"
+        :class="[textareaClasses]"
+        style="width: 100%; box-sizing: border-box; overflow-y: hidden;"
+      ></textarea>
 
       <!-- Clear -->
-      <div v-if="clearable && internalValue" class="absolute right-2 top-2"
-        :class="clearIconClasses">
+      <div
+        v-if="clearable && internalValue"
+        class="absolute right-2 top-2"
+        :class="clearIconClasses"
+      >
         <slot name="clear" v-bind="clearSlotBindings">
           <button type="button" @click="handleClear" class="text-gray-500 hover:text-gray-700">
             <component :is="renderIconSlot(clearIcon)" />
@@ -77,7 +84,11 @@
       <div v-if="loading" class="mt-1">
         <slot name="loader" :color="loadingColor" :isActive="true">
           <div class="h-1 w-full bg-gray-200 rounded overflow-hidden">
-            <div class="h-full transition-all duration-300" :class="[loadingColor]" style="width: 100%"></div>
+            <div
+              class="h-full transition-all duration-300"
+              :class="[loadingColor]"
+              style="width: 100%"
+            ></div>
           </div>
         </slot>
       </div>
@@ -130,8 +141,7 @@ const uid = `textarea-${getCurrentInstance().uid}`
 const {
   isFocused,
   internalValue,
-  rootRef,  // si no usás, sacalo del composable y de acá
-  updateValue,
+  updateModel,
   handleClear,
   validate,
   reset,
@@ -143,7 +153,7 @@ const {
 } = useTextarea(props, emits, textareaRef)
 
 const handleInput = (e) => {
-  updateValue(e.target.value)
+  updateModel(e.target.value)
   if (props.autoGrow) adjustHeight()
 }
 
@@ -158,21 +168,28 @@ const handleBlur = () => {
 }
 
 const isActive = computed(() => isFocused.value || !!internalValue.value || props.dirty)
-const valueLength = computed(() => typeof internalValue.value === 'string' ? internalValue.value.length : 0)
-const counterMax = computed(() => props.counter === true ? 25 : props.counter || null)
+const valueLength = computed(() => (typeof internalValue.value === 'string' ? internalValue.value.length : 0))
+const counterMax = computed(() => (props.counter === true ? 25 : props.counter || null))
 const counterVisible = computed(() => props.persistentCounter || (props.counter && isFocused.value))
 
 const wrapperClasses = computed(() => ['relative w-full flex flex-col', props.class, props.wrapperClass])
-const clearIconClasses = computed(() => props.persistentClear ? 'opacity-100' : 'hover:opacity-100 opacity-0 transition-opacity duration-200')
+const clearIconClasses = computed(() =>
+  props.persistentClear ? 'opacity-100' : 'hover:opacity-100 opacity-0 transition-opacity duration-200'
+)
 
 const variantClass = computed(() => {
   const bg = props.bgColor ? '' : props.variant === 'filled' ? 'bg-gray-100 dark:bg-gray-900' : ''
   switch (props.variant) {
-    case 'filled': return [bg, 'border border-transparent']
-    case 'outlined': return 'border border-gray-300 bg-transparent'
-    case 'underlined': return 'border-b border-gray-300 bg-transparent rounded-none'
-    case 'solo': return [bg || 'bg-white dark:bg-black', 'shadow-md border-transparent']
-    default: return ''
+    case 'filled':
+      return [bg, 'border border-transparent']
+    case 'outlined':
+      return 'border border-gray-300 bg-transparent'
+    case 'underlined':
+      return 'border-b border-gray-300 bg-transparent rounded-none'
+    case 'solo':
+      return [bg || 'bg-white dark:bg-black', 'shadow-md border-transparent']
+    default:
+      return ''
   }
 })
 
@@ -199,11 +216,26 @@ const textareaClasses = computed(() => [
     'resize': !props.noResize && !props.autoGrow,
   },
   variantClass.value,
-  densityClass.value
+  densityClass.value,
 ])
 
-const labelSlotBindings = { label: props.label, isFocused, isActive, controlRef: textareaRef, focus: () => textareaRef.value?.focus(), blur: () => textareaRef.value?.blur(), props }
-const clearSlotBindings = { isActive: !!internalValue.value, isFocused, controlRef: textareaRef, focus: () => textareaRef.value?.focus(), blur: () => textareaRef.value?.blur(), props }
+const labelSlotBindings = {
+  label: props.label,
+  isFocused,
+  isActive,
+  controlRef: textareaRef,
+  focus: () => textareaRef.value?.focus(),
+  blur: () => textareaRef.value?.blur(),
+  props,
+}
+const clearSlotBindings = {
+  isActive: !!internalValue.value,
+  isFocused,
+  controlRef: textareaRef,
+  focus: () => textareaRef.value?.focus(),
+  blur: () => textareaRef.value?.blur(),
+  props,
+}
 const prependSlotBindings = clearSlotBindings
 const appendSlotBindings = clearSlotBindings
 
@@ -218,7 +250,7 @@ defineExpose({
   resetValidation,
   errorMessages: displayedMessages,
   isValid: computed(() => !hasError.value),
-  rootRef,
-  focus: () => textareaRef.value?.focus()
+  focus: () => textareaRef.value?.focus(),
+  rootRef: textareaRef,
 })
 </script>

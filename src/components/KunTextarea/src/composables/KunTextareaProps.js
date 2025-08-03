@@ -1,60 +1,52 @@
 export const kunTextareaProps = {
-  modelValue: [String, Number],
+  modelValue: [String, Number, Object],
 
-  // Etiqueta visible del textarea
   label: String,
-
-  // Texto de ayuda o descripción secundaria
   hint: String,
-
-  // Clases de estilo personalizadas
   class: String,
   bgColor: String,
   textColor: String,
-
-  // Alineación de texto (left, center, right)
   textAlign: {
     type: String,
     default: 'left',
   },
 
-  // Define si se debe mostrar el loader
   loading: Boolean,
 
-  // Slot para ícono al comienzo
+  prependIcon: [String, Object, Function],
+  appendIcon: [String, Object, Function],
+
   prependInnerIcon: [String, Object, Function],
-  // Slot para ícono al final
   appendInnerIcon: [String, Object, Function],
 
-  // Slots adicionales
-  loader: Boolean,
-  hideDetails: Boolean,
+  clearable: Boolean,
+  persistentClear: Boolean,
 
-  // Deshabilita la entrada
+  loader: Boolean,
+  hideDetails: [Boolean, String],
+
   disabled: Boolean,
   readonly: Boolean,
 
-  // Valida errores sólo al blur (desenfocar)
   blurValidation: Boolean,
 
-  // Validaciones
   rules: Array,
   errorMessages: [String, Array],
-  maxErrors: Number,
+  maxErrors: {
+    type: Number,
+    default: 3,
+  },
 
-  // Forzar estado de error visual
   error: Boolean,
 
-  // Contador de caracteres
   counter: Boolean,
+  persistentCounter: Boolean,
   maxLength: [Number, String],
 
-  // Crecimiento dinámico
   autoGrow: Boolean,
   noResize: Boolean,
-  maxRows: [Number, String], // aplica si autoGrow está activo
+  maxRows: [Number, String],
 
-  // Atributos HTML nativos
   placeholder: String,
   name: String,
   id: String,
@@ -63,4 +55,21 @@ export const kunTextareaProps = {
     type: [Number, String],
     default: 5,
   },
+
+  dirty: Boolean,
+  variant: {
+    type: String,
+    default: 'outlined',
+  },
+  density: {
+    type: String,
+    default: 'default',
+  },
+  inputClass: [String, Array],
+  wrapperClass: [String, Array],
+  tile: Boolean,
+  rounded: [String, Number],
+  flat: Boolean,
+  color: String,
+  loadingColor: String,
 }
