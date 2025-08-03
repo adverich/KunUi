@@ -62,8 +62,14 @@ export default function useTextarea(props, emit) {
         nextTick(() => {
             input.style.height = 'auto'
 
-            const minHeight = parseInt(getComputedStyle(input).lineHeight || '24') * (props.rows || 2)
-            const finalHeight = Math.min(input.scrollHeight, props.maxHeight || 9999)
+            const lineHeight = parseFloat(getComputedStyle(input).lineHeight) || 24
+            const rows = Number(props.rows) || 5
+            const minHeight = lineHeight * rows
+
+            const scrollHeight = input.scrollHeight
+            const maxHeight = props.maxHeight || 9999
+
+            const finalHeight = Math.min(scrollHeight, maxHeight)
 
             input.style.height = `${Math.max(minHeight, finalHeight)}px`
 
@@ -71,6 +77,7 @@ export default function useTextarea(props, emit) {
             input.setSelectionRange(cursor, cursor)
         })
     }
+
 
     onMounted(() => {
         internalValue.value = formatInputValue(props.modelValue)
