@@ -55,27 +55,22 @@ export default function useTextarea(props, emit) {
     })
 
     // -------- CRECIMIENTO AUTOMATICO ----------
-    function adjustHeight() {
-        const input = inputRef.value
-        if (!input || !props.autoGrow) return
+    const adjustHeight = () => {
+        if (!textareaRef.value) return
+        textareaRef.value.style.height = 'auto'
+        textareaRef.value.style.overflowY = 'hidden'
 
-        nextTick(() => {
-            input.style.height = 'auto'  // reset para que calcule scrollHeight correcto
+        const scrollHeight = textareaRef.value.scrollHeight
+        const lineHeight = parseFloat(getComputedStyle(textareaRef.value).lineHeight || '24')
+        const maxRows = Number(props.maxRows || 0)
 
-            const maxHeight = props.maxHeight || 9999
-
-            // scrollHeight es la altura necesaria para todo el contenido
-            const scrollHeight = input.scrollHeight
-
-            // Ajustamos altura pero nunca más que maxHeight
-            input.style.height = `${Math.min(scrollHeight, maxHeight)}px`
-
-            // Mantener posición cursor
-            const cursor = input.selectionStart
-            input.setSelectionRange(cursor, cursor)
-        })
+        if (props.maxRows && maxRows > 0) {
+            const maxHeight = maxRows * lineHeight
+            textareaRef.value.style.height = Math.min(scrollHeight, maxHeight) + 'px'
+        } else {
+            textareaRef.value.style.height = scrollHeight + 'px'
+        }
     }
-
 
     onMounted(() => {
         internalValue.value = formatInputValue(props.modelValue)

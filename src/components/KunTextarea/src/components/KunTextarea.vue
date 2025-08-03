@@ -31,18 +31,18 @@
       <textarea
         ref="textareaRef"
         :value="internalValue"
-        :rows="autoGrow ? undefined : rows"
+        :rows="rows"
         :disabled="disabled"
         :readonly="readonly"
         :placeholder="placeholder"
-        :name="name"
-        :class="textareaClasses"
-        @input="handleInput"
-        @keydown.enter="handleJsonEnter"
-        @focus="handleFocus"
-        @blur="handleBlur"
+        @input="e => { updateValue(e.target.value); if (autoGrow) adjustHeight() }"
+        @focus="isFocused = true; $emit('update:focused', true)"
+        @blur="isFocused = false; $emit('update:focused', false)"
         @click="$emit('click:control', $event)"
         @mousedown="$emit('mousedown:control', $event)"
+        @keydown.enter="handleJsonEnter"
+        :class="[variantClass, densityClass, inputClasses]"
+        class="py-3"
       />
 
       <!-- Clear -->
@@ -130,33 +130,21 @@ const uid = `textarea-${getCurrentInstance().uid}`
 const {
   isFocused,
   internalValue,
-  rootRef,
+  rootRef,  // si no usás, sacalo del composable y de acá
   updateValue,
   handleClear,
   validate,
   reset,
   resetValidation,
-  validationErrors,
   hasError,
   displayedMessages,
-  adjustHeight
+  adjustHeight,
+  handleJsonEnter,
 } = useTextarea(props, emits, textareaRef)
 
 const handleInput = (e) => {
   updateValue(e.target.value)
   if (props.autoGrow) adjustHeight()
-}
-
-const handleJsonEnter = (e) => {
-  if (!props.jsonMode) return
-  e.preventDefault()
-  const textarea = e.target
-  const start = textarea.selectionStart
-  const indent = textarea.value.substring(0, start).match(/(^|\n)(\s*)[^\n]*$/)?.[2] ?? ''
-  const newValue = textarea.value.slice(0, start) + '\n' + indent + textarea.value.slice(start)
-  textarea.value = newValue
-  updateValue(newValue)
-  nextTick(() => textarea.setSelectionRange(start + 1 + indent.length, start + 1 + indent.length))
 }
 
 const handleFocus = () => {
