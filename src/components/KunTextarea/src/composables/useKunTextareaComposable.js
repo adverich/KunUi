@@ -60,19 +60,17 @@ export default function useTextarea(props, emit) {
         if (!input || !props.autoGrow) return
 
         nextTick(() => {
-            input.style.height = 'auto'
+            input.style.height = 'auto'  // reset para que calcule scrollHeight correcto
 
-            const lineHeight = parseFloat(getComputedStyle(input).lineHeight) || 24
-            const rows = Number(props.rows) || 5
-            const minHeight = lineHeight * rows
-
-            const scrollHeight = input.scrollHeight
             const maxHeight = props.maxHeight || 9999
 
-            const finalHeight = Math.min(scrollHeight, maxHeight)
+            // scrollHeight es la altura necesaria para todo el contenido
+            const scrollHeight = input.scrollHeight
 
-            input.style.height = `${Math.max(minHeight, finalHeight)}px`
+            // Ajustamos altura pero nunca más que maxHeight
+            input.style.height = `${Math.min(scrollHeight, maxHeight)}px`
 
+            // Mantener posición cursor
             const cursor = input.selectionStart
             input.setSelectionRange(cursor, cursor)
         })

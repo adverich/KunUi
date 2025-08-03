@@ -31,7 +31,7 @@
       <textarea
         ref="textareaRef"
         :value="internalValue"
-        :rows="rows"
+        :rows="autoGrow ? undefined : rows"
         :disabled="disabled"
         :readonly="readonly"
         :placeholder="placeholder"
