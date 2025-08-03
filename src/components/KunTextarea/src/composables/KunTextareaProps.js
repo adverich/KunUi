@@ -1,70 +1,66 @@
 export const kunTextareaProps = {
-  modelValue: [String, Number, Array, Object, Boolean],
-  formatModel: {
-    type: String,
-    default: 'auto', // auto | raw | json
-  },
-  label: String,
-  dirty: { type: Boolean, default: false },
-  placeholder: String,
-  rows: { type: [String, Number], default: 1 },
-  autoGrow: Boolean,
-  noResize: Boolean,
-  maxRows: [Number, String],
+  modelValue: [String, Number],
 
-  clearable: Boolean,
-  clearIcon: {
-    type: [String, Function, Object],
-    default: 'i-mdi-close',
+  // Etiqueta visible del textarea
+  label: String,
+
+  // Texto de ayuda o descripción secundaria
+  hint: String,
+
+  // Clases de estilo personalizadas
+  class: String,
+  bgColor: String,
+  textColor: String,
+
+  // Alineación de texto (left, center, right)
+  textAlign: {
+    type: String,
+    default: 'left',
   },
-  persistentClear: Boolean,
+
+  // Define si se debe mostrar el loader
+  loading: Boolean,
+
+  // Slot para ícono al comienzo
+  prependInnerIcon: [String, Object, Function],
+  // Slot para ícono al final
+  appendInnerIcon: [String, Object, Function],
+
+  // Slots adicionales
+  loader: Boolean,
+  hideDetails: Boolean,
+
+  // Deshabilita la entrada
   disabled: Boolean,
   readonly: Boolean,
 
-  variant: { type: String, default: 'filled' },
-  density: { type: String, default: 'default' },
+  // Valida errores sólo al blur (desenfocar)
+  blurValidation: Boolean,
 
-  // Estilo
-  rounded: [Boolean, String, Number],
-  tile: Boolean,
-  flat: Boolean,
-  color: String,
-  bgColor: String,
-  textColor: String,
-  iconColor: [String, Boolean],
-  glow: Boolean,
-  class: [String, Array, Object],
-  inputClass: [String, Array, Object],
-  wrapperClass: [String, Array, Object],
+  // Validaciones
+  rules: Array,
+  errorMessages: [String, Array],
+  maxErrors: Number,
 
-  // Iconos
-  prependIcon: [String, Object, Function, Array],
-  appendIcon: [String, Object, Function, Array],
-  prependInnerIcon: [String, Object, Function, Array],
-  appendInnerIcon: [String, Object, Function, Array],
-
-  // Validación
-  rules: {
-    type: Array,
-    default: () => [],
-  },
+  // Forzar estado de error visual
   error: Boolean,
-  errorMessages: {
-    type: [String, Array],
-    default: () => [],
-  },
-  maxErrors: {
-    type: [String, Number],
-    default: 1,
-  },
-  validationValue: null,
-  validateOn: String,
-  hint: String,
-  persistentHint: Boolean,
-  hideDetails: { type: [Boolean, String], default: false },
-  persistentCounter: Boolean,
 
-  // Loader
-  loading: Boolean,
-  loadingColor: { type: String, default: 'bg-slate-500' },
+  // Contador de caracteres
+  counter: Boolean,
+  maxLength: [Number, String],
+
+  // Crecimiento dinámico
+  autoGrow: Boolean,
+  noResize: Boolean,
+  maxRows: [Number, String], // aplica si autoGrow está activo
+
+  // Atributos HTML nativos
+  placeholder: String,
+  name: String,
+  id: String,
+  autocomplete: String,
+  rows: {
+    type: [Number, String],
+    default: 5,
+  },
 }

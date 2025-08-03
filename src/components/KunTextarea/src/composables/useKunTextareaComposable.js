@@ -1,136 +1,150 @@
-import { ref, watch, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 
-export function useKunTextarea(props, emit, textareaRef) {
-    const isFocused = ref(false)
+export default function useTextarea(props, emit) {
+    const inputRef = ref(null)
+    const internalValue = ref('')
     const rawModelValue = ref(props.modelValue)
-    const rootRef = ref(null);
+    const isFocused = ref(false)
+    const errorMessages = ref([])
+    const resizeTimeout = ref(null)
 
-    const formatInputValue = (v) => {
-        if (props.formatModel === 'raw') return String(v ?? '')
-        if (props.formatModel === 'json' || props.formatModel === 'auto') {
-            if (typeof v === 'object' && v !== null) {
-                try {
-                    return JSON.stringify(v, null, 2)
-                } catch (e) {
-                    return String(v)
-                }
-            }
-        }
-        return String(v ?? '')
-    }
-
-    const parseTextareaValue = (text) => {
-        if (props.formatModel === 'raw') return text
-
-        try {
-            const parsed = JSON.parse(text)
-            if (props.formatModel === 'json' || props.formatModel === 'auto') {
-                return parsed
-            }
-        } catch (e) {
-            // si no es parseable y estamos en auto, devolver string
-        }
-
-        return text
-    }
-
-    const internalValue = ref(formatInputValue(props.modelValue))
-
-    watch(() => props.modelValue, (val) => {
-        rawModelValue.value = val
-        internalValue.value = formatInputValue(val)
-        if (props.autoGrow) nextTick(adjustHeight)
+    // -------- FORMATO ----------
+    const isJsonMode = computed(() => {
+        return props.formatModel === 'json' || (props.formatModel === 'auto' && typeof props.modelValue === 'object')
     })
 
-    const updateValue = (v) => {
-        internalValue.value = v
-        const parsed = parseTextareaValue(v)
-        emit('update:modelValue', parsed)
-    }
-
-    const handleClear = () => {
-        updateValue('')
-        emit('click:clear')
-    }
-
-    const adjustHeight = () => {
-        if (!textareaRef.value) return
-        textareaRef.value.style.height = 'auto'
-        textareaRef.value.style.overflowY = 'hidden'
-
-        const scrollHeight = textareaRef.value.scrollHeight
-        const lineHeight = parseFloat(getComputedStyle(textareaRef.value).lineHeight || '24')
-        const maxRows = Number(props.maxRows || 0)
-
-        if (props.maxRows && maxRows > 0) {
-            const maxHeight = maxRows * lineHeight
-            textareaRef.value.style.height = Math.min(scrollHeight, maxHeight) + 'px'
-        } else {
-            textareaRef.value.style.height = scrollHeight + 'px'
+    function formatInputValue(val) {
+        if (isJsonMode.value && val != null) {
+            try {
+                return JSON.stringify(val, null, 2)
+            } catch (e) {
+                return ''
+            }
         }
+        return val ?? ''
+    }
+
+    function parseInputValue(val) {
+        if (isJsonMode.value && typeof val === 'string') {
+            try {
+                return JSON.parse(val)
+            } catch (e) {
+                return null
+            }
+        }
+        return val
+    }
+
+    function updateModel(val) {
+        const parsed = parseInputValue(val)
+        rawModelValue.value = parsed
+        emit('update:modelValue', parsed)
+        emit('change', parsed)
+    }
+
+    // -------- WATCH PRINCIPAL ----------
+    watch(() => props.modelValue, (val) => {
+        const incoming = JSON.stringify(val)
+        const current = JSON.stringify(rawModelValue.value)
+
+        if (incoming !== current) {
+            rawModelValue.value = val
+            internalValue.value = formatInputValue(val)
+            if (props.autoGrow) nextTick(adjustHeight)
+        }
+    })
+
+    // -------- CRECIMIENTO AUTOMATICO ----------
+    function adjustHeight() {
+        const input = inputRef.value
+        if (!input || !props.autoGrow) return
+
+        const cursor = input.selectionStart
+        input.style.height = 'auto'
+        resizeTimeout.value = requestAnimationFrame(() => {
+            input.style.height = `${Math.min(input.scrollHeight, props.maxHeight || 9999)}px`
+            input.setSelectionRange(cursor, cursor)
+        })
     }
 
     onMounted(() => {
+        internalValue.value = formatInputValue(props.modelValue)
         if (props.autoGrow) nextTick(adjustHeight)
     })
 
-    // Validación (igual)
-    const validationErrors = ref([])
-    const isPristine = ref(true)
+    onBeforeUnmount(() => {
+        if (resizeTimeout.value) cancelAnimationFrame(resizeTimeout.value)
+    })
 
-    const validate = (silent = false) => {
-        const value = props.validationValue ?? parseTextareaValue(internalValue.value)
-        const rules = props.rules ?? []
+    // -------- VALIDACIÓN ----------
+    const hasError = computed(() => {
+        return !!(errorMessages.value.length || props.errorMessages?.length)
+    })
+
+    const displayedMessages = computed(() => {
+        return hasError.value
+            ? [...(props.errorMessages || []), ...errorMessages.value].slice(0, props.maxErrors)
+            : []
+    })
+
+    function validate() {
+        const rules = props.rules || []
+        const value = props.required && !internalValue.value ? null : parseInputValue(internalValue.value)
         const errors = []
 
         for (const rule of rules) {
             const result = typeof rule === 'function' ? rule(value) : rule
-            if (typeof result === 'string') errors.push(result)
+            if (Array.isArray(result)) errors.push(...result)
+            else if (typeof result === 'string') errors.push(result)
             else if (result === false) errors.push('Campo inválido')
         }
 
-        validationErrors.value = errors.slice(0, props.maxErrors ?? 1)
-        if (!silent) emit('update:focused', isFocused.value)
-        return validationErrors.value
+        errorMessages.value = errors
+        return errors.length === 0
     }
 
-    const resetValidation = () => {
-        validationErrors.value = []
+    function resetValidation() {
+        errorMessages.value = []
     }
 
-    const reset = () => {
-        internalValue.value = ''
-        resetValidation()
-        emit('update:modelValue', '')
+    // -------- JSON: auto identación con tabulador ----------
+    function handleJsonEnter(event) {
+        if (!isJsonMode.value) return
+        if (event.key !== 'Enter') return
+
+        const input = inputRef.value
+        if (!input) return
+
+        const cursor = input.selectionStart
+        const value = internalValue.value
+        const indent = '  '
+        const before = value.slice(0, cursor)
+        const after = value.slice(cursor)
+
+        const lineStart = before.lastIndexOf('\n') + 1
+        const currentLine = before.slice(lineStart)
+        const leadingSpaces = currentLine.match(/^\s*/)?.[0] ?? ''
+        const newIndent = `\n${leadingSpaces}${indent}`
+
+        internalValue.value = before + newIndent + after
+        nextTick(() => {
+            const newCursor = cursor + newIndent.length
+            input.setSelectionRange(newCursor, newCursor)
+        })
+
+        event.preventDefault()
     }
-
-    const hasError = computed(() => {
-        return props.error || validationErrors.value.length > 0
-    })
-
-    const displayedMessages = computed(() => {
-        if (props.errorMessages?.length) {
-            return Array.isArray(props.errorMessages)
-                ? props.errorMessages
-                : [props.errorMessages]
-        }
-        return validationErrors.value
-    })
 
     return {
-        isFocused,
+        inputRef,
         internalValue,
-        rootRef,
-        updateValue,
-        handleClear,
-        adjustHeight,
-
-        isPristine,
-        validate,
-        reset,
-        resetValidation,
-        validationErrors,
+        isFocused,
         hasError,
         displayedMessages,
+        validate,
+        resetValidation,
+        updateModel,
+        adjustHeight,
+        handleJsonEnter,
     }
 }

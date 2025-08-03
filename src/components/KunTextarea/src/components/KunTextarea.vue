@@ -1,10 +1,9 @@
 <template>
-  <div :class="wrapperClasses" ref="rootRef" v-bind="$attrs">
+  <div :class="wrapperClasses" ref="rootRef" v-bind="restAttrs">
     <!-- Label -->
-    <slot name="label" :for="uid" v-bind="{ label, isFocused, isActive: !!internalValue, controlRef: textareaRef, focus: () => textareaRef?.focus(), blur: () => textareaRef?.blur(), props }">
+    <slot name="label" :for="uid" v-bind="labelSlotBindings">
       <label v-if="label" class="absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10"
-        :class="isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'"
-      >
+        :class="isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'">
         {{ label }}
       </label>
     </slot>
@@ -28,39 +27,30 @@
         </slot>
       </div>
 
-      <!-- Textarea -->
+      <!-- Textarea Mejorado -->
       <textarea
         ref="textareaRef"
         :value="internalValue"
-        :rows="rows"
+        :rows="autoGrow ? 1 : rows"
         :disabled="disabled"
         :readonly="readonly"
         :placeholder="placeholder"
-        @input="e => { updateValue(e.target.value); if (autoGrow) adjustHeight() }"
-        @focus="isFocused = true; $emit('update:focused', true)"
-        @blur="isFocused = false; $emit('update:focused', false)"
+        :name="name"
+        :class="textareaClasses"
+        @input="handleInput"
+        @keydown.enter="handleJsonEnter"
+        @focus="handleFocus"
+        @blur="handleBlur"
         @click="$emit('click:control', $event)"
         @mousedown="$emit('mousedown:control', $event)"
-        :class="[variantClass, densityClass, inputClasses]"
-        class="py-3"
       />
 
       <!-- Clear -->
-      <div
-        v-if="clearable && internalValue"
-        class="absolute right-2 top-2"
-        :class="{ 'opacity-100': persistentClear, 'hover:opacity-100 opacity-0 transition-opacity duration-200': !persistentClear }"
-      >
-        <slot
-          name="clear"
-          v-bind="{ isActive: !!internalValue, isFocused, controlRef: textareaRef, focus: () => textareaRef?.focus(), blur: () => textareaRef?.blur(), props }"
-        >
-          <button
-            type="button"
-            @click="handleClear"
-            class="text-gray-500 hover:text-gray-700"
-          >
-            <span :class="clearIcon" />
+      <div v-if="clearable && internalValue" class="absolute right-2 top-2"
+        :class="clearIconClasses">
+        <slot name="clear" v-bind="clearSlotBindings">
+          <button type="button" @click="handleClear" class="text-gray-500 hover:text-gray-700">
+            <component :is="renderIconSlot(clearIcon)" />
           </button>
         </slot>
       </div>
@@ -87,11 +77,7 @@
       <div v-if="loading" class="mt-1">
         <slot name="loader" :color="loadingColor" :isActive="true">
           <div class="h-1 w-full bg-gray-200 rounded overflow-hidden">
-            <div
-              class="h-full transition-all duration-300"
-              :class="[`${loadingColor}`]"
-              style="width: 100%"
-            ></div>
+            <div class="h-full transition-all duration-300" :class="[loadingColor]" style="width: 100%"></div>
           </div>
         </slot>
       </div>
@@ -120,8 +106,8 @@
 
       <!-- Counter -->
       <div v-if="counterVisible" class="text-xs text-right mt-1 text-gray-400">
-        <slot name="counter" :counter="internalValue.length" :max="counterMax" :value="internalValue.length">
-          {{ internalValue.length }}<span v-if="counterMax"> / {{ counterMax }}</span>
+        <slot name="counter" :counter="valueLength" :max="counterMax" :value="valueLength">
+          {{ valueLength }}<span v-if="counterMax"> / {{ counterMax }}</span>
         </slot>
       </div>
     </div>
@@ -129,17 +115,17 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref, computed } from 'vue'
+import { useAttrs, computed, ref, getCurrentInstance, nextTick } from 'vue'
 import { kunTextareaProps } from '../composables/kunTextareaProps'
-import { useKunTextarea } from '../composables/useKunTextareaComposable'
+import useTextarea from '../composables/useKunTextareaComposable'
 import { renderIconSlot } from '@/utils/renderIcon'
 
-const props = defineProps(kunTextareaProps)
+const props = defineProps({ ...kunTextareaProps })
 const emits = defineEmits(['update:modelValue', 'click:clear', 'click:control', 'update:focused', 'mousedown:control'])
+const attrs = useAttrs()
 
 const textareaRef = ref(null)
-const uid = `textarea-${getCurrentInstance().uid}`;
-const isActive = computed(() => (isFocused.value || !!internalValue.value) || props.dirty);
+const uid = `textarea-${getCurrentInstance().uid}`
 
 const {
   isFocused,
@@ -147,42 +133,67 @@ const {
   rootRef,
   updateValue,
   handleClear,
-  adjustHeight,
   validate,
   reset,
   resetValidation,
   validationErrors,
   hasError,
   displayedMessages,
-} = useKunTextarea(props, emits, textareaRef)
+  adjustHeight
+} = useTextarea(props, emits, textareaRef)
+
+const handleInput = (e) => {
+  updateValue(e.target.value)
+  if (props.autoGrow) adjustHeight()
+}
+
+const handleJsonEnter = (e) => {
+  if (!props.jsonMode) return
+  e.preventDefault()
+  const textarea = e.target
+  const start = textarea.selectionStart
+  const indent = textarea.value.substring(0, start).match(/(^|\n)(\s*)[^\n]*$/)?.[2] ?? ''
+  const newValue = textarea.value.slice(0, start) + '\n' + indent + textarea.value.slice(start)
+  textarea.value = newValue
+  updateValue(newValue)
+  nextTick(() => textarea.setSelectionRange(start + 1 + indent.length, start + 1 + indent.length))
+}
+
+const handleFocus = () => {
+  isFocused.value = true
+  emits('update:focused', true)
+}
+
+const handleBlur = () => {
+  isFocused.value = false
+  emits('update:focused', false)
+}
+
+const isActive = computed(() => isFocused.value || !!internalValue.value || props.dirty)
+const valueLength = computed(() => typeof internalValue.value === 'string' ? internalValue.value.length : 0)
+const counterMax = computed(() => props.counter === true ? 25 : props.counter || null)
+const counterVisible = computed(() => props.persistentCounter || (props.counter && isFocused.value))
+
+const wrapperClasses = computed(() => ['relative w-full flex flex-col', props.class, props.wrapperClass])
+const clearIconClasses = computed(() => props.persistentClear ? 'opacity-100' : 'hover:opacity-100 opacity-0 transition-opacity duration-200')
 
 const variantClass = computed(() => {
-  const hasCustomBg = !!props.bgColor
-
+  const bg = props.bgColor ? '' : props.variant === 'filled' ? 'bg-gray-100 dark:bg-gray-900' : ''
   switch (props.variant) {
-    case 'filled':
-      return [
-        hasCustomBg ? '' : 'bg-gray-100 dark:bg-gray-900',
-        'border border-transparent',
-      ]
-    case 'outlined':
-      return 'border border-gray-300 bg-transparent'
-    case 'underlined':
-      return 'border-b border-gray-300 bg-transparent rounded-none'
-    case 'solo':
-      return [
-        hasCustomBg ? '' : 'bg-white dark:bg-black',
-        'shadow-md border-transparent',
-      ]
-    default:
-      return ''
+    case 'filled': return [bg, 'border border-transparent']
+    case 'outlined': return 'border border-gray-300 bg-transparent'
+    case 'underlined': return 'border-b border-gray-300 bg-transparent rounded-none'
+    case 'solo': return [bg || 'bg-white dark:bg-black', 'shadow-md border-transparent']
+    default: return ''
   }
 })
 
-const densityClass = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");
+const densityClass = computed(() =>
+  props.density === 'compact' ? 'p-1' : props.density === 'comfortable' ? 'p-2' : 'p-3'
+)
 
-const inputClasses = computed(() => [
-  'w-full resize-none p-2 transition-colors duration-150',
+const textareaClasses = computed(() => [
+  'w-full resize-none p-2 transition-colors duration-150 py-3',
   props.inputClass,
   {
     'rounded-md': !props.tile,
@@ -191,42 +202,27 @@ const inputClasses = computed(() => [
     'shadow-md': props.variant === 'solo' && !props.flat,
     'shadow-none': props.flat,
     [`text-${props.textColor}`]: props.textColor,
-    [`${props.bgColor}`]: props.bgColor,
+    [props.bgColor]: props.bgColor,
     'text-gray-500 bg-gray-200': props.disabled,
     'focus:outline-none focus:ring-2': !props.disabled,
     [`focus:ring-${props.color}`]: props.color && !props.disabled && !hasError.value,
     'border-red-500 ring-red-500 focus:ring-red-500': hasError.value,
     'resize-none': props.noResize || props.autoGrow,
     'resize': !props.noResize && !props.autoGrow,
-  }
+  },
+  variantClass.value,
+  densityClass.value
 ])
 
-const wrapperClasses = computed(() => [
-  'relative w-full flex flex-col',
-  props.class,
-  props.wrapperClass,
-])
+const labelSlotBindings = { label: props.label, isFocused, isActive, controlRef: textareaRef, focus: () => textareaRef.value?.focus(), blur: () => textareaRef.value?.blur(), props }
+const clearSlotBindings = { isActive: !!internalValue.value, isFocused, controlRef: textareaRef, focus: () => textareaRef.value?.focus(), blur: () => textareaRef.value?.blur(), props }
+const prependSlotBindings = clearSlotBindings
+const appendSlotBindings = clearSlotBindings
 
-const counterMax = computed(() => {
-  if (props.counter === true) return 25
-  if (typeof props.counter === 'number' || typeof props.counter === 'string') return props.counter
-  return null
+const restAttrs = computed(() => {
+  const { class: _class, ...rest } = attrs
+  return rest
 })
-
-const counterVisible = computed(() => {
-  if (props.persistentCounter) return true
-  return !!props.counter && isFocused.value
-})
-
-const clearIcon = computed(() => {
-  return typeof props.clearIcon === 'string'
-    ? props.clearIcon
-    : 'i-heroicons-x-mark-20-solid' // o cualquier ícono por defecto
-})
-
-function handleIconClick(event, type) {
-  emits(`click:${type}`, event)
-}
 
 defineExpose({
   validate,
