@@ -160,7 +160,7 @@ const handleInput = (e) => {
 }
 const debouncedUpdateModel = debounce((val) => {
   updateModel(val)
-}, 2000)
+}, 100)
 
 const handleFocus = () => {
   isFocused.value = true
