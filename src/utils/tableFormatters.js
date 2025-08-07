@@ -82,8 +82,7 @@ export const formatters = {
             minute: "2-digit",
             second: "2-digit",
             hourCycle: "h24",
-            ...options,
-        }).format(d);
+        }).format(date);
     },
 
     secondsToTime: value => convertirSegundosATiempo(value ?? 0),
