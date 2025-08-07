@@ -84,6 +84,7 @@ export const formatters = {
         // }).format(date);
         return new Intl.DateTimeFormat("es-AR", {
             weekday: "short",
+            day: "2-digit",
             month: "short",
             year: "2-digit",
             hour: "2-digit",
