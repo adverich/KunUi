@@ -1,7 +1,7 @@
 <template>
-    <div class="block" :class="textClass" v-bind="$attrs">
+    <component :is="tag" class="block" :class="computedClass" v-bind="$attrs">
         <slot>{{ text }}</slot>
-    </div>
+    </component>
 </template>
 
 <script setup>
@@ -10,9 +10,10 @@ import { kunCardTextProps } from '../composables/kunCardTextProps'
 
 const props = defineProps(kunCardTextProps)
 
-const textClass = computed(() => {
+const computedClass = computed(() => {
     return [
-        props.color,
+        props.color, 
+        props.opacity, 
         props.dense ? 'text-xs' : 'text-sm'
     ].filter(Boolean)
 })

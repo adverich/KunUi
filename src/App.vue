@@ -40,12 +40,20 @@
         clearable
       />
 
-      <KunTextarea v-model="textAreaTest" :auto-grow="true" formatModel="json"/>
 
       <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name" item-value="id"
         :has-create-item="true"  label="hola mundo" return-object multiple
         :items="products" :searchable-keys="['name', 'fullName']"
-      />
+        />
+    </div>
+    <div class="flex justify-center">
+
+      
+      <KunBadge text="5" >
+        <KunBtn bgColor="bg-blue-700">
+          clickMe!
+        </KunBtn>
+      </KunBadge>
       <!-- <KunRelationMatrix 
         :columns="companies"
         :rows="products"
@@ -62,7 +70,7 @@
       <!-- <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/> -->
     </div>
     <div>
-      <KunCard to="/examples/KunCard">HOla</KunCard>
+
     </div>
 
     <!-- <div class="h-24"></div> -->
@@ -133,6 +141,7 @@ import KunAutocomplete from './components/KunAutocomplete/src/components/KunAuto
 import KunCard from './components/KunCard/src/components/KunCard.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
 import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
+import KunBadge from './components/KunBadge/src/components/KunBadge.vue';
 
 
 const textAreaTest = ref(

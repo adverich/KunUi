@@ -3,7 +3,7 @@
     <slot />
     <div
       v-if="visible"
-      :class="[...positionClass, bgColor, textColor, textSize, fontWeight, rounded, 'px-2 py-1 min-w-[20px] min-h-[20px] flex items-center justify-center']"
+      :class="[ ...positionClass, ...computedClass ]"
       :style="style"
       v-bind="$attrs"
     >
@@ -35,23 +35,24 @@ const props = defineProps({
       ].includes(val)
   },
   ejeX: { type: [Number, String], default: 25 }, // desplazamiento horizontal
-  ejeY: { type: [Number, String], default: -15 }  // desplazamiento vertical
+  ejeY: { type: [Number, String], default: -15 },  // desplazamiento vertical
+  cursor:{
+    type: String,
+    default: 'cursor-default'
+  }
 });
 
 defineOptions({ inheritAttrs: false })
 
 const computedClass = computed(() => [
-  'absolute -top-1 -right-1 flex items-center justify-center px-2 py-1',
-  'transform translate-x-1/2 -translate-y-1/2',
-  'min-w-[20px] min-h-[20px]',
+  'px-2 py-1 min-w-[20px] min-h-[20px] flex items-center justify-center',
   props.bgColor,
   props.textColor,
   props.textSize,
   props.fontWeight,
-  props.rounded
+  props.rounded,
+  props.cursor
 ].filter(Boolean))
-
-
 
 const positionClass = computed(() => {
   const map = {

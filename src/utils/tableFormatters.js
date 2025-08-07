@@ -22,6 +22,7 @@ export function getValue(header, item) {
 }
 
 export function formatValue(header, value) {
+    if (header.columnType === 'toComplete') return '';
     if (value === null || value === undefined) return 'Sin datos';
 
     if (header.columnType === 'dateTime') {
