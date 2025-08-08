@@ -30,8 +30,8 @@ const baseClass = computed(() => {
 
 const mergedClass = computed(() => [
   baseClass.value,
-  ...(props.bgColor?.split(' ') || []),
-  ...(props.contentClass?.split(' ') || []),
+  props.contentClass,
+  props.bgColor,
   props.minWidth,
   props.width,
   props.maxWidth,
