@@ -40,6 +40,7 @@
         clearable
       />
 
+      <KunAutocomplete v-model="selected" label="hola mundo" :items="[0,1,2]" />
 
       <KunAutocomplete v-model="selected" item-title="name" item-subtitle="name" item-value="id"
         :has-create-item="true"  label="hola mundo" return-object multiple

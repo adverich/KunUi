@@ -37,7 +37,7 @@
         <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="true">
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="{ item, index, empty }">
-            <template v-if="!empty && item">
+            <template v-if="!empty && (item !== undefined && item !== null)">
               <KunListItem :value="item" :key="`kun-list-${index + 1}`" :id="`kun-item-${index + 1}`" :disabled="checkDisabled(item)" 
               :bg-items="bgItemListColor" :hover-bg="hoverItemListColor" :activeClass="selectedItemListColor"
               :density="density" :selectable="true">
