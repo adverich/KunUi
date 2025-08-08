@@ -82,9 +82,9 @@ onMounted(() => {
       >
         <template #default="{ item, index }">
           <slot
-            :item="visibleItems.length ? item : null"
-            :index="visibleItems.length ? index : null"
-            :empty="!visibleItems.length"
+            :item="item"
+            :index="index"
+            :empty="visibleItems.length === 0"
           />
         </template>
       </component>
