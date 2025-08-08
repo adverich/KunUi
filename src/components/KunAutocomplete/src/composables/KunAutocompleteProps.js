@@ -52,6 +52,7 @@ export const KunAutocompleteProps = {
   },
 
   closeOnSelect: { type: Boolean, default: true },
+  menuOrigin: { type: String, default: "bottom left" },
 
   startEmtpy: { type: Boolean, default: false },
   placeholderText: { type: String, default: "Seleccionar" },

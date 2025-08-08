@@ -65,7 +65,7 @@ export const formatters = {
         const date = new Date(value);
         return new Intl.DateTimeFormat("es-MX", {
             weekday: "short",
-            day: "numeric",
+            day: "2-digit",
             month: "short",
             year: "2-digit",
         }).format(date);
@@ -74,14 +74,6 @@ export const formatters = {
     dateTime: value => {
         if (!value || value === "0000-00-00" || !isValidDate(value)) return "Nunca";
         const date = new Date(value);
-        // return new Intl.DateTimeFormat("es-MX", {
-        //     day: "numeric",
-        //     month: "short",
-        //     year: "2-digit",
-        //     hour: "numeric",
-        //     minute: "numeric",
-        //     second: "numeric",
-        // }).format(date);
         return new Intl.DateTimeFormat("es-AR", {
             weekday: "short",
             day: "2-digit",

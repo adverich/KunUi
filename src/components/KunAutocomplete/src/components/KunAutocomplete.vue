@@ -26,7 +26,7 @@
       </template>
 
       <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :z-index="zIndex"
-        :parent-ref="parentRef" location="bottom" origin="bottom left" @handleEscape="handleEscape"
+        :parent-ref="parentRef" :origin="menuOrigin" @handleEscape="handleEscape"
         :close-on-content-click="closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
       >
         <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b">
