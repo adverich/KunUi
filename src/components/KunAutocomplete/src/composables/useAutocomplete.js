@@ -15,7 +15,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
     };
 
     const placeholder = computed(() => {
-        if (selectedItem.value) {
+        if (selectedItem.value !== null && selectedItem.value !== undefined) {
             if (isArray(selectedItem.value)) {
                 if (selectedItem.value.length) {
                     return itemToString(selectedItem.value, props.itemTitle, "hasDefault");

@@ -112,7 +112,7 @@ defineExpose({
 });
 
 const uid = `input-${getCurrentInstance().uid}`;
-const isActive = computed(() => (inputFocused.value || !!inputValue.value) || props.dirty);
+const isActive = computed(() => ( inputFocused.value || inputValue.value !== '' || props.dirty ));
 
 const slots = useSlots();
 const hasPrependInner = computed(() => !!slots['prepend-inner']);

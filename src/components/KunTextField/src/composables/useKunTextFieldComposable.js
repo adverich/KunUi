@@ -2,7 +2,7 @@ import { ref, computed, watch, inject, onUnmounted } from 'vue'
 import { debounce } from '../../../../utils/utils.js'
 
 export default function useKunTextField(props, emits) {
-    const inputValue = ref(props.modelValue)
+    const inputValue = ref(props.modelValue ?? '')
     const inputFocused = ref(false)
     const validationError = ref('')
     const isTouched = ref(false)
@@ -31,8 +31,8 @@ export default function useKunTextField(props, emits) {
     // Sincroniza valor externo con inputValue interno
     watch(() => props.modelValue, (newVal) => {
         if (newVal !== inputValue.value) {
-            syncing.value = true
-            inputValue.value = newVal
+            syncing.value = true;
+            inputValue.value = newVal ?? ''
         }
     })
 
