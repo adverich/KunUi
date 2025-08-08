@@ -2,6 +2,7 @@
 
 export const kunMenuProps = {
     class: [String, Array, Object],
+    bgColor: { type: String, default: 'bg-gray-200 dark:bg-gray-800' },
     modelValue: Boolean,
     activator: [String, Object],
     activatorProps: {

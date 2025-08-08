@@ -165,7 +165,7 @@ const props = defineProps({
 
   bgItems: { type: String, default: 'bg-transparent' },
   textColor: { type: String, default: 'text-black dark:text-white' },
-  hoverBg: { type: String, default: 'hover:bg-red-300 dark:hover:bg-slate-700' },
+  hoverBg: { type: String, default: 'hover:bg-slate-300 dark:hover:bg-slate-700' },
   noGutters: Boolean,
   itemPosition: { type: String, default: 'items-start' },
 

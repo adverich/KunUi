@@ -34,7 +34,7 @@
             {{ btnCreateText }}
           </KunBtn>
         </div>
-        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="true">
+        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="true" :bgColor="bgMenuColor">
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="{ item, index, empty }">
             <template v-if="!empty && (item !== undefined && item !== null)">
