@@ -31,10 +31,13 @@ export function useAutocomplete(props, emits, modelValue, items) {
     });
 
     const textArr = computed(() => {
-        if (props.itemText.includes(",")) {
-            return props.itemText.split(",");
+        const txt = props.itemText;
+
+        if (typeof txt === 'string' && txt.includes(",")) {
+            return txt.split(",");
         }
-        return props.itemText;
+
+        return txt;
     });
 
     function itemToString(item, value, hasDefault) {

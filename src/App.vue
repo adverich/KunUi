@@ -40,15 +40,15 @@
         clearable
       />
 
-      <!-- <KunAutocomplete v-model="selected" label="hola mundo" :items="[0,1,2]" /> -->
+      <KunAutocomplete v-model="selected" label="hola mundo" :items="[0,1,2]" />
 
-      <KunAutocomplete v-model="selected" :has-create-item="true"  label="hola mundo" return-object 
+      <!-- <KunAutocomplete v-model="selected" :has-create-item="true"  label="hola mundo" return-object 
         :items="products" :searchable-keys="['measurement_unit.name', 'fullName']"
 
         item-title="fullName" 
         :item-subtitle="['measurement_unit.name','fullName']" 
         item-value="id"
-        />
+        /> -->
     </div>
     <div class="flex justify-center">
 
