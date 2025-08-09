@@ -6,7 +6,7 @@
       :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
       :error="!!internalError" :error-messages="internalError">
 
-      <div v-if="isArray(modelValue)" class="w-full flex overflow-x-auto whitespace-nowrap space-x-1">
+      <div v-if="isArray(modelValue) && isNotEmpty(modelValue)" class="w-full flex overflow-x-auto whitespace-nowrap space-x-1">
         <template v-for="item in modelValue" :key="item.id ?? item.name">
           <KunChip size="small">
             <div class="flex items-center">
@@ -29,7 +29,7 @@
         :parent-ref="parentRef" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor" 
         :close-on-content-click="closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
       >
-        <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b">
+        <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b bg-select-background">
           <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass" >
             {{ btnCreateText }}
           </KunBtn>

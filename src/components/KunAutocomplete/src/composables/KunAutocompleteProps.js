@@ -4,19 +4,19 @@ export const KunAutocompleteProps = {
   },
   itemValue: {
     type: String,
-    default: "",
+    default: null,
   },
   itemTitle: {
-    type: String,
-    default: "",
+    type: [String, Array],
+    default: null,
   },
   itemText: {
-    type: String,
-    default: "",
+    type: [String, Array],
+    default: null,
   },
   itemSubtitle: {
-    type: String,
-    default: "",
+    type: [String, Array],
+    default: null,
   },
 
   returnObject: {

@@ -43,7 +43,17 @@ export function useAutocomplete(props, emits, modelValue, items) {
                 // Verificamos si tiene texto configurado
                 if (isArray(value)) {
                     // Verificamos si el texto es un array de strings
-                    return value.map((i) => item[i] ?? 'No definido').join(" - ");
+                    return value.map((i) => {
+                        if (i.includes(".")) {
+                            const parts = i.split(".");
+                            let result = item;
+                            for (const part of parts) {
+                                result = result != null ? result[part] : undefined;
+                            }
+                            return result ?? "No definido";
+                        }
+                        return item[i] ?? "No definido";
+                    }).join(" - ");
                 }
                 if (value.includes(",")) {
                     // Verificamos si el texto es un string separado por comas
@@ -66,6 +76,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
                 }
 
                 if (item[value] !== undefined && item[value] !== null) {
+                    console.log(value)
                     return item[value].toString();
                 }
                 return "";

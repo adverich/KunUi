@@ -23,17 +23,27 @@ export function useKunInfiniteScroll({
     // MEJORAR EL FILTRADO PORQUE SOLO ESTA BUSCANDO Y FILTRANDO POR STRINGS
     /////////***************************** *//////////////////////////////////
     const filteredItems = computed(() => {
-        const list = items.value || []
-        const q = search.value?.trim().toLowerCase()
-        if (!q || !safeSearchableKeys.value.length) return list
+        const list = items.value || [];
+        const q = search.value?.trim().toLowerCase();
+
+        if (!q || !safeSearchableKeys.value) return list;
+
+        // Normalizar a array
+        const keys = Array.isArray(safeSearchableKeys.value)
+            ? safeSearchableKeys.value
+            : [safeSearchableKeys.value];
 
         return list.filter((item) => {
-            return safeSearchableKeys.value.some((key) => {
-                const val = key.split('.').reduce((obj, k) => obj?.[k], item)
-                return typeof val === 'string' && val.toLowerCase().includes(q)
-            })
-        })
-    })
+            return keys.some((key) => {
+                const val = key
+                    .split('.')
+                    .reduce((obj, k) => (obj != null ? obj[k] : undefined), item);
+
+                if (val == null) return false; // si es null o undefined, este key no hace match
+                return String(val).toLowerCase().includes(q);
+            });
+        });
+    });
 
     const totalItems = computed(() => filteredItems.value.length)
 
