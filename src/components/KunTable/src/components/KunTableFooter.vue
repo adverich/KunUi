@@ -36,7 +36,7 @@ const next = () => {
 </script>
 
 <template>
-  <div class="flex items-center justify-between p-2 text-sm border-t border-slate-300 dark:border-slate-700  bg-slate-50 dark:bg-slate-900">
+  <div class="flex items-center justify-between p-2 text-sm border-t border-slate-300 dark:border-slate-700  bg-surface-dark">
     <div class="text-balck dark:text-white">
       Mostrando {{ start }} - {{ end }} de {{ itemsLength }}
     </div>
@@ -48,7 +48,7 @@ const next = () => {
         @change="emit('update:itemsPerPage', +$event.target.value)"
       >
         <option
-          class="bg-slate-200 dark:bg-slate-800"
+          class="bg-surface"
           v-for="option in pageOptions"
           :key="option"
           :value="option"
@@ -58,7 +58,7 @@ const next = () => {
       </select>
 
       <button
-        class="px-2 py-1 border rounded text-slate-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-gray-800 disabled:opacity-50"
+        class="px-2 py-1 border rounded text-slate-700 dark:text-slate-300 hover:bg-button-hover disabled:opacity-50"
         :disabled="currentPage <= 1"
         @click="prev"
       >
@@ -70,7 +70,7 @@ const next = () => {
       </span>
 
       <button
-        class="px-2 py-1 border rounded text-slate-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-gray-800 disabled:opacity-50"
+        class="px-2 py-1 border rounded text-slate-700 dark:text-slate-300 hover:bg-button-hover disabled:opacity-50"
         :disabled="currentPage >= totalPages"
         @click="next"
       >

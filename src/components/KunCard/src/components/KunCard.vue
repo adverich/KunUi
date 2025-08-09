@@ -158,7 +158,7 @@ const cardClass = computed(() => {
     props.position ? props.position : '',
     props.variant === 'outlined' ? 'border' : '',
     props.variant === 'flat' ? 'shadow-none' : '',
-    props.variant === 'tonal' ? 'bg-gray-100 dark:bg-gray-800' : '',
+    props.variant === 'tonal' ? 'bg-surface-dark' : '',
     props.variant === 'text' ? 'bg-transparent shadow-none' : '',
     props.variant === 'plain' ? '' : ''
   ]

@@ -65,7 +65,7 @@ const props = defineProps({
     validator: v => ['top', 'center', 'bottom'].includes(v),
   },
   contentClass: { type: String, default: '' },
-  bgColor: { type: String, default: 'bg-slate-100 dark:bg-slate-900' },
+  bgColor: { type: String, default: 'bg-surface-dark' },
   minHeight: { type: String, default: 'h-fit' },
   height: { type: String, default: 'h-fit' },
   maxHeight: { type: String, default: 'max-h-[100vh]' },

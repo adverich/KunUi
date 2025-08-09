@@ -26,7 +26,7 @@ const props = defineProps({
   },
   bgColor: {
     type: String,
-    default: 'bg-gray-300 dark:bg-gray-700'
+    default: 'bg-surface-light'
   },
   textColor: {
     type: String,

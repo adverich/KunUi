@@ -76,10 +76,7 @@ const props = defineProps({
   },
   disabled: Boolean,
   loading: Boolean,
-  bgColor: {
-    type: String,
-    default: 'bg-slate-200 dark:bg-slate-800'
-  },
+  bgColor: { type: String, default: 'bg-button' },
   textColor: {
     type: String,
     default: 'text-slate-800 dark:text-slate-200'

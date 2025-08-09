@@ -21,7 +21,7 @@
       <KunVirtualScroller :items="rows" :estimatedItemHeight="36" class="w-full">
         <template #default="{ item: row }">
           <div
-            class="grid items-center hover:bg-slate-200 dark:hover:bg-slate-800"
+            class="grid items-center hover:bg-surface"
             :style="`grid-template-columns: repeat(${columns.length + 1}, minmax(120px, 1fr))`"
           >
             <div class="px-2 py-1 border-b font-medium text-lg">

@@ -154,7 +154,7 @@ const props = defineProps({
 
   disabled: Boolean,
   active: Boolean,
-  activeClass: { type: String, default: 'bg-slate-300 dark:bg-slate-700' },
+  activeClass: { type: String, default: 'bg-surface-light' },
   selectable: { type: Boolean, default: false },
 
   variant: { type: String, default: 'text' },
@@ -165,7 +165,7 @@ const props = defineProps({
 
   bgItems: { type: String, default: 'bg-transparent' },
   textColor: { type: String, default: 'text-black dark:text-white' },
-  hoverBg: { type: String, default: 'hover:bg-slate-300 dark:hover:bg-slate-700' },
+  hoverBg: { type: String, default: 'hover:bg-surface-light' },
   noGutters: Boolean,
   itemPosition: { type: String, default: 'items-start' },
 
@@ -240,7 +240,7 @@ const variantClass = computed(() => {
   switch (props.variant) {
     case 'outlined': return 'border border-gray-300 dark:border-gray-700'
     case 'elevated': return 'shadow-md'
-    case 'tonal': return 'bg-gray-100 dark:bg-gray-800'
+    case 'tonal': return 'bg-surface'
     case 'flat': return 'bg-transparent'
     case 'plain': return ''
     default: return ''

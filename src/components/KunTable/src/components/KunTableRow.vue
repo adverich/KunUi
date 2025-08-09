@@ -102,9 +102,9 @@ function resolveTdClass(item, index) {
   return result?.trim() || '';
 }
 
-const baseRowClass = 'hover:bg-slate-300 dark:hover:bg-slate-600 border-t border-slate-300 dark:border-slate-700';
+const baseRowClass = 'hover:bg-surface-light border-t border-slate-300 dark:border-slate-700';
 const rowClass = computed(() => props.rowClass || baseRowClass);
-const baseTrClass = 'bg-slate-100 dark:bg-slate-900';
+const baseTrClass = 'bg-surface-dark';
 const trClass = computed(() => props.trClass || baseTrClass);
 const conditionalRowClass = computed(() => resolveTdClass(props.item, props.index));
 

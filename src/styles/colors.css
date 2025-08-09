@@ -1,0 +1,74 @@
+:root {
+    --background: #f1f2ff;
+    --appbar: #d6dfff;
+    --appbar-darken: #c6c8ff;
+    --toolbar: #E5F0F0;
+    --toolbar-dark: #D0DCDC;
+    --footer: #d6dfff;
+    --drawer: #dbddff;
+    --card: #e5e6f0;
+    --menu: #cfcfcf;
+
+    --primary: #20A0E0;
+    --secondary: #273F60;
+    --surface: #e5eaff;
+    --surface-dark: #c2c2c2;
+    --surface-light: #c2c8e0;
+    --error: #D56C5D;
+    --success: #8CD88B;
+    --warning: #b0bb76;
+
+    --field-background: #e0e0e0;
+    --field-border: #000000;
+    --field-border-focus: #1a245f;
+    --field-ring-focus: #6e79bb;
+
+    --button: #9a6ed8;
+    --button-hover: #805db1;
+    --accent-button: #7425e4;
+    --button-disabled: #35331a;
+    --icon: #9a6ed8;
+    --accent-icon: #7425e4;
+
+    --select-background: #2e363e;
+    --select-hover: #24292d;
+    --textarea-outline-focus: #9D2817;
+}
+
+:root.dark {
+    --background: #040421;
+    --appbar: #19192d;
+    --appbar-darken: #060614;
+    --toolbar: #252533;
+    --toolbar-dark: #131321;
+    --footer: #19192d;
+    --drawer: #19192d;
+    --drawer-dark: #060614;
+    --card: #2b2b2b;
+    --menu: #191d2d;
+
+    --primary: #20A0E0;
+    --secondary: #273F60;
+    --surface: #0d0d23;
+    --surface-dark: rgb(4, 7, 25);
+    --surface-light: #161634;
+    --error: #9D2817;
+    --success: #0E730D;
+    --warning: #80941b;
+
+    --field-background: #1d1e27;
+    --field-border: #6e79bb;
+    --field-border-focus: #1a245f;
+    --field-ring-focus: #6e79bb;
+
+    --button: #5c22ad;
+    --button-hover: #481c84;
+    --accent-button: #7d48c8;
+    --button-disabled: #35331a;
+    --icon: #5c22ad;
+    --accent-icon: #7d48c8;
+
+    --select-background: #2e363e;
+    --select-hover: #24292d;
+    --textarea-outline-focus: #9D2817;
+}

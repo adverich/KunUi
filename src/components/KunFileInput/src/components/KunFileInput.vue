@@ -9,7 +9,7 @@
       :class="[
         variant === 'outlined' ? 'border border-slate-400 dark:border-slate-600' :
         variant === 'solo' ? 'border-slate-400 dark:border-slate-600 shadow-inner' :
-        'bg-slate-200 dark:bg-slate-800 border border-slate-400 dark:border-slate-600',
+        'bg-surface border border-slate-400 dark:border-slate-600',
         disabled ? 'border-slate-400 dark:border-slate-600 cursor-not-allowed' : 'hover:border-blue-500',
         error || validationErrors.length ? 'border-red-500' : '',
         isFocused ? 'ring-2 ring-blue-500' : '',

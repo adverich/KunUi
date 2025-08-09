@@ -137,7 +137,7 @@ const computedClass = computed(() => {
     borderClass.value,
     props.elevation ? `shadow-${props.elevation}` : '',
     roundedClass.value,
-    props.color ?? 'bg-white dark:bg-slate-800',
+    props.color ?? 'bg-surface-dark',
     props.scrollable ? 'overflow-auto' : ''
   ];
   if (attrs.class) base.push(attrs.class);

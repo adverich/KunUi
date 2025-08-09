@@ -20,7 +20,7 @@
         :class="[
           'relative select-none cursor-pointer',
           vertical ? 'w-2 h-full' : 'h-1.5 w-full',
-          'bg-gray-300 rounded-full'
+          'bg-surface-light rounded-full'
         ]"
         @pointerdown="onTrackClick"
       >

@@ -115,7 +115,7 @@ function resolveTdClass(item, index) {
 }
 
 const defaultContainerClass = 'p-4 shadow-sm';
-const baseRowClass = 'bg-slate-100 dark:bg-slate-900';
+const baseRowClass = 'bg-surface-dark';
 const rowClass = computed(() => props.rowClass || baseRowClass);
 const conditionalRowClass = computed(() => resolveTdClass(props.item, props.index));
 

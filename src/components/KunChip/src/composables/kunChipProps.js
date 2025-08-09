@@ -15,10 +15,7 @@ export const kunChipProps = {
         type: String,
         default: null
     },
-    color: {
-        type: String,
-        default: 'bg-slate-200 dark:bg-slate-800'
-    },
+    color: { type: String, default: 'bg-button' },
     textColor: {
         type: String,
         default: 'text-slate-700 dark:text-slate-300'

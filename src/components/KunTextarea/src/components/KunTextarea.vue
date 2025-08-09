@@ -82,12 +82,12 @@
       <!-- Loader -->
       <div v-if="loading" class="mt-1">
         <slot name="loader" :color="loadingColor" :isActive="true">
-          <div class="h-1 w-full bg-gray-200 rounded overflow-hidden">
+          <div class="h-1 w-full bg-field-background rounded overflow-hidden">
             <div
               class="h-full transition-all duration-300"
               :class="[loadingColor]"
               style="width: 100%"
-            ></div>
+            />
           </div>
         </slot>
       </div>
@@ -183,7 +183,7 @@ const clearIconClasses = computed(() =>
 )
 
 const variantClass = computed(() => {
-  const bg = props.bgColor ? '' : props.variant === 'filled' ? 'bg-gray-100 dark:bg-gray-900' : ''
+  const bg = props.bgColor ? '' : props.variant === 'filled' ? 'bg-surface-dark' : ''
   switch (props.variant) {
     case 'filled':
       return [bg, 'border border-transparent']
@@ -213,7 +213,7 @@ const textareaClasses = computed(() => [
     'shadow-none': props.flat,
     [`text-${props.textColor}`]: props.textColor,
     [props.bgColor]: props.bgColor,
-    'text-gray-500 bg-gray-200': props.disabled,
+    'text-gray-500 bg-surface': props.disabled,
     'focus:outline-none focus:ring-2': !props.disabled,
     [`focus:ring-${props.color}`]: props.color && !props.disabled && !hasError.value,
     'border-red-500 ring-red-500 focus:ring-red-500': hasError.value,

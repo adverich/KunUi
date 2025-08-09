@@ -82,10 +82,10 @@ export const KunAutocompleteProps = {
     type: Boolean,
     default: true,
   },
-  bgMenuColor: { type: String, default: "bg-slate-200 dark:bg-slate-800" },
+  bgMenuColor: { type: String, default: "bg-menu" },
   bgItemListColor: { type: String, default: "bg-transparent" },
-  selectedItemListColor: { type: String, default: "bg-slate-100 dark:bg-slate-900" },
-  hoverItemListColor: { type: String, default: "hover:bg-slate-300 dark:hover:bg-slate-700" },
+  selectedItemListColor: { type: String, default: "bg-select-background" },
+  hoverItemListColor: { type: String, default: "hover:bg-select-hover" },
   attach: {
     type: Boolean,
     default: false

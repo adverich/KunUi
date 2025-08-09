@@ -10,7 +10,7 @@ const props = defineProps({
   labelPosition: { type: String, default: 'right' }, // 'top', 'bottom', 'left', 'right'
   disabled: Boolean,
   onColor: { type: String, default: 'bg-green-600' },
-  offColor: { type: String, default: 'bg-gray-300' },
+  offColor: { type: String, default: 'bg-surface-light' },
   iconColor: { type: String, default: 'bg-white' },
   inset: Boolean,
   hideDetails: { type: Boolean, default: false },

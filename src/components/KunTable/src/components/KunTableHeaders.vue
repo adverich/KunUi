@@ -118,7 +118,7 @@ const getSortIcon = (header) => {
   return order === 'asc' ? arrowUp : arrowDown;
 }
 
-const baseTheadClass = 'bg-slate-200 dark:bg-slate-800 sticky top-0 z-5';
+const baseTheadClass = 'bg-surface sticky top-0 z-5';
 const mergedTheadClass = [baseTheadClass, props.theadClass];
 
 const baseTrClass = '';

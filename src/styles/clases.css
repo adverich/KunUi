@@ -1,0 +1,116 @@
+.bg-background {
+    background-color: var(--background);
+}
+
+.bg-appbar {
+    background-color: var(--appbar);
+}
+
+.bg-appbar-darken {
+    background-color: var(--appbar-darken);
+}
+
+.bg-toolbar {
+    background-color: var(--toolbar);
+}
+
+.bg-toolbar-dark {
+    background-color: var(--toolbar-dark);
+}
+
+.bg-footer {
+    background-color: var(--footer);
+}
+
+.bg-drawer {
+    background-color: var(--drawer);
+}
+
+.bg-card {
+    background-color: var(--card);
+}
+
+.bg-menu {
+    background-color: var(--menu);
+}
+
+.bg-primary {
+    background-color: var(--primary);
+}
+
+.bg-secondary {
+    background-color: var(--secondary);
+}
+
+.bg-surface {
+    background-color: var(--surface);
+}
+
+.bg-surface-dark {
+    background-color: var(--surface-dark);
+}
+
+.bg-surface-light {
+    background-color: var(--surface-light);
+}
+
+.bg-error {
+    background-color: var(--error);
+}
+
+.bg-success {
+    background-color: var(--success);
+}
+
+.bg-warning {
+    background-color: var(--warning);
+}
+
+
+.bg-button {
+    background-color: var(--button);
+}
+
+.bg-button-hover {
+    background-color: var(--button-hover);
+}
+
+.bg-accent-button {
+    background-color: var(--accent-button);
+}
+
+.bg-button-disabled {
+    background-color: var(--button-disabled);
+}
+
+.bg-accent-button-icon {
+    background-color: var(--accent-button-icon);
+}
+
+.bg-field-background {
+    background-color: var(--field-background);
+}
+
+.field-border {
+    border-color: var(--field-border);
+}
+
+.field-border-focus {
+    border-color: var(--field-border-focus);
+}
+
+.field-ring-focus {
+    border-color: var(--field-ring-focus);
+}
+
+.bg-select-background {
+    background-color: var(--select-background);
+}
+
+.bg-select-hover {
+    background-color: var(--select-hover);
+}
+
+.textarea-outline-focus {
+    outline-color: var(--textarea-outline-focus);
+}
