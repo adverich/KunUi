@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-dvh text-black dark:text-white overflow-hidden" style="overflow: hidden!important;">
+  <div class="flex flex-col h-dvh text-black dark:text-white overflow-hidden bg-slate-50" style="overflow: hidden!important;">
     <KunAppbar bg-color="bg-slate-400 dark:bg-slate-800" @toggle-drawer="leftDrawerStatus = !leftDrawerStatus" showDrawerButton>
       <template #actions>
         <KunBtn @click="modaDialgo = true" text="dialgo"/>
