@@ -67,7 +67,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
                     const parts = value.split(".");
                     let result = item;
                     for (const part of parts) {
-                        result = result[part]
+                        result = result != null ? result[part] : undefined;
                     }
                     return result;
                 }
