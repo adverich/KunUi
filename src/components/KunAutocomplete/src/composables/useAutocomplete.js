@@ -48,7 +48,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
                             const parts = i.split(".");
                             let result = item;
                             for (const part of parts) {
-                                result = result != null ? result[part] : undefined;
+                                result = result != null ? result[part] : '';
                             }
                             return result ?? "No definido";
                         }
@@ -67,7 +67,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
                     const parts = value.split(".");
                     let result = item;
                     for (const part of parts) {
-                        result = result != null ? result[part] : undefined;
+                        result = result != null ? result[part] : '';
                     }
                     return result;
                 }
@@ -76,7 +76,6 @@ export function useAutocomplete(props, emits, modelValue, items) {
                 }
 
                 if (item[value] !== undefined && item[value] !== null) {
-                    console.log(value)
                     return item[value].toString();
                 }
                 return "";

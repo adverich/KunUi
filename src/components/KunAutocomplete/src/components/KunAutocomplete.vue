@@ -143,7 +143,6 @@ function textKeyDown(e) {
   if (['ArrowUp', 'ArrowDown'].includes(key)) {
     e.preventDefault();
     if (!menuModel.value) openMenu();
-    console.log('listRef.value', listRef.value);
     
     listRef.value?.focusWithKey?.(key);
   }
