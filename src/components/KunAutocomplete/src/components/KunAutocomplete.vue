@@ -42,7 +42,7 @@
               :bg-items="bgItemListColor" :hover-bg="hoverItemListColor" :activeClass="selectedItemListColor"
               :density="density" :selectable="true">
                 <KunListItemTitle class="text-wrap">
-                  {{ itemToString(item, itemTitle ?? textArr, 'hasDefault') }}
+                  {{ itemToString(item, itemTitle ?? textArr, 'hasDefault') }} 
                 </KunListItemTitle>
                 <KunListItemSubtitle :text="itemSubtitle ? itemToString(item, itemSubtitle) : ''" />
               </KunListItem>

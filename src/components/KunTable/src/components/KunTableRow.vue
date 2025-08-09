@@ -102,7 +102,7 @@ function resolveTdClass(item, index) {
   return result?.trim() || '';
 }
 
-const baseRowClass = 'hover:bg-surface-light border-t border-slate-300 dark:border-slate-700';
+const baseRowClass = 'hover:bg-select-hover border-t border-slate-300 dark:border-slate-700';
 const rowClass = computed(() => props.rowClass || baseRowClass);
 const baseTrClass = 'bg-surface-dark';
 const trClass = computed(() => props.trClass || baseTrClass);

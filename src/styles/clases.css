@@ -71,7 +71,7 @@
     background-color: var(--button);
 }
 
-.bg-button-hover {
+.hover\:bg-button-hover:hover {
     background-color: var(--button-hover);
 }
 
@@ -107,7 +107,7 @@
     background-color: var(--select-background);
 }
 
-.bg-select-hover {
+.hover\:bg-select-hover:hover {
     background-color: var(--select-hover);
 }
 

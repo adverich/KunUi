@@ -18,7 +18,7 @@ export const KunNumberFieldProps = {
   textColor: { type: String, default: 'text-black dark:text-white' },
   labelColor: { type: String, default: 'text-black/80 dark:text-white/80' },
   placeholderColor: { type: String, default: 'placeholder-black/60 dark:placeholder-white/60' },
-  bgInput: { type: String, default: 'bg-surface' },
+  bgInput: { type: String, default: 'bg-field-background' },
   textCenter: { type: Boolean, default: false },
   controlVariant: { type: String, default: 'default' },
   noArrows: { type: Boolean, default: false },

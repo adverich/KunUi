@@ -183,7 +183,7 @@ const clearIconClasses = computed(() =>
 )
 
 const variantClass = computed(() => {
-  const bg = props.bgColor ? '' : props.variant === 'filled' ? 'bg-surface-dark' : ''
+  const bg = props.bgColor ? '' : props.variant === 'filled' ? 'bg-field-background' : ''
   switch (props.variant) {
     case 'filled':
       return [bg, 'border border-transparent']

@@ -103,7 +103,7 @@ const props = defineProps({
   borderColor: { type: String, default: 'border-b border-slate-200 dark:border-slate-800' },
   showDrawerButton: { type: Boolean, default: true },
   buttonClass: { type: String, default: 'px-2' },
-  buttonBg: { type: String, default: 'bg-button-disabled' },
+  buttonBg: { type: String, default: 'bg-button-disabled opacity-75' },
   leftSectionClass: { type: String, default: 'flex items-center gap-2' },
   rightSectionClass: { type: String, default: 'flex items-center gap-2 justify-end ml-auto' },
   zIndex: { type: String, default: 'z-1000' },
