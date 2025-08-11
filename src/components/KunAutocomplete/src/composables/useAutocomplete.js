@@ -11,8 +11,6 @@ export function useAutocomplete(props, emits, modelValue, items) {
     const getArrayText = (item, string) => {
         if (props.returnObject) return itemToString(item, props.itemTitle);
         const finded = selectedItem.value.find((i) => i[props.itemValue] === item);
-        console.log(selectedItem.value)
-        console.log(finded)
         return itemToString(finded, props.itemTitle);
     };
 
@@ -188,27 +186,15 @@ export function useAutocomplete(props, emits, modelValue, items) {
     function checkIfValueExist(value) {
         if (!modelValue.value || !value) return false;
 
-        const compareValue = props.returnObject
-            ? value[props.itemValue]
-            : value;
-
-        return modelValue.value.some((i) => {
-            const current = props.returnObject ? i[props.itemValue] : i;
-            return current === compareValue;
-        });
+        const compareValue = props.returnObject ? value : value[props.itemValue];
+        return modelValue.value.some((i) => i === compareValue);
     }
 
     function removeFromArray(value) {
-        const val = props.returnObject
-            ? value[props.itemValue]
-            : value;
+        const val = props.returnObject ?
+            value : value[props.itemValue];
 
-        const updated = modelValue.value.filter((i) => {
-            const current = props.returnObject ? i[props.itemValue] : i;
-            return current !== val;
-        });
-
-        modelValue.value = updated;
+        modelValue.value = modelValue.value.filter((i) => i !== val);
     }
 
     function lightReset(event) {
