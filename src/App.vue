@@ -45,7 +45,7 @@
       <!-- <KunAutocomplete v-model="selected" label="hola mundo" :items="[0,1,2]" /> -->
 
       <div class="w-1/2">
-        <KunAutocomplete v-model="selected" :has-create-item="true"  label="hola mundo" return-object 
+        <KunAutocomplete v-model="selected" :has-create-item="true"  label="hola mundo" 
           :items="products" :searchable-keys="['measurement_unit.name', 'fullName']"
           multiple
           item-title="fullName" 

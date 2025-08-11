@@ -10,12 +10,12 @@
       <template #prepend-input-content>
         <div
           v-if="isArray(modelValue) && isNotEmpty(modelValue)"
-          class="flex flex-nowrap items-center space-x-1 min-w-0 w-full overflow-x-auto overflow-y-hidden"
+          class="flex flex-nowrap items-center space-x-1 min-w-3xs max-w-full overflow-x-auto overflow-y-hidden"
         >
           <template v-for="item in modelValue" :key="item.id ?? item.name">
             <KunChip size="small" variant="pill">
               <div class="flex items-center">
-                {{ itemToString(item, itemTitle) }}
+                {{ getArrayText(item) }}
                 <KunIcon
                   color="error"
                   :icon="icons.close"
@@ -100,7 +100,7 @@ const props = defineProps(KunAutocompleteProps);
 const emits = defineEmits(["update:modelValue", "selectedItem", "createItem", "validation", "search"]);
 
 const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, closeMenu, toggleMenu, onMenuKeydown,
-  getSelectedItem, textArr, getItemText, isAlphanumeric,
+  getSelectedItem, textArr, getArrayText, isAlphanumeric,
   createItem, checkDisabled, itemToString, placeholder, 
 } = useAutocomplete(props, emits, modelValue, items);
 

@@ -8,10 +8,12 @@ export function useAutocomplete(props, emits, modelValue, items) {
     const menuModel = ref(false);
     const search = ref("");
 
-    const getItemText = (obj, string) => {
-        return string.split('.').reduce((acc, key) => {
-            return acc && acc[key] !== undefined ? acc[key] : null;
-        }, obj);
+    const getArrayText = (item, string) => {
+        if (props.returnObject) return itemToString(item, props.itemTitle);
+        const finded = selectedItem.value.find((i) => i[props.itemValue] === item);
+        console.log(selectedItem.value)
+        console.log(finded)
+        return itemToString(finded, props.itemTitle);
     };
 
     const placeholder = computed(() => {
@@ -294,7 +296,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     return {
-        selectedItem, textFieldRef, listRef, menuModel, search, getItemText,
+        selectedItem, textFieldRef, listRef, menuModel, search, getArrayText,
         placeholder, textArr, itemToString, getSelectedItem,
         checkIfValueExist, removeFromArray, lightReset, openMenu, closeMenu, toggleMenu, focusOnMenu, onMenuKeydown, createItem,
         removeItem, clearSelection, checkDisabled, isAlphanumeric,
