@@ -35,20 +35,24 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-fit flex overflow-auto justify-center bg-gray-900">
-      <KunNumberField text-center v-model="testTxtArea" variant="outlined" 
-        label="pepe" precision="0" dirty noArrows @update:model-value="checkItem"
-        clearable
-      />
+      <div class="w-1/2">
+        <KunNumberField text-center v-model="testTxtArea" variant="outlined" 
+          label="pepe" precision="0" dirty noArrows @update:model-value="checkItem"
+          clearable
+        />
+      </div>
 
-      <KunAutocomplete v-model="selected" label="hola mundo" :items="[0,1,2]" />
+      <!-- <KunAutocomplete v-model="selected" label="hola mundo" :items="[0,1,2]" /> -->
 
-      <!-- <KunAutocomplete v-model="selected" :has-create-item="true"  label="hola mundo" return-object 
-        :items="products" :searchable-keys="['measurement_unit.name', 'fullName']"
-
-        item-title="fullName" 
-        :item-subtitle="['measurement_unit.name','fullName']" 
-        item-value="id"
-        /> -->
+      <div class="w-1/2">
+        <KunAutocomplete v-model="selected" :has-create-item="true"  label="hola mundo" return-object 
+          :items="products" :searchable-keys="['measurement_unit.name', 'fullName']"
+          multiple
+          item-title="fullName" 
+          :item-subtitle="['measurement_unit.name','fullName']" 
+          item-value="id"
+        />
+      </div>
     </div>
     <div class="flex justify-center">
 
@@ -194,7 +198,7 @@ const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
 const productFamilies = ref(generateFakeFamilies(100));
 const productMkups = ref(generateFakeMkups(5));
-const products = ref(generateFakeProductsFull(1));
+const products = ref(generateFakeProductsFull(15));
 
 const currentTheme = ref('dark')
 const selected = ref([])

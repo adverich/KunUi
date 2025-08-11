@@ -1,21 +1,33 @@
 <template>
   <div class="w-full h-fit" ref="parentRef">
+
     <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
       autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
       @blur="textFieldBlur" @keyDown="textKeyDown"
       :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
-      :error="!!internalError" :error-messages="internalError">
-
-      <div v-if="isArray(modelValue) && isNotEmpty(modelValue)" class="w-full flex overflow-x-auto whitespace-nowrap space-x-1">
-        <template v-for="item in modelValue" :key="item.id ?? item.name">
-          <KunChip size="small">
-            <div class="flex items-center">
-              {{ getItemText(item, itemTitle) }}
-              <KunIcon color="error" :icon="icons.close" size="small" class="ml-1" @click="removeItem(item)" />
-            </div>
-          </KunChip>
-        </template>
-      </div>
+      :error="!!internalError" :error-messages="internalError"
+    >
+      <template #prepend-input-content>
+        <div
+          v-if="isArray(modelValue) && isNotEmpty(modelValue)"
+          class="flex flex-nowrap items-center space-x-1 min-w-0 w-full overflow-x-auto overflow-y-hidden"
+        >
+          <template v-for="item in modelValue" :key="item.id ?? item.name">
+            <KunChip size="small" variant="pill">
+              <div class="flex items-center">
+                {{ getItemText(item, itemTitle) }}
+                <KunIcon
+                  color="error"
+                  :icon="icons.close"
+                  size="small"
+                  class="ml-1"
+                  @click="removeItem(item)"
+                />
+              </div>
+            </KunChip>
+          </template>
+        </div>
+      </template>
 
       <template v-if="hasIcons" v-slot:append-inner>
         <KunIcon v-if="clearable && modelValue" @click="clearSelection" size="small" color="error" :icon="icons.close"

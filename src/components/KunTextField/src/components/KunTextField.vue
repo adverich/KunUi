@@ -15,10 +15,13 @@
         hasError ? 'bg-red-200 dark:bg-red-900' : ''
       ]">
         <div v-if="prefix" class="mr-2">{{ prefix }}</div>
+
         <div v-if="hasPrependInner" :class="prependInnerClass"
           class="flex items-center justify-center min-w-[32px] h-full px-1">
           <slot name="prepend-inner" />
         </div>
+
+        <slot name="prepend-input-content" />
 
         <!-- Input -->
         <input ref="inputField" :type="inputType" :value="inputValue" :id="uid" :placeholder="placeholder"
