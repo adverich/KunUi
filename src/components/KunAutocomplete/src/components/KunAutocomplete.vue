@@ -15,7 +15,7 @@
           <template v-for="item in modelValue" :key="item.id ?? item.name">
             <KunChip size="small" variant="pill">
               <div class="flex items-center">
-                {{ getItemText(item, itemTitle) }}
+                {{ itemToString(item, itemTitle) }}
                 <KunIcon
                   color="error"
                   :icon="icons.close"
