@@ -212,7 +212,7 @@ const slotProps = computed(() => ({
   hasActions: props.hasActions,
 }));
 
-const baseWrapperClass = 'overflow-hidden h-dvh w-full flex flex-col border border-slate-200 dark:border-slate-800 rounded';
+const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col border border-slate-200 dark:border-slate-800 rounded';
 const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
 
 const baseTableClass = 'table-auto w-full h-fit text-sm text-left';

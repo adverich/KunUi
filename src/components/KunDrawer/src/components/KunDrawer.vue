@@ -83,7 +83,7 @@ const computedTop = computed(() =>
 )
 
 const computedHeight = computed(() =>
-  props.fullHeight ? '100vh' : `calc(100vh - ${appbarHeight.value}px)`
+  props.fullHeight ? isMobile ? '100dvh' : '100vh' : `calc(100vh - ${appbarHeight.value}px)`
 )
 
 // Width class
