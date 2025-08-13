@@ -21,7 +21,7 @@ const props = defineProps({
 const baseClass = computed(() => {
   if (props.fullscreen) {
     const overflowClass = props.scrollable ? 'overflow-y-auto' : 'overflow-visible';  
-    return `fixed inset-0 w-screen h-[100dvh] sm:h-screen rounded-none shadow-none overflow-visible ${overflowClass}`;
+    return `fixed inset-0 w-screen h-screen rounded-none shadow-none overflow-visible ${overflowClass}`;
   }
 
   const overflowClass = props.scrollable ? 'overflow-y-auto' : 'overflow-visible';
