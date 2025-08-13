@@ -16,7 +16,6 @@
     ]"
     :style="drawerStyle"
     @click.stop
-    <!-- listeners locales (cuando está abierto o ya se activó isDragging) -->
     @touchstart.passive="onTouchStart"
     @touchmove.passive="onTouchMove"
     @touchend.passive="onTouchEnd"
