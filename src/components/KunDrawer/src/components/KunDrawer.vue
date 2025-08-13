@@ -265,16 +265,26 @@ function endDrag() {
 
 /* Local touch listeners */
 function onTouchStart(e) {
-  if (!props.swipeable || !props.modelValue || isInteractiveTarget(e.target)) return
+  if (!props.swipeable || isInteractiveTarget(e.target)) return
   const x = getClientX(e)
   nextTick(() => {
     measureDrawerWidth()
+
+    // Si está abierto → detectar desde cualquier punto del drawer
+    if (props.modelValue) {
+      beginDrag(x)
+      return
+    }
+
+    // Si está cerrado → solo detectar si viene desde el borde (handle)
     const handleHit = isStart.value
-      ? x >= drawerWidth.value - props.swipeHandleSize && x <= drawerWidth.value + 8
-      : x <= window.innerWidth - (drawerWidth.value - props.swipeHandleSize) && x >= window.innerWidth - drawerWidth.value - 8
+      ? x <= props.swipeEdgeSize
+      : x >= window.innerWidth - props.swipeEdgeSize
+
     if (handleHit) beginDrag(x)
   })
 }
+
 function onTouchMove(e) {
   if (isDragging.value) {
     e.preventDefault() // evita scroll mientras arrastras
