@@ -4,21 +4,18 @@
     v-show="modelValue || permanent || isDragging"
     :is="tag"
     ref="drawerEl"
-    class="fixed z-[2001] flex flex-col select-none will-change-transform"
+    class="z-[2001] flex flex-col select-none will-change-transform"
     :class="[
       computedClass,
       absolute ? 'absolute' : 'fixed',
       floating ? 'border-none' : '',
-      // cuando arrastro: sin transición; cuando suelto/aprieto: usa la transición configurable
       isDragging ? 'transition-none' : swipeTransition,
-      // permite scroll vertical dentro, pero gestos horizontales del drawer
       'touch-pan-y'
     ]"
     :style="drawerStyle"
     @click.stop
-    <!-- listeners locales (cuando está abierto o ya se activó isDragging) -->
     @touchstart.passive="onTouchStart"
-    @touchmove.passive="onTouchMove"
+    @touchmove="onTouchMove"
     @touchend.passive="onTouchEnd"
   >
     <slot name="prepend" />
@@ -26,15 +23,12 @@
     <slot name="append" />
   </component>
 
-  <!-- Scrim con opacidad progresiva -->
+  <!-- Scrim -->
   <Transition name="kun-scrim">
     <div
       v-if="scrim && (modelValue || isDragging) && !permanent && !persistent"
-      class="fixed inset-0 z-30"
-      :style="{
-        backgroundColor: `rgba(0,0,0,${0.4 * openProgress})`,
-        transition: isDragging ? 'none' : scrimTransition
-      }"
+      class="fixed inset-0 bg-black"
+      :style="{ opacity: 0.4 * (1 - openProgress) }"
       @click="close"
     />
   </Transition>
@@ -44,9 +38,15 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useAppbarHeight } from '@/utils/useLayout'
 
-/* 👇 compat v-model camel & kebab */
-const emits = defineEmits(['update:model-value','update:modelValue'])
-function emitModel (val) {
+/* Emits */
+const emits = defineEmits([
+  'update:model-value',
+  'update:modelValue',
+  'swipe-start',
+  'swipe-move',
+  'swipe-end'
+])
+function emitModel(val) {
   emits('update:model-value', val)
   emits('update:modelValue', val)
 }
@@ -59,7 +59,7 @@ const props = defineProps({
   elevation: [String, Number],
   floating: Boolean,
   image: String,
-  location: { type: String, default: 'start' }, // start|end|left|right|top|bottom
+  location: { type: String, default: 'start' },
   permanent: Boolean,
   persistent: Boolean,
   rail: Boolean,
@@ -72,36 +72,48 @@ const props = defineProps({
   fullHeight: Boolean,
   scrollable: { type: Boolean, default: true },
 
-  /* --- NUEVAS / ya tenías --- */
+  /* Swipe */
   swipeable: { type: Boolean, default: false },
-  swipeThreshold: { type: Number, default: 50 },        // px para decidir apertura/cierre
-  swipeEdgeSize: { type: Number, default: 30 },         // px desde el borde para iniciar si está cerrado
+  swipeThreshold: { type: Number, default: 50 },
+  swipeEdgeSize: { type: Number, default: 30 },
   swipeTransition: { type: String, default: 'transition-transform duration-300 ease-in-out' },
 
-  /* --- extras (opcionales) --- */
-  swipeHandleSize: { type: Number, default: 24 },       // zona interna para comenzar drag cuando está abierto
-  swipeMinVelocity: { type: Number, default: 0.35 },    // px/ms para "flick" (abrir/cerrar aunque no llegue al threshold)
-  scrimTransition: { type: String, default: 'opacity 200ms ease' }
+  swipeHandleSize: { type: Number, default: 24 },
+  swipeMinVelocity: { type: Number, default: 0.35 },
+  scrimTransition: { type: String, default: 'opacity 200ms ease' },
+
+  animationDuration: { type: Number, default: 300 },
+  animationEasing: { type: String, default: 'ease-in-out' },
+
+  /* Nuevo */
+  peekSize: { type: Number, default: 0 } // borde visible cuando está cerrado
 })
 
-const appbarHeight = useAppbarHeight();
+/* Layout */
+const appbarHeight = useAppbarHeight()
 const drawerEl = ref(null)
+const drawerWidth = ref(256)
+let drawerWidthCached = 256
 
-/* Posición y dimensiones */
-const computedTop = computed(() =>
-  props.fullHeight ? '0px' : `${appbarHeight.value}px`
-)
+function measureDrawerWidth() {
+  drawerWidthCached = drawerEl.value?.offsetWidth || drawerWidthCached
+  drawerWidth.value = drawerWidthCached
+}
+
+/* Computed base */
+const computedTop = computed(() => props.fullHeight ? '0px' : `${appbarHeight.value}px`)
 const computedHeight = computed(() =>
   props.fullHeight
     ? (typeof window !== 'undefined' && window.innerWidth < 768 ? '100dvh' : '100vh')
     : `calc(100vh - ${appbarHeight.value}px)`
 )
-
 const widthClass = computed(() => props.rail ? props.railWidth : props.width)
+const isStart = computed(() => ['start', 'left'].includes(props.location))
+const isEnd = computed(() => ['end', 'right'].includes(props.location))
 
+/* Classes */
 const positionClass = computed(() => {
-  const pos = props.location
-  switch (pos) {
+  switch (props.location) {
     case 'start':
     case 'left': return 'left-0 top-0 h-full'
     case 'end':
@@ -111,23 +123,17 @@ const positionClass = computed(() => {
     default: return 'left-0 top-0 h-full'
   }
 })
-
-const isStart = computed(() => ['start','left'].includes(props.location))
-const isEnd   = computed(() => ['end','right'].includes(props.location))
-
 const borderClass = computed(() => {
   if (!props.border) return ''
   if (typeof props.border === 'string') return `border-${props.border}`
   return 'border'
 })
-
 const roundedClass = computed(() => {
   if (props.rounded === true) return isStart.value ? 'rounded-r' : 'rounded-l'
   if (typeof props.rounded === 'string') return props.rounded
   if (typeof props.rounded === 'number') return `rounded-[${props.rounded}px]`
   return ''
 })
-
 const computedClass = computed(() => ([
   positionClass.value,
   widthClass.value,
@@ -138,223 +144,183 @@ const computedClass = computed(() => ([
   props.scrollable ? 'overflow-auto' : ''
 ]))
 
-/* --- Swipe handling --- */
+/* Drag state */
 const startX = ref(0)
 const currentX = ref(0)
 const isDragging = ref(false)
-const drawerWidth = ref(0)
-/* tracking para velocidad (flick) */
 let lastMoveTs = 0
 let lastMoveX = 0
-let velocity = 0 // px/ms
+let velocity = 0
 
-/* progreso de apertura para scrim (0 cerrado, 1 abierto) */
+/* Progress */
 const openProgress = computed(() => {
-  // translate actual en px (negativo a la izquierda)
-  const t = calcTranslateX()
+  const t = getTranslate()
   const w = drawerWidth.value || 1
-  if (isStart.value) {
-    // -w (cerrado) -> 0 (abierto)
-    return Math.min(1, Math.max(0, 1 - Math.abs(t) / w))
-  } else if (isEnd.value) {
-    // w (cerrado) -> 0 (abierto)
-    return Math.min(1, Math.max(0, 1 - Math.abs(t) / w))
-  }
-  return props.modelValue ? 1 : 0
+  return Math.min(1, Math.max(0, 1 - Math.abs(t) / w))
 })
 
-/* Traducción actual (se usa en style y progreso) */
-function calcTranslateX () {
-  if (!props.swipeable) return props.modelValue ? 0 : (isStart.value ? - (drawerWidth.value || 0) : (drawerWidth.value || 0))
+/* Translate calculation */
+function getClosedTranslate() {
+  const peek = isDragging.value ? 0 : props.peekSize
+  return isStart.value
+    ? -drawerWidth.value + peek
+    : drawerWidth.value - peek
+}
 
-  let translate = 0
+function getOpenTranslate() {
+  return 0
+}
+
+function getTranslate() {
+  if (!props.swipeable) {
+    return props.modelValue ? getOpenTranslate() : getClosedTranslate()
+  }
   if (isDragging.value) {
     const delta = currentX.value - startX.value
-    if (isStart.value) {
-      translate = props.modelValue ? Math.min(0, delta) : Math.min(drawerWidth.value, -(drawerWidth.value - delta))
-    } else if (isEnd.value) {
-      translate = props.modelValue ? Math.max(0, delta) : Math.max(-drawerWidth.value, drawerWidth.value + delta)
+    if (props.modelValue) {
+      return isStart.value ? Math.min(0, delta) : Math.max(0, delta)
+    } else {
+      return isStart.value
+        ? Math.min(drawerWidth.value, getClosedTranslate() + delta)
+        : Math.max(-drawerWidth.value, getClosedTranslate() + delta)
     }
-  } else if (!props.modelValue) {
-    translate = isStart.value ? -drawerWidth.value : drawerWidth.value
   }
-  return translate
+  return props.modelValue ? getOpenTranslate() : getClosedTranslate()
 }
 
 const drawerStyle = computed(() => {
-  const translate = calcTranslateX()
+  let duration = props.animationDuration
+  if (!isDragging.value) {
+    const remaining = drawerWidth.value * (1 - openProgress.value)
+    duration = Math.max(120, Math.min(300, remaining * 1.2))
+  }
   return {
-    transform: `translateX(${translate}px)`,
+    transform: `translateX(${getTranslate()}px)`,
     top: computedTop.value,
-    height: computedHeight.value
+    height: computedHeight.value,
+    transition: isDragging.value
+      ? 'none'
+      : `transform ${duration}ms ${props.animationEasing}`
   }
 })
 
-/* Utils */
-function getClientX (e) {
+/* Helpers */
+function getClientX(e) {
   if (e?.touches?.length) return e.touches[0].clientX
   if (e?.changedTouches?.length) return e.changedTouches[0].clientX
   return e.clientX
 }
-
-function isInteractiveTarget (el) {
+function isInteractiveTarget(el) {
   const selector = 'input,textarea,select,button,a,[role="button"],[data-no-drag]'
-  return !!el && (el.closest?.(selector))
+  return !!el && el.closest?.(selector)
 }
 
-/* Listeners locales (cuando el drawer ya está capturando) */
-function onTouchStart (e) {
-  if (!props.swipeable) return
-  if (!props.modelValue) return // cuando está cerrado, se usa el listener global de borde
-  if (isInteractiveTarget(e.target)) return
-
-  const x = getClientX(e)
-  // restringir inicio a un handle interno para no interferir con contenido
-  nextTick(() => {
-    drawerWidth.value = drawerEl.value?.getBoundingClientRect?.().width || drawerWidth.value || 256
-    const handleHit = isStart.value
-      ? x >= drawerWidth.value - props.swipeHandleSize && x <= drawerWidth.value + 8
-      : x <= window.innerWidth - (drawerWidth.value - props.swipeHandleSize) && x >= window.innerWidth - drawerWidth.value - 8
-    if (!handleHit) return
-    beginDrag(x)
-  })
-}
-
-function onTouchMove (e) {
-  if (!isDragging.value) return
-  const x = getClientX(e)
-  updateDrag(x)
-}
-
-function onTouchEnd () {
-  if (!isDragging.value) return
-  endDrag()
-}
-
-/* --- Global pointer para abrir desde el borde y funcionar en desktop --- */
-function onPointerDownGlobal (e) {
-  if (!props.swipeable || props.permanent) return
-  // si está abierto, dejamos que los handlers locales decidan
-  if (props.modelValue) return
-
-  // ignorar clicks en elementos interactivos (p. ej. Swiper dentro, etc.)
-  if (isInteractiveTarget(e.target)) return
-
-  const x = getClientX(e)
-  const fromEdge = isStart.value
-    ? x <= props.swipeEdgeSize
-    : x >= window.innerWidth - props.swipeEdgeSize
-
-  if (!fromEdge) return
-
-  // activamos el drawer para poder medir y arrastrar
+/* Drag core */
+function beginDrag(x) {
   isDragging.value = true
   startX.value = x
   currentX.value = x
   lastMoveX = x
   lastMoveTs = performance.now()
   velocity = 0
+  measureDrawerWidth()
+  emits('swipe-start', { x, width: drawerWidth.value })
+}
 
-  // v-show depende de isDragging → esperar a que esté en DOM y medir
-  nextTick(() => {
-    drawerWidth.value = drawerEl.value?.getBoundingClientRect?.().width || drawerWidth.value || 256
+let dragRAF = null
+function updateDrag(x) {
+  if (dragRAF) cancelAnimationFrame(dragRAF)
+  dragRAF = requestAnimationFrame(() => {
+    const now = performance.now()
+    const dx = x - lastMoveX
+    const dt = Math.max(1, now - lastMoveTs)
+    velocity = dx / dt
+    lastMoveX = x
+    lastMoveTs = now
+    currentX.value = x
+    emits('swipe-move', { x, progress: openProgress.value })
   })
 }
 
-function onPointerMoveGlobal (e) {
-  if (!isDragging.value) return
-  const x = getClientX(e)
-  updateDrag(x)
-}
-
-function onPointerUpGlobal () {
-  if (!isDragging.value) return
-  endDrag()
-}
-
-/* Core drag helpers */
-function beginDrag (x) {
-  isDragging.value = true
-  startX.value = x
-  currentX.value = x
-  lastMoveX = x
-  lastMoveTs = performance.now()
-  velocity = 0
-  drawerWidth.value = drawerEl.value?.getBoundingClientRect?.().width || drawerWidth.value || 256
-}
-
-function updateDrag (x) {
-  const now = performance.now()
-  // velocidad en px/ms
-  const dx = x - lastMoveX
-  const dt = Math.max(1, now - lastMoveTs)
-  velocity = dx / dt
-  lastMoveX = x
-  lastMoveTs = now
-  currentX.value = x
-}
-
-function endDrag () {
+function endDrag() {
   const diff = currentX.value - startX.value
   const v = velocity
-
   isDragging.value = false
 
-  // Regla de decisión: flick o threshold
   if (isStart.value) {
     if (!props.modelValue) {
-      if (diff > props.swipeThreshold || v > props.swipeMinVelocity) {
-        emitModel(true)
-      } else {
-        emitModel(false)
-      }
+      emitModel(diff > props.swipeThreshold || v > props.swipeMinVelocity)
     } else {
-      if (diff < -props.swipeThreshold || v < -props.swipeMinVelocity) {
-        emitModel(false)
-      } else {
-        emitModel(true)
-      }
+      emitModel(!(diff < -props.swipeThreshold || v < -props.swipeMinVelocity))
     }
   } else if (isEnd.value) {
     if (!props.modelValue) {
-      if (diff < -props.swipeThreshold || v < -props.swipeMinVelocity) {
-        emitModel(true)
-      } else {
-        emitModel(false)
-      }
+      emitModel(diff < -props.swipeThreshold || v < -props.swipeMinVelocity)
     } else {
-      if (diff > props.swipeThreshold || v > props.swipeMinVelocity) {
-        emitModel(false)
-      } else {
-        emitModel(true)
-      }
+      emitModel(!(diff > props.swipeThreshold || v > props.swipeMinVelocity))
     }
   }
+  emits('swipe-end', { opened: props.modelValue })
 }
 
-/* Close (respeta persistent) */
-const close = () => {
+/* Local touch listeners */
+function onTouchStart(e) {
+  if (!props.swipeable || !props.modelValue || isInteractiveTarget(e.target)) return
+  const x = getClientX(e)
+  nextTick(() => {
+    measureDrawerWidth()
+    const handleHit = isStart.value
+      ? x >= drawerWidth.value - props.swipeHandleSize && x <= drawerWidth.value + 8
+      : x <= window.innerWidth - (drawerWidth.value - props.swipeHandleSize) && x >= window.innerWidth - drawerWidth.value - 8
+    if (handleHit) beginDrag(x)
+  })
+}
+function onTouchMove(e) {
+  if (isDragging.value) {
+    e.preventDefault() // evita scroll mientras arrastras
+    updateDrag(getClientX(e))
+  }
+}
+function onTouchEnd() {
+  if (isDragging.value) endDrag()
+}
+
+/* Global pointer listeners */
+function onPointerDownGlobal(e) {
+  if (!props.swipeable || props.permanent || props.modelValue || isInteractiveTarget(e.target)) return
+  const x = getClientX(e)
+  const fromEdge = isStart.value ? x <= props.swipeEdgeSize : x >= window.innerWidth - props.swipeEdgeSize
+  if (!fromEdge) return
+  beginDrag(x)
+}
+function onPointerMoveGlobal(e) {
+  if (isDragging.value) updateDrag(getClientX(e))
+}
+function onPointerUpGlobal() {
+  if (isDragging.value) endDrag()
+}
+
+/* Close */
+function close() {
   if (!props.persistent) emitModel(false)
 }
 
-/* listeners globales solo si swipeable */
+/* Lifecycle */
 onMounted(() => {
-  if (!props.swipeable) return
-  window.addEventListener('pointerdown', onPointerDownGlobal, { passive: true })
-  window.addEventListener('pointermove', onPointerMoveGlobal, { passive: true })
-  window.addEventListener('pointerup', onPointerUpGlobal, { passive: true })
+  measureDrawerWidth()
+  if (props.swipeable) {
+    window.addEventListener('pointerdown', onPointerDownGlobal, { passive: true })
+    window.addEventListener('pointermove', onPointerMoveGlobal, { passive: true })
+    window.addEventListener('pointerup', onPointerUpGlobal, { passive: true })
+  }
 })
-
 onBeforeUnmount(() => {
-  if (!props.swipeable) return
-  window.removeEventListener('pointerdown', onPointerDownGlobal)
-  window.removeEventListener('pointermove', onPointerMoveGlobal)
-  window.removeEventListener('pointerup', onPointerUpGlobal)
+  if (props.swipeable) {
+    window.removeEventListener('pointerdown', onPointerDownGlobal)
+    window.removeEventListener('pointermove', onPointerMoveGlobal)
+    window.removeEventListener('pointerup', onPointerUpGlobal)
+  }
   isDragging.value = false
 })
-
-/* Si el modelo cambia externamente, aborta cualquier drag residual */
-watch(() => props.modelValue, () => {
-  isDragging.value = false
-})
+watch(() => props.modelValue, () => { isDragging.value = false })
 </script>
