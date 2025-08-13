@@ -68,7 +68,7 @@ const props = defineProps({
   bgColor: { type: String, default: 'bg-surface-dark' },
   minHeight: { type: String, default: 'h-fit' },
   height: { type: String, default: 'h-fit' },
-  maxHeight: { type: String, default: 'max-h-[100vh]' },
+  maxHeight: { type: String, default: 'max-h-dvh' },
   minWidth: { type: String, default: 'min-w-1/3' },
   width: { type: String, default: 'w-full' },
   maxWidth: { type: String, default: 'max-w-full' },
