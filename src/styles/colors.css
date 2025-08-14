@@ -11,9 +11,9 @@
 
     --primary: #20A0E0;
     --secondary: #273F60;
-    --surface-light: #d5d5f1;
-    --surface: #c8c8ee;
-    --surface-dark: #9b9be6;
+    --surface-light: #dbdbf0;
+    --surface: #d0d0f0;
+    --surface-dark: #c0c0ee;
     --error: #D56C5D;
     --success: #8CD88B;
     --warning: #bca66f;
@@ -30,8 +30,8 @@
     --icon: #9a6ed8;
     --accent-icon: #7425e4;
 
-    --select-background: #d5d5f1;
-    --select-hover: #9b9be6;
+    --select-background: #e0e0f2;
+    --select-hover: #bbbbe6;
     --textarea-outline-focus: #9D2817;
 }
 
