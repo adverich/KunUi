@@ -34,7 +34,7 @@
       <slot name="appendSearch" />
     </div>
 
-    <div class="flex-1 overflow-auto">
+    <div class="flex-1 overflow-auto bg-surface">
       <table :class="mergedTableClass" v-if="paginatedItems.length">
         <template v-if="$slots.colgroup && !isMobile">
           <colgroup><slot name="colgroup" v-bind="slotProps" /></colgroup>

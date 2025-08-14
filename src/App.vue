@@ -54,7 +54,7 @@
         />
       </div>
     </div>
-    <div class="flex justify-center">
+    <div class="h-full flex justify-center">
 
       
       <KunBadge text="5" >
@@ -205,7 +205,7 @@ const selected = ref([])
 const testTxtArea = ref(null)
 
 function checkType({item}){
-  return item.name.includes('Prueba 1') ? 'bg-red-700' : ''
+  // return item.name.includes('Prueba 1') ? 'bg-red-700' : ''
 }
 
 const minQuantity = ref(0);

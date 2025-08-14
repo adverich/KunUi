@@ -104,7 +104,7 @@ function resolveTdClass(item, index) {
 
 const baseRowClass = 'hover:bg-select-hover border-t border-slate-300 dark:border-slate-700';
 const rowClass = computed(() => props.rowClass || baseRowClass);
-const baseTrClass = 'bg-surface-dark';
+const baseTrClass = 'bg-surface';
 const trClass = computed(() => props.trClass || baseTrClass);
 const conditionalRowClass = computed(() => resolveTdClass(props.item, props.index));
 
