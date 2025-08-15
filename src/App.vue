@@ -34,7 +34,7 @@
 
     <!-- <div class="h-24"></div> -->
 
-    <div class="h-fit flex overflow-auto justify-center bg-gray-900">
+    <div class="h-fit flex justify-center bg-gray-900">
       <div class="w-1/2">
         <KunNumberField text-center v-model="testTxtArea" variant="outlined" 
           label="pepe" precision="0" dirty noArrows @update:model-value="checkItem"
@@ -56,6 +56,7 @@
     </div>
     <div class="h-full flex justify-center">
 
+      <KunTextarea rows="4" />
       
       <KunBadge text="5" >
         <KunBtn bgColor="bg-blue-700">
@@ -75,7 +76,7 @@
         @update:columns="val => companies = val"
       /> -->
 
-      <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/>
+      <!-- <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/> -->
     </div>
     <div>
 

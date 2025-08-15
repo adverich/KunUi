@@ -12,7 +12,7 @@
       </label>
     </slot>
 
-    <div class="relative">
+    <div class="relative ">
       <!-- Prepend Icon -->
       <div v-if="prependIcon || $slots.prepend" class="absolute left-2 top-2 flex items-center">
         <slot name="prepend" v-bind="prependSlotBindings">
@@ -44,6 +44,7 @@
         @blur="handleBlur"
         @click="$emit('click:control', $event)"
         @mousedown="$emit('mousedown:control', $event)"
+        class="bg-field-background"
         :class="[textareaClasses]"
         style="width: 100%; box-sizing: border-box; overflow-y: hidden;"
       ></textarea>

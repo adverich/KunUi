@@ -22,13 +22,13 @@
         </slot>
       </template>
 
-      <div v-if="prependAvatar || prependIcon || $slots.prepend" class="flex items-center gap-2 px-4 py-2">
+      <div v-if="prependAvatar || prependIcon || $slots.prepend" class="flex items-center gap-2">
         <slot name="prepend" />
         <img v-if="prependAvatar" :src="prependAvatar" class="w-8 h-8 rounded-full" />
         <i v-if="prependIcon" :class="prependIcon" />
       </div>
 
-      <div v-if="$slots.title || title || subtitle" class="px-4 pt-4">
+      <div v-if="$slots.title || title || subtitle" class="pt-2">
         <KunCardItem :dense="density !== 'default'">
           <KunCardTitle :title="title" :subtitle="subtitle" :titleSize="titleSize" />
         </KunCardItem>
@@ -36,7 +36,7 @@
 
       <div
         v-if="$slots.default || text"
-        :class="[ 'px-4 py-2 text-sm', scrollable ? 'flex-grow overflow-auto' : '' ]"
+        :class="[ 'text-sm', scrollable ? 'flex-grow overflow-auto' : '' ]"
       >
         <KunCardItem v-if="text">
           <KunCardText :text="text" />
@@ -44,13 +44,13 @@
         <slot v-else />
       </div>
 
-      <div v-if="appendAvatar || appendIcon || $slots.append" class="flex items-center gap-2 px-4 py-2">
+      <div v-if="appendAvatar || appendIcon || $slots.append" class="flex items-center gap-2">
         <slot name="append" />
         <img v-if="appendAvatar" :src="appendAvatar" class="w-8 h-8 rounded-full" />
         <i v-if="appendIcon" :class="appendIcon" />
       </div>
 
-      <div v-if="$slots.actions" class="px-4 pb-4 flex justify-end gap-2">
+      <div v-if="$slots.actions" class="flex justify-end gap-2">
         <KunCardActions>
           <slot name="actions" />
         </KunCardActions>
@@ -72,13 +72,13 @@
       </slot>
     </template>
 
-    <div v-if="prependAvatar || prependIcon || $slots.prepend" class="flex items-center gap-2 px-4 py-2">
+    <div v-if="prependAvatar || prependIcon || $slots.prepend" class="flex items-center gap-2">
       <slot name="prepend" />
       <img v-if="prependAvatar" :src="prependAvatar" class="w-8 h-8 rounded-full" />
       <i v-if="prependIcon" :class="prependIcon" />
     </div>
 
-    <div v-if="$slots.title || title || subtitle" class="px-4 pt-4">
+    <div v-if="$slots.title || title || subtitle">
       <KunCardItem :dense="density !== 'default'">
         <KunCardTitle :title="title" :subtitle="subtitle" :titleSize="titleSize" />
       </KunCardItem>
@@ -86,7 +86,7 @@
 
     <div
       v-if="$slots.default || text"
-      :class="[ 'px-4 py-2 text-sm', scrollable ? 'flex-grow overflow-auto' : '' ]"
+      :class="[ 'text-sm', scrollable ? 'flex-grow overflow-auto' : '' ]"
     >
       <KunCardItem v-if="text">
         <KunCardText :text="text" />
@@ -94,13 +94,13 @@
       <slot v-else />
     </div>
 
-    <div v-if="appendAvatar || appendIcon || $slots.append" class="flex items-center gap-2 px-4 py-2">
+    <div v-if="appendAvatar || appendIcon || $slots.append" class="flex items-center gap-2">
       <slot name="append" />
       <img v-if="appendAvatar" :src="appendAvatar" class="w-8 h-8 rounded-full" />
       <i v-if="appendIcon" :class="appendIcon" />
     </div>
 
-    <div v-if="$slots.actions" class="px-4 pb-4 flex justify-end gap-2">
+    <div v-if="$slots.actions" class="flex justify-end gap-2">
       <KunCardActions>
         <slot name="actions" />
       </KunCardActions>
