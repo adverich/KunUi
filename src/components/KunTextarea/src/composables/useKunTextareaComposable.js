@@ -62,7 +62,6 @@ export default function useTextarea(props, emit, textareaRef) {
         textareaRef.value.style.overflowY = 'hidden'
 
         const scrollHeight = textareaRef.value.scrollHeight
-        console.log(scrollHeight)
         const lineHeight = parseFloat(getComputedStyle(textareaRef.value).lineHeight) || 24
         const maxRows = Number(props.maxRows || 0)
 

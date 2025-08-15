@@ -1,5 +1,5 @@
 <template>
-  <div :class="wrapperClasses" class="px-0.5" ref="rootRef" v-bind="restAttrs">
+  <div :class="wrapperClasses" ref="rootRef" v-bind="restAttrs">
     <!-- Label -->
     <slot name="label" :for="uid" v-bind="labelSlotBindings">
       <label
@@ -205,10 +205,10 @@ const densityClass = computed(() =>
 )
 
 const textareaClasses = computed(() => [
-  'w-full resize-none p-2 transition-colors duration-150 py-2',
+  'w-full resize-none p-2 transition-colors duration-150',
   props.inputClass,
   {
-    'rounded-md': !props.tile,
+    'rounded': !props.tile,
     'rounded-none': props.tile,
     [`rounded-${props.rounded}`]: typeof props.rounded === 'string' || typeof props.rounded === 'number',
     'shadow-md': props.variant === 'solo' && !props.flat,

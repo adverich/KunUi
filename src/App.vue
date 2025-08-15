@@ -35,13 +35,10 @@
     <!-- <div class="h-24"></div> -->
 
     <div class="h-fit flex justify-center bg-gray-900">
-      <div class="w-1/2">
-        <KunNumberField text-center v-model="testTxtArea" variant="outlined" 
-          label="pepe" precision="0" dirty noArrows @update:model-value="checkItem"
-          clearable
-        />
-        <KunTextField />
-        <KunTextarea :rows="3" auto-grow />
+      <div class="w-1/2 flex">
+        <KunTextField label="text" dirty hide-details />
+        <KunTextField label="text" dirty hide-details />
+        <KunTextarea label="area" dirty rows="1" hide-details/>
       </div>
 
       <!-- <KunAutocomplete v-model="selected" label="hola mundo" :items="[0,1,2]" /> -->
@@ -49,7 +46,7 @@
       <div class="w-1/2">
         <KunAutocomplete v-model="selected" :has-create-item="true"  label="hola mundo" 
           :items="products" :searchable-keys="['measurement_unit.name', 'fullName']"
-          multiple
+          multiple 
           item-title="fullName" 
           :item-subtitle="['measurement_unit.name','fullName']" 
           item-value="id"
