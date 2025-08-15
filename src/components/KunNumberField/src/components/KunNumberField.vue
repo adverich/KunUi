@@ -10,7 +10,7 @@
 
     <div class="w-full flex flex-col justify-center relative" v-bind="$attrs">
       <div class="flex items-center w-full h-full border" :class="[bgInput, rounded,
-        focus ? 'border-blue-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : borderColor,
+        focus ? 'border-slate-400 dark:border-slate-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : borderColor,
         disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
         error ? 'bg-red-200 dark:bg-red-900' : ''
       ]">

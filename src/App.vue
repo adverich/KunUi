@@ -40,6 +40,8 @@
           label="pepe" precision="0" dirty noArrows @update:model-value="checkItem"
           clearable
         />
+        <KunTextField />
+        <KunTextarea :rows="3" auto-grow />
       </div>
 
       <!-- <KunAutocomplete v-model="selected" label="hola mundo" :items="[0,1,2]" /> -->
@@ -55,9 +57,6 @@
       </div>
     </div>
     <div class="h-full flex justify-center">
-
-      <KunTextarea rows="4" />
-      
       <KunBadge text="5" >
         <KunBtn bgColor="bg-blue-700">
           clickMe!
@@ -148,6 +147,7 @@ import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunCard from './components/KunCard/src/components/KunCard.vue';
+import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
 import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
 import KunBadge from './components/KunBadge/src/components/KunBadge.vue';

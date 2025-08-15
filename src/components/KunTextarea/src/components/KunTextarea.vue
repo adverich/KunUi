@@ -1,5 +1,5 @@
 <template>
-  <div :class="wrapperClasses" ref="rootRef" v-bind="restAttrs">
+  <div :class="wrapperClasses" class="px-0.5" ref="rootRef" v-bind="restAttrs">
     <!-- Label -->
     <slot name="label" :for="uid" v-bind="labelSlotBindings">
       <label
@@ -13,6 +13,7 @@
     </slot>
 
     <div class="relative ">
+
       <!-- Prepend Icon -->
       <div v-if="prependIcon || $slots.prepend" class="absolute left-2 top-2 flex items-center">
         <slot name="prepend" v-bind="prependSlotBindings">
@@ -189,9 +190,9 @@ const variantClass = computed(() => {
     case 'filled':
       return [bg, 'border border-transparent']
     case 'outlined':
-      return 'border border-gray-300 bg-transparent'
+      return 'border border-gray-300 dark:border-gray-700 bg-transparent'
     case 'underlined':
-      return 'border-b border-gray-300 bg-transparent rounded-none'
+      return 'border-b border-gray-300 dark:border-gray-700 bg-transparent rounded-none'
     case 'solo':
       return [bg || 'bg-white dark:bg-black', 'shadow-md border-transparent']
     default:
@@ -204,7 +205,7 @@ const densityClass = computed(() =>
 )
 
 const textareaClasses = computed(() => [
-  'w-full resize-none p-2 transition-colors duration-150 py-3',
+  'w-full resize-none p-2 transition-colors duration-150 py-2',
   props.inputClass,
   {
     'rounded-md': !props.tile,
@@ -215,8 +216,8 @@ const textareaClasses = computed(() => [
     [`text-${props.textColor}`]: props.textColor,
     [props.bgColor]: props.bgColor,
     'text-gray-500 bg-surface': props.disabled,
-    'focus:outline-none focus:ring-2': !props.disabled,
-    [`focus:ring-${props.color}`]: props.color && !props.disabled && !hasError.value,
+    'focus:outline-none focus:ring-1': !props.disabled,
+    [`${props.focusRingColor}`]: props.focusRingColor && !props.disabled && !hasError.value,
     'border-red-500 ring-red-500 focus:ring-red-500': hasError.value,
     'resize-none': props.noResize || props.autoGrow,
     'resize': !props.noResize && !props.autoGrow,
