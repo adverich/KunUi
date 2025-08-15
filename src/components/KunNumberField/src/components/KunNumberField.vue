@@ -26,7 +26,7 @@
         <div v-if="prefix" class="mx-2">{{ prefix }}</div>
 
         <!-- Prepend -->
-        <div v-if="prependIcon || prependIconSlot" class="flex items-center justify-center h-full pl-1">
+        <div v-if="prependIcon || prependIconSlot" class="flex items-center justify-center h-full pl-2">
           <template v-if="prependIcon">
             <KunIcon :icon="prependIcon" />
           </template>

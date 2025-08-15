@@ -11,7 +11,10 @@ export function useKunNumberField(props, emits) {
 
     let rawNumberString = '';
 
-    const minLen = computed(() => Number(props.precision) > 0 ? Number(props.precision) + 1 : 1);
+    const minLen = computed(() => {
+        const precision = Number(props.precision);
+        return precision > 0 ? precision + 1 : 1;
+    });
 
     function ensureMinLength(str) {
         if (Number(props.precision) === 0) {
@@ -20,21 +23,34 @@ export function useKunNumberField(props, emits) {
         return str.padStart(minLen.value, '0');
     }
 
-    watch(() => props.modelValue, (newVal) => {
-        if (newVal == null || isNaN(newVal)) {
-            inputValue.value = nf.format(0, props);
-            rawNumberString = '0'.repeat(Number(props.precision) + 1); // ✅ +1
-        } else {
-            const num = parseFloat(newVal);
-            const clamped = nf.clamp(num, props.min, props.max);
-            rawNumberString = nf.toRawNumberString(clamped, Number(props.precision));
-            // Asegurar longitud mínima
-            if (rawNumberString.length < Number(props.precision) + 1) {
-                rawNumberString = rawNumberString.padStart(Number(props.precision) + 1, '0');
+    watch(
+        [() => props.modelValue, () => props.precision],
+        ([newVal, newPrecision], [oldVal, oldPrecision]) => {
+            // Solo reformatear completamente si cambió la precisión
+            const precisionChanged = Number(newPrecision) !== Number(oldPrecision);
+
+            if (newVal == null || isNaN(newVal)) {
+                inputValue.value = nf.format(0, { ...props, precision: newPrecision });
+                rawNumberString = '0'.repeat(Number(newPrecision) + 1);
+            } else {
+                const num = parseFloat(newVal);
+                const clamped = nf.clamp(num, props.min, props.max);
+
+                // Si cambió la precisión, reconstruimos completamente el rawNumberString
+                if (precisionChanged) {
+                    rawNumberString = nf.toRawNumberString(clamped, Number(newPrecision));
+                }
+
+                // Aseguramos la longitud mínima
+                if (rawNumberString.length < Number(newPrecision) + 1) {
+                    rawNumberString = rawNumberString.padStart(Number(newPrecision) + 1, '0');
+                }
+
+                inputValue.value = nf.format(clamped, { ...props, precision: newPrecision });
             }
-            inputValue.value = nf.format(clamped, props);
-        }
-    }, { immediate: true });
+        },
+        { immediate: true }
+    );
 
     function validateKey(event) {
         const { key, target } = event;
