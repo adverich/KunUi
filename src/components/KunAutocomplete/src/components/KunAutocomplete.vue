@@ -215,4 +215,10 @@ function handleEnter() {
 
   emits('keyDownEnter')
 }
+
+defineExpose({
+  focus: () => {
+    textFieldRef.value?.focus();
+  }
+});
 </script>
