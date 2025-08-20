@@ -104,6 +104,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     function getSelectedItem(item) {
+        console.log(item)
         try {
             let updated = null;
             selectedItem.value = fullCopy(item);

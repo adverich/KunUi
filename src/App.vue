@@ -2,7 +2,6 @@
   <div class="flex flex-col h-dvh text-black dark:text-white overflow-hidden " style="overflow: hidden!important;">
     <KunAppbar bg-color="bg-slate-400 dark:bg-slate-800" @toggle-drawer="leftDrawerStatus = !leftDrawerStatus" showDrawerButton>
       <template #actions>
-        <KunBtn @click="modaDialgo = true" text="dialgo"/>
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
           icon-color="bg-blue-500" @update:model-value="setTheme" />
       </template>
@@ -32,165 +31,33 @@
       </template>
     </KunDrawer>
 
-    <!-- <div class="h-24"></div> -->
 
     <div class="h-fit flex justify-center bg-gray-900">
       <div class="w-1/2 flex">
-        <KunTextField label="text" dirty hide-details />
-        <KunTextField label="text" dirty hide-details />
-        <KunTextarea label="area" dirty rows="1" hide-details/>
-      </div>
-
-      <!-- <KunAutocomplete v-model="selected" label="hola mundo" :items="[0,1,2]" /> -->
-
-      <div class="w-1/2">
-        <KunAutocomplete v-model="selected" :has-create-item="true"  label="hola mundo" 
-          :items="products" :searchable-keys="['measurement_unit.name', 'fullName']"
-          multiple 
-          item-title="fullName" 
-          :item-subtitle="['measurement_unit.name','fullName']" 
-          item-value="id"
+        <KunAutocomplete label="text" hide-details v-model="selected" :items="products" :searchable-keys="['bar_code', 'fullName']" 
+          return-object item-title="fullName" item-subtitle="bar_code"
         />
       </div>
     </div>
-    <div class="h-full flex justify-center">
-      <KunBadge text="5" >
-        <KunBtn bgColor="bg-blue-700">
-          clickMe!
-        </KunBtn>
-      </KunBadge>
-      <!-- <KunRelationMatrix 
-        :columns="companies"
-        :rows="products"
-        row-key="id"
-        column-key="id"
-        row-label="name"
-        column-label="fantasy_name"
-        relation-key="users"
-        relation-title="Test relacion" 
-        relationDirection="column"
-        @update:columns="val => companies = val"
-      /> -->
-
-      <!-- <KunTable showSelect searchable filterable :filters="[1,2]" :headers="headers" :items="products" :rowClassCondition="checkType" items-per-page="50"/> -->
-    </div>
-    <div>
-
-    </div>
-
-    <!-- <div class="h-24"></div> -->
-
-    <!-- <div class="flex justify-center bg-gray-400">
-      <KunMenu v-model="pija" origin="top center" transition="slide-down">
-        <template v-slot:activator="{ props }">
-          <KunBtn bgColor="bg-amber-300" :icon="IconAccountOutline" v-bind="props" class="mx-2" @click="pija = true" />
-        </template>
-        <KunList>
-          <KunListItem class="hover:bg-red-800">Hola mundo</KunListItem>
-        </KunList>
-      </KunMenu>
-    </div> -->
-
-    <KunDialog v-if="modaDialgo" v-model="modaDialgo" :fullscreen="true" minWidth="min-w-full" persistent>
-      <div class="h-full flex-shrink">
-        <KunToolbar rightSectionClass="bg-red-900" titlePosition="left" title="consumidor finalhola mundo arroba jaja" bgColor="bg-primary-200 dark:bg-primary-920" density="compact">
-          <template #append>
-              <div class="flex gap-x-2">
-                  <slot name="tolbar-buttons"/>
-                  <KunBtn rounded="rounded-xl" @click="menuModel = false" bgColor="bg-error" text="X" />
-              </div>
-          </template>
-        </KunToolbar>
-
-        <KunRow class="h-full overflow-auto">
-          <KunCol cols="12">5</KunCol>
-          <KunCol cols="12">3</KunCol>
-          <KunCol cols="12">2</KunCol>
-          <KunCol cols="12">1</KunCol>
-          <KunCol cols="12">5</KunCol>
-          <KunCol cols="12">8</KunCol>
-          <KunCol cols="12">4</KunCol>
-          <KunCol cols="12">3</KunCol>
-          <KunCol cols="12">1</KunCol>
-          <KunCol cols="12">2</KunCol>
-          <KunCol cols="12">1</KunCol>
-          <KunCol cols="12">5</KunCol>
-          <KunCol cols="12">8</KunCol>
-          <KunCol cols="12">4</KunCol>
-          <KunCol cols="12">3</KunCol>
-          <KunCol cols="12">1</KunCol>
-        </KunRow>
-      </div>
-    </KunDialog>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, nextTick } from 'vue';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
-import IconAccountOutline from './icons/IconAccountOutline.vue';
-import KunList from './components/KunList/src/components/KunList.vue';
-import KunListItem from './components/KunListItem/src/components/KunListItem.vue';
 import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
 import KunTable from './components/KunTable/src/components/KunTable.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
-import KunRelationMatrix from './components/KunRelationMatrix/src/components/KunRelationMatrix.vue';
 import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
-import KunDialog from './components/KunDialog/src/components/KunDialog.vue';
-import KunRow from './components/KunRow/src/components/KunRow.vue';
-import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
-import KunCard from './components/KunCard/src/components/KunCard.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
-import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
-import KunBadge from './components/KunBadge/src/components/KunBadge.vue';
 
 
-const textAreaTest = ref(
-{
-  "entity": {
-    "parentMenu": 1,
-    "relation": "entity",
-    "inputType": "number",
-    "dropdownItem": "name",
-    "required": true,
-    "route": "entity"
-  }
-})
-const menuModel = ref(false);
 const leftDrawerStatus = ref(false);
-
-function checkItem(value){
-  console.log(testTxtArea.value);
-}
-
-const accountUsers = ref([
-  { id: 1, email: "facu.ft@gmail.com" },
-  { id: 6, email: "adverich@gmail.com" },
-  { id: 158, email: "testing@neopos.ar " },
-  { id: 39, email: "santiagoaloi@gmail.com"}
-]);
-
-const companies = ref([
-  { id: 1, fantasy_name: "SAFTCloud", 
-    users: [
-      { id: 1, email: "facu.ft@gmail.com" },
-      { id: 6, email: "adverich@gmail.com" }
-    ] 
-  },
-  { id: 3, fantasy_name: "Pimplin", 
-    users: [
-      { id: 158, email: "richard@gmail.com" },
-    ] 
-  }
-]);
-
-
-const modaDialgo = ref(false);
 
 const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
@@ -199,12 +66,7 @@ const productMkups = ref(generateFakeMkups(5));
 const products = ref(generateFakeProductsFull(15));
 
 const currentTheme = ref('dark')
-const selected = ref([])
-const testTxtArea = ref(null)
-
-function checkType({item}){
-  // return item.name.includes('Prueba 1') ? 'bg-red-700' : ''
-}
+const selected = ref({})
 
 const minQuantity = ref(0);
 function setMin() {
@@ -217,6 +79,8 @@ setMin();
 function getTotalAmount(item){
   return Number(item.stock) * Number(item.price_base);
 }
+
+const numThree = ref(0)
 
 const headers = [
   {value: 'bar_code', label: 'CB', sortable: true, align: 'center', headerAlign: 'center' },

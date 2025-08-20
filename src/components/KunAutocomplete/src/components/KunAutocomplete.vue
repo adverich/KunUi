@@ -2,7 +2,7 @@
   <div class="w-full h-fit" ref="parentRef">
     <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
       autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
-      @blur="textFieldBlur" @keyDown="textKeyDown"
+      @blur="textFieldBlur" @keyDown="textKeyDown" @keyDown.enter.prevent="handleEnter"
       :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
       :error="!!internalError" :error-messages="internalError"
     >
@@ -141,8 +141,8 @@ function handleEscape() {
 
 function textKeyDown(e) {
   const key = e.key
-
-  if (key === 'Tab' || key === 'Shift') {
+console.log(key)
+  if (key === 'Tab' || key === 'Shift' || key === 'Escape') {
     closeMenu();
     return;
   }
@@ -174,5 +174,42 @@ function handleKeyList(event) {
 
 function textFieldBlur() {
   // SE MANTIENE LA FUNCINOALIDAD TEMPORALMENTE POR SI SE NECESITA, SINO SERA ELIMINADO
+}
+
+function handleEnter() {
+  if (!search.value) return;
+
+  let found = null;
+
+  // Caso 1: returnObject = true
+  if (props.returnObject) {
+    found = items.value.find(item =>
+      Object.values(item).some(val =>
+        String(val).toLowerCase() === String(search.value).toLowerCase()
+      )
+    );
+  }
+
+  // Caso 2: returnObject = false y hay itemValue
+  else if (props.itemValue) {
+    found = items.value.find(item =>
+      String(item[props.itemValue]).toLowerCase() === String(search.value).toLowerCase()
+    );
+  }
+
+  // Caso 3: item es primitivo u objeto sin itemValue
+  else {
+    found = items.value.find(item =>
+      (typeof item === "object"
+        ? Object.values(item).some(val => String(val).toLowerCase() === String(search.value).toLowerCase())
+        : String(item).toLowerCase() === String(search.value).toLowerCase()
+      )
+    );
+  }
+
+  if (found) {
+    // Reutilizamos la lógica que ya maneja emits, multiple, etc.
+    getSelectedItem(found);
+  }
 }
 </script>
