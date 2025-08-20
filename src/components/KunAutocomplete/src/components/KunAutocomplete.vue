@@ -96,7 +96,7 @@ const modelValue = defineModel({ default: null });
 const items = defineModel('items', { default: [], type: Array, required: true });
 
 const props = defineProps(KunAutocompleteProps);
-const emits = defineEmits(["update:modelValue", "selectedItem", "createItem", "validation", "search"]);
+const emits = defineEmits(["update:modelValue", "selectedItem", "createItem", "validation", "search", "keyDown", "keyDownEnter"]);
 
 const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, closeMenu, toggleMenu, onMenuKeydown,
   getSelectedItem, textArr, getArrayText, isAlphanumeric,
@@ -141,9 +141,10 @@ function handleEscape() {
 
 function textKeyDown(e) {
   const key = e.key
-console.log(key)
+
   if (key === 'Tab' || key === 'Shift' || key === 'Escape') {
     closeMenu();
+    emits('keyDown', key);
     return;
   }
 
@@ -211,5 +212,7 @@ function handleEnter() {
     // Reutilizamos la lógica que ya maneja emits, multiple, etc.
     getSelectedItem(found);
   }
+
+  emits('keyDownEnter')
 }
 </script>
