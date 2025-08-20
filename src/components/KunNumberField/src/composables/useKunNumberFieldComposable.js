@@ -61,6 +61,11 @@ export function useKunNumberField(props, emits) {
         const isCtrl = event.ctrlKey || event.metaKey;
         const isHome = key === 'Home';
         const isEnd = key === 'End';
+        const isTab = key === 'Tab';
+
+        if (isTab) {
+            return;
+        }
 
         if (isHome) {
             // Mover cursor al principio del input (pos 0 o primer dígito)
