@@ -187,37 +187,6 @@ watch(() => props.search, (val) => {
   }
 });
 
-const { filteredItems, setSearch, modalFilter, applyColumnFilters, clearFilters, appliedFilters } = useFilter(propsRefs, debounceTime);
-
-// Sincronizar búsqueda
-watch(searchQuery, (val) => {
-  emits('update:search', val);   // opcional: si querés que sea bidireccional
-  setSearch(val);
-});
-
-const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems);
-const { isSelected, toggleSelect, toggleSelectAll, allSelected, someSelected } = useSelect(paginatedItems, selectedItems);
-const { isExpanded, toggleExpand } = useExpand();
-
-const slotProps = computed(() => ({
-  items: paginatedItems.value,
-  headers: headers.value,
-  page: options.page,
-  itemsPerPage: options.itemsPerPage,
-  toggleSelect,
-  isSelected,
-  toggleExpand,
-  isExpanded,
-  sortBy: options.sortBy,
-  hasActions: props.hasActions,
-}));
-
-const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col border border-slate-200 dark:border-slate-800 rounded';
-const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
-
-const baseTableClass = 'table-auto w-full h-fit text-sm text-left';
-const mergedTableClass = [baseTableClass, tableClass.value];
-
 const resolvedHeaders = computed(() => {
   return props.headers.map(header => {
     const newHeader = { ...header };
@@ -252,6 +221,37 @@ const resolvedHeaders = computed(() => {
     return newHeader;
   });
 });
+
+const { filteredItems, setSearch, modalFilter, applyColumnFilters, clearFilters, appliedFilters } = useFilter(propsRefs, debounceTime, resolvedHeaders);
+
+// Sincronizar búsqueda
+watch(searchQuery, (val) => {
+  emits('update:search', val);   // opcional: si querés que sea bidireccional
+  setSearch(val);
+});
+
+const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems);
+const { isSelected, toggleSelect, toggleSelectAll, allSelected, someSelected } = useSelect(paginatedItems, selectedItems);
+const { isExpanded, toggleExpand } = useExpand();
+
+const slotProps = computed(() => ({
+  items: paginatedItems.value,
+  headers: headers.value,
+  page: options.page,
+  itemsPerPage: options.itemsPerPage,
+  toggleSelect,
+  isSelected,
+  toggleExpand,
+  isExpanded,
+  sortBy: options.sortBy,
+  hasActions: props.hasActions,
+}));
+
+const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col border border-slate-200 dark:border-slate-800 rounded';
+const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
+
+const baseTableClass = 'table-auto w-full h-fit text-sm text-left';
+const mergedTableClass = [baseTableClass, tableClass.value];
 
 onMounted(() => showIconSearch());
 const searchRef = ref(null);

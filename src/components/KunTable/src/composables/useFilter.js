@@ -2,7 +2,7 @@ import { computed, reactive, watch, ref, unref } from 'vue'
 import { debounce } from '../../../../utils/utils.js'
 import { getValue, formatValue } from '@/utils/tableFormatters'
 
-export default function useFilter(props, debounceTime) {
+export default function useFilter(props, debounceTime, resolvedHeaders) {
     const appliedFilters = reactive({
         search: '',
         byColumn: {},
@@ -35,7 +35,7 @@ export default function useFilter(props, debounceTime) {
     }
 
     // Normalizamos headers y searchableKeys para aceptar ref o valor plano
-    const headersRef = computed(() => unref(headers) ?? [])
+    const headersRef = computed(() => resolvedHeaders.value ?? [])
     const searchableKeysRef = computed(() => {
         const sk = unref(searchableKeys)
         if (Array.isArray(sk) && sk.length) return sk
