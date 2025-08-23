@@ -26,48 +26,25 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  computed,
-  onMounted,
-  onBeforeUnmount,
-} from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 
 const props = defineProps({
   class: [String, Array, Object],
   text: String,
-  location: {
-    type: String,
-    default: 'top',
-  },
-  openOn: {
-    type: String,
-    default: 'hover', // 'click' | 'hover' | 'focus'
-  },
-  transition: {
-    type: String,
-    default: 'fade',
-  },
+  location: { type: String, default: 'top' },
+  openOn: { type: String, default: 'hover' },
+  transition: { type: String, default: 'fade' },
   disabled: Boolean,
-  delay: {
-    type: [Number, String],
-    default: 0,
-  },
-  closeDelay: {
-    type: [Number, String],
-    default: 100,
-  },
+  delay: { type: [Number, String], default: 0 },
+  closeDelay: { type: [Number, String], default: 100 },
   textColor: { type: String, default: 'text-black dark:text-white' },
-  bgColor: { type: String, default: 'bg-gray-600:75 dark:bg-gray-700/75 '},
-  rounded: { type: String, default: 'rounded '},
+  bgColor: { type: String, default: 'bg-gray-600/75 dark:bg-gray-700/75' },
+  rounded: { type: String, default: 'rounded' },
   textSize: { type: String, default: 'text-sm' },
-  dist: {
-    type: [Number, Object],
-    default: () => ({ x: 0, y: 8 })
-  },
-  disabled: Boolean,
+  dist: { type: [Number, Object], default: () => ({ x: 0, y: 8 }) },
 })
 
+// ID único por tooltip
 const tooltipId = 'tooltip-' + Math.random().toString(36).slice(2, 11)
 
 const isVisible = ref(false)
@@ -75,49 +52,48 @@ const activatorRef = ref(null)
 const tooltipRef = ref(null)
 const tooltipStyle = ref({})
 
+// Sistema centralizado de visibilidad
+let currentTooltip = null
 let openTimer = null
 let closeTimer = null
 
 function show() {
   if (props.disabled) return
-  // Cancela cualquier close pendiente
+  clearTimeout(openTimer)
   clearTimeout(closeTimer)
 
-  // Evita que se dispare otro show si ya está visible
-  if (isVisible.value) return
+  // Oculta tooltip anterior
+  if (currentTooltip && currentTooltip !== tooltipId) {
+    currentTooltip.hideFn()
+  }
 
-  openTimer = setTimeout(() => {
-    // Si el activador ya no existe, no mostrar
+  currentTooltip = { id: tooltipId, hideFn: hide }
+
+  openTimer = setTimeout(async () => {
     if (!activatorRef.value) return
-
     isVisible.value = true
+    await nextTick()
     updatePosition()
-  }, Number(props.delay))
+  }, +props.delay)
 }
 
 function hide() {
-  // Cancela cualquier open pendiente
   clearTimeout(openTimer)
-  
-  // Evita crear un close si ya está oculto
-  if (!isVisible.value) return
-
+  clearTimeout(closeTimer)
   closeTimer = setTimeout(() => {
     isVisible.value = false
-  }, Number(props.closeDelay))
+    if (currentTooltip && currentTooltip.id === tooltipId) currentTooltip = null
+  }, +props.closeDelay)
 }
 
 function toggle() {
   isVisible.value ? hide() : show()
 }
 
-function onTooltipEnter() {
-  clearTimeout(closeTimer)
-}
-function onTooltipLeave() {
-  hide()
-}
+function onTooltipEnter() { clearTimeout(closeTimer) }
+function onTooltipLeave() { hide() }
 
+// Props para activador
 const activatorProps = computed(() => {
   if (props.disabled) return {}
   const listeners = {}
@@ -125,7 +101,7 @@ const activatorProps = computed(() => {
     listeners.onMouseenter = show
     listeners.onMouseleave = hide
   }
-  if (props.openOn === 'click') listeners.onClick = () => (isVisible.value ? hide() : show())
+  if (props.openOn === 'click') listeners.onClick = toggle
   if (props.openOn === 'focus') {
     listeners.onFocus = show
     listeners.onBlur = hide
@@ -133,53 +109,37 @@ const activatorProps = computed(() => {
   return listeners
 })
 
-const baseClass="absolute px-3 py-2 shadow";
-const mergedClass = computed(() => [baseClass, props.textColor, props.bgColor, props.textSize, props.rounded, props.class]);
+// Clases
+const baseClass = "absolute px-3 py-2 shadow"
+const mergedClass = computed(() => [baseClass, props.textColor, props.bgColor, props.textSize, props.rounded, props.class])
 
 const offset = computed(() => {
-  if (typeof props.dist === 'number') {
-    return { x: 0, y: props.dist }
-  }
+  if (typeof props.dist === 'number') return { x: 0, y: props.dist }
   return { x: props.dist.x ?? 0, y: props.dist.y ?? 0 }
-});
+})
 
+// Posicionamiento
 function updatePosition() {
-  const activator = activatorRef.value
-  const tooltip = tooltipRef.value
-  if (!activator || !tooltip) return
+  const a = activatorRef.value?.getBoundingClientRect()
+  const t = tooltipRef.value?.getBoundingClientRect()
+  if (!a || !t) return
 
-  const activatorRect = activator.getBoundingClientRect()
-  const tooltipRect = tooltip.getBoundingClientRect()
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop
   const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
-
-  const { x, y } = offset.value;
+  const { x, y } = offset.value
 
   const positions = {
-    top: {
-      top: `${activatorRect.top + scrollTop - tooltipRect.height - y}px`,
-      left: `${activatorRect.left + scrollLeft + activatorRect.width / 2 - tooltipRect.width / 2 + x}px`,
-    },
-    bottom: {
-      top: `${activatorRect.bottom + scrollTop + y}px`,
-      left: `${activatorRect.left + scrollLeft + activatorRect.width / 2 - tooltipRect.width / 2 + x}px`,
-    },
-    left: {
-      top: `${activatorRect.top + scrollTop + activatorRect.height / 2 - tooltipRect.height / 2 + y}px`,
-      left: `${activatorRect.left + scrollLeft - tooltipRect.width - x}px`,
-    },
-    right: {
-      top: `${activatorRect.top + scrollTop + activatorRect.height / 2 - tooltipRect.height / 2 + y}px`,
-      left: `${activatorRect.right + scrollLeft + x}px`,
-    },
+    top:    { top: `${a.top + scrollTop - t.height - y}px`, left: `${a.left + scrollLeft + a.width/2 - t.width/2 + x}px` },
+    bottom: { top: `${a.bottom + scrollTop + y}px`, left: `${a.left + scrollLeft + a.width/2 - t.width/2 + x}px` },
+    left:   { top: `${a.top + scrollTop + a.height/2 - t.height/2 + y}px`, left: `${a.left + scrollLeft - t.width - x}px` },
+    right:  { top: `${a.top + scrollTop + a.height/2 - t.height/2 + y}px`, left: `${a.right + scrollLeft + x}px` },
   }
 
-  tooltipStyle.value = positions[props.location]
+  tooltipStyle.value = positions[props.location] || positions.top
 }
 
-const onScrollOrResize = () => {
-  if (isVisible.value) updatePosition()
-}
+// Scroll / Resize
+const onScrollOrResize = () => { if (isVisible.value) updatePosition() }
 
 onMounted(() => {
   window.addEventListener('scroll', onScrollOrResize)
@@ -194,14 +154,3 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onScrollOrResize)
 })
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.15s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
