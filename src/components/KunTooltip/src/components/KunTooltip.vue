@@ -15,6 +15,8 @@
         style="z-index: 9999;"
         role="tooltip"
         aria-hidden="!isVisible"
+        @mouseenter="onTooltipEnter"
+        @mouseleave="onTooltipLeave"
       >
         <slot>{{ text }}</slot>
       </div>
@@ -75,16 +77,17 @@ let openTimer = null
 let closeTimer = null
 
 function show() {
-  if (props.disabled) return
+  if (props.disabled || isVisible.value) return
   clearTimeout(closeTimer)
-  openTimer = setTimeout(async () => {
+  openTimer = setTimeout(() => {
+    if (!activatorRef.value) return // previene mostrar tooltip si ya no hay activador
     isVisible.value = true
-    await nextTick()
     updatePosition()
   }, +props.delay)
 }
 
 function hide() {
+  if (!isVisible.value) return
   clearTimeout(openTimer)
   closeTimer = setTimeout(() => {
     isVisible.value = false
@@ -93,6 +96,13 @@ function hide() {
 
 function toggle() {
   isVisible.value ? hide() : show()
+}
+
+function onTooltipEnter() {
+  clearTimeout(closeTimer)
+}
+function onTooltipLeave() {
+  hide()
 }
 
 const activatorProps = computed(() => {
@@ -173,6 +183,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   clearTimeout(openTimer)
   clearTimeout(closeTimer)
+  isVisible.value = false
   window.removeEventListener('scroll', onScrollOrResize)
   window.removeEventListener('resize', onScrollOrResize)
 })
