@@ -79,21 +79,32 @@ let openTimer = null
 let closeTimer = null
 
 function show() {
-  if (props.disabled || isVisible.value) return
+  if (props.disabled) return
+  // Cancela cualquier close pendiente
   clearTimeout(closeTimer)
+
+  // Evita que se dispare otro show si ya está visible
+  if (isVisible.value) return
+
   openTimer = setTimeout(() => {
-    if (!activatorRef.value) return // previene mostrar tooltip si ya no hay activador
+    // Si el activador ya no existe, no mostrar
+    if (!activatorRef.value) return
+
     isVisible.value = true
     updatePosition()
-  }, +props.delay)
+  }, Number(props.delay))
 }
 
 function hide() {
-  if (!isVisible.value) return
+  // Cancela cualquier open pendiente
   clearTimeout(openTimer)
+  
+  // Evita crear un close si ya está oculto
+  if (!isVisible.value) return
+
   closeTimer = setTimeout(() => {
     isVisible.value = false
-  }, +props.closeDelay)
+  }, Number(props.closeDelay))
 }
 
 function toggle() {
@@ -109,23 +120,16 @@ function onTooltipLeave() {
 
 const activatorProps = computed(() => {
   if (props.disabled) return {}
-
   const listeners = {}
-
   if (props.openOn === 'hover') {
     listeners.onMouseenter = show
     listeners.onMouseleave = hide
   }
-
-  if (props.openOn === 'click') {
-    listeners.onClick = toggle
-  }
-
+  if (props.openOn === 'click') listeners.onClick = () => (isVisible.value ? hide() : show())
   if (props.openOn === 'focus') {
     listeners.onFocus = show
     listeners.onBlur = hide
   }
-
   return listeners
 })
 
