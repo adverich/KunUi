@@ -2,15 +2,13 @@ import { computed, reactive, watch, ref, unref } from 'vue'
 import { debounce } from '../../../../utils/utils.js'
 import { getValue, formatValue } from '@/utils/tableFormatters'
 
-export default function useFilter(props, debounceTime, resolvedHeaders) {
+export default function useFilter(props, debounceTime, resolvedHeaders, debug = false) {
     const appliedFilters = reactive({
         search: '',
         byColumn: {},
     })
 
-    // Desestructuramos pero SIEMPRE usando unref cuando se usen
     const { items, customFilter, searchableKeys, headers } = props
-
     const modalFilter = ref(false)
 
     const toSearchableString = (v) => {
@@ -34,7 +32,7 @@ export default function useFilter(props, debounceTime, resolvedHeaders) {
         return a.includes(b)
     }
 
-    // Normalizamos headers y searchableKeys para aceptar ref o valor plano
+    // Headers y searchableKeys
     const headersRef = computed(() => resolvedHeaders.value ?? [])
     const searchableKeysRef = computed(() => {
         const sk = unref(searchableKeys)
@@ -42,135 +40,113 @@ export default function useFilter(props, debounceTime, resolvedHeaders) {
         return headersRef.value.map(h => h?.value).filter(Boolean)
     })
 
+    // Cache para valores buscables
+    const searchableCache = ref(new Map())
+
+    // Reconstruye cache cuando items cambian
+    watch(
+        () => unref(items),
+        (list) => {
+            searchableCache.value.clear()
+            if (!Array.isArray(list)) return
+
+            list.forEach(item => {
+                const values = {}
+                searchableKeysRef.value.forEach(key => {
+                    const header = headersRef.value.find(h => h.value === key)
+                    let raw, shown
+                    try {
+                        raw = header ? getValue(header, item) : item[key]
+                    } catch (err) {
+                        raw = ''
+                        if (debug) console.error('[useFilter] ERROR getValue', { item, key, err })
+                    }
+                    try {
+                        shown = header ? formatValue(header, raw) : raw
+                    } catch (err) {
+                        shown = raw
+                        if (debug) console.error('[useFilter] ERROR formatValue', { header, raw, err })
+                    }
+                    values[key] = toSearchableString(shown).toLowerCase()
+                })
+                searchableCache.value.set(item, values)
+            })
+
+            if (debug) console.log('[useFilter] Cache reconstruida', searchableCache.value)
+        },
+        { immediate: true, deep: false }
+    )
+
     const getDisplayValue = (item, key) => {
-        console.log('[getDisplayValue] START → key:', key, 'item:', item)
-
-        const header = headersRef.value.find(h => h?.value === key)
-        console.log('[getDisplayValue] header encontrado:', header)
-
-        if (!header) {
-            const val = item?.[key]
-            console.log('[getDisplayValue] SIN header, devuelvo item[key]:', val)
-            return val
-        }
-
-        let raw, shown
-        try {
-            raw = getValue(header, item)
-            console.log('[getDisplayValue] raw value de getValue:', raw)
-        } catch (err) {
-            console.error('[getDisplayValue] ERROR en getValue', { header, item, err })
-        }
-
-        try {
-            shown = formatValue(header, raw)
-            console.log('[getDisplayValue] shown value de formatValue:', shown)
-        } catch (err) {
-            console.error('[getDisplayValue] ERROR en formatValue', { header, raw, err })
-        }
-
-        const str = toSearchableString(shown)
-        console.log('[getDisplayValue] FINAL stringified:', str)
-        return str
+        const val = searchableCache.value.get(item)?.[key] ?? ''
+        if (debug) console.log('[getDisplayValue]', { item, key, val })
+        return val
     }
 
     const matchesFilter = (item, key, value) => {
-        console.log('[matchesFilter] item:', item, 'key:', key, 'filter value:', value)
-
         const itemValue = getDisplayValue(item, key)
-        console.log('[matchesFilter] itemValue obtenido:', itemValue)
-
         const cf = unref(customFilter)
+
         if (typeof cf === 'function') {
-            console.log('[matchesFilter] customFilter detectado, llamando...')
             const header = headersRef.value.find(h => h?.value === key)
             try {
-                const res = cf(item, key, value, header)
-                console.log('[matchesFilter] customFilter result:', res)
-                return res
+                return cf(item, key, value, header)
             } catch (err) {
-                console.error('[matchesFilter] ERROR en customFilter', { item, key, value, header, err })
+                if (debug) console.error('[matchesFilter] ERROR customFilter', { item, key, value, header, err })
                 return false
             }
         }
 
         if (Array.isArray(value)) {
-            console.log('[matchesFilter] value es array, evaluando...')
-            const res = value.some(v => defaultFilterFn(itemValue, v))
-            console.log('[matchesFilter] array filter result:', res)
-            return res
+            return value.some(v => defaultFilterFn(itemValue, v))
         }
 
-        const res = defaultFilterFn(itemValue, value)
-        console.log('[matchesFilter] default filter result:', res)
-        return res
+        return defaultFilterFn(itemValue, value)
     }
 
     const filteredItems = computed(() => {
         const list = unref(items)
-        console.log('[filteredItems] recompute → items length:', Array.isArray(list) ? list.length : 'NO ARRAY')
-
         if (!Array.isArray(list)) return []
 
-        const result = list.filter((item, idx) => {
-            console.log('\n[filteredItems] --- Evaluando item idx:', idx, item)
-
+        return list.filter(item => {
+            // Filtro global
             const q = appliedFilters.search
             if (q) {
-                console.log('[filteredItems] search activo:', q)
                 const keys = searchableKeysRef.value
-                console.log('[filteredItems] searchableKeys:', keys)
-
-                const ok = keys.some((key) => matchesFilter(item, key, q))
-                console.log('[filteredItems] resultado filtro global:', ok)
+                const ok = keys.some(key => matchesFilter(item, key, q))
                 if (!ok) return false
             }
 
+            // Filtros por columna
             for (const key in appliedFilters.byColumn) {
                 const value = appliedFilters.byColumn[key]
-                if (value != null && value !== '') {
-                    console.log('[filteredItems] columna con filtro:', key, 'value:', value)
-                    if (!matchesFilter(item, key, value)) {
-                        console.log('[filteredItems] filtro por columna NO pasó')
-                        return false
-                    }
-                }
+                if (value != null && value !== '' && !matchesFilter(item, key, value)) return false
             }
 
-            console.log('[filteredItems] item pasó todos los filtros ✅')
             return true
         })
-
-        console.log('[filteredItems] RESULT FINAL →', result)
-        return result
     })
 
     const setSearch = debounce((value) => {
-        console.log('[setSearch] nuevo valor:', value)
         appliedFilters.search = toSearchableString(value).toLowerCase()
+        if (debug) console.log('[setSearch]', appliedFilters.search)
     }, unref(debounceTime) ?? 150)
 
     const setColumnFilter = (key, value) => {
-        console.log('[setColumnFilter] key:', key, 'value:', value)
         appliedFilters.byColumn[key] = value
+        if (debug) console.log('[setColumnFilter]', key, value)
     }
 
-    function applyColumnFilters(columnFilters) {
-        console.log('[applyColumnFilters] aplicando:', columnFilters)
-        for (const key in columnFilters) {
-            setColumnFilter(key, columnFilters[key])
-        }
+    const applyColumnFilters = (columnFilters) => {
+        for (const key in columnFilters) setColumnFilter(key, columnFilters[key])
+        if (debug) console.log('[applyColumnFilters]', columnFilters)
     }
 
     const clearFilters = () => {
-        console.log('[clearFilters] reseteando filtros')
         appliedFilters.search = ''
         appliedFilters.byColumn = {}
+        if (debug) console.log('[clearFilters] filtros reseteados')
     }
-
-    watch(() => unref(items), (n, o) => {
-        console.log('[watch items] old:', o, 'new:', n)
-    }, { deep: true })
 
     return {
         modalFilter,
