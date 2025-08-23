@@ -52,37 +52,45 @@ const activatorRef = ref(null)
 const tooltipRef = ref(null)
 const tooltipStyle = ref({})
 
-// Sistema centralizado de visibilidad
-let currentTooltip = null
+// Timers
 let openTimer = null
 let closeTimer = null
+let safetyTimer = null
+let pending = false
 
 function show() {
-  if (props.disabled) return
+  if (props.disabled || isVisible.value || pending) return
+
   clearTimeout(openTimer)
   clearTimeout(closeTimer)
+  clearTimeout(safetyTimer)
 
-  // Oculta tooltip anterior
-  if (currentTooltip && currentTooltip !== tooltipId) {
-    currentTooltip.hideFn()
-  }
-
-  currentTooltip = { id: tooltipId, hideFn: hide }
-
+  pending = true
   openTimer = setTimeout(async () => {
+    pending = false
     if (!activatorRef.value) return
+
     isVisible.value = true
     await nextTick()
     updatePosition()
+
+    // Timer de seguridad: oculta tooltip automáticamente a los 5 segundos
+    safetyTimer = setTimeout(() => {
+      hide()
+    }, 5000)
   }, +props.delay)
 }
 
 function hide() {
   clearTimeout(openTimer)
   clearTimeout(closeTimer)
+  clearTimeout(safetyTimer)
+
+  if (!isVisible.value && !pending) return
+
   closeTimer = setTimeout(() => {
     isVisible.value = false
-    if (currentTooltip && currentTooltip.id === tooltipId) currentTooltip = null
+    pending = false
   }, +props.closeDelay)
 }
 
@@ -90,8 +98,14 @@ function toggle() {
   isVisible.value ? hide() : show()
 }
 
-function onTooltipEnter() { clearTimeout(closeTimer) }
-function onTooltipLeave() { hide() }
+function onTooltipEnter() {
+  clearTimeout(closeTimer)
+  clearTimeout(safetyTimer)
+}
+
+function onTooltipLeave() {
+  hide()
+}
 
 // Props para activador
 const activatorProps = computed(() => {
@@ -149,6 +163,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   clearTimeout(openTimer)
   clearTimeout(closeTimer)
+  clearTimeout(safetyTimer)
   isVisible.value = false
   window.removeEventListener('scroll', onScrollOrResize)
   window.removeEventListener('resize', onScrollOrResize)
