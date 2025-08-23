@@ -31,7 +31,6 @@ import {
   computed,
   onMounted,
   onBeforeUnmount,
-  nextTick
 } from 'vue'
 
 const props = defineProps({
@@ -82,9 +81,7 @@ let closeTimer = null
 function show() {
   if (props.disabled || isVisible.value) return
   clearTimeout(closeTimer)
-  console.log('[Tooltip] show triggered')
   openTimer = setTimeout(() => {
-    console.log('[Tooltip] show timeout executed')
     if (!activatorRef.value) return // previene mostrar tooltip si ya no hay activador
     isVisible.value = true
     updatePosition()
@@ -94,9 +91,7 @@ function show() {
 function hide() {
   if (!isVisible.value) return
   clearTimeout(openTimer)
-  console.log('[Tooltip] hide triggered')
   closeTimer = setTimeout(() => {
-    console.log('[Tooltip] hide timeout executed')
     isVisible.value = false
   }, +props.closeDelay)
 }
