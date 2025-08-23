@@ -1,6 +1,5 @@
-// useFilter.js
-import { computed, reactive, watch, ref } from 'vue'
-import { debounce } from '@/utils/utils.js'
+import { computed, reactive, watch, ref, unref } from 'vue'
+import { debounce } from '../../../../utils/utils.js'
 import { getValue, formatValue } from '@/utils/tableFormatters'
 
 export default function useFilter(props, debounceTime) {
@@ -8,46 +7,81 @@ export default function useFilter(props, debounceTime) {
         search: '',
         byColumn: {},
     })
+
+    // Desestructuramos pero SIEMPRE usando unref cuando se usen
     const { items, customFilter, searchableKeys, headers } = props
 
     const modalFilter = ref(false)
 
-    const defaultFilterFn = (itemValue, filterValue) => {
-        if (itemValue == null) return false
-        return String(itemValue).toLowerCase().includes(String(filterValue).toLowerCase())
+    const toSearchableString = (v) => {
+        if (v == null) return ''
+        // Evita crashear si te pasan objetos/fechas/etc
+        if (typeof v === 'string') return v
+        if (typeof v === 'number' || typeof v === 'boolean') return String(v)
+        if (v instanceof Date) return v.toISOString()
+        if (typeof v === 'object') {
+            if ('label' in v) return String(v.label)
+            if ('name' in v) return String(v.name)
+            try { return String(v) } catch { return '' }
+        }
+        try { return String(v) } catch { return '' }
     }
 
+    const defaultFilterFn = (itemValue, filterValue) => {
+        const a = toSearchableString(itemValue).toLowerCase()
+        const b = toSearchableString(filterValue).toLowerCase()
+        if (!b) return true
+        if (!a) return false
+        return a.includes(b)
+    }
+
+    // Normalizamos headers y searchableKeys para aceptar ref o valor plano
+    const headersRef = computed(() => unref(headers) ?? [])
+    const searchableKeysRef = computed(() => {
+        const sk = unref(searchableKeys)
+        if (Array.isArray(sk) && sk.length) return sk
+        return headersRef.value.map(h => h?.value).filter(Boolean)
+    })
+
     const getDisplayValue = (item, key) => {
-        const header = headers?.value?.find(h => h.value === key)
-        if (!header) return item[key]
+        const header = headersRef.value.find(h => h?.value === key)
+        if (!header) return item?.[key]
 
         const raw = getValue(header, item)
-        return formatValue(header, raw)
+        const shown = formatValue(header, raw)
+
+        return toSearchableString(shown) // 🔑 garantiza que siempre es string
     }
 
     const matchesFilter = (item, key, value) => {
         const itemValue = getDisplayValue(item, key)
 
-        if (typeof customFilter?.value === 'function') {
-            return customFilter.value(item, key, value)
+        // customFilter puede venir como ref o como función directa
+        const cf = unref(customFilter)
+        if (typeof cf === 'function') {
+            // Pasamos también el header por si lo necesitan (args extra son opcionales)
+            const header = headersRef.value.find(h => h?.value === key)
+            return cf(item, key, value, header)
         }
 
         if (Array.isArray(value)) {
-            return value.some((v) => defaultFilterFn(itemValue, v))
+            return value.some(v => defaultFilterFn(itemValue, v))
         }
 
         return defaultFilterFn(itemValue, value)
     }
 
     const filteredItems = computed(() => {
-        if (!Array.isArray(items.value)) return []
+        const list = unref(items)
+        if (!Array.isArray(list)) return []
 
-        return items.value.filter((item) => {
-            // 🔍 filtro global
-            if (appliedFilters.search) {
-                const keys = searchableKeys.value || headers.value.map(h => h.value)
-                const matches = keys.some((key) => matchesFilter(item, key, appliedFilters.search))
-                if (!matches) return false
+        return list.filter((item) => {
+            // 🔍 filtro global (usa las claves "searchable")
+            const q = appliedFilters.search
+            if (q) {
+                const keys = searchableKeysRef.value
+                const ok = keys.some((key) => matchesFilter(item, key, q))
+                if (!ok) return false
             }
 
             // 🔍 filtros por columna
@@ -57,13 +91,14 @@ export default function useFilter(props, debounceTime) {
                     if (!matchesFilter(item, key, value)) return false
                 }
             }
+
             return true
         })
     })
 
     const setSearch = debounce((value) => {
-        appliedFilters.search = value?.toString().toLowerCase() || ''
-    }, debounceTime.value)
+        appliedFilters.search = toSearchableString(value).toLowerCase()
+    }, unref(debounceTime) ?? 150)
 
     const setColumnFilter = (key, value) => {
         appliedFilters.byColumn[key] = value
@@ -80,7 +115,7 @@ export default function useFilter(props, debounceTime) {
         appliedFilters.byColumn = {}
     }
 
-    watch(() => items.value, () => { }, { deep: true })
+    watch(() => unref(items), () => { }, { deep: true })
 
     return {
         modalFilter,
