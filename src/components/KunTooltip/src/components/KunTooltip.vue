@@ -8,6 +8,7 @@
   <teleport to="body" v-if="!disabled">
     <transition :name="transition">
       <div
+        :id="tooltipId"
         v-show="isVisible"
         ref="tooltipRef"
         :class="mergedClass"
@@ -67,6 +68,8 @@ const props = defineProps({
   },
   disabled: Boolean,
 })
+
+const tooltipId = 'tooltip-' + Math.random().toString(36).slice(2, 11)
 
 const isVisible = ref(false)
 const activatorRef = ref(null)
