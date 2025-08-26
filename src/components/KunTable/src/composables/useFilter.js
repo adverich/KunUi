@@ -1,6 +1,6 @@
 // useFilter.js
-import { computed, reactive, watch, ref, unref } from 'vue'
-import { debounce } from '@/utils/utils.js'
+import { computed, reactive, watch, ref, unref, onMounted } from 'vue'
+import { debounce } from '../../../../utils/utils.js'
 import { getValue, formatValue } from '@/utils/tableFormatters'
 
 export default function useFilter(props, debounceTime, resolvedHeaders, debug = false) {
@@ -12,6 +12,7 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
     const { items, customFilter, searchableKeys, headers } = props
     const modalFilter = ref(false)
 
+    // --- Helpers ---
     const toSearchableString = (v) => {
         if (v == null) return ''
         if (typeof v === 'string') return v
@@ -33,7 +34,7 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
         return a.includes(b)
     }
 
-    // Headers y searchableKeys
+    // --- Headers y searchableKeys ---
     const headersRef = computed(() => resolvedHeaders.value ?? [])
     const searchableKeysRef = computed(() => {
         const sk = unref(searchableKeys)
@@ -41,72 +42,57 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
         return headersRef.value.map(h => h?.value).filter(Boolean)
     })
 
-    // Cache para valores buscables
+    // --- Cache para valores buscables ---
     const searchableCache = ref(new Map())
 
-    // función para obtener clave única
-    const getItemKey = (item, index) => {
-        return item?.id ?? index
-    }
+    // 🔥 Centralizamos la reconstrucción del cache
+    function rebuildCache() {
+        searchableCache.value.clear()
+        const list = unref(items)
+        if (!Array.isArray(list)) return
 
-    const buildCacheForItem = (item) => {
-        const values = {}
-        searchableKeysRef.value.forEach(key => {
-            const header = headersRef.value.find(h => h.value === key)
-            let raw, shown
-            try {
-                raw = header ? getValue(header, item) : item[key]
-            } catch (err) {
-                raw = ''
-                if (debug) console.error('[useFilter] ERROR getValue', { item, key, err })
-            }
-            try {
-                shown = header ? formatValue(header, raw) : raw
-            } catch (err) {
-                shown = raw
-                if (debug) console.error('[useFilter] ERROR formatValue', { header, raw, err })
-            }
-            values[key] = toSearchableString(shown).toLowerCase()
-        })
-        return values
-    }
-
-    // Actualización incremental del cache
-    watch(
-        () => unref(items),
-        (list) => {
-            if (!Array.isArray(list)) {
-                searchableCache.value.clear()
-                return
-            }
-
-            const newMap = new Map()
-            list.forEach((item, idx) => {
-                const key = getItemKey(item, idx)
-                if (searchableCache.value.has(key)) {
-                    newMap.set(key, searchableCache.value.get(key))
-                } else {
-                    newMap.set(key, buildCacheForItem(item))
+        list.forEach(item => {
+            const values = {}
+            searchableKeysRef.value.forEach(key => {
+                const header = headersRef.value.find(h => h.value === key)
+                let raw, shown
+                try {
+                    raw = header ? getValue(header, item) : item[key]
+                } catch (err) {
+                    raw = ''
+                    if (debug) console.error('[useFilter] ERROR getValue', { item, key, err })
                 }
+                try {
+                    shown = header ? formatValue(header, raw) : raw
+                } catch (err) {
+                    shown = raw
+                    if (debug) console.error('[useFilter] ERROR formatValue', { header, raw, err })
+                }
+                values[key] = toSearchableString(shown).toLowerCase()
             })
-            searchableCache.value = newMap
+            searchableCache.value.set(item, values)
+        })
 
-            if (debug) console.log('[useFilter] Cache actualizado', searchableCache.value)
-        },
-        { immediate: true, deep: false }
-    )
+        if (debug) console.log('[useFilter] Cache reconstruida', searchableCache.value)
+    }
 
-    const getDisplayValue = (item, key, index = 0) => {
-        const cacheKey = getItemKey(item, index)
-        const val = searchableCache.value.get(cacheKey)?.[key] ?? ''
+    // --- Watchers ---
+    // 1) Cuando cambia la referencia completa de items
+    watch(() => unref(items), () => rebuildCache(), { immediate: true })
+
+    // 2) Cuando cambia la longitud del array (push, splice, pop, etc.)
+    watch(() => unref(items)?.length, () => rebuildCache())
+
+    // --- Getters y filtros ---
+    const getDisplayValue = (item, key) => {
+        const val = searchableCache.value.get(item)?.[key] ?? ''
         if (debug) console.log('[getDisplayValue]', { item, key, val })
         return val
     }
 
-    const matchesFilter = (item, key, value, index = 0) => {
-        const itemValue = getDisplayValue(item, key, index)
+    const matchesFilter = (item, key, value) => {
+        const itemValue = getDisplayValue(item, key)
         const cf = unref(customFilter)
-
         if (typeof cf === 'function') {
             const header = headersRef.value.find(h => h?.value === key)
             try {
@@ -116,11 +102,9 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
                 return false
             }
         }
-
         if (Array.isArray(value)) {
             return value.some(v => defaultFilterFn(itemValue, v))
         }
-
         return defaultFilterFn(itemValue, value)
     }
 
@@ -128,25 +112,25 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
         const list = unref(items)
         if (!Array.isArray(list)) return []
 
-        return list.filter((item, idx) => {
+        return list.filter(item => {
             // Filtro global
             const q = appliedFilters.search
             if (q) {
                 const keys = searchableKeysRef.value
-                const ok = keys.some(key => matchesFilter(item, key, q, idx))
+                const ok = keys.some(key => matchesFilter(item, key, q))
                 if (!ok) return false
             }
 
             // Filtros por columna
             for (const key in appliedFilters.byColumn) {
                 const value = appliedFilters.byColumn[key]
-                if (value != null && value !== '' && !matchesFilter(item, key, value, idx)) return false
+                if (value != null && value !== '' && !matchesFilter(item, key, value)) return false
             }
-
             return true
         })
     })
 
+    // --- Acciones ---
     const setSearch = debounce((value) => {
         appliedFilters.search = toSearchableString(value).toLowerCase()
         if (debug) console.log('[setSearch]', appliedFilters.search)
@@ -175,5 +159,7 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
         setSearch,
         applyColumnFilters,
         clearFilters,
+        // 👇 Exponemos también por si querés refrescar manualmente
+        refreshCache: rebuildCache,
     }
 }
