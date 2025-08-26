@@ -98,6 +98,7 @@ const props = defineProps({
     validator: val => ['left', 'center', 'right'].includes(val)
   },
   density: { type: String, default: 'default' },
+  height: String,
   elevation: { type: String, default: 'md' },
   bordered: { type: Boolean, default: false },
   borderColor: { type: String, default: 'border-b border-slate-200 dark:border-slate-800' },
@@ -173,6 +174,8 @@ defineExpose({
 });
 
 const heightClass = computed(() => {
+  if(props.height) return props.height;
+
   switch (props.density) {
     case 'comfortable':
       return 'h-[56px]'
