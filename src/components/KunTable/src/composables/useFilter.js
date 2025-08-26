@@ -45,7 +45,10 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
 
     // Reconstruye cache cuando items cambian
     watch(
-        () => unref(items),
+        () => {
+            const list = items.value; // ← Directamente items.value
+            return list ? { arrayRef: list, length: list.length } : null;
+        },
         (list) => {
             searchableCache.value.clear()
             if (!Array.isArray(list)) return
