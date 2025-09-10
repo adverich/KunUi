@@ -1,12 +1,17 @@
 <template>
-  <form @submit.prevent="handleSubmit" novalidate
-    :class="`flex flex-col w-full ${props.gap} ${props.padding} ${props.maxWidth}`" v-bind="$attrs">
+  <form
+    ref="formEl"
+    :class="`flex flex-col w-full ${props.gap} ${props.padding} ${props.maxWidth}`"
+    novalidate
+    @submit.prevent="handleSubmit"
+    v-bind="$attrs"
+  >
     <slot />
   </form>
 </template>
 
 <script setup>
-import { ref, provide } from 'vue';
+import { ref, provide, watch, computed } from 'vue';
 
 const props = defineProps({
   gap: {
@@ -20,72 +25,107 @@ const props = defineProps({
   maxWidth: {
     type: String,
     default: 'max-w-full'
+  },
+  modelValue: { // v-model para exponer validez
+    type: Boolean,
+    default: true
+  },
+  validateOn: { // submit, lazy, input
+    type: String,
+    default: 'submit'
   }
 });
-const emits = defineEmits(["submit"]);
 
+const emit = defineEmits(['update:modelValue', 'submit']);
+
+// Estado interno
 const fields = ref([]);
-
-// Estado del formulario
 const isValid = ref(true);
+const isDirty = ref(false);
+const formEl = ref(null);
 
-// Registrar campo
+// Computed para exponer estado
+const valid = computed(() => isValid.value);
+
+// Registrar / eliminar campos
 function registerField(field) {
-  fields.value.push(field);
+  if (!fields.value.includes(field)) {
+    fields.value.push(field);
+  }
 }
-
-// Eliminar campo
 function unregisterField(field) {
   fields.value = fields.value.filter(f => f !== field);
 }
 
-// Validar todo el formulario
+// Validación completa
 async function validate() {
   const results = await Promise.all(
     fields.value.map(async (field) => {
-      const valid = await field.validate();
-      return valid;
+      return typeof field.validate === 'function'
+        ? await field.validate()
+        : true;
     })
   );
-
-  isValid.value = results.every(result => result === true);
+  isValid.value = results.every(r => r === true);
+  emit('update:modelValue', isValid.value);
   return { valid: isValid.value };
 }
 
-// Resetear valores de campos
+// Reset
 function reset() {
   fields.value.forEach(field => {
-    if (field.reset) field.reset();
+    if (typeof field.reset === 'function') field.reset();
   });
+  resetValidation();
 }
 
-// Resetear validación (errores)
+// Reset solo validación
 function resetValidation() {
   fields.value.forEach(field => {
-    if (field.resetValidation) field.resetValidation();
+    if (typeof field.resetValidation === 'function') field.resetValidation();
   });
+  isValid.value = true;
+  emit('update:modelValue', true);
 }
 
 // Submit handler
-function handleSubmit(event) {
-  if (event && typeof event.preventDefault === 'function') {
-    event.preventDefault();
-  }
-  validate().then(({ valid }) => {
+async function handleSubmit(e) {
+  if (props.validateOn === 'submit') {
+    const { valid } = await validate();
     if (valid) {
-      emits('submit', event);
+      emit('submit', e);
     }
-  });
+  } else {
+    emit('submit', e);
+  }
 }
 
-// Exponer métodos a hijos anidados
-provide('registerField', registerField);
-provide('unregisterField', unregisterField);
+// Opcional: validar en "input"
+function onFieldChange() {
+  if (props.validateOn === 'input') {
+    validate();
+  }
+}
 
-// Exponer métodos públicos
+// Proveer API a hijos
+provide('kunForm', {
+  registerField,
+  unregisterField,
+  onFieldChange,
+  validateOn: props.validateOn
+});
+
+// Exponer métodos a padres
 defineExpose({
   validate,
   reset,
-  resetValidation
+  resetValidation,
+  valid,
+  isDirty
+});
+
+// Mantener v-model reactivo
+watch(isValid, (v) => {
+  emit('update:modelValue', v);
 });
 </script>
