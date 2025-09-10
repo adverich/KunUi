@@ -36,12 +36,9 @@ export function useKunNumberField(props, emits) {
                 const num = parseFloat(newVal);
                 const clamped = nf.clamp(num, props.min, props.max);
 
-                // Si cambió la precisión, reconstruimos completamente el rawNumberString
-                if (precisionChanged) {
-                    rawNumberString = nf.toRawNumberString(clamped, Number(newPrecision));
-                }
+                // 🔧 Siempre regenerar rawNumberString
+                rawNumberString = nf.toRawNumberString(clamped, Number(newPrecision));
 
-                // Aseguramos la longitud mínima
                 if (rawNumberString.length < Number(newPrecision) + 1) {
                     rawNumberString = rawNumberString.padStart(Number(newPrecision) + 1, '0');
                 }

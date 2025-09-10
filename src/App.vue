@@ -33,6 +33,9 @@
 
 
     <div class="h-fit flex justify-center bg-gray-900">
+      <div>
+        <KunNumberField v-model="minQuantity" @keydown.enter="minQuantity = 0" />
+      </div>
       <div class="w-1/2 flex">
         <KunAutocomplete label="text" hide-details v-model="selected" :items="products" :searchable-keys="['bar_code', 'fullName']" 
           return-object item-title="fullName" item-subtitle="bar_code"
