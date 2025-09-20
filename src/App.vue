@@ -33,15 +33,15 @@
 
 
     <div class="h-fit flex justify-center bg-gray-900">
-      <div>
-        <KunNumberField v-model="minQuantity" @keydown.enter="minQuantity = 0" />
-      </div>
       <div class="w-1/2 flex">
         <KunAutocomplete label="text" hide-details v-model="selected" :items="products" :searchable-keys="['bar_code', 'fullName']" 
           return-object item-title="fullName" item-subtitle="bar_code"
         />
       </div>
     </div>
+      <div class="h-full flex flex-col overflow-auto">
+        <KunTable :items="products" :headers="headers" searchable/>
+      </div>
   </div>
 </template>
 
@@ -66,7 +66,7 @@ const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));
 const productFamilies = ref(generateFakeFamilies(100));
 const productMkups = ref(generateFakeMkups(5));
-const products = ref(generateFakeProductsFull(15));
+const products = ref(generateFakeProductsFull(105));
 
 const currentTheme = ref('dark')
 const selected = ref({})
@@ -82,8 +82,6 @@ setMin();
 function getTotalAmount(item){
   return Number(item.stock) * Number(item.price_base);
 }
-
-const numThree = ref(0)
 
 const headers = [
   {value: 'bar_code', label: 'CB', sortable: true, align: 'center', headerAlign: 'center' },

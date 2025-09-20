@@ -125,7 +125,7 @@
     <!-- Footer Fijo -->
     <div v-if="!hideDefaultFooter" class="sticky bottom-0 z-10 print:hidden">
       <KunTableFooter
-        :items-length="paginatedItems.length"
+        :items-length="filteredItems.length"
         :items-per-page="options.itemsPerPage"
         :current-page="options.page"
         :page-options="pageOptions"
