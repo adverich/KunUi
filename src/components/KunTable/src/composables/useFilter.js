@@ -91,8 +91,9 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
     }
 
     const matchesFilter = (item, key, value) => {
-        const itemValue = getDisplayValue(item, key)
+        const rawValue = getRawValue(item, key)
         const cf = unref(customFilter)
+
         if (typeof cf === 'function') {
             const header = headersRef.value.find(h => h?.value === key)
             try {
@@ -102,10 +103,23 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
                 return false
             }
         }
-        if (Array.isArray(value)) {
-            return value.some(v => defaultFilterFn(itemValue, v))
+
+        // Resolvemos la lista de filters tanto si viene como ref o como array
+        const filtersList = unref(props.filters) ?? props.filters
+        const filterDef = Array.isArray(filtersList) ? filtersList.find(f => f.value === key) : undefined
+        const itemValueKey = filterDef?.['item-value'] ?? 'id'
+
+        const extractFilterVal = (v) => {
+            if (v != null && typeof v === 'object') {
+                return v[itemValueKey]
+            }
+            return v
         }
-        return defaultFilterFn(itemValue, value)
+
+        if (Array.isArray(value)) {
+            return value.some(v => defaultFilterFn(rawValue, extractFilterVal(v)))
+        }
+        return defaultFilterFn(rawValue, extractFilterVal(value))
     }
 
     const filteredItems = computed(() => {
@@ -150,6 +164,16 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
         appliedFilters.search = ''
         appliedFilters.byColumn = {}
         if (debug) console.log('[clearFilters] filtros reseteados')
+    }
+
+    const getRawValue = (item, key) => {
+        const header = headersRef.value.find(h => h?.value === key)
+        try {
+            return header ? getValue(header, item) : item[key]
+        } catch (err) {
+            if (debug) console.error('[useFilter] ERROR getRawValue', { item, key, err })
+            return null
+        }
     }
 
     return {

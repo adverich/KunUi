@@ -40,7 +40,7 @@
       </div>
     </div>
       <div class="h-full flex flex-col overflow-auto">
-        <KunTable :items="products" :headers="headers" searchable/>
+        <KunTable :items="products" :headers="headers" searchable filterable :filters="filters"/>
       </div>
   </div>
 </template>
