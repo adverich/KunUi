@@ -2,26 +2,38 @@
 import { ref, watch, computed, onMounted, nextTick } from 'vue'
 
 const props = defineProps({
-  items: Array, // paneles
-  estimatedItemWidth: { type: Number, default: 300 },
-  buffer: { type: Number, default: 2 },
-  scrollToIndex: Number,
+  items: {
+    type: Array,
+    required: true,
+  },
+  estimatedItemHeight: {
+    type: Number,
+    default: 48,
+  },
+  buffer: {
+    type: Number,
+    default: 5,
+  },
+  scrollToIndex: {
+    type: Number,
+    default: null,
+  },
 })
 
 const containerRef = ref(null)
-const scrollLeft = ref(0)
-const containerWidth = ref(0)
+const scrollTop = ref(0)
+const containerHeight = ref(0)
 
-const totalWidth = computed(() => props.items.length * props.estimatedItemWidth)
+const totalHeight = computed(() => props.items.length * props.estimatedItemHeight)
 
 const startIndex = computed(() =>
-  Math.max(0, Math.floor(scrollLeft.value / props.estimatedItemWidth) - props.buffer)
+  Math.max(0, Math.floor(scrollTop.value / props.estimatedItemHeight) - props.buffer)
 )
 
 const endIndex = computed(() =>
   Math.min(
     props.items.length,
-    Math.ceil((scrollLeft.value + containerWidth.value) / props.estimatedItemWidth) + props.buffer
+    Math.ceil((scrollTop.value + containerHeight.value) / props.estimatedItemHeight) + props.buffer
   )
 )
 
@@ -29,47 +41,63 @@ const visibleItems = computed(() =>
   props.items.slice(startIndex.value, endIndex.value)
 )
 
-const leftOffset = computed(() => startIndex.value * props.estimatedItemWidth)
+const topOffset = computed(() => startIndex.value * props.estimatedItemHeight)
 
 function onScroll() {
-  if (containerRef.value) scrollLeft.value = containerRef.value.scrollLeft
-}
-
-function updateContainerWidth() {
-  if (containerRef.value) containerWidth.value = containerRef.value.clientWidth
-}
-
-watch(() => props.scrollToIndex, async (index) => {
-  if (index != null && containerRef.value) {
-    await nextTick()
-    containerRef.value.scrollLeft = index * props.estimatedItemWidth
+  if (containerRef.value) {
+    scrollTop.value = containerRef.value.scrollTop
   }
-})
+}
+
+function updateContainerHeight() {
+  if (containerRef.value) {
+    containerHeight.value = containerRef.value.clientHeight
+  }
+}
+
+watch(
+  () => props.scrollToIndex,
+  async (index) => {
+    if (
+      index !== null &&
+      typeof index === 'number' &&
+      index >= 0 &&
+      index < props.items.length &&
+      containerRef.value
+    ) {
+      await nextTick()
+      containerRef.value.scrollTop = index * props.estimatedItemHeight
+    }
+  },
+  { immediate: true }
+)
 
 onMounted(() => {
-  updateContainerWidth()
+  updateContainerHeight()
   if (typeof ResizeObserver !== 'undefined') {
-    const resizeObserver = new ResizeObserver(updateContainerWidth)
+    const resizeObserver = new ResizeObserver(updateContainerHeight)
     resizeObserver.observe(containerRef.value)
   }
 })
 </script>
 
 <template>
-  <div ref="containerRef" class="w-full h-full overflow-x-auto relative" @scroll="onScroll">
-    <div :style="{ width: totalWidth + 'px', position: 'relative', height: '100%' }">
+  <div
+    ref="containerRef"
+    class="w-full h-full overflow-y-auto relative"
+    @scroll="onScroll"
+  >
+    <div :style="{ height: totalHeight + 'px', position: 'relative' }">
       <div
         :style="{
-          transform: `translateX(${leftOffset}px)`,
+          transform: `translateY(${topOffset}px)`,
           position: 'absolute',
-          height: '100%',
-          display: 'flex',
+          width: '100%',
         }"
       >
         <div
           v-for="(item, i) in visibleItems"
-          :key="item?.[0]?.id ?? startIndex + i"
-          class="w-[300px] h-full flex-shrink-0"
+          :key="item?.id ?? startIndex + i"
         >
           <slot :item="item" :index="startIndex + i" />
         </div>
