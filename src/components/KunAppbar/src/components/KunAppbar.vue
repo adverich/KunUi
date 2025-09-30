@@ -87,7 +87,7 @@ import IconMenuRounded from '../../../../icons/IconMenuRounded.vue';
 import { setAppbarHeight } from '@/utils/useLayout';
 
 const props = defineProps({
-  bgColor: { type: String, default: 'bg-transparent' },
+  bgColor: { type: String, default: 'bg-red-700' },
   title: String,
   titleImage: String,
   titleSize: { type: String, default: 'text-base' },
