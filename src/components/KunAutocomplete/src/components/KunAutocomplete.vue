@@ -213,7 +213,9 @@ function handleEnter(e) {
     getSelectedItem(found);
   }
 
-  emits('keyDownEnter', e);
+  nextTick(() => {
+    emits('keyDownEnter', e);
+  });
 }
 
 defineExpose({
