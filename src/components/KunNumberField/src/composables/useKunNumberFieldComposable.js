@@ -248,10 +248,26 @@ export function useKunNumberField(props, emits) {
         emits('blur');
     }
 
-    function handleFocus() {
+    function handleFocus(event) {
         isActive.value = true;
-        const visualPos = numberInput.value?.selectionStart || 0;
-        cursorPosition.value = visualToRawPosition(inputValue.value, visualPos);
+        // const visualPos = numberInput.value?.selectionStart || 0;
+        // cursorPosition.value = visualToRawPosition(inputValue.value, visualPos);
+        nextTick(() => {
+            if (!numberInput.value) return;
+
+            // Si el focus viene de Tab (keyboard), posicionar al final
+            const cameFromKeyboard = event?.relatedTarget !== undefined || event?.sourceCapabilities?.firesTouchEvents === false;
+
+            if (cameFromKeyboard) {
+                const len = inputValue.value.length;
+                numberInput.value.setSelectionRange(len, len);
+                cursorPosition.value = inputValue.value.replace(/\D/g, '').length; // posición raw al final
+            } else {
+                // Focus por click
+                const visualPos = numberInput.value.selectionStart || 0;
+                cursorPosition.value = visualToRawPosition(inputValue.value, visualPos);
+            }
+        });
         emits('focus');
     }
 

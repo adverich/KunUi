@@ -35,8 +35,15 @@
     <div class="h-fit flex justify-center bg-gray-900">
       <div class="w-1/2 flex">
         <KunAutocomplete label="text" hide-details v-model="selected" :items="products" :searchable-keys="['bar_code', 'fullName']" 
-          return-object item-title="fullName" item-subtitle="bar_code"
+          return-object item-title="fullName" item-subtitle="bar_code" 
+          @update:model-value="addProduct" :focus-on-select="true" 
         />
+      </div>
+      <div class="w-1/2 flex">
+        <KunTextField label="lelele" v-model="modelText" ref="refEls" />
+      </div>
+      <div class="w-1/2 flex">
+        <KunNumberField label="lalala" v-model="minQuantity" :no-arrows="true" />
       </div>
     </div>
       <div class="h-full flex flex-col overflow-auto">
@@ -71,13 +78,27 @@ const products = ref(generateFakeProductsFull(105));
 const currentTheme = ref('dark')
 const selected = ref({})
 
+const modelText = ref(null);
 const minQuantity = ref(0);
-function setMin() {
-  setTimeout(() => {
-    minQuantity.value = 4;
-  }, 2500);
+
+function addProduct(item){
+  focusLastInserted();
 }
-setMin();
+
+const refEls = ref(null);
+function focusLastInserted() {
+  console.log(1);
+  nextTick(() => {
+    console.log(3);
+    if (refEls.value?.focus) {
+      console.log(refEls.value);
+      console.log(4);
+      refEls.value.focus();
+    } else {
+      console.log(5);
+    }
+  });
+}
 
 function getTotalAmount(item){
   return Number(item.stock) * Number(item.price_base);
