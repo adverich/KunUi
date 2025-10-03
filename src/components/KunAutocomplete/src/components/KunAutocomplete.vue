@@ -2,7 +2,7 @@
   <div class="w-full h-fit" ref="parentRef">
     <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
       autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
-      @blur="textFieldBlur" @keyDown="textKeyDown" @keyDown.enter.prevent="handleEnter"
+      @blur="textFieldBlur" @keyDown="textKeyDown" @keyDown.enter="handleEnter"
       :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
       :error="!!internalError" :error-messages="internalError"
     >
@@ -211,15 +211,9 @@ function handleEnter() {
   if (found) {
     // Reutilizamos la lógica que ya maneja emits, multiple, etc.
     getSelectedItem(found);
-
-    if (props.focusOnSelect) {
-      nextTick(() => {
-        textFieldRef.value?.focus();
-      });
-    }
   }
 
-  emits('keyDownEnter')
+  emits('keyDownEnter', e);
 }
 
 defineExpose({
