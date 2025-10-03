@@ -222,6 +222,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
 
     function focusTextField() {
         textFieldRef.value.inputField.focus();
+        console.log('sera???');
     }
 
     function focusOnMenu() {
