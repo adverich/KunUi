@@ -166,7 +166,11 @@ const {
 defineExpose({
   numberInput,
   rootRef,
-  focus: () => numberInput.value?.focus()
+  focus: () => {
+    nextTick(() => {
+      numberInput.value?.focus();
+    });
+  }
 });
 
 const inputDensity = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");
