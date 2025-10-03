@@ -6,6 +6,10 @@
     :class="computedClass"
     :style="attrs.style"
     :disabled="isButton && (loading || disabled)"
+    @click="emits('click', $event)"
+    @keydown="emits('keydown', $event)"
+    @keyup="emits('keyup', $event)"
+    @keypress="emits('keypress', $event)"
   >
     <div :class="['relative flex items-center justify-center', hasCustomWidth ? '' : 'w-full', hasCustomHeight ? '' : 'h-full']">
       <!-- Loader encima sin opacidad -->
@@ -92,6 +96,8 @@ const props = defineProps({
   iconSize: { type: String, default: null },
   focusColor: { type: String, default: null }
 })
+
+const emits = defineEmits(['click', 'keydown', 'keyup', 'keypress'])
 
 const isLink = computed(() => !!props.to || !!props.href)
 const isButton = computed(() => !isLink.value)
