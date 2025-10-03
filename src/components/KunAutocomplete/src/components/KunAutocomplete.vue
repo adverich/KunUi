@@ -177,7 +177,7 @@ function textFieldBlur() {
   // SE MANTIENE LA FUNCINOALIDAD TEMPORALMENTE POR SI SE NECESITA, SINO SERA ELIMINADO
 }
 
-function handleEnter() {
+function handleEnter(e) {
   if (!search.value) return;
 
   let found = null;
