@@ -89,7 +89,8 @@ const props = defineProps({
   icon: [Boolean, String, Function, Object, Array],
   prependIcon: [String, Function, Object, Array],
   appendIcon: [String, Function, Object, Array],
-  iconSize: { type: String, default: null }
+  iconSize: { type: String, default: null },
+  focusColor: { type: String, default: null }
 })
 
 const isLink = computed(() => !!props.to || !!props.href)
@@ -224,7 +225,8 @@ const computedClass = computed(() => {
       props.ring ? 'focus:ring-2 focus:ring-offset-2' : '',
       'active:scale-[.98]',
       'transition duration-100 ease-in-out',
-      'cursor-pointer'
+      'cursor-pointer',
+      props.focusColor ? `focus:${props.focusColor}` : '',
     );
   } else {
     base.push('pointer-events-none');
