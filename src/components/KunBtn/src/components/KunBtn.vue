@@ -226,7 +226,7 @@ const computedClass = computed(() => {
       'active:scale-[.98]',
       'transition duration-100 ease-in-out',
       'cursor-pointer',
-      props.focusColor ? `focus:${props.focusColor}` : '',
+      props.focusColor ? `${props.focusColor}` : '',
     );
   } else {
     base.push('pointer-events-none');
