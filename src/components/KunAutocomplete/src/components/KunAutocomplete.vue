@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 import { icons } from '@/icons'
 import { isNotEmpty, isArray } from '../../../../utils/utils.js'
 
@@ -211,14 +211,18 @@ function handleEnter() {
   if (found) {
     // Reutilizamos la lógica que ya maneja emits, multiple, etc.
     getSelectedItem(found);
+
+    if (props.focusOnSelect) {
+      nextTick(() => {
+        textFieldRef.value?.focus();
+      });
+    }
   }
 
   emits('keyDownEnter')
 }
 
 defineExpose({
-  focus: () => {
-    textFieldRef.value?.focus();
-  }
+  focus: () => nextTick(() => textFieldRef.value?.focus())
 });
 </script>

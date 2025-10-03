@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, useSlots, computed, ref } from 'vue';
+import { getCurrentInstance, useSlots, computed, ref, nextTick } from 'vue';
 import { icons } from '@/icons'
 import inputProps from '../composables/KunTextFieldProps';
 import useKunTextField from '../composables/useKunTextFieldComposable';
