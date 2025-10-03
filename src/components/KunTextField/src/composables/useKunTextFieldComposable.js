@@ -63,6 +63,7 @@ export default function useKunTextField(props, emits) {
     }
 
     const focusInput = () => {
+        console.log('deberia hacer el focus')
         inputFocused.value = true
         emits('focus')
     }
