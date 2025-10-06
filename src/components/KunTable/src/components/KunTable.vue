@@ -25,7 +25,7 @@
         </template>
       </div>
 
-      <div class="flex h-full items-center justify-end">
+      <div class="w-full flex h-full items-center justify-end">
         <slot name="prependSearch" />
 
         <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-green-200 dark:bg-green-800">
