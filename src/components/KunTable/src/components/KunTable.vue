@@ -10,7 +10,9 @@
         'justify-end flex': searchPosition === 'end'
       }"
     >
-      <slot name="prependSearch" />
+      <div class="w-full flex items-left">
+        <slot name="prependSearch" />
+      </div>
 
       <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-green-200 dark:bg-green-800">
         <KunIcon class="h-fit" :icon="IconFilter" size="text-lg" />

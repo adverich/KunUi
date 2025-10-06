@@ -47,7 +47,13 @@
       </div>
     </div>
       <div class="h-full flex flex-col overflow-auto">
-        <KunTable :items="products" :headers="headers" searchable filterable :filters="filters"/>
+        <KunTable :items="products" :headers="headers" searchable filterable :filters="filters">
+          <template #prependSearch>
+            <div class="mr-2">
+              <KunBtn size="sm">Invertir orden</KunBtn>
+            </div>
+          </template>
+        </KunTable>
       </div>
   </div>
 </template>
