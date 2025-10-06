@@ -2,11 +2,11 @@
   <div :class="mergedWrapperClass" v-bind="$attrs" style="user-select: text">
     <!-- Barra de búsqueda -->
     <div
-      v-if="searchable || filterable || $slots.prependSearch || $slots.appendSearch"
+      v-if="searchable || filterable || $slots.prependHeader || $slots.prependSearch || $slots.appendSearch"
       class="p-2 bg-surface print:hidden flex w-full justify-between"
     >
       <div class="w-fit flex items-center">
-        <slot name="prependSearch" />
+        <slot name="prependHeader" />
       </div>
 
       <div class="flex items-center justify-center" v-if="selectedItems.length">
@@ -16,6 +16,8 @@
       </div>
 
       <div class="flex h-full items-center">
+        <slot name="prependSearch" />
+
         <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-green-200 dark:bg-green-800">
           <KunIcon class="h-fit" :icon="IconFilter" size="text-lg" />
         </KunBtn>
