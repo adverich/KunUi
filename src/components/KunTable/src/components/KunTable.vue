@@ -5,7 +5,7 @@
       v-if="searchable || filterable || $slots.prependHeader || $slots.prependSearch || $slots.appendSearch"
       class="p-2 bg-surface print:hidden flex w-full justify-between"
     >
-      <div class="w-full flex items-center">
+      <div class="w-full flex items-center" v-if="!showSearch">
         <slot name="prependHeader" />
       </div>
 
@@ -25,7 +25,7 @@
         </template>
       </div>
 
-      <div class="w-full flex h-full items-center justify-end">
+      <div class="min-w-1/3 flex h-full items-center justify-end">
         <slot name="prependSearch" />
 
         <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-green-200 dark:bg-green-800">
