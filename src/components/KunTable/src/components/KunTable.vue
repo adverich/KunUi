@@ -5,19 +5,27 @@
       v-if="searchable || filterable || $slots.prependHeader || $slots.prependSearch || $slots.appendSearch"
       class="p-2 bg-surface print:hidden flex w-full justify-between"
     >
-      <div class="w-fit flex items-center">
+      <div class="w-full flex items-center">
         <slot name="prependHeader" />
       </div>
 
-      <div class="flex items-center justify-center" v-if="selectedItems.length">
+      <div class="inline-flex items-center justify-center whitespace-nowrap" v-if="selectedItems.length">
         <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
         <template v-if="paginatedItems.length !== filteredItems.length">
-          <span v-if="paginatedItems.length === selectedItems.length" class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2" @click="selectCompleteAll">Seleccionar todos los {{ filteredItems.length }} registros</span>
-          <span v-if="filteredItems.length === selectedItems.length" class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2" @click="clearSelection">Anular selección</span>
+          <span v-if="paginatedItems.length === selectedItems.length" @click="selectCompleteAll"
+            class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2 ml-2"
+          >
+            Seleccionar todos los {{ filteredItems.length }} registros
+          </span>
+          <span v-if="filteredItems.length === selectedItems.length" @click="clearSelection" 
+            class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2 ml-2"
+          >
+            Anular selección
+          </span>
         </template>
       </div>
 
-      <div class="flex h-full items-center">
+      <div class="flex h-full items-center justify-end">
         <slot name="prependSearch" />
 
         <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-green-200 dark:bg-green-800">
