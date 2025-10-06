@@ -20,7 +20,7 @@
           :ripple="false"
           :true-value="true"
           :false-value="false"
-          :color="someSelected && !allSelected ? 'text-yellow-600 dark:text-yellow-400' : allSelected ? 'text-green-600 dark:text-green-400' : ''"
+          :color="someSelected && !allSelected && !moreThanPaginated ? 'text-yellow-600 dark:text-yellow-400' : allSelected ? 'text-green-600 dark:text-green-400' : moreThanPaginated ? 'text-green-900 dark:text-green-600' : ''"
           hide-details
         />
       </th>
@@ -72,6 +72,7 @@ const props = defineProps({
   isExpanded: Boolean,
   allSelected: Boolean,
   someSelected: Boolean,
+  moreThanPaginated: Boolean,
   sortBy: Object,
   theadClass: String,
   trClass: String,
@@ -130,7 +131,7 @@ const mergedThClass = [baseThClass, props.thClass];
 const checkboxRef = ref(null);
 const updateIndeterminate = () => {
   if (checkboxRef.value) {
-    checkboxRef.value.indeterminate = props.someSelected && !props.allSelected;
+    checkboxRef.value.indeterminate = props.someSelected && !props.allSelected && props.moreThanPaginated;
   }
 };
 

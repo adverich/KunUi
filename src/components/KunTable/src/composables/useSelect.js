@@ -1,6 +1,6 @@
-import { ref, computed, watch } from 'vue';
+import { computed, watch } from 'vue';
 
-export default function useSelect(paginatedItems, selectedItems) {
+export default function useSelect(paginatedItems, selectedItems, filteredItems) {
     const isSelected = (item) => selectedItems.value.includes(item);
 
     const toggleSelect = (item) => {
@@ -17,12 +17,10 @@ export default function useSelect(paginatedItems, selectedItems) {
 
     const selectAll = () => {
         selectedItems.value = [...paginatedItems.value];
-        // emits?.('update:selectedItems', selectedItems.value);
     };
 
     const clearSelection = () => {
         selectedItems.value = [];
-        // emits?.('update:selectedItems', selectedItems.value);
     };
 
     const toggleSelectAll = () => {
@@ -33,8 +31,16 @@ export default function useSelect(paginatedItems, selectedItems) {
         }
     };
 
+    function selectCompleteAll() {
+        selectedItems.value = [...filteredItems.value];
+    }
+
     const allSelected = computed(() => {
         return paginatedItems.value?.length > 0 && selectedItems.value.length === paginatedItems.value.length;
+    });
+
+    const moreThanPaginated = computed(() => {
+        return selectedItems.value?.length > paginatedItems.value?.length;
     });
 
     const someSelected = computed(() => {
@@ -53,6 +59,8 @@ export default function useSelect(paginatedItems, selectedItems) {
         clearSelection,
         toggleSelectAll,
         allSelected,
-        someSelected
+        someSelected,
+        moreThanPaginated,
+        selectCompleteAll
     };
 }

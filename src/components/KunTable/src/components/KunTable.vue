@@ -3,37 +3,40 @@
     <!-- Barra de búsqueda -->
     <div
       v-if="searchable || filterable || $slots.prependSearch || $slots.appendSearch"
-      class="p-2 bg-surface print:hidden"
-      :class="{
-        'justify-start flex': searchPosition === 'start',
-        'justify-center flex': searchPosition === 'center',
-        'justify-end flex': searchPosition === 'end'
-      }"
+      class="p-2 bg-surface print:hidden flex w-full justify-between"
     >
-      <div class="w-full flex items-left">
+      <div class="w-fit flex items-center">
         <slot name="prependSearch" />
       </div>
 
-      <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-green-200 dark:bg-green-800">
-        <KunIcon class="h-fit" :icon="IconFilter" size="text-lg" />
-      </KunBtn>
-
-      <div v-if="searchable" class="rounded flex mx-2" :class="[searchClass]">
-        <input
-          v-model="searchQuery"
-          v-show="showSearch"
-          type="text"
-          :placeholder="searchPlaceholder"
-          class="w-full text-sm"
-          :class="isMobile ? 'px-1' : 'px-2 py-1'"
-          ref="searchRef"
-          @focus="hideIconSearch"
-          @blur="showIconSearch"
-        />
-        <KunIcon :icon="IconSearch" @click="handleSearchFocus" v-show="showSearchBtn"/>
+      <div class="flex items-center justify-center" v-if="selectedItems.length">
+        <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
+        <span v-if="paginatedItems.length === selectedItems.length" class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2" @click="selectCompleteAll">Seleccionar todos los {{ filteredItems.length }} registros</span>
+        <span v-if="filteredItems.length === selectedItems.length" class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2" @click="clearSelection">Anular selección</span>
       </div>
 
-      <slot name="appendSearch" />
+      <div class="flex h-full items-center">
+        <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-green-200 dark:bg-green-800">
+          <KunIcon class="h-fit" :icon="IconFilter" size="text-lg" />
+        </KunBtn>
+
+        <div v-if="searchable" class="rounded flex mx-2" :class="[searchClass]">
+          <input
+            v-model="searchQuery"
+            v-show="showSearch"
+            type="text"
+            :placeholder="searchPlaceholder"
+            class="w-full text-sm"
+            :class="isMobile ? 'px-1' : 'px-2 py-1'"
+            ref="searchRef"
+            @focus="hideIconSearch"
+            @blur="showIconSearch"
+          />
+          <KunIcon :icon="IconSearch" @click="handleSearchFocus" v-show="showSearchBtn"/>
+        </div>
+
+        <slot name="appendSearch" />
+      </div>
     </div>
 
     <div class="flex-1 overflow-auto bg-surface">
@@ -49,6 +52,7 @@
           :show-select="showSelect"
           :show-expand="showExpand"
           :all-selected="allSelected"
+          :more-than-paginated="moreThanPaginated"
           :some-selected="someSelected"
           :thead-class="theadClass"
           :tr-class="trClass"
@@ -233,7 +237,7 @@ watch(searchQuery, (val) => {
 });
 
 const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems);
-const { isSelected, toggleSelect, toggleSelectAll, allSelected, someSelected } = useSelect(paginatedItems, selectedItems);
+const { isSelected, toggleSelect, toggleSelectAll, allSelected, someSelected, moreThanPaginated, clearSelection, selectCompleteAll } = useSelect(paginatedItems, selectedItems, filteredItems);
 const { isExpanded, toggleExpand } = useExpand();
 
 const slotProps = computed(() => ({

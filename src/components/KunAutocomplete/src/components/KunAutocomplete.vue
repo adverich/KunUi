@@ -9,7 +9,8 @@
       <template #prepend-input-content>
         <div
           v-if="isArray(modelValue) && isNotEmpty(modelValue)"
-          class="flex flex-nowrap items-center space-x-1 min-w-3xs max-w-full overflow-x-auto overflow-y-hidden"
+          class="flex flex-nowrap items-center space-x-1 min-w-[calc(100%-56px)] overflow-x-auto overflow-y-hidden"
+          @click="toggleMenu"
         >
           <template v-for="item in modelValue" :key="item.id ?? item.name">
             <KunChip size="small" variant="pill">

@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import KunDialog from '../../../KunDialog/src/components/KunDialog.vue';
 import KunRow from '../../../KunRow/src/components/KunRow.vue';
 import KunCol from '../../../KunCol/src/components/KunCol.vue';
@@ -52,7 +52,7 @@ const filterDialog = computed({
 const selectedFilters = ref({});
 onMounted(() => {
     selectedFilters.value = { ...props.filters.reduce((acc, filter) => {
-        const key = filter.key;
+        const key = filter.value;
         const currentVal = props.activeFilters?.[key];
         if (currentVal !== undefined) acc[key] = currentVal;
         return acc;
@@ -72,4 +72,12 @@ function clearFilters() {
 function closeDialog(){
     emits('update:modelValue', false);
 }
+
+watch(selectedFilters, (val) => {
+  for (const key in val) {
+    if (Array.isArray(val[key]) && val[key].length === 0) {
+      delete val[key];
+    }
+  }
+}, { deep: true });
 </script>
