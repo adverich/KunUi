@@ -11,8 +11,10 @@
 
       <div class="flex items-center justify-center" v-if="selectedItems.length">
         <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
-        <span v-if="paginatedItems.length === selectedItems.length" class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2" @click="selectCompleteAll">Seleccionar todos los {{ filteredItems.length }} registros</span>
-        <span v-if="filteredItems.length === selectedItems.length" class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2" @click="clearSelection">Anular selección</span>
+        <template v-if="paginatedItems.length !== filteredItems.length">
+          <span v-if="paginatedItems.length === selectedItems.length" class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2" @click="selectCompleteAll">Seleccionar todos los {{ filteredItems.length }} registros</span>
+          <span v-if="filteredItems.length === selectedItems.length" class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2" @click="clearSelection">Anular selección</span>
+        </template>
       </div>
 
       <div class="flex h-full items-center">
