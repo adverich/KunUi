@@ -5,7 +5,7 @@
       v-if="searchable || filterable || $slots.prependHeader || $slots.prependSearch || $slots.appendSearch"
       class="p-2 bg-surface print:hidden flex w-full justify-between"
     >
-      <div class="w-full flex items-center" v-if="!showSearch">
+      <div class="w-full flex items-center" v-if="showSearchBtn">
         <slot name="prependHeader" />
       </div>
 
