@@ -43,14 +43,9 @@ export default function useTextarea(props, emit, textareaRef) {
     watch(
         () => props.modelValue,
         (val) => {
-            const incoming = JSON.stringify(val)
-            const current = JSON.stringify(rawModelValue.value)
-
-            if (incoming !== current) {
-                rawModelValue.value = val
-                internalValue.value = formatInputValue(val)
-                if (props.autoGrow) nextTick(() => adjustHeight())
-            }
+            rawModelValue.value = val
+            internalValue.value = formatInputValue(val)
+            if (props.autoGrow) nextTick(() => adjustHeight())
         },
         { immediate: true, deep: true }
     )
