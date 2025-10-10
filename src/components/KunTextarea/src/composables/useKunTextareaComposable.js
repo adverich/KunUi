@@ -27,7 +27,8 @@ export default function useTextarea(props, emit, textareaRef) {
             try {
                 return JSON.parse(val)
             } catch {
-                return null
+                // si no es JSON válido, devolvemos el string tal cual
+                return val
             }
         }
         return val
