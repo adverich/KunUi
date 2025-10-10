@@ -155,11 +155,12 @@ const {
 } = useTextarea(props, emits, textareaRef)
 
 const handleInput = (e) => {
-  internalValue.value = e.target.value  // Actualiza el texto de inmediato
-  debouncedUpdateModel(e.target.value) // Actualiza el modelo después del delay
-
+  const val = e.target.value
+  internalValue.value = val
+  updateModel(val) // EMITE update:modelValue inmediatamente
   if (props.autoGrow) adjustHeight()
 }
+
 const debouncedUpdateModel = debounce((val) => {
   updateModel(val)
 }, 100)

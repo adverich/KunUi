@@ -32,29 +32,37 @@
     </KunDrawer>
 
 
-    <div class="h-fit flex justify-center bg-gray-900">
-      <div class="w-1/2 flex">
-        <KunAutocomplete label="text" hide-details v-model="selected" :items="products" :searchable-keys="['bar_code', 'fullName']" 
-          return-object item-title="fullName" item-subtitle="bar_code" 
-          @update:model-value="addProduct" :focus-on-select="true" 
-        />
+    <div class="h-fit flex flex-col w-full bg-gray-900">
+      <div class="h-fit flex w-full">
+        <div class="w-1/2 flex">
+          <KunAutocomplete label="text" hide-details v-model="selected" :items="products" :searchable-keys="['bar_code', 'fullName']" 
+            return-object item-title="fullName" item-subtitle="bar_code" 
+            @update:model-value="addProduct" :focus-on-select="true" 
+          />
+        </div>
+        <div class="w-1/2 flex">
+          <KunTextField label="lelele" v-model="modelText" ref="refEls" />
+        </div>
       </div>
-      <div class="w-1/2 flex">
-        <KunTextField label="lelele" v-model="modelText" ref="refEls" />
-      </div>
-      <div class="w-1/2 flex">
-        <KunNumberField label="lalala" v-model="minQuantity" :no-arrows="true" />
+      <div class="h-fit flex w-full">
+        <div class="w-1/2 flex">
+          <KunTextarea label="Text area" v-model="objectArea['name']" rows="1" auto-grow />
+        </div>
+        <div class="w-1/2 flex">
+          <KunNumberField label="lalala" v-model="minQuantity" :no-arrows="true" />
+        </div>
       </div>
     </div>
-      <div class="h-full flex flex-col overflow-auto">
-        <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect search-position="end">
-          <template #prependSearch>
-            <div>
-              <KunBtn size="sm">Invertir orden</KunBtn>
-            </div>
-          </template>
-        </KunTable>
-      </div>
+
+    <div class="h-full flex flex-col overflow-auto">
+      <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect search-position="end">
+        <template #prependSearch>
+          <div>
+            <KunBtn size="sm">Invertir orden</KunBtn>
+          </div>
+        </template>
+      </KunTable>
+    </div>
   </div>
 </template>
 
@@ -67,7 +75,7 @@ import KunTable from './components/KunTable/src/components/KunTable.vue';
 import KunMenu from './components/KunMenu/src/components/KunMenu.vue';
 import KunDrawer from './components/KunDrawer/src/components/KunDrawer.vue';
 import KunBtn from './components/KunBtn/src/components/KunBtn.vue';
-import KunToolbar from './components/KunToolbar/src/components/KunToolbar.vue';
+import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue';
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
@@ -84,6 +92,7 @@ const products = ref(generateFakeProductsFull(105));
 const currentTheme = ref('dark')
 const selected = ref({})
 
+const objectArea = ref({name: '', age: null})
 const modelText = ref(null);
 const minQuantity = ref(0);
 
