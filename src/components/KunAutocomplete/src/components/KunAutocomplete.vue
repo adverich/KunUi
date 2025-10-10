@@ -179,6 +179,7 @@ function textFieldBlur() {
 }
 
 function handleEnter(e) {
+  console.log(e);
   if (!search.value) return;
 
   let found = null;
@@ -212,6 +213,15 @@ function handleEnter(e) {
   if (found) {
     // Reutilizamos la lógica que ya maneja emits, multiple, etc.
     getSelectedItem(found);
+  } else {
+    // Si no se encuentra nada, emitir evento notFound
+    emits('notFound', search.value);
+
+    // Opcional: limpiar campo o mostrar mensaje visual
+    if (props.clearOnNotFound) {
+      search.value = "";
+      menuModel.value = false;
+    }
   }
 
   nextTick(() => {

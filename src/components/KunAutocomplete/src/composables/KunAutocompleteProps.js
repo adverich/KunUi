@@ -50,6 +50,7 @@ export const KunAutocompleteProps = {
     type: Boolean,
     default: true,
   },
+  clearOnNotFound: { type: Boolean, default: true },
 
   closeOnSelect: { type: Boolean, default: true },
   menuOrigin: { type: String, default: "bottom left" },
