@@ -179,9 +179,7 @@ function textFieldBlur() {
 }
 
 function handleEnter(e) {
-  console.log(1)
   if (!search.value) return;
-  console.log(2)
 
   let found = null;
 
@@ -220,10 +218,10 @@ function handleEnter(e) {
     emits('notFound', search.value);
 
     // Opcional: limpiar campo o mostrar mensaje visual
-    // if (props.clearOnNotFound) {
-    //   search.value = "";
-    //   menuModel.value = false;
-    // }
+    if (props.clearOnNotFound) {
+      search.value = "";
+      menuModel.value = false;
+    }
   }
 
   nextTick(() => {
