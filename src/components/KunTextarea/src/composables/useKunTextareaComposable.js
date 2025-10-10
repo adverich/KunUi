@@ -52,7 +52,7 @@ export default function useTextarea(props, emit, textareaRef) {
                 if (props.autoGrow) nextTick(() => adjustHeight())
             }
         },
-        { immediate: true }
+        { immediate: true, deep: true }
     )
 
     // -------- CRECIMIENTO AUTOMÁTICO ----------
