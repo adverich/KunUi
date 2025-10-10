@@ -213,7 +213,6 @@ function handleEnter(e) {
     // Reutilizamos la lógica que ya maneja emits, multiple, etc.
     getSelectedItem(found);
   } else {
-    console.log('No se encontró el elemento:', search.value);
     // Si no se encuentra nada, emitir evento notFound
     emits('notFound', search.value);
 
