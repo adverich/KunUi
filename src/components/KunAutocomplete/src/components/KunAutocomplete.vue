@@ -179,7 +179,9 @@ function textFieldBlur() {
 }
 
 function handleEnter(e) {
+  console.log(1)
   if (!search.value) return;
+  console.log(2)
 
   let found = null;
 
@@ -213,6 +215,7 @@ function handleEnter(e) {
     // Reutilizamos la lógica que ya maneja emits, multiple, etc.
     getSelectedItem(found);
   } else {
+    console.log('No se encontró el elemento:', search.value);
     // Si no se encuentra nada, emitir evento notFound
     emits('notFound', search.value);
 
