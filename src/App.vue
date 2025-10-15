@@ -49,7 +49,7 @@
           <KunTextarea label="Text area" v-model="objectArea['name']" rows="1" auto-grow />
         </div>
         <div class="w-1/2 flex">
-          <KunNumberField label="lalala" v-model="minQuantity" :no-arrows="true" />
+          <KunNumberField label="lalala" v-model="minQuantity" :no-arrows="true" format-mode="caca" />
         </div>
       </div>
     </div>

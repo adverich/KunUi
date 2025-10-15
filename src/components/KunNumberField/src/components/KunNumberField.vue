@@ -1,25 +1,35 @@
 <template>
   <div class="w-full flex flex-col relative h-fit" ref="rootRef">
     <!-- Label -->
-    <label v-if="label" :for="uid" :class="[labelColor,
-      'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
-      '-top-2.25 text-xs opacity-80'
-    ]">
+    <label
+      v-if="label"
+      :for="uid"
+      :class="[labelColor,
+        'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
+        '-top-2.25 text-xs opacity-80'
+      ]"
+    >
       {{ label }}
     </label>
 
     <div class="w-full flex flex-col justify-center relative" v-bind="$attrs">
-      <div class="flex items-center w-full h-full border" :class="[bgInput, rounded,
-        focus ? 'border-slate-400 dark:border-slate-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : borderColor,
-        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
-        error ? 'bg-red-200 dark:bg-red-900' : ''
-      ]">
+      <div
+        class="flex items-center w-full h-full border"
+        :class="[bgInput, rounded,
+          focus ? 'border-slate-400 dark:border-slate-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : borderColor,
+          disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
+          error ? 'bg-red-200 dark:bg-red-900' : ''
+        ]"
+      >
 
         <!-- Control - (SPLIT start) -->
         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
-          <button type="button"
-            class="p-3 text-lg border-r border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
-            @click="onDecrement" :disabled="disabled || readonly">−</button>
+          <button
+            type="button"
+            class="p-3 text-lg border-r border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer hover:opacity-80"
+            @click="onDecrement"
+            :disabled="disabled || readonly"
+          >−</button>
         </div>
 
         <!-- Prefix -->
@@ -36,53 +46,74 @@
         </div>
 
         <!-- Input -->
-        <input :id="uid" ref="numberInput" type="text" :value="inputValue" :placeholder="placeholder"
-          :readonly="readonly" :disabled="disabled" :maxlength="maxlength" autocomplete="off"
-          class="w-full h-full bg-transparent rounded focus:outline-none" :aria-invalid="error ? 'true' : 'false'"
+        <input
+          :id="uid"
+          ref="numberInput"
+          type="text"
+          :value="inputValue"
+          :placeholder="placeholder"
+          :readonly="readonly"
+          :disabled="disabled"
+          :maxlength="maxlength"
+          autocomplete="off"
+          class="w-full h-full bg-transparent rounded focus:outline-none"
+          :aria-invalid="error ? 'true' : 'false'"
           :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '']"
-          @blur="handleBlur" 
-          @focus="handleFocus" 
-          @keydown="validateKey($event), emits('keyDown', $event)" 
-          @keyup="emits('keyUp', $event)" 
+          @blur="handleBlur"
+          @focus="handleFocus"
+          @input="handleInput"
+          @keydown="validateKey($event), emits('keyDown', $event)"
+          @keyup="emits('keyUp', $event)"
           inputmode="decimal"
           pattern="[0-9]+([\.,][0-9]+)?"
         />
 
         <!-- Clearable -->
-         <div v-if="clearable && inputValue != null" class="px-2">
-           <KunBtn @click="onClear" rounded="rounded-full" bgColor="bg-red-500/75" :disabled="disabled || readonly" class="h-6 w-6">
+        <div v-if="clearable && inputValue != null" class="px-2">
+          <KunBtn
+            @click="onClear"
+            rounded="rounded-full"
+            bgColor="bg-red-500/75"
+            :disabled="disabled || readonly"
+            class="h-6 w-6"
+          >
             <KunIcon :icon="IconClose" size="text-xs" />
           </KunBtn>
-         </div>
+        </div>
 
         <!-- Controls: DEFAULT -->
         <template v-if="!noArrows">
           <div v-if="controlVariant === 'default'" class="flex items-center h-full">
-            <button type="button"
+            <button
+              type="button"
               class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
-              @click="onIncrement" :disabled="disabled || readonly">
-              ▲
-            </button>
+              @click="onIncrement"
+              :disabled="disabled || readonly"
+            >▲</button>
 
-            <button type="button"
+            <button
+              type="button"
               class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
-              @click="onDecrement" :disabled="disabled || readonly">
-              ▼
-            </button>
+              @click="onDecrement"
+              :disabled="disabled || readonly"
+            >▼</button>
           </div>
 
           <!-- Controls: STACKED -->
-          <div v-if="controlVariant === 'stacked'"
-            class="flex flex-col items-center justify-center border-l border-slate-600">
+          <div v-if="controlVariant === 'stacked'" class="flex flex-col items-center justify-center border-l border-slate-600">
             <div class="border-b border-slate-600 pb-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onIncrement">
-              <button type="button"
+              <button
+                type="button"
                 class="text-xs text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer"
-                :disabled="disabled || readonly">▲</button>
+                :disabled="disabled || readonly"
+              >▲</button>
             </div>
             <div class="border-t border-slate-600 pt-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onDecrement">
-              <button type="button"
+              <button
+                type="button"
                 class="text-xs text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer"
-                :disabled="disabled || readonly">▼</button>
+                :disabled="disabled || readonly"
+              >▼</button>
             </div>
           </div>
         </template>
@@ -99,9 +130,12 @@
 
         <!-- Control + (SPLIT end) -->
         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
-          <button type="button"
-            class="p-3 text-lg border-l border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer  hover:opacity-80"
-            @click="onIncrement" :disabled="disabled || readonly">+</button>
+          <button
+            type="button"
+            class="p-3 text-lg border-l border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer hover:opacity-80"
+            @click="onIncrement"
+            :disabled="disabled || readonly"
+          >+</button>
         </div>
 
         <!-- Suffix -->
@@ -123,7 +157,6 @@
     </div>
   </div>
 </template>
-
 
 <script setup>
 import { getCurrentInstance, computed, nextTick, useSlots } from 'vue';
@@ -159,8 +192,8 @@ const {
   validateKey,
   focus,
   handleFocus,
-  isActive,
-  handleBlur
+  handleBlur,
+  handleInput
 } = useKunNumberField(props, emits);
 
 defineExpose({
@@ -173,5 +206,9 @@ defineExpose({
   }
 });
 
-const inputDensity = computed(() =>props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3");
+const inputDensity = computed(() =>
+  props.density === "compact" ? "p-1" :
+  props.density === "comfortable" ? "p-2" :
+  "p-3"
+);
 </script>

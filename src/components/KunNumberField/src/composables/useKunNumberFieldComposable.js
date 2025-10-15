@@ -2,6 +2,11 @@
 import { ref, watch, computed, nextTick } from 'vue';
 import * as nf from './numberFormatUtils';
 
+/**
+ * Composable para KunNumberField
+ * - props.formatMode === 'bank'    -> modo bancario (estricto, rawNumberString, control fino del cursor)
+ * - props.formatMode === 'natural' -> modo natural (entrada libre, normaliza '.'->',', respeta precision en input)
+ */
 export function useKunNumberField(props, emits) {
     const inputValue = ref('');
     const numberInput = ref(null);
@@ -9,6 +14,7 @@ export function useKunNumberField(props, emits) {
     const isActive = ref(false);
     const cursorPosition = ref(0);
 
+    // Solo usado en modo bank
     let rawNumberString = '';
 
     const minLen = computed(() => {
@@ -16,6 +22,130 @@ export function useKunNumberField(props, emits) {
         return precision > 0 ? precision + 1 : 1;
     });
 
+    // =========================================================
+    // MODO NATURAL (estilo Vuetify) - con control de precision en input
+    // =========================================================
+    function handleInputNatural(e) {
+        const el = numberInput.value;
+        if (!el) return;
+
+        let val = el.value;
+        const precision = Number(props.precision);
+        const selStart = el.selectionStart || 0;
+
+        if (precision === 0) {
+            // Mantener solo dígitos
+            let newVal = val.replace(/[^0-9]/g, '');
+
+            // Evitar infinitos ceros iniciales
+            newVal = newVal.replace(/^0+(\d)/, '$1');
+
+            // Forzar DOM
+            inputValue.value = newVal;
+            nextTick(() => {
+                if (!numberInput.value) return;
+                numberInput.value.value = newVal;
+                const cursorPos = Math.min(newVal.length, selStart);
+                numberInput.value.setSelectionRange(cursorPos, cursorPos);
+            });
+
+            emits('input', newVal);
+            return;
+        }
+
+        // 1) Normalizar puntos -> coma
+        val = val.replace(/\./g, ',').replace(/\s+/g, '');
+        // 2) Mantener solo dígitos y coma
+        val = val.replace(/[^0-9,]/g, '');
+        // 3) Mantener una sola coma
+        if ((val.match(/,/g) || []).length > 1) {
+            const parts = val.split(',');
+            const integerPart = parts.shift() || '';
+            const decimalPart = parts.join('');
+            val = integerPart + (decimalPart.length ? ',' + decimalPart : '');
+        }
+        // 4) Limitar decimales
+        if (val.includes(',')) {
+            const [intP, decP = ''] = val.split(',');
+            const truncatedDec = decP.slice(0, precision);
+            val = intP + (truncatedDec.length ? ',' + truncatedDec : ',');
+        }
+
+        inputValue.value = val;
+        nextTick(syncInputDom);
+
+        nextTick(() => {
+            const newCursor = selStart;
+            el.setSelectionRange(newCursor, newCursor);
+        });
+
+        emits('input', val);
+    }
+
+    function syncInputDom() {
+        if (!numberInput.value) return;
+        numberInput.value.value = inputValue.value;
+    }
+
+    function handleFocusNatural(event) {
+        isActive.value = true;
+        if (!numberInput.value) return;
+
+        const num = parseFloat(props.modelValue ?? 0);
+        const precision = Number(props.precision);
+
+        if (isNaN(num)) {
+            inputValue.value = '';
+            emits('focus');
+            return;
+        }
+
+        if (precision === 0) {
+            inputValue.value = String(Math.trunc(num));
+        } else {
+            const raw = nf.toRawNumberString(num, precision);
+            const decPart = raw.slice(-precision);
+            const allZero = /^0+$/.test(decPart);
+
+            inputValue.value = allZero
+                ? String(Math.trunc(num))
+                : nf.format(num, { ...props, precision }).replace('.', ',');
+        }
+
+        nextTick(() => {
+            try {
+                const cameFromKeyboard =
+                    event?.relatedTarget !== undefined ||
+                    event?.sourceCapabilities?.firesTouchEvents === false;
+                if (cameFromKeyboard) {
+                    const len = inputValue.value.length;
+                    numberInput.value.setSelectionRange(len, len);
+                }
+            } catch (e) { }
+        });
+
+        emits('focus');
+    }
+
+    function handleBlurNatural() {
+        isActive.value = false;
+        let val = (inputValue.value ?? '').toString().trim();
+        if (!val) val = '0';
+
+        val = val.replace(',', '.');
+        let num = parseFloat(val);
+        if (isNaN(num)) num = 0;
+
+        num = nf.clamp(num, props.min, props.max);
+
+        inputValue.value = nf.format(num, { ...props });
+        emits('update:modelValue', num);
+        emits('blur');
+    }
+
+    // =========================================================
+    // MODO BANK
+    // =========================================================
     function ensureMinLength(str) {
         if (Number(props.precision) === 0) {
             return str === '' ? '0' : str.replace(/^0+(\d)/, '$1');
@@ -23,186 +153,48 @@ export function useKunNumberField(props, emits) {
         return str.padStart(minLen.value, '0');
     }
 
-    watch(
-        [() => props.modelValue, () => props.precision],
-        ([newVal, newPrecision], [oldVal, oldPrecision]) => {
-            // Solo reformatear completamente si cambió la precisión
-            const precisionChanged = Number(newPrecision) !== Number(oldPrecision);
-
-            if (newVal == null || isNaN(newVal)) {
-                inputValue.value = nf.format(0, { ...props, precision: newPrecision });
-                rawNumberString = '0'.repeat(Number(newPrecision) + 1);
-            } else {
-                const num = parseFloat(newVal);
-                const clamped = nf.clamp(num, props.min, props.max);
-
-                // 🔧 Siempre regenerar rawNumberString
-                rawNumberString = nf.toRawNumberString(clamped, Number(newPrecision));
-
-                if (rawNumberString.length < Number(newPrecision) + 1) {
-                    rawNumberString = rawNumberString.padStart(Number(newPrecision) + 1, '0');
-                }
-
-                inputValue.value = nf.format(clamped, { ...props, precision: newPrecision });
-            }
-        },
-        { immediate: true }
-    );
-
-    function validateKey(event) {
-        const { key, target } = event;
-        const isDigit = /^[0-9]$/.test(key);
-        const isBackspace = key === 'Backspace';
-        const isDelete = key === 'Delete';
-        const isArrow = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key);
-        const isCtrl = event.ctrlKey || event.metaKey;
-        const isHome = key === 'Home';
-        const isEnd = key === 'End';
-        const isTab = key === 'Tab';
-
-        if (isTab) {
-            return;
-        }
-
-        if (isHome) {
-            // Mover cursor al principio del input (pos 0 o primer dígito)
-            nextTick(() => {
-                if (!numberInput.value) return;
-                // Posición visual del primer dígito en input formateado
-                const formatted = inputValue.value;
-                const firstDigitPos = formatted.search(/\d/);
-                numberInput.value.setSelectionRange(firstDigitPos, firstDigitPos);
-            });
-            return; // no prevenir default
-        }
-
-        if (isEnd) {
-            // Mover cursor al final del input (última posición visual)
-            nextTick(() => {
-                if (!numberInput.value) return;
-                const formatted = inputValue.value;
-                numberInput.value.setSelectionRange(formatted.length, formatted.length);
-            });
-            return; // no prevenir default
-        }
-
-        if (isArrow || isCtrl) return;
-
-        const visualPos = normalizeCursorPosition(inputValue.value, target.selectionStart);
-        event.preventDefault();
-
-        const minLen = Number(props.precision) + 1;
-
-        // Asegurar que rawNumberString tenga longitud mínima
-        while (rawNumberString.length < minLen) {
-            rawNumberString = '0' + rawNumberString;
-        }
-
-        const rawPos = visualToRawPosition(inputValue.value, visualPos);
-
-        if (isDigit) {
-            rawNumberString = rawNumberString.substring(0, rawPos) + key + rawNumberString.substring(rawPos);
-            cursorPosition.value = rawPos + 1;
-        } else if (isBackspace && visualPos > 0) {
-            const rawPos = visualToRawPosition(inputValue.value, visualPos);
-            const nextCursor = rawPos - 1;
-
-            if (rawNumberString.length <= (Number(props.precision) + 1)) {
-                // Borrar el dígito en rawPos - 1 pero no mover el cursor
-                const nextCursor = Math.max(0, rawPos - 1);
-                rawNumberString = rawNumberString.slice(0, nextCursor) + rawNumberString.slice(rawPos);
-                rawNumberString = ensureMinLength(rawNumberString);
-                cursorPosition.value = rawPos; // ❗️Cursor NO se mueve
-                updateValue();
-                return;
-            }
-
-            if (rawPos > 0) {
-                rawNumberString = rawNumberString.slice(0, nextCursor) + rawNumberString.slice(rawPos);
-                rawNumberString = ensureMinLength(rawNumberString);
-                cursorPosition.value = nextCursor;
-            }
-        } else if (isDelete && visualPos < inputValue.value.length) {
-            if (rawPos < rawNumberString.length) {
-                rawNumberString = rawNumberString.substring(0, rawPos) + rawNumberString.substring(rawPos + 1);
-                cursorPosition.value = rawPos;
-            }
-        }
-
-        // Asegurar longitud mínima ANTES de formatear
-        rawNumberString = ensureMinLength(rawNumberString);
-
-        // Asegurar longitud mínima antes de formatear
-        while (rawNumberString.length < minLen) {
-            rawNumberString = '0' + rawNumberString;
-        }
-
-        updateValue();
-    }
-
-    // Convierte posición en el input formateado → posición en rawNumberString
     function visualToRawPosition(formatted, visualPos) {
         let rawPos = 0;
         for (let i = 0; i < visualPos; i++) {
-            if (/\d/.test(formatted[i])) {
-                rawPos++;
-            }
+            if (/\d/.test(formatted[i])) rawPos++;
         }
         return rawPos;
     }
 
-    // Convierte posición en rawNumberString → posición en el texto formateado
     function rawToVisualPosition(formatted, rawPos) {
         let count = 0;
         for (let i = 0; i < formatted.length; i++) {
             if (/\d/.test(formatted[i])) {
-                if (count === rawPos) {
-                    return i;
-                }
+                if (count === rawPos) return i;
                 count++;
             }
         }
-        // Si no se encontró una posición exacta, devolvemos la última posición numérica
         for (let i = formatted.length - 1; i >= 0; i--) {
-            if (/\d/.test(formatted[i])) {
-                return i + 1;
-            }
+            if (/\d/.test(formatted[i])) return i + 1;
         }
         return formatted.length;
     }
 
     function normalizeCursorPosition(formatted, visualPos) {
-        // Si el cursor está sobre un separador, moverlo a la derecha (comportamiento natural)
-        while (visualPos < formatted.length && !/\d/.test(formatted[visualPos])) {
-            visualPos++;
-        }
-
-        // Si no hay dígitos a la derecha, ir hacia la izquierda
+        while (visualPos < formatted.length && !/\d/.test(formatted[visualPos])) visualPos++;
         if (visualPos >= formatted.length) {
             visualPos = formatted.length;
-            while (visualPos > 0 && !/\d/.test(formatted[visualPos - 1])) {
-                visualPos--;
-            }
+            while (visualPos > 0 && !/\d/.test(formatted[visualPos - 1])) visualPos--;
         }
-
-        // 🔒 Previene colocarse justo antes del primer número (0)
         const firstDigit = formatted.search(/\d/);
-        if (visualPos < firstDigit) {
-            visualPos = firstDigit;
-        }
-
-        return visualPos;
+        return visualPos < firstDigit ? firstDigit : visualPos;
     }
 
     function updateValue() {
-        // Asegurar que rawNumberString tenga al menos precision + 1 dígitos
-        const minLen = Number(props.precision) + 1;
-        let padded = rawNumberString.padStart(minLen, '0');
+        const minLenLocal = Number(props.precision) + 1;
+        rawNumberString = String(rawNumberString || '').padStart(minLenLocal, '0');
 
-        // Extraer partes
         const integerDigits = Math.max(1, rawNumberString.length - Number(props.precision));
         const integerPart = rawNumberString.slice(0, integerDigits) || '0';
-        const decimalPart = rawNumberString.slice(integerDigits).padEnd(Number(props.precision), '0').slice(0, Number(props.precision));
+        const decimalPart = rawNumberString
+            .slice(integerDigits)
+            .padEnd(Number(props.precision), '0')
+            .slice(0, Number(props.precision));
 
         const numStr = `${integerPart}.${decimalPart}`;
         const num = parseFloat(numStr);
@@ -211,7 +203,6 @@ export function useKunNumberField(props, emits) {
         rawNumberString = nf.toRawNumberString(clamped, Number(props.precision));
 
         inputValue.value = nf.format(clamped, props);
-
         emits('update:modelValue', clamped);
         emits('input', clamped);
 
@@ -219,15 +210,8 @@ export function useKunNumberField(props, emits) {
             if (!numberInput.value) return;
             try {
                 const formatted = inputValue.value;
-
-                // Convertimos raw a visual utilizando el valor guardado
                 let visualPos = rawToVisualPosition(formatted, cursorPosition.value);
-
-                // Evitar quedar sobre separadores
-                while (visualPos < formatted.length && !/\d/.test(formatted[visualPos])) {
-                    visualPos++;
-                }
-
+                while (visualPos < formatted.length && !/\d/.test(formatted[visualPos])) visualPos++;
                 numberInput.value.setSelectionRange(visualPos, visualPos);
             } catch (e) {
                 numberInput.value.setSelectionRange(inputValue.value.length, inputValue.value.length);
@@ -235,8 +219,7 @@ export function useKunNumberField(props, emits) {
         });
     }
 
-    // Resto de funciones se mantienen EXACTAMENTE igual
-    function handleBlur() {
+    function handleBlurBank() {
         isActive.value = false;
         rawNumberString = ensureMinLength(rawNumberString);
         const finalValue = nf.fromRawString(rawNumberString, Number(props.precision));
@@ -248,22 +231,19 @@ export function useKunNumberField(props, emits) {
         emits('blur');
     }
 
-    function handleFocus(event) {
+    function handleFocusBank(event) {
         isActive.value = true;
-        // const visualPos = numberInput.value?.selectionStart || 0;
-        // cursorPosition.value = visualToRawPosition(inputValue.value, visualPos);
         nextTick(() => {
             if (!numberInput.value) return;
-
-            // Si el focus viene de Tab (keyboard), posicionar al final
-            const cameFromKeyboard = event?.relatedTarget !== undefined || event?.sourceCapabilities?.firesTouchEvents === false;
+            const cameFromKeyboard =
+                event?.relatedTarget !== undefined ||
+                event?.sourceCapabilities?.firesTouchEvents === false;
 
             if (cameFromKeyboard) {
                 const len = inputValue.value.length;
                 numberInput.value.setSelectionRange(len, len);
-                cursorPosition.value = inputValue.value.replace(/\D/g, '').length; // posición raw al final
+                cursorPosition.value = inputValue.value.replace(/\D/g, '').length;
             } else {
-                // Focus por click
                 const visualPos = numberInput.value.selectionStart || 0;
                 cursorPosition.value = visualToRawPosition(inputValue.value, visualPos);
             }
@@ -271,28 +251,180 @@ export function useKunNumberField(props, emits) {
         emits('focus');
     }
 
+    function handleInputBank(e) {
+        e.preventDefault?.();
+    }
+
+    function validateKey(event) {
+        if (props.formatMode !== 'bank') return;
+        const { key, target } = event;
+        const isDigit = /^[0-9]$/.test(key);
+        const isBackspace = key === 'Backspace';
+        const isDelete = key === 'Delete';
+        const isArrow = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key);
+        const isCtrl = event.ctrlKey || event.metaKey;
+        const isHome = key === 'Home';
+        const isEnd = key === 'End';
+        const isTab = key === 'Tab';
+
+        if (isTab) return;
+        if (isHome) {
+            nextTick(() => {
+                if (!numberInput.value) return;
+                const formatted = inputValue.value;
+                const firstDigitPos = formatted.search(/\d/);
+                numberInput.value.setSelectionRange(firstDigitPos, firstDigitPos);
+            });
+            return;
+        }
+        if (isEnd) {
+            nextTick(() => {
+                if (!numberInput.value) return;
+                const formatted = inputValue.value;
+                numberInput.value.setSelectionRange(formatted.length, formatted.length);
+            });
+            return;
+        }
+        if (isArrow || isCtrl) return;
+
+        const selStart = target?.selectionStart ?? 0;
+        const visualPos = normalizeCursorPosition(inputValue.value, selStart);
+        event.preventDefault();
+
+        const minLenLocal = Number(props.precision) + 1;
+        while (rawNumberString.length < minLenLocal) rawNumberString = '0' + rawNumberString;
+
+        const rawPos = visualToRawPosition(inputValue.value, visualPos);
+
+        if (isDigit) {
+            rawNumberString = rawNumberString.substring(0, rawPos) + key + rawNumberString.substring(rawPos);
+            cursorPosition.value = rawPos + 1;
+        } else if (isBackspace && visualPos > 0) {
+            const rp = visualToRawPosition(inputValue.value, visualPos);
+            const nextCursor = rp - 1;
+
+            if (rawNumberString.length <= Number(props.precision) + 1) {
+                const nextCursorSafe = Math.max(0, rp - 1);
+                rawNumberString = rawNumberString.slice(0, nextCursorSafe) + rawNumberString.slice(rp);
+                rawNumberString = ensureMinLength(rawNumberString);
+                cursorPosition.value = rp;
+                updateValue();
+                return;
+            }
+
+            if (rp > 0) {
+                rawNumberString = rawNumberString.slice(0, nextCursor) + rawNumberString.slice(rp);
+                rawNumberString = ensureMinLength(rawNumberString);
+                cursorPosition.value = nextCursor;
+            }
+        } else if (isDelete && visualPos < inputValue.value.length) {
+            if (rawPos < rawNumberString.length) {
+                rawNumberString = rawNumberString.substring(0, rawPos) + rawNumberString.substring(rawPos + 1);
+                cursorPosition.value = rawPos;
+            }
+        } else return;
+
+        rawNumberString = ensureMinLength(rawNumberString);
+        while (rawNumberString.length < minLenLocal) rawNumberString = '0' + rawNumberString;
+
+        updateValue();
+    }
+
+    // =========================================================
+    // INCREMENT/DECREMENT y CLEAR
+    // =========================================================
     function onIncrement() {
-        let current = nf.fromRawString(rawNumberString, Number(props.precision)) || 0;
-        current = nf.clamp(current + Number(props.step), props.min, props.max);
-        rawNumberString = nf.toRawNumberString(current, Number(props.precision));
-        inputValue.value = nf.format(current, props);
-        emits('update:modelValue', current);
+        let current;
+        if (props.formatMode === 'bank') {
+            current = nf.fromRawString(rawNumberString, Number(props.precision)) || 0;
+            current = nf.clamp(current + Number(props.step), props.min, props.max);
+            rawNumberString = nf.toRawNumberString(current, Number(props.precision));
+            inputValue.value = nf.format(current, props);
+            emits('update:modelValue', current);
+            emits('input', current);
+        } else {
+            current = parseFloat(props.modelValue ?? 0) || 0;
+            current = nf.clamp(current + Number(props.step), props.min, props.max);
+            inputValue.value = nf.format(current, props);
+            emits('update:modelValue', current);
+            emits('input', current);
+        }
     }
 
     function onDecrement() {
-        let current = nf.fromRawString(rawNumberString, Number(props.precision)) || 0;
-        current = nf.clamp(current - Number(props.step), props.min, props.max);
-        rawNumberString = nf.toRawNumberString(current, Number(props.precision));
-        inputValue.value = nf.format(current, props);
-        emits('update:modelValue', current);
+        let current;
+        if (props.formatMode === 'bank') {
+            current = nf.fromRawString(rawNumberString, Number(props.precision)) || 0;
+            current = nf.clamp(current - Number(props.step), props.min, props.max);
+            rawNumberString = nf.toRawNumberString(current, Number(props.precision));
+            inputValue.value = nf.format(current, props);
+            emits('update:modelValue', current);
+            emits('input', current);
+        } else {
+            current = parseFloat(props.modelValue ?? 0) || 0;
+            current = nf.clamp(current - Number(props.step), props.min, props.max);
+            inputValue.value = nf.format(current, props);
+            emits('update:modelValue', current);
+            emits('input', current);
+        }
     }
 
     function onClear() {
-        rawNumberString = '0'.repeat(Number(props.precision) + 1);
-        cursorPosition.value = Number(props.precision) + 1;
+        if (props.formatMode === 'bank') {
+            rawNumberString = '0'.repeat(Number(props.precision) + 1);
+            cursorPosition.value = Number(props.precision) + 1;
+            updateValue();
+            nextTick(() => numberInput.value?.focus?.());
+        } else {
+            inputValue.value = '';
+            emits('update:modelValue', null);
+            nextTick(() => numberInput.value?.focus?.());
+        }
+    }
 
-        updateValue();
-        numberInput.value?.focus();
+    // ----------------------------
+    // WATCH: sincroniza modelValue → inputValue
+    // ----------------------------
+    watch(
+        [() => props.modelValue, () => props.precision, () => props.formatMode],
+        ([newVal, newPrecision, mode]) => {
+            if (mode !== 'bank') {
+                inputValue.value = nf.format(newVal ?? 0, { ...props, precision: newPrecision });
+                return;
+            }
+
+            if (newVal == null || isNaN(newVal)) {
+                inputValue.value = nf.format(0, { ...props, precision: newPrecision });
+                rawNumberString = '0'.repeat(Number(newPrecision) + 1);
+            } else {
+                const num = parseFloat(newVal);
+                const clamped = nf.clamp(num, props.min, props.max);
+                rawNumberString = nf.toRawNumberString(clamped, Number(newPrecision));
+                if (rawNumberString.length < Number(newPrecision) + 1)
+                    rawNumberString = rawNumberString.padStart(Number(newPrecision) + 1, '0');
+
+                inputValue.value = nf.format(clamped, { ...props, precision: newPrecision });
+            }
+        },
+        { immediate: true }
+    );
+
+    // ----------------------------
+    // API expuesta
+    // ----------------------------
+    function handleInput(e) {
+        if (props.formatMode !== 'bank') return handleInputNatural(e);
+        return handleInputBank(e);
+    }
+
+    function handleFocus(e) {
+        if (props.formatMode !== 'bank') return handleFocusNatural(e);
+        return handleFocusBank(e);
+    }
+
+    function handleBlur(e) {
+        if (props.formatMode !== 'bank') return handleBlurNatural(e);
+        return handleBlurBank(e);
     }
 
     return {
@@ -302,10 +434,11 @@ export function useKunNumberField(props, emits) {
         validateKey,
         handleFocus,
         handleBlur,
+        handleInput,
         onIncrement,
         onDecrement,
         onClear,
         isActive,
-        focus: isActive
+        focus: isActive,
     };
 }

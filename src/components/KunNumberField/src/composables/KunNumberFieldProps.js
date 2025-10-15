@@ -49,4 +49,9 @@ export const KunNumberFieldProps = {
   separator: { type: String, default: ',' },
   useGrouping: { type: Boolean, default: true },
   precision: { type: [Number, String], default: 2 },
+
+  formatMode: {
+    type: String,
+    default: 'natural', // 'bank' | 'natural'
+  },
 };
