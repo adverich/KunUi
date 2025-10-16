@@ -22,6 +22,65 @@ export function useKunNumberField(props, emits) {
         return precision > 0 ? precision + 1 : 1;
     });
 
+    // -------------------
+    // Helpers robustos
+    // -------------------
+    // Formatea un Number de forma determinista a estilo "español":
+    // - miles con '.' y decimal con ','
+    // - si trimZeros=true quita ceros finales en la parte decimal (para focus)
+    function formatNumberForDisplay(num, precision = 2, trimZeros = false) {
+        if (num == null || isNaN(num)) return '';
+        const p = Number(precision);
+        const sign = Number(num) < 0 ? '-' : '';
+        const absNum = Math.abs(Number(num));
+
+        // Cadena raw sin separadores, ej: p=2 → 12345.67 => "1234567"
+        let raw = nf.toRawNumberString(absNum, p);
+
+        const min = p + 1;
+        if (raw.length < min) raw = raw.padStart(min, '0');
+
+        const intRaw = raw.slice(0, raw.length - p) || '0';
+        let decRaw = p > 0 ? raw.slice(-p) : '';
+
+        if (p > 0 && trimZeros) {
+            decRaw = decRaw.replace(/0+$/, '');
+        }
+
+        // 👇 Formatear separador de miles SOLO sobre la parte entera
+        const intFormatted = intRaw.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+        if (p === 0) {
+            return sign + intFormatted;
+        }
+
+        if (!decRaw || decRaw.length === 0) {
+            return sign + intFormatted;
+        }
+
+        return sign + intFormatted + ',' + decRaw;
+    }
+
+    // Parsea un string formateado (con miles y decimal usando '.' o ',')
+    // Retorna Number o NaN si no es parseable.
+    function parseFormattedToNumber(str) {
+        if (str == null) return NaN;
+        let s = String(str).trim();
+        if (!s) return NaN;
+
+        // Quitar espacios
+        s = s.replace(/\s+/g, '');
+
+        // Siempre: '.' = miles, ',' = decimal
+        s = s.replace(/\./g, '');   // eliminar miles
+        s = s.replace(/,/g, '.');   // coma decimal → punto decimal
+
+        // Mantener solo números, signo y decimal
+        s = s.replace(/[^0-9\.\-]/g, '');
+
+        return s === '' ? NaN : parseFloat(s);
+    }
+
     // =========================================================
     // MODO NATURAL (estilo Vuetify) - con control de precision en input
     // =========================================================
@@ -35,7 +94,7 @@ export function useKunNumberField(props, emits) {
 
         if (precision === 0) {
             // Mantener solo dígitos
-            let newVal = val.replace(/[^0-9]/g, '');
+            let newVal = val.replace(/[^0-9\-]/g, '');
 
             // Evitar infinitos ceros iniciales
             newVal = newVal.replace(/^0+(\d)/, '$1');
@@ -53,10 +112,10 @@ export function useKunNumberField(props, emits) {
             return;
         }
 
-        // 1) Normalizar puntos -> coma
+        // 1) Normalizar puntos -> coma (usuario podría escribir . como decimal)
         val = val.replace(/\./g, ',').replace(/\s+/g, '');
-        // 2) Mantener solo dígitos y coma
-        val = val.replace(/[^0-9,]/g, '');
+        // 2) Mantener solo dígitos, coma y signo
+        val = val.replace(/[^0-9,\-]/g, '');
         // 3) Mantener una sola coma
         if ((val.match(/,/g) || []).length > 1) {
             const parts = val.split(',');
@@ -91,7 +150,7 @@ export function useKunNumberField(props, emits) {
         isActive.value = true;
         if (!numberInput.value) return;
 
-        const num = parseFloat(props.modelValue ?? 0);
+        const num = Number(props.modelValue);
         const precision = Number(props.precision);
 
         if (isNaN(num)) {
@@ -100,28 +159,27 @@ export function useKunNumberField(props, emits) {
             return;
         }
 
-        if (precision === 0) {
-            inputValue.value = String(Math.trunc(num));
-        } else {
-            const raw = nf.toRawNumberString(num, precision);
-            const decPart = raw.slice(-precision);
-            const allZero = /^0+$/.test(decPart);
+        // 🔹 Formatear sin separador de miles y sin ceros sobrantes
+        let str = nf.toRawNumberString(Math.abs(num), precision);
 
-            inputValue.value = allZero
-                ? String(Math.trunc(num))
-                : nf.format(num, { ...props, precision }).replace('.', ',');
+        const intRaw = str.slice(0, str.length - precision) || '0';
+        let decRaw = precision > 0 ? str.slice(-precision) : '';
+
+        if (precision > 0) {
+            // sacar ceros finales
+            decRaw = decRaw.replace(/0+$/, '');
         }
+
+        inputValue.value =
+            (num < 0 ? '-' : '') +
+            intRaw +
+            (decRaw.length ? ',' + decRaw : '');
 
         nextTick(() => {
             try {
-                const cameFromKeyboard =
-                    event?.relatedTarget !== undefined ||
-                    event?.sourceCapabilities?.firesTouchEvents === false;
-                if (cameFromKeyboard) {
-                    const len = inputValue.value.length;
-                    numberInput.value.setSelectionRange(len, len);
-                }
-            } catch (e) { }
+                const len = inputValue.value.length;
+                numberInput.value.setSelectionRange(len, len);
+            } catch { }
         });
 
         emits('focus');
@@ -132,13 +190,13 @@ export function useKunNumberField(props, emits) {
         let val = (inputValue.value ?? '').toString().trim();
         if (!val) val = '0';
 
-        val = val.replace(',', '.');
-        let num = parseFloat(val);
+        let num = parseFormattedToNumber(val);
         if (isNaN(num)) num = 0;
 
         num = nf.clamp(num, props.min, props.max);
 
-        inputValue.value = nf.format(num, { ...props });
+        // Formatear determinísticamente con todos los decimales según precision
+        inputValue.value = formatNumberForDisplay(num, Number(props.precision), false);
         emits('update:modelValue', num);
         emits('blur');
     }
@@ -202,7 +260,7 @@ export function useKunNumberField(props, emits) {
         const clamped = nf.clamp(num, props.min, props.max);
         rawNumberString = nf.toRawNumberString(clamped, Number(props.precision));
 
-        inputValue.value = nf.format(clamped, props);
+        inputValue.value = formatNumberForDisplay(clamped, Number(props.precision), false);
         emits('update:modelValue', clamped);
         emits('input', clamped);
 
@@ -226,7 +284,7 @@ export function useKunNumberField(props, emits) {
         const clamped = nf.clamp(finalValue, props.min, props.max);
         rawNumberString = nf.toRawNumberString(clamped, Number(props.precision));
         rawNumberString = ensureMinLength(rawNumberString);
-        inputValue.value = nf.format(clamped, props);
+        inputValue.value = formatNumberForDisplay(clamped, Number(props.precision), false);
         emits('update:modelValue', clamped);
         emits('blur');
     }
@@ -255,6 +313,9 @@ export function useKunNumberField(props, emits) {
         e.preventDefault?.();
     }
 
+    // ----------------------------
+    // validateKey (BANK)
+    // ----------------------------
     function validateKey(event) {
         if (props.formatMode !== 'bank') return;
         const { key, target } = event;
@@ -288,43 +349,30 @@ export function useKunNumberField(props, emits) {
         if (isArrow || isCtrl) return;
 
         const selStart = target?.selectionStart ?? 0;
-        const visualPos = normalizeCursorPosition(inputValue.value, selStart);
+        const formatted = inputValue.value || '';
+        const rawPos = visualToRawPosition(formatted, selStart);
+
         event.preventDefault();
 
         const minLenLocal = Number(props.precision) + 1;
         while (rawNumberString.length < minLenLocal) rawNumberString = '0' + rawNumberString;
 
-        const rawPos = visualToRawPosition(inputValue.value, visualPos);
-
         if (isDigit) {
             rawNumberString = rawNumberString.substring(0, rawPos) + key + rawNumberString.substring(rawPos);
             cursorPosition.value = rawPos + 1;
-        } else if (isBackspace && visualPos > 0) {
-            const rp = visualToRawPosition(inputValue.value, visualPos);
-            const nextCursor = rp - 1;
-
-            if (rawNumberString.length <= Number(props.precision) + 1) {
-                const nextCursorSafe = Math.max(0, rp - 1);
-                rawNumberString = rawNumberString.slice(0, nextCursorSafe) + rawNumberString.slice(rp);
-                rawNumberString = ensureMinLength(rawNumberString);
-                cursorPosition.value = rp;
-                updateValue();
-                return;
+        } else if (isBackspace) {
+            if (rawPos > 0) {
+                const removeIndex = rawPos - 1;
+                rawNumberString = rawNumberString.substring(0, removeIndex) + rawNumberString.substring(removeIndex + 1);
+                cursorPosition.value = removeIndex;
             }
-
-            if (rp > 0) {
-                rawNumberString = rawNumberString.slice(0, nextCursor) + rawNumberString.slice(rp);
-                rawNumberString = ensureMinLength(rawNumberString);
-                cursorPosition.value = nextCursor;
-            }
-        } else if (isDelete && visualPos < inputValue.value.length) {
+        } else if (isDelete) {
             if (rawPos < rawNumberString.length) {
                 rawNumberString = rawNumberString.substring(0, rawPos) + rawNumberString.substring(rawPos + 1);
                 cursorPosition.value = rawPos;
             }
         } else return;
 
-        rawNumberString = ensureMinLength(rawNumberString);
         while (rawNumberString.length < minLenLocal) rawNumberString = '0' + rawNumberString;
 
         updateValue();
@@ -339,13 +387,13 @@ export function useKunNumberField(props, emits) {
             current = nf.fromRawString(rawNumberString, Number(props.precision)) || 0;
             current = nf.clamp(current + Number(props.step), props.min, props.max);
             rawNumberString = nf.toRawNumberString(current, Number(props.precision));
-            inputValue.value = nf.format(current, props);
+            inputValue.value = formatNumberForDisplay(current, Number(props.precision), false);
             emits('update:modelValue', current);
             emits('input', current);
         } else {
-            current = parseFloat(props.modelValue ?? 0) || 0;
+            current = Number(props.modelValue ?? 0) || 0;
             current = nf.clamp(current + Number(props.step), props.min, props.max);
-            inputValue.value = nf.format(current, props);
+            inputValue.value = formatNumberForDisplay(current, Number(props.precision), false);
             emits('update:modelValue', current);
             emits('input', current);
         }
@@ -357,13 +405,13 @@ export function useKunNumberField(props, emits) {
             current = nf.fromRawString(rawNumberString, Number(props.precision)) || 0;
             current = nf.clamp(current - Number(props.step), props.min, props.max);
             rawNumberString = nf.toRawNumberString(current, Number(props.precision));
-            inputValue.value = nf.format(current, props);
+            inputValue.value = formatNumberForDisplay(current, Number(props.precision), false);
             emits('update:modelValue', current);
             emits('input', current);
         } else {
-            current = parseFloat(props.modelValue ?? 0) || 0;
+            current = Number(props.modelValue ?? 0) || 0;
             current = nf.clamp(current - Number(props.step), props.min, props.max);
-            inputValue.value = nf.format(current, props);
+            inputValue.value = formatNumberForDisplay(current, Number(props.precision), false);
             emits('update:modelValue', current);
             emits('input', current);
         }
@@ -389,21 +437,21 @@ export function useKunNumberField(props, emits) {
         [() => props.modelValue, () => props.precision, () => props.formatMode],
         ([newVal, newPrecision, mode]) => {
             if (mode !== 'bank') {
-                inputValue.value = nf.format(newVal ?? 0, { ...props, precision: newPrecision });
+                inputValue.value = formatNumberForDisplay(Number(newVal ?? 0), Number(newPrecision), false);
                 return;
             }
 
             if (newVal == null || isNaN(newVal)) {
-                inputValue.value = nf.format(0, { ...props, precision: newPrecision });
+                inputValue.value = formatNumberForDisplay(0, Number(newPrecision), false);
                 rawNumberString = '0'.repeat(Number(newPrecision) + 1);
             } else {
-                const num = parseFloat(newVal);
+                const num = Number(newVal);
                 const clamped = nf.clamp(num, props.min, props.max);
                 rawNumberString = nf.toRawNumberString(clamped, Number(newPrecision));
                 if (rawNumberString.length < Number(newPrecision) + 1)
                     rawNumberString = rawNumberString.padStart(Number(newPrecision) + 1, '0');
 
-                inputValue.value = nf.format(clamped, { ...props, precision: newPrecision });
+                inputValue.value = formatNumberForDisplay(clamped, Number(newPrecision), false);
             }
         },
         { immediate: true }
