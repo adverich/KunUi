@@ -159,6 +159,18 @@ export function useKunNumberField(props, emits) {
             return;
         }
 
+        // 🔹 NUEVO: si es cero exacto → limpiar el input
+        if (num === 0) {
+            inputValue.value = '';
+            nextTick(() => {
+                try {
+                    numberInput.value.setSelectionRange(0, 0);
+                } catch { }
+            });
+            emits('focus');
+            return;
+        }
+
         // 🔹 Formatear sin separador de miles y sin ceros sobrantes
         let str = nf.toRawNumberString(Math.abs(num), precision);
 
