@@ -4,7 +4,7 @@
     role="list"
     class="w-full kun-list"
     tabindex="-1"
-    @keydown.prevent="onKeydown"
+    @keydown="onKeydown"
     @select="e => emit('click:select', e.detail)"
     :class="[
       bgList,
@@ -99,7 +99,15 @@ provide('kunListContext', {
 })
 
 function onKeydown(e) {
-  emit('keyDown', e)
+  emit('keyDown', e);
+
+  if (
+    ['INPUT','TEXTAREA'].includes(e.target.tagName) ||
+    e.target.isContentEditable
+  ) {
+    return;
+  }
+
   const key = e.key
   const items = itemRefs.value.filter(el => el && el.isConnected)
 
