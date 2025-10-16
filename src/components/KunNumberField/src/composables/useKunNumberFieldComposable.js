@@ -78,7 +78,7 @@ export function useKunNumberField(props, emits) {
 
     const emitModelValue = useDebounce((num) => {
         emits('update:modelValue', num);
-    }, 250);
+    }, 100);
 
     // =========================================================
     // MODO NATURAL (estilo Vuetify) - con control de precision en input
@@ -92,7 +92,7 @@ export function useKunNumberField(props, emits) {
         const selStart = el.selectionStart || 0;
 
         if (precision === 0) {
-            // Mantener solo dígitos
+            // Mantener solo dígitos y signo
             let newVal = val.replace(/[^0-9\-]/g, '');
 
             // Evitar infinitos ceros iniciales
@@ -108,6 +108,13 @@ export function useKunNumberField(props, emits) {
             });
 
             emits('input', newVal);
+
+            // 🔹 NUEVO: actualizar modelValue en tiempo real
+            const parsed = parseFormattedToNumber(newVal);
+            if (!isNaN(parsed)) {
+                emitModelValue(parsed);
+            }
+
             return;
         }
 
