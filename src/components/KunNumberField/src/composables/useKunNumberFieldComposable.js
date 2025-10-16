@@ -28,15 +28,13 @@ export function useKunNumberField(props, emits) {
     // Formatea un Number de forma determinista a estilo "español":
     // - miles con '.' y decimal con ','
     // - si trimZeros=true quita ceros finales en la parte decimal (para focus)
-    function formatNumberForDisplay(num, precision = 2, trimZeros = false) {
+    function formatNumberForDisplay(num, precision = 2, trimZeros = false, withThousands = true) {
         if (num == null || isNaN(num)) return '';
         const p = Number(precision);
         const sign = Number(num) < 0 ? '-' : '';
         const absNum = Math.abs(Number(num));
 
-        // Cadena raw sin separadores, ej: p=2 → 12345.67 => "1234567"
         let raw = nf.toRawNumberString(absNum, p);
-
         const min = p + 1;
         if (raw.length < min) raw = raw.padStart(min, '0');
 
@@ -47,16 +45,13 @@ export function useKunNumberField(props, emits) {
             decRaw = decRaw.replace(/0+$/, '');
         }
 
-        // 👇 Formatear separador de miles SOLO sobre la parte entera
-        const intFormatted = intRaw.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        // 👇 Solo aplicar separador de miles si withThousands = true
+        const intFormatted = withThousands
+            ? intRaw.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+            : intRaw;
 
-        if (p === 0) {
-            return sign + intFormatted;
-        }
-
-        if (!decRaw || decRaw.length === 0) {
-            return sign + intFormatted;
-        }
+        if (p === 0) return sign + intFormatted;
+        if (!decRaw || decRaw.length === 0) return sign + intFormatted;
 
         return sign + intFormatted + ',' + decRaw;
     }
@@ -80,6 +75,10 @@ export function useKunNumberField(props, emits) {
 
         return s === '' ? NaN : parseFloat(s);
     }
+
+    const emitModelValue = useDebounce((num) => {
+        emits('update:modelValue', num);
+    }, 250);
 
     // =========================================================
     // MODO NATURAL (estilo Vuetify) - con control de precision en input
@@ -139,6 +138,19 @@ export function useKunNumberField(props, emits) {
         });
 
         emits('input', val);
+        // Parsear provisionalmente a número para v-model con debounce
+        const parsed = parseFormattedToNumber(val);
+        if (!isNaN(parsed)) {
+            emitModelValue(parsed);
+        }
+    }
+
+    function useDebounce(fn, delay = 250) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => fn(...args), delay);
+        };
     }
 
     function syncInputDom() {
@@ -449,7 +461,18 @@ export function useKunNumberField(props, emits) {
         [() => props.modelValue, () => props.precision, () => props.formatMode],
         ([newVal, newPrecision, mode]) => {
             if (mode !== 'bank') {
-                inputValue.value = formatNumberForDisplay(Number(newVal ?? 0), Number(newPrecision), false);
+                if (isActive.value) {
+                    const num = Number(newVal ?? 0);
+                    if (num === 0) {
+                        inputValue.value = '';
+                    } else {
+                        // 👇 sin miles, sin ceros extras
+                        inputValue.value = formatNumberForDisplay(num, Number(newPrecision), true, false);
+                    }
+                } else {
+                    // 👇 con miles y ceros completos
+                    inputValue.value = formatNumberForDisplay(Number(newVal ?? 0), Number(newPrecision), false, true);
+                }
                 return;
             }
 
