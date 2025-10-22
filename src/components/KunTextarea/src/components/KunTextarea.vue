@@ -57,7 +57,7 @@
         :class="clearIconClasses"
       >
         <slot name="clear" v-bind="clearSlotBindings">
-          <button type="button" @click="handleClear" class="text-gray-500 hover:text-gray-700">
+          <button type="button" @click="handleClear" class="text-gray-500 hover:text-gray-700" v-if="clearIcon">
             <component :is="renderIconSlot(clearIcon)" />
           </button>
         </slot>
