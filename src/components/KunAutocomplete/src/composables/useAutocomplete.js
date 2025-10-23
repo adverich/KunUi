@@ -214,11 +214,15 @@ export function useAutocomplete(props, emits, modelValue, items) {
         return values.length > 0 ? values[0] : item;
     }
 
-    function removeFromArray(value) {
-        const val = props.returnObject ?
-            value : value[props.itemValue];
+    function removeFromArray(itemToRemove) {
+        if (!modelValue.value) return;
 
-        modelValue.value = modelValue.value.filter((i) => i !== val);
+        const keyToRemove = extractValueKey(itemToRemove);
+
+        modelValue.value = modelValue.value.filter(currentItem => {
+            const currentKey = extractValueKey(currentItem);
+            return currentKey !== keyToRemove;
+        });
     }
 
     function lightReset(event) {
