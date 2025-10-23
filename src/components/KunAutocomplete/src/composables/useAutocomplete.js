@@ -109,7 +109,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
             selectedItem.value = fullCopy(item);
             if (!props.multiple) {
                 if (props.returnObject) {
-                    updated = item;
+                    updated = fullCopy(item);
                 } else {
                     if (isObject(item)) {
                         if (props.itemValue) {
@@ -126,7 +126,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
             } else {
                 if (!checkIfValueExist(item)) {
                     const val = props.returnObject
-                        ? item
+                        ? fullCopy(item)
                         : isObject(item)
                             ? props.itemValue
                                 ? item[props.itemValue]
