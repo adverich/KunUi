@@ -186,8 +186,32 @@ export function useAutocomplete(props, emits, modelValue, items) {
     function checkIfValueExist(value) {
         if (!modelValue.value || !value) return false;
 
-        const compareValue = props.returnObject ? value : value[props.itemValue];
-        return modelValue.value.some((i) => i === compareValue);
+        const targetKey = extractValueKey(value);
+
+        return modelValue.value.some(selected => {
+            const selectedKey = extractValueKey(selected);
+            return selectedKey === targetKey;
+        });
+    }
+
+    // Dentro de useAutocomplete.js
+    function extractValueKey(item) {
+        if (!isObject(item)) {
+            return item; // ya es primitivo
+        }
+
+        // Si itemValue está definido, úsalo
+        if (props.itemValue) {
+            return item[props.itemValue];
+        }
+
+        if ('id' in item) {
+            return item.id;
+        }
+
+        // Primer valor como fallback
+        const values = Object.values(item);
+        return values.length > 0 ? values[0] : item;
     }
 
     function removeFromArray(value) {
