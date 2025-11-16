@@ -21,8 +21,8 @@
     <div
       ref="tabsWrapper"
       :class="[
-        'relative flex overflow-hidden whitespace-nowrap transition-all',
-        direction === 'vertical' ? 'flex-col' : 'flex-row',
+        'relative flex overflow-x-auto overflow-y-hidden whitespace-nowrap transition-all',
+        direction === 'vertical' ? 'flex-col overflow-x-hidden' : 'flex-row horizontal-scroll-container',
         alignTabsClass,
         grow ? 'flex-grow' : '',
       ]"
@@ -119,3 +119,14 @@ provide('modelValue', computed(() => props.modelValue))
 provide('updateModelValue', select)
 provide('registerTab', registerTab)
 </script>
+
+<style scoped>
+/* En el componente (puedes usar style scoped) */
+.horizontal-scroll-container {
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.horizontal-scroll-container::-webkit-scrollbar {
+  display: none;             /* Chrome/Safari */
+}
+</style>
