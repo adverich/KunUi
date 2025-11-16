@@ -106,9 +106,9 @@ export function useTabsGroup(options) {
     }
 
     // If route has tab values to sync
-    watch(() => route.fullPath, () => {
-        if (modelValue !== route.fullPath) emit('update:modelValue', route.fullPath)
-    })
+    // watch(() => route.fullPath, () => {
+    //     if (modelValue !== route.fullPath) emit('update:modelValue', route.fullPath)
+    // })
 
     watch(() => modelValue, () => {
         updateSelection()
