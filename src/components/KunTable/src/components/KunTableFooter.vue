@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onBeforeUnmount, computed, ref } from 'vue'
+import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue'
 
 const props = defineProps({
   itemsLength: { type: Number, default: 0 },
@@ -87,6 +87,14 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
   document.removeEventListener("click", handleClickOutsideIpp)
+});
+
+watch(() => totalPages.value, (newVal, oldVal) => {
+  if (props.currentPage > newVal && newVal > 0) {
+    emit('update:page', newVal);
+  } else if (newVal === 0) {
+    emit('update:page', 1);
+  }
 });
 </script>
 
