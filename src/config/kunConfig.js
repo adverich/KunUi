@@ -77,6 +77,7 @@ export const kunConfig = {
 
     // Configurar (merge profundo)
     configure(options = {}) {
+        console.log(options);
         const merged = deepMerge(configState, options);
         Object.assign(configState, merged);
     },
