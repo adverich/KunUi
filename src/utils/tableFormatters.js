@@ -18,12 +18,6 @@ export function getValue(header, item) {
 }
 
 export function formatValue(header, value) {
-    const config = kunConfig.current;
-    const locale = config.locale;
-    const currency = config.currency;
-    console.log(currency)
-    console.log(locale)
-
     if (header.columnType === 'toComplete') return '';
     if (value === null || value === undefined) return 'Sin datos';
 
@@ -58,13 +52,14 @@ export const formatters = {
     money: value => {
         const config = kunConfig.current;
         const locale = config.locale;
+        const precision = config.precision;
         const currency = config.currency;
 
         return new Intl.NumberFormat(locale, {
             style: 'currency',
-            currency: currency.code,
-            minimumFractionDigits: currency.precision,
-            maximumFractionDigits: currency.precision,
+            currency: currency.value,
+            minimumFractionDigits: precision,
+            maximumFractionDigits: precision,
         }).format(value ?? 0);
     },
 

@@ -4,10 +4,11 @@ import { reactive, readonly, inject } from 'vue';
 // Valores por defecto de la librería
 const defaultConfig = {
     locale: 'es-AR',
+    precision: 2,
     currency: {
-        code: 'ARS',
+        value: 'ARS',
+        name: 'Pesos Argentinos',
         symbol: '$',
-        precision: 2,
     },
     date: {
         dateFormat: {
@@ -67,6 +68,10 @@ export const kunConfig = {
         return configState.locale;
     },
 
+    get precision() {
+        return configState.precision;
+    },
+
     get currency() {
         return configState.currency;
     },
@@ -91,9 +96,13 @@ export const kunConfig = {
         configState.locale = locale;
     },
 
+    setPrecision(precision) {
+        configState.precision = precision;
+    },
+
     setCurrency(currency) {
         if (typeof currency === 'string') {
-            configState.currency.code = currency;
+            configState.currency.value = currency;
         } else if (typeof currency === 'object') {
             Object.assign(configState.currency, currency);
         }

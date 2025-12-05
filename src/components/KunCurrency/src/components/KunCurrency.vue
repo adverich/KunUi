@@ -44,11 +44,11 @@ const resolvedLocale = computed(() =>
 );
 
 const resolvedCurrency = computed(() => 
-    props.currency ?? globalConfig.currency ?? { code: 'ARS', symbol: '$', precision: 2 }
+    props.currency ?? globalConfig.currency ?? { value: 'ARS', name: 'Pesos Argentinos', symbol: '$' }
 );
 
 const resolvedPrecision = computed(() => 
-    resolveConfigValue(props.precision, 'currency.precision', 2)
+    resolveConfigValue(props.precision, 'precision', 2)
 );
 
 const resolvedPrefix = computed(() => 
