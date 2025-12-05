@@ -18,6 +18,12 @@ export function getValue(header, item) {
 }
 
 export function formatValue(header, value) {
+    const config = kunConfig.current;
+    const locale = config.locale;
+    const currency = config.currency;
+    console.log(currency)
+    console.log(locale)
+
     if (header.columnType === 'toComplete') return '';
     if (value === null || value === undefined) return 'Sin datos';
 
