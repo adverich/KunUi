@@ -1,3 +1,5 @@
+import { kunConfig, resolveConfigValue } from '../config/kunConfig.js';
+
 export function getValue(header, item) {
     if (!header || !header.value) return undefined;
 
@@ -15,22 +17,22 @@ export function getValue(header, item) {
     return safeValue(value);
 }
 
-export function formatValue(header, value) {
+export function formatValue(header, value, options = {}) {
     if (header.columnType === 'toComplete') return '';
     if (value === null || value === undefined) return 'Sin datos';
 
     if (header.columnType === 'dateTime') {
         const formatter = formatters[header.columnType] || formatters.default;
-        return formatter(value);
+        return formatter(value, options);
     }
 
     if (header.columnType === 'date') {
         const formatter = formatters[header.columnType] || formatters.default;
-        return formatter(value);
+        return formatter(value, options);
     }
 
     const formatter = formatters[header.columnFormat] || formatters.default;
-    return formatter(value);
+    return formatter(value, options);
 }
 
 export const formatters = {
@@ -42,33 +44,52 @@ export const formatters = {
     composed: value => value, // ya está procesado por getComposedValue
 
     // NUMBERS
-    number: value => Number(value).toLocaleString('es-AR'),
-    money: value =>
-        new Intl.NumberFormat('es-CL', {
+    number: (value, options = {}) => {
+        const locale = resolveConfigValue(options.locale, 'locale', 'es-AR');
+        return Number(value).toLocaleString(locale);
+    },
+
+    money: (value, options = {}) => {
+        const locale = resolveConfigValue(options.locale, 'locale', 'es-AR');
+        const currencyCode = resolveConfigValue(options.currency, 'currency.code', 'ARS');
+        const precision = resolveConfigValue(options.precision, 'currency.precision', 2);
+
+        return new Intl.NumberFormat(locale, {
             style: 'currency',
-            currency: 'CLP',
-            minimumFractionDigits: 2,
-        }).format(value ?? 0),
+            currency: currencyCode,
+            minimumFractionDigits: precision,
+            maximumFractionDigits: precision,
+        }).format(value ?? 0);
+    },
+
     noDecimal: value => parseFloat(value ?? 0).toFixed(0),
     withDecimals: (value, decimals = 2) => parseFloat(value ?? 0).toFixed(decimals),
     noCeros: value => parseFloat(value ?? 0),
     percentage: value => `${parseFloat(value ?? 0)}%`,
 
-    date: value => {
+    date: (value, options = {}) => {
         if (!value || value === "0000-00-00" || !isValidDate(value)) return "Nunca";
         const date = new Date(value);
-        return new Intl.DateTimeFormat("es-MX", {
+        const locale = resolveConfigValue(options.locale, 'locale', 'es-AR');
+        const config = kunConfig.current;
+
+        return new Intl.DateTimeFormat(locale, {
             weekday: "short",
             day: "2-digit",
             month: "short",
             year: "2-digit",
+            ...config.date?.dateFormat,
+            ...options.format,
         }).format(date);
     },
 
-    dateTime: value => {
+    dateTime: (value, options = {}) => {
         if (!value || value === "0000-00-00" || !isValidDate(value)) return "Nunca";
         const date = new Date(value);
-        return new Intl.DateTimeFormat("es-AR", {
+        const locale = resolveConfigValue(options.locale, 'locale', 'es-AR');
+        const config = kunConfig.current;
+
+        return new Intl.DateTimeFormat(locale, {
             weekday: "short",
             day: "2-digit",
             month: "short",
@@ -77,11 +98,30 @@ export const formatters = {
             minute: "2-digit",
             second: "2-digit",
             hourCycle: "h23",
+            ...config.date?.dateTimeFormat,
+            ...options.format,
         }).format(date);
     },
 
     secondsToTime: value => convertirSegundosATiempo(value ?? 0),
 };
+
+// Funciones helper adicionales para formateo con config global
+export function formatMoney(value, options = {}) {
+    return formatters.money(value, options);
+}
+
+export function formatDate(value, options = {}) {
+    return formatters.date(value, options);
+}
+
+export function formatDateTime(value, options = {}) {
+    return formatters.dateTime(value, options);
+}
+
+export function formatNumber(value, options = {}) {
+    return formatters.number(value, options);
+}
 
 export function getNestedValue(obj, path) {
     if (!obj || !path) return obj;

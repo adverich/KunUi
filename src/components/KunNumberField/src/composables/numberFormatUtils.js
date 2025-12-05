@@ -1,16 +1,20 @@
 // numberFormatUtils.js
+import { resolveConfigValue } from '../../../../config/kunConfig.js';
 
 export function clamp(value, min, max) {
     return Math.min(Math.max(value, Number(min)), Number(max));
 }
 
-export function format(value, { precision, locale = 'en-US', useGrouping = true }) {
+export function format(value, { precision, locale = null, useGrouping = true }) {
+    // Resolver locale: prop > global > default
+    const resolvedLocale = resolveConfigValue(locale, 'locale', 'es-AR');
+
     // Asegurarnos que value es un número
     const numValue = typeof value === 'number' ? value : parseFloat(value);
 
     // Manejo especial para precisión 0 (enteros)
     if (precision === 0) {
-        return new Intl.NumberFormat(locale, {
+        return new Intl.NumberFormat(resolvedLocale, {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
             useGrouping: useGrouping
@@ -19,7 +23,7 @@ export function format(value, { precision, locale = 'en-US', useGrouping = true 
 
     // Para precisión > 0, forzar exactamente esa cantidad de decimales
     const fixedValue = numValue.toFixed(precision);
-    return new Intl.NumberFormat(locale, {
+    return new Intl.NumberFormat(resolvedLocale, {
         minimumFractionDigits: precision,
         maximumFractionDigits: precision,
         useGrouping: useGrouping

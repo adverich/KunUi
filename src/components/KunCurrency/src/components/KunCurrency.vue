@@ -1,12 +1,13 @@
 <script setup>
+import { ref, onMounted, computed } from 'vue';
+import { useKunConfig, resolveConfigValue } from '../../../../config/kunConfig.js';
+
+const globalConfig = useKunConfig();
+
 const props = defineProps({
     currency:{
         type: Object,
-        default: () => ({
-            name: 'Peso Argentino',
-            name: 'ARS',
-            simbol: '$'
-        }),
+        default: null,
     },
     hideCurrency:{
         type: Boolean,
@@ -14,11 +15,11 @@ const props = defineProps({
     },
     locale:{
         type: String,
-        default: 'ar-ES'
+        default: null
     },
     precision:{
         type: Number,
-        default: 2,
+        default: null,
     },
     modelValue:{
         default: null,
@@ -29,13 +30,31 @@ const props = defineProps({
     },
     prefix:{
         type: String,
-        default: '$'
+        default: null
     },
     suffix:{
         type: String,
         default: ''
     },
 })
+
+// Valores resueltos con fallback a config global
+const resolvedLocale = computed(() => 
+    resolveConfigValue(props.locale, 'locale', 'es-AR')
+);
+
+const resolvedCurrency = computed(() => 
+    props.currency ?? globalConfig.currency ?? { code: 'ARS', symbol: '$', precision: 2 }
+);
+
+const resolvedPrecision = computed(() => 
+    resolveConfigValue(props.precision, 'currency.precision', 2)
+);
+
+const resolvedPrefix = computed(() => 
+    props.prefix ?? resolvedCurrency.value?.symbol ?? '$'
+);
+
 const emits = defineEmits(['update:modelValue'])
 
 function updateModelValue(value){
@@ -44,7 +63,6 @@ function updateModelValue(value){
 }
 
 const inputValue = ref(props.modelValue);
-
 
 let hide = null;
 let txt = null;
@@ -97,7 +115,7 @@ const updateInputPlaceholder = (value) => {
 <template>
     <div class="w-full h-full flex justify-center" style="cursor: text;" @click="focusInput($event)">
         <div class="flex flex-row items-center" style="padding: 2px 2px; max-width: 200px;">
-            <div v-if="prefix" class="mr-1">{{ prefix }}</div>
+            <div v-if="resolvedPrefix" class="mr-1">{{ resolvedPrefix }}</div>
             <span id="hide" />
 
             <input id="txt" ref="inputField" type="number" class="text-field-style" @focus="handleFocus" @blur="handleBlur" 
