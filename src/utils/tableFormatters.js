@@ -73,6 +73,7 @@ export const formatters = {
         const date = new Date(value);
         const config = kunConfig.current;
         const locale = config.locale;
+        console.log(config);
 
         return new Intl.DateTimeFormat(locale, {
             weekday: "short",
