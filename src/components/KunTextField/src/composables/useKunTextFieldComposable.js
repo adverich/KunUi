@@ -68,8 +68,8 @@ export default function useKunTextField(props, emits) {
     }
 
     const clearInput = () => {
+        // Solo modificamos inputValue, el watcher se encarga de emitir update:modelValue
         inputValue.value = ''
-        emits('update:modelValue', '')
         isTouched.value = true
         if (!props.validateOnBlur) debouncedValidate()
     }

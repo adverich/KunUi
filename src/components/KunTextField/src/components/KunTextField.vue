@@ -31,7 +31,7 @@
           :aria-describedby="hasError ? `error-${uid}` : null" 
           @input="handleInput" @blur="handleBlur" @focus="focusInput" 
           @click.stop="emits('handleClick')" 
-          @keydown="emits('keyDown', $event)" @keyup="emits('keyUp', $event)" 
+          @keydown="handleKeyDown" @keyup="emits('keyUp', $event)" 
         />
 
         <!-- Clearable -->
@@ -79,6 +79,10 @@ import inputProps from '../composables/KunTextFieldProps';
 import useKunTextField from '../composables/useKunTextFieldComposable';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
+defineOptions({
+  inheritAttrs: false
+});
+
 const props = defineProps({ ...inputProps });
 const emits = defineEmits([
   'update:modelValue',
@@ -86,7 +90,8 @@ const emits = defineEmits([
   'blur',
   'handleClick',
   'keyDown',
-  'keyUp'
+  'keyUp',
+  'enter'
 ]);
 
 const {
@@ -105,6 +110,20 @@ const {
   clearInput
 } = useKunTextField(props, emits);
 
+// Manejo de keydown con soporte especial para Enter
+const handleKeyDown = (event) => {
+  // Emitir evento keyDown para el padre
+  emits('keyDown', event);
+  
+  // Manejar Enter de forma especial para evitar duplicados
+  if (event.key === 'Enter') {
+    // Prevenir comportamiento por defecto (ej: submit de formulario)
+    event.preventDefault();
+    // Emitir evento dedicado para Enter
+    emits('enter', event);
+  }
+};
+
 defineExpose({
   validate,
   reset,
@@ -113,7 +132,9 @@ defineExpose({
   rootRef,
   focus: () => {
     nextTick(() => {
-      inputField.value?.focus();
+      if (inputField.value) {
+        inputField.value.focus();
+      }
     });
   }
 });
