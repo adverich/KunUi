@@ -97,7 +97,7 @@ const modelValue = defineModel({ default: null });
 const items = defineModel('items', { default: [], type: Array, required: true });
 
 const props = defineProps(KunAutocompleteProps);
-const emits = defineEmits(["update:modelValue", "selectedItem", "createItem", "validation", "search", "keyDown", "keyDownEnter", "notFound"]);
+const emits = defineEmits(["update:modelValue", "selectedItem", "createItem", "validation", "search", "keyDown", "keyDownEnter", "notFound", "cleared"]);
 
 const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, closeMenu, toggleMenu, onMenuKeydown,
   getSelectedItem, textArr, getArrayText, isAlphanumeric,

@@ -303,6 +303,8 @@ export function useAutocomplete(props, emits, modelValue, items) {
         if (selectedItem.value !== null) {
             selectedItem.value = null;
         }
+
+        emits("cleared");
     }
 
     function checkDisabled(item) {
