@@ -1,2 +1,2 @@
-import kunMenu from './components/kunMenu.vue'
-export default kunMenu
+import KunMenu from './components/KunMenu.vue'
+export default KunMenu
