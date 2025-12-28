@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-dvh text-black dark:text-white overflow-hidden " style="overflow: hidden!important;">
+  <div class="flex flex-col h-dvh overflow-hidden">
     <KunAppbar bg-color="bg-slate-400 dark:bg-slate-800" @toggle-drawer="leftDrawerStatus = !leftDrawerStatus" showDrawerButton>
       <template #actions>
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
@@ -32,36 +32,8 @@
     </KunDrawer>
 
 
-    <div class="h-fit flex flex-col w-full bg-gray-900">
-      <div class="h-fit flex w-full">
-        <div class="w-1/2 flex">
-          <KunAutocomplete label="text" hide-details v-model="selected" :items="products" :searchable-keys="['bar_code', 'fullName']" 
-            return-object item-title="fullName" item-subtitle="bar_code" 
-            @update:model-value="addProduct" :focus-on-select="true" 
-          />
-        </div>
-        <div class="w-1/2 flex">
-          <KunTextField label="lelele" v-model="modelText" ref="refEls" />
-        </div>
-      </div>
-      <div class="h-fit flex w-full">
-        <div class="w-1/2 flex">
-          <KunTextarea label="Text area" v-model="objectArea['name']" rows="1" auto-grow />
-        </div>
-        <div class="w-1/2 flex">
-          <KunNumberField label="lalala" v-model="minQuantity" :no-arrows="true" format-mode="natural" precision="0" />
-        </div>
-      </div>
-    </div>
-
-    <div class="h-full flex flex-col overflow-auto">
-      <KunTable :items="products" :headers="headers" searchable filterable :filters="filters" showSelect search-position="end">
-        <template #prependSearch>
-          <div>
-            <KunBtn size="sm">Invertir orden</KunBtn>
-          </div>
-        </template>
-      </KunTable>
+    <div class="h-full w-full flex overflow-auto">
+      <DatePickerExample />
     </div>
   </div>
 </template>
@@ -79,7 +51,7 @@ import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
-
+import DatePickerExample from './components/KunDatePicker/examples/DatePickerExample.vue'
 
 const leftDrawerStatus = ref(false);
 
