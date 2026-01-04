@@ -253,6 +253,75 @@ function formatDate(date: Date, format: string): string {
     return format.replace(/YYYY|yyyy|YY|yy|MM|DD|dd|HH|mm|ss/g, matched => map[matched]);
 }
 
+function parseFromFormat(val: string, format: string): Date | null {
+    if (!val || !format) return null;
+    
+    const formatParts = format.match(/[a-zA-Z]+/g); 
+    const valueParts = val.match(/\d+/g);
+
+    if (!formatParts || !valueParts || formatParts.length !== valueParts.length) return null;
+
+    let year = new Date().getFullYear();
+    let month = 0;
+    let day = 1;
+    let hours = 0;
+    let minutes = 0;
+    let seconds = 0;
+
+    formatParts.forEach((part, i) => {
+        const v = parseInt(valueParts[i], 10);
+        if (isNaN(v)) return;
+
+        if (/y/i.test(part)) {
+            year = v < 100 ? 2000 + v : v;
+        } else if (part === 'MM') {
+            month = v - 1;
+        } else if (/d/i.test(part)) {
+            day = v;
+        } else if (part === 'HH') {
+            hours = v;
+        } else if (part === 'mm') {
+            minutes = v;
+        } else if (part === 'ss') {
+            seconds = v;
+        }
+    });
+
+    const d = new Date(year, month, day, hours, minutes, seconds);
+    if (d.getMonth() !== month) return null; 
+    return d;
+}
+
+function parseSmart(val: any): Date | null {
+    if (!val) return null;
+    if (val instanceof Date) return val;
+    if (typeof val === 'string') {
+        const fmt = getConfigFormat('value');
+        if (fmt) {
+            const d = parseFromFormat(val, fmt);
+            if (d && !isNaN(d.getTime())) return d;
+        }
+        
+        // Try native (ISO/standard)
+        const d = new Date(val);
+        if (!isNaN(d.getTime())) return d;
+        
+        // Time mode fallback
+        if (effectiveMode.value === 'time') {
+             const [h, m, s] = val.split(/[:\s]/).map(Number);
+             const def = new Date();
+             def.setHours(h||0, m||0, s||0, 0);
+             return def;
+        }
+        
+        // ISO fix space to T
+        const iso = val.replace(' ', 'T');
+        const dx = new Date(iso);
+        if (!isNaN(dx.getTime())) return dx;
+    }
+    return null;
+}
+
 // Config Computed
 const effectiveMode = computed(() => {
     if (props.mode) return props.mode;
@@ -273,30 +342,13 @@ watch(() => props.modelValue, (val) => {
 
 function initFromValue(val: any) {
     if (val) {
-        // ... (Existing parsing logic)
-        const parseValue = (v: any) => {
-             if (v instanceof Date) return v;
-             if (typeof v === 'string') {
-                 // Try native
-                 const d = new Date(v);
-                 if (!isNaN(d.getTime())) return d;
-                 // Try custom parsers for time
-                 if (effectiveMode.value === 'time') {
-                      const [h, m, s] = v.split(/[:\s]/).map(Number);
-                      const def = new Date();
-                      def.setHours(h||0, m||0, s||0, 0);
-                      return def;
-                 }
-                 // Try ISO fix
-                 const iso = v.replace(' ', 'T');
-                 const dx = new Date(iso);
-                 if (!isNaN(dx.getTime())) return dx;
-             }
-             return null;
-        };
-
         if (props.range && Array.isArray(val) && val.length > 0) {
-             const parsedRange = val.map(parseValue).filter(v => v);
+             const parsedRange = val.map(v => parseSmart(v)).filter(v => v) as Date[];
+             
+             if (parsedRange.length === 2 && parsedRange[0] > parsedRange[1]) {
+                 parsedRange.reverse();
+             }
+             
              tempValue.value = parsedRange.length > 0 ? parsedRange : null;
              
              const first = parsedRange[0];
@@ -306,7 +358,7 @@ function initFromValue(val: any) {
                  if (shouldShowTime.value) extractTime(first);
              }
         } else {
-             const d = parseValue(val);
+             const d = parseSmart(val);
              if (d) {
                  tempValue.value = d;
                  currentMonth.value = d.getMonth();
@@ -413,22 +465,8 @@ const displayInputValue = computed(() => {
     };
 
     const parseAndFormat = (val: any) => {
-        // Reuse initFromValue logic's parser simplified?
-        const d = (val instanceof Date) ? val : new Date(val); // Simplification, relies on init
-        // Actually we need the parser:
-        // Let's make the parser reusable or just assume robust inputs after v-model update?
-        // Basic re-parsing:
-        let dx: Date | null = null;
-        if (val instanceof Date) dx = val;
-        else if (typeof val === 'string') {
-             if (effectiveMode.value === 'time' && val.includes(':')) {
-                 const [h,m,s] = val.split(/[:\s]/).map(Number);
-                 dx = new Date(); dx.setHours(h||0, m||0, s||0, 0);
-             } else {
-                 dx = new Date(val);
-             }
-        }
-        if (dx && !isNaN(dx.getTime())) return manualFormat(dx);
+        const d = parseSmart(val);
+        if (d) return manualFormat(d);
         return String(val);
     };
 
