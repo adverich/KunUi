@@ -113,7 +113,7 @@
                     <!-- Time Picker -->
                     <div v-if="shouldShowTime" class="border-t border-slate-100 dark:border-slate-700 p-3 bg-slate-50/50 dark:bg-slate-800/50 grid gap-2 text-center flex-shrink-0" :class="[enableSeconds ? 'grid-cols-3' : 'grid-cols-2']">
                         <div class="flex flex-col items-center gap-1">
-                            <div class="py-3" v-if="mode !== 'time'">
+                            <div class="py-3" v-if="mode === 'time'">
                                 <KunBtn @click="adjustTime('hours', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
                             </div>
                             <KunNumberField 
@@ -128,12 +128,12 @@
                                 placeholder="00"
                                 bg-input="bg-white dark:bg-slate-700"
                             />
-                            <div class="py-3" v-if="mode !== 'time'">
+                            <div class="py-3" v-if="mode === 'time'">
                                 <KunBtn @click="adjustTime('hours', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
                             </div>
                         </div>
                         <div class="flex flex-col items-center gap-1">
-                            <div class="py-3" v-if="mode !== 'time'">
+                            <div class="py-3" v-if="mode === 'time'">
                                 <KunBtn @click="adjustTime('minutes', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
                             </div>
                             <KunNumberField 
@@ -148,12 +148,12 @@
                                 placeholder="00"
                                 bg-input="bg-white dark:bg-slate-700"
                             />
-                            <div class="py-3" v-if="mode !== 'time'">
+                            <div class="py-3" v-if="mode === 'time'">
                                 <KunBtn @click="adjustTime('minutes', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
                             </div>
                         </div>
                         <div v-if="enableSeconds" class="flex flex-col items-center gap-1">
-                            <div class="py-3" v-if="mode !== 'time'">
+                            <div class="py-3" v-if="mode === 'time'">
                                 <KunBtn @click="adjustTime('seconds', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
                             </div>
                             <KunNumberField 
@@ -168,7 +168,7 @@
                                 placeholder="00"
                                 bg-input="bg-white dark:bg-slate-700"
                             />
-                            <div class="py-3" v-if="mode !== 'time'">
+                            <div class="py-3" v-if="mode === 'time'">
                                 <KunBtn @click="adjustTime('seconds', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
                             </div>
                         </div>
