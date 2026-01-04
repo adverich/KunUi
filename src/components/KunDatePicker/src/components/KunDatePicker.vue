@@ -8,6 +8,7 @@
             :placeholder="placeholder"
             :disabled="disabled"
             readonly
+            input-style="cursor-pointer"
             v-bind="$attrs"
             @handleClick="togglePopover"
             @click="togglePopover"

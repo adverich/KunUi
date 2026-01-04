@@ -20,6 +20,7 @@ export default {
   labelColor: { type: String, default: 'text-black/80 dark:text-white/80' },
   placeholderColor: { type: String, default: 'placeholder-black/60 dark:placeholder-white/60' },
   bgInput: { type: String, default: 'bg-field-background' },
+  inputStyle: { type: String, default: '' },
   textCenter: { type: Boolean, default: false },
   density: { type: String, default: 'default' },
 
