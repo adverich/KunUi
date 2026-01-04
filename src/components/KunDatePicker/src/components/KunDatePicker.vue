@@ -171,19 +171,19 @@ const props = defineProps({
   // Logic
   autoApply: { type: Boolean, default: true },
   mode: { type: String, default: 'date' }, 
-  
+
   // Time Options
   enableTime: { type: Boolean, default: false },
   enableSeconds: { type: Boolean, default: false },
-  
+
   // Defaults
   startDate: { type: [Date, String], default: null },
   startTime: { type: [String, Object], default: null }, // 'HH:mm:ss' or object
-  
+
   minDate: { type: Date, default: null },
   maxDate: { type: Date, default: null },
   locale: { type: String, default: 'es-ES' },
-  
+
   // Formatting
   valueFormat: { type: String, default: null }, 
   displayFormat: { type: String, default: null },
@@ -197,7 +197,7 @@ const props = defineProps({
   daySize: { type: String, default: '2rem' }, 
   fontSize: { type: String, default: '0.875rem' },
   maxHeight: { type: String, default: '400px' }, 
-  
+
   inputClass: { default: '' },
   dialogClass: { default: '' },
 });
@@ -231,15 +231,26 @@ function parseDateString(val: string): Date | null {
 }
 
 function formatDate(date: Date, format: string): string {
+    const year = date.getFullYear().toString();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
     const map: Record<string, string> = {
-        YYYY: date.getFullYear().toString(),
-        MM: String(date.getMonth() + 1).padStart(2, '0'),
-        DD: String(date.getDate()).padStart(2, '0'),
-        HH: String(date.getHours()).padStart(2, '0'),
-        mm: String(date.getMinutes()).padStart(2, '0'),
-        ss: String(date.getSeconds()).padStart(2, '0'),
+        YYYY: year,
+        yyyy: year,
+        YY: year.slice(-2),
+        yy: year.slice(-2),
+        MM: month,
+        DD: day,
+        dd: day,
+        HH: hours,
+        mm: minutes,
+        ss: seconds,
     };
-    return format.replace(/YYYY|MM|DD|HH|mm|ss/g, matched => map[matched]);
+    return format.replace(/YYYY|yyyy|YY|yy|MM|DD|dd|HH|mm|ss/g, matched => map[matched]);
 }
 
 // Config Computed
