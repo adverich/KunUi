@@ -186,6 +186,7 @@ const props = defineProps({
 
   // Formatting
   valueFormat: { type: String, default: null }, 
+  format: { type: String, default: null }, // Alias/Standard prop
   displayFormat: { type: String, default: null },
   formats: { type: Object, default: () => null }, // { value: string, display: string }
 
@@ -440,8 +441,8 @@ const weekDays = computed(() => {
 function getConfigFormat(type: 'value' | 'display') {
     if (props.formats && props.formats[type]) return props.formats[type];
     // fallback to legacy
-    if (type === 'value') return props.valueFormat;
-    if (type === 'display') return props.displayFormat;
+    if (type === 'value') return props.valueFormat || props.format;
+    if (type === 'display') return props.displayFormat || props.format;
     return null;
 }
 
@@ -613,13 +614,25 @@ function updateTime() {
     // Use startDate as base if available? Or just Today.
     // If we are in time only mode, date part matters less but we keep today.
     const d = mergeTime(base);
-    if (!props.range) tempValue.value = d;
+    if (!props.range) {
+        tempValue.value = d;
+        if (props.autoApply) {
+            const output = getValueToEmit();
+            emit('update:modelValue', output);
+            emit('change', output);
+        }
+    }
 }
 
 function getValueToEmit() {
     const val = tempValue.value;
     if (!val) return null;
-    const fmt = getConfigFormat('value');
+    let fmt = getConfigFormat('value');
+    
+    // Default time format if mode is time and no format specified
+    if (!fmt && effectiveMode.value === 'time') {
+         fmt = shouldEnableSeconds.value ? 'HH:mm:ss' : 'HH:mm';
+    }
     
     const formatter = (d: Date) => {
         if (fmt) return formatDate(d, fmt);
