@@ -109,68 +109,68 @@
                             </div>
                         </div>
                     </div>
-                            
+
                     <!-- Time Picker -->
                     <div v-if="shouldShowTime" class="border-t border-slate-100 dark:border-slate-700 p-3 bg-slate-50/50 dark:bg-slate-800/50 grid gap-2 text-center flex-shrink-0" :class="[enableSeconds ? 'grid-cols-3' : 'grid-cols-2']">
                         <div class="flex flex-col items-center gap-1">
-                            <button type="button" class="p-0.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors focus:outline-none" @click="adjustTime('hours', 1)">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>
-                            </button>
-                                <KunNumberField 
-                                    v-model="time.hours" 
-                                    :min="0" :max="23" 
-                                    @change="updateTime" 
-                                    precision="0"
-                                    text-center
-                                    label="Hora"
-                                    noArrows hide-details
-                                    density="compact"
-                                    placeholder="00"
-                                    bg-input="bg-white dark:bg-slate-700"
-                                />
-                            <button type="button" class="p-0.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors focus:outline-none" @click="adjustTime('hours', -1)">
-                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                            </button>
+                            <div class="py-3">
+                                <KunBtn @click="adjustTime('hours', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
+                            </div>
+                            <KunNumberField 
+                                v-model="time.hours" 
+                                :min="0" :max="23" 
+                                @change="updateTime" 
+                                precision="0"
+                                text-center
+                                label="Hora"
+                                noArrows hide-details
+                                density="compact"
+                                placeholder="00"
+                                bg-input="bg-white dark:bg-slate-700"
+                            />
+                            <div class="py-3">
+                                <KunBtn @click="adjustTime('hours', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
+                            </div>
                         </div>
                         <div class="flex flex-col items-center gap-1">
-                            <button type="button" class="p-0.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors focus:outline-none" @click="adjustTime('minutes', 1)">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>
-                            </button>
-                                <KunNumberField 
-                                    v-model="time.minutes" 
-                                    :min="0" :max="59" 
-                                    @change="updateTime" 
-                                    precision="0"
-                                    text-center
-                                    label="Min"
-                                    noArrows hide-details
-                                    density="compact"
-                                    placeholder="00"
-                                    bg-input="bg-white dark:bg-slate-700"
-                                />
-                            <button type="button" class="p-0.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors focus:outline-none" @click="adjustTime('minutes', -1)">
-                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                            </button>
+                            <div class="py-3">
+                                <KunBtn @click="adjustTime('minutes', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
+                            </div>
+                            <KunNumberField 
+                                v-model="time.minutes" 
+                                :min="0" :max="59" 
+                                @change="updateTime" 
+                                precision="0"
+                                text-center
+                                label="Min"
+                                noArrows hide-details
+                                density="compact"
+                                placeholder="00"
+                                bg-input="bg-white dark:bg-slate-700"
+                            />
+                            <div class="py-3">
+                                <KunBtn @click="adjustTime('minutes', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
+                            </div>
                         </div>
                         <div v-if="enableSeconds" class="flex flex-col items-center gap-1">
-                            <button type="button" class="p-0.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors focus:outline-none" @click="adjustTime('seconds', 1)">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>
-                            </button>
-                                <KunNumberField 
-                                    v-model="time.seconds" 
-                                    :min="0" :max="59" 
-                                    @change="updateTime" 
-                                    precision="0" 
-                                    text-center
-                                    label="Seg"
-                                    noArrows hide-details
-                                    density="compact"
-                                    placeholder="00"
-                                    bg-input="bg-white dark:bg-slate-700"
-                                />
-                            <button type="button" class="p-0.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors focus:outline-none" @click="adjustTime('seconds', -1)">
-                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                            </button>
+                            <div class="py-3">
+                                <KunBtn @click="adjustTime('seconds', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
+                            </div>
+                            <KunNumberField 
+                                v-model="time.seconds" 
+                                :min="0" :max="59" 
+                                @change="updateTime" 
+                                precision="0" 
+                                text-center
+                                label="Seg"
+                                noArrows hide-details
+                                density="compact"
+                                placeholder="00"
+                                bg-input="bg-white dark:bg-slate-700"
+                            />
+                            <div class="py-3">
+                                <KunBtn @click="adjustTime('seconds', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
+                            </div>
                         </div>
                     </div>
 
@@ -192,6 +192,9 @@ import KunTextField from '../../../KunTextField/src/components/KunTextField.vue'
 import KunNumberField from '../../../KunNumberField/src/components/KunNumberField.vue';
 import { usePosition } from '../composables/usePosition';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
+
+import arrowUp from '@/icons/IconArrowUp.vue'
+import arrowDown from '@/icons/IconArrowDown.vue'
 
 const props = defineProps({
   modelValue: { type: [Date, Array, String], default: null },
