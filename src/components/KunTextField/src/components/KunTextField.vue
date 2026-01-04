@@ -11,7 +11,7 @@
     <div class="w-full flex flex-col justify-center relative" v-bind="$attrs">
       <div class="flex flex-row items-center w-full h-full border" :class="[bgInput, rounded, 
         inputFocused ? 'border-slate-400 dark:border-slate-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : borderColor,
-        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text', 
+        disabled ? 'opacity-60 cursor-not-allowed' : (readonly ? 'cursor-pointer' : 'cursor-text'), 
         hasError ? 'bg-red-200 dark:bg-red-900' : ''
       ]">
         <div v-if="prefix" class="mr-2">{{ prefix }}</div>

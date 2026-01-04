@@ -50,7 +50,7 @@
                 >
                     <!-- Header (Month/Year Navigation) -->
                     <div v-if="mode !== 'time'" class="px-2 py-3 flex items-center justify-between border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50 flex-shrink-0">
-                        <button type="button" class="p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400" @click="changeMonth(-1)">
+                        <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400" @click="changeMonth(-1)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                             </svg>
@@ -58,7 +58,7 @@
                         <div class="font-semibold text-slate-800 dark:text-slate-100 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1 rounded transition-colors text-center" @click="toggleViewMode">
                             {{ currentMonthName }} {{ currentYear }}
                         </div>
-                        <button type="button" class="p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400" @click="changeMonth(1)">
+                        <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400" @click="changeMonth(1)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                             </svg>
@@ -87,13 +87,24 @@
                         </div>
 
                         <!-- Years View -->
-                        <div v-else class="grid grid-cols-3 gap-2">
+                        <div v-else-if="viewMode === 'years'" class="grid grid-cols-3 gap-2">
                             <div v-for="year in yearList" :key="year"
                                 class="p-2 text-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors text-sm border border-transparent"
                                 :class="{'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800 font-bold': year === currentYear}"
                                 @click="selectYear(year)"
                             >
                                 {{ year }}
+                            </div>
+                        </div>
+
+                        <!-- Months View -->
+                        <div v-else-if="viewMode === 'months'" class="grid grid-cols-3 gap-2">
+                            <div v-for="(month, index) in monthNames" :key="index"
+                                class="p-2 text-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors text-sm border border-transparent"
+                                :class="{'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800 font-bold': index === currentMonth}"
+                                @click="selectMonth(index)"
+                            >
+                                {{ month }}
                             </div>
                         </div>
                     </div>
@@ -211,7 +222,7 @@ const containerRef = ref(null);
 const triggerRef = ref(null);
 const popoverRef = ref(null);
 const isOpen = ref(false);
-const viewMode = ref<'days' | 'years'>('days');
+const viewMode = ref<'days' | 'months' | 'years'>('days');
 
 const tempValue = ref<Date | Date[] | null>(null);
 const currentMonth = ref(new Date().getMonth());
@@ -520,6 +531,15 @@ const yearList = computed(() => {
     return years.reverse();
 });
 
+const monthNames = computed(() => {
+    const months = [];
+    for (let i = 0; i < 12; i++) {
+        const name = new Date(2000, i, 1).toLocaleString(props.locale, { month: 'short' }); 
+        months.push(name.charAt(0).toUpperCase() + name.slice(1));
+    }
+    return months;
+});
+
 // Actions
 function togglePopover() {
     if (props.disabled) return;
@@ -576,7 +596,14 @@ function changeMonth(delta: number) {
 }
 
 function toggleViewMode() { viewMode.value = viewMode.value === 'days' ? 'years' : 'days'; }
-function selectYear(year: number) { currentYear.value = year; viewMode.value = 'days'; }
+function selectYear(year: number) { 
+    currentYear.value = year; 
+    viewMode.value = 'months'; 
+}
+function selectMonth(monthIndex: number) {
+    currentMonth.value = monthIndex;
+    viewMode.value = 'days';
+}
 
 function mergeTime(date: Date) {
     const d = new Date(date);
