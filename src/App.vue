@@ -74,15 +74,9 @@ function addProduct(item){
 
 const refEls = ref(null);
 function focusLastInserted() {
-  console.log(1);
   nextTick(() => {
-    console.log(3);
     if (refEls.value?.focus) {
-      console.log(refEls.value);
-      console.log(4);
       refEls.value.focus();
-    } else {
-      console.log(5);
     }
   });
 }

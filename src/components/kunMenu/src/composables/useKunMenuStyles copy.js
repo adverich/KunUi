@@ -16,16 +16,10 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
     })
 
     function repositionMenu(attempt = 0) {
-        console.log('reposicionando')
         const parentEl = props.parentRef;
         const content = contentEl.value;
 
-        console.log(props.parentRef)
-        console.log(content);
-
         if (!(parentEl instanceof HTMLElement) || !content) return;
-
-        console.log('sigue')
 
         const parentRect = parentEl.getBoundingClientRect();
 

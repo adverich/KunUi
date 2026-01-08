@@ -11,7 +11,6 @@ export function useKunMenu(props, emits) {
     })
 
     function showMenu() {
-        console.log(1)
         if (props.disabled) return
         clearTimeout(closeTimeout.value)
         openTimeout.value = setTimeout(() => {
