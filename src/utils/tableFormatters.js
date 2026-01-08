@@ -9,6 +9,8 @@ export function getValue(header, item) {
     }
 
     if (header.columnType === 'function') {
+        console.log(header);
+        console.log(header.columnFunction);
         const value = header.columnFunction?.(item, header);
         return safeValue(value);
     }

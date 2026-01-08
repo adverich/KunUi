@@ -210,13 +210,14 @@ const resolvedHeaders = computed(() => {
     const newHeader = { ...header };
 
     if (
-      (header.columnType === 'function' || header.columnType == 'objectFunction' || header.columnType == 'simpleFunction') && 
-      typeof header.columnFunction === 'string'
+      (header.columnType === 'function') && typeof header.columnFunction === 'string'
     ) {
       const resolvedFn = props.functionMap?.[header.columnFunction];
       if (typeof resolvedFn === 'function') {
         newHeader.columnFunction = resolvedFn;
       } else {
+        console.log(`columnType: ${header.columnType}`)
+        console.log(`columnFunction: ${header.columnFunction}`)
         console.warn(
           `[KunTable] No se encontró la función "${header.columnFunction}" en functionMap`
         );
@@ -229,6 +230,9 @@ const resolvedHeaders = computed(() => {
       if (typeof resolvedFn === 'function') {
         newHeader.columnRowText = resolvedFn;
       } else {
+        console.log(`columnType: ${header.columnType}`)
+        console.log(`columnFunction: ${header.columnFunction}`)
+        console.log(`columnRowText: ${header.columnRowText}`)
         console.warn(
           `[KunTable] No se encontró la función "${header.columnRowText}" en functionMap`
         );
