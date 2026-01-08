@@ -216,27 +216,8 @@ const resolvedHeaders = computed(() => {
       if (typeof resolvedFn === 'function') {
         newHeader.columnFunction = resolvedFn;
       } else {
-        console.log(`columnType: ${header.columnType}`)
-        console.log(`columnFunction: ${header.columnFunction}`)
-        console.warn(
-          `[KunTable] No se encontró la función "${header.columnFunction}" en functionMap`
-        );
+        // console.warn(`[KunTable] No se encontró la función "${header.columnFunction}" en functionMap`);
         newHeader.columnFunction = () => ''; // fallback para evitar errores
-      }
-    }
-
-    if (header.columnFormat === 'function' && typeof header.columnRowText === 'string') {
-      const resolvedFn = props.functionMap?.[header.columnRowText];
-      if (typeof resolvedFn === 'function') {
-        newHeader.columnRowText = resolvedFn;
-      } else {
-        console.log(`columnType: ${header.columnType}`)
-        console.log(`columnFunction: ${header.columnFunction}`)
-        console.log(`columnRowText: ${header.columnRowText}`)
-        console.warn(
-          `[KunTable] No se encontró la función "${header.columnRowText}" en functionMap`
-        );
-        newHeader.columnRowText = () => ''; // fallback para evitar errores
       }
     }
 
