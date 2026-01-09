@@ -35,6 +35,27 @@ export default function useOptions(props, emits, filteredItems) {
         if (!Array.isArray(filteredItems.value)) return [];
         if (!options.sortBy.length) return filteredItems.value;
 
+        // Helper para parsear números formateados
+        const parseNumber = (val) => {
+            if (typeof val === 'number') return val;
+            if (typeof val === 'string') {
+                // Si contiene letras, no lo tratamos como número (para evitar romper orden de códigos alfanuméricos)
+                if (/[a-zA-Z]/.test(val)) return val;
+
+                const clean = val.replace(/[^\d.,-]/g, '');
+                // Formato Latam/EU: 1.000,00 (puntos mil, coma decimal)
+                // Acepta: 1.000,00 o 1000,00 o 1,00
+                if (/^-?(\d{1,3}(\.\d{3})*|\d+),\d+$/.test(clean)) {
+                    return parseFloat(clean.replace(/\./g, '').replace(',', '.'));
+                }
+                // Formato Estándar/Integer: 1234.56 o 1234
+                if (/^-?\d+(\.\d+)?$/.test(clean)) {
+                    return parseFloat(clean);
+                }
+            }
+            return val;
+        };
+
         return [...filteredItems.value].sort((a, b) => {
             for (const { key, order } of options.sortBy) {
                 const aVal = a[key];
@@ -51,9 +72,12 @@ export default function useOptions(props, emits, filteredItems) {
                     continue;
                 }
 
-                // Comparación para números
-                if (typeof aVal === 'number' && typeof bVal === 'number') {
-                    const diff = aVal - bVal;
+                // Intentar parsear valores a números para comparación numérica correcta
+                const numA = parseNumber(aVal);
+                const numB = parseNumber(bVal);
+
+                if (typeof numA === 'number' && typeof numB === 'number') {
+                    const diff = numA - numB;
                     if (diff !== 0) return order === 'asc' ? diff : -diff;
                     continue;
                 }
