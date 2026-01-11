@@ -1,7 +1,12 @@
 import { ref, computed } from 'vue'
 
+const isClient = typeof window !== 'undefined'
+
 // Detectar el sistema operativo
 function getOS() {
+    if (!isClient) {
+        return { os: 'Server', osVersion: 'Unknown' }
+    }
     const userAgent = window.navigator.userAgent
     let os = 'Unknown OS', osVersion = 'Unknown Version'
 
@@ -25,8 +30,8 @@ function getOS() {
 }
 
 // Variables reactivas
-const screenWidth = ref(window.innerWidth)
-const screenHeight = ref(window.innerHeight)
+const screenWidth = ref(isClient ? window.innerWidth : 1024)
+const screenHeight = ref(isClient ? window.innerHeight : 768)
 const kunOS = getOS()
 
 const isMobile = computed(() =>
@@ -68,14 +73,18 @@ const xxlAndDown = computed(() => screenWidth.value < breakpoints.xxl)
 
 // Manejo de eventos de cambio de tamaño
 function handleResize() {
-    screenWidth.value = window.innerWidth
-    screenHeight.value = window.innerHeight
+    if (isClient) {
+        screenWidth.value = window.innerWidth
+        screenHeight.value = window.innerHeight
+    }
 }
 
-window.addEventListener('resize', handleResize)
-window.addEventListener('beforeunload', () => {
-    window.removeEventListener('resize', handleResize)
-})
+if (isClient) {
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('beforeunload', () => {
+        window.removeEventListener('resize', handleResize)
+    })
+}
 
 export {
     kunOS, isMobile, screenWidth, screenHeight,
