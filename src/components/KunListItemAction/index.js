@@ -1,2 +1,4 @@
-import KunListItemAction from './src/components/KunListItemAction.vue'
-export default KunListItemAction
+import KunListItemAction from './src/components/KunListItemAction.vue';
+
+export { KunListItemAction };
+export default KunListItemAction;

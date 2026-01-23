@@ -1,2 +1,4 @@
-import KunAvatar from './src/components/KunAvatar.vue'
-export default KunAvatar
+import KunAvatar from './src/components/KunAvatar.vue';
+
+export { KunAvatar };
+export default KunAvatar;

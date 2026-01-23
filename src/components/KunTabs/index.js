@@ -1,2 +1,4 @@
-import KunTabs from './src/components/KunTabs.vue'
-export default KunTabs
+import KunTabs from './src/components/KunTabs.vue';
+
+export { KunTabs };
+export default KunTabs;

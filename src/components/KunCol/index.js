@@ -1,2 +1,4 @@
-import KunCol from './src/components/KunCol.vue'
-export default KunCol
+import KunCol from './src/components/KunCol.vue';
+
+export { KunCol };
+export default KunCol;

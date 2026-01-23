@@ -1,9 +1,4 @@
-import KunTextField from './KunTextField.vue'
-import useKunTextField from './composables/useKunTextField.js'
+import KunTextField from './src/components/KunTextField.vue';
 
-export {
-    KunTextField,
-    useKunTextField,
-}
-
+export { KunTextField };
 export default KunTextField;

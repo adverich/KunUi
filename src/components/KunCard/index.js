@@ -1,2 +1,4 @@
-import KunCard from './src/components/KunCard.vue'
-export default KunCard
+import KunCard from './src/components/KunCard.vue';
+
+export { KunCard };
+export default KunCard;

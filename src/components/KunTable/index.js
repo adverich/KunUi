@@ -1,6 +1,4 @@
-export { default as KunTable } from './src/components/KunTable.vue'
-export { default as KunTableHeaders } from './src/components/KunTableHeaders.vue'
-export { default as KunTableFooter } from './src/components/KunTableFooter.vue'
-export { default as KunTableRows } from './src/components/KunTableRows.vue'
-export { default as KunTableRow } from './src/components/KunTableRow.vue'
-export { default as KunTableVirtual } from './src/components/KunTableVirtual.vue'
+import KunTable from './src/components/KunTable.vue';
+
+export { KunTable };
+export default KunTable;

@@ -1,2 +1,4 @@
-import KunRelationMatrix from './src/components/KunRelationMatrix.vue'
-export default KunRelationMatrix
+import KunRelationMatrix from './src/components/KunRelationMatrix.vue';
+
+export { KunRelationMatrix };
+export default KunRelationMatrix;

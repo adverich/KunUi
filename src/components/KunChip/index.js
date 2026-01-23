@@ -1,2 +1,4 @@
-import KunChip from './src/components/KunChip.vue'
-export default KunChip
+import KunChip from './src/components/KunChip.vue';
+
+export { KunChip };
+export default KunChip;

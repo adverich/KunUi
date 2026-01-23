@@ -1,2 +1,4 @@
-import KunFileInput from './src/components/KunFileInput.vue'
-export default KunFileInput
+import KunFileInput from './src/components/KunFileInput.vue';
+
+export { KunFileInput };
+export default KunFileInput;

@@ -1,2 +1,4 @@
-import KunRadioGroup from './src/components/KunRadioGroup.vue'
-export default KunRadioGroup
+import KunRadioGroup from './src/components/KunRadioGroup.vue';
+
+export { KunRadioGroup };
+export default KunRadioGroup;

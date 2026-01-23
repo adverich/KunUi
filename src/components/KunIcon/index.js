@@ -1,2 +1,4 @@
-import KunIcon from './src/components/KunIcon.vue'
-export default KunIcon
+import KunIcon from './src/components/KunIcon.vue';
+
+export { KunIcon };
+export default KunIcon;

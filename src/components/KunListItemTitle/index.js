@@ -1,2 +1,4 @@
-import KunListItemTitle from './src/components/KunListItemTitle.vue'
-export default KunListItemTitle
+import KunListItemTitle from './src/components/KunListItemTitle.vue';
+
+export { KunListItemTitle };
+export default KunListItemTitle;

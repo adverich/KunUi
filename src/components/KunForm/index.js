@@ -1,2 +1,4 @@
-import KunForm from './src/components/KunForm.vue'
-export default KunForm
+import KunForm from './src/components/KunForm.vue';
+
+export { KunForm };
+export default KunForm;

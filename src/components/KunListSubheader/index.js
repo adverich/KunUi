@@ -1,2 +1,4 @@
-import KunListSubheader from './src/components/KunListSubheader.vue'
-export default KunListSubheader
+import KunListSubheader from './src/components/KunListSubheader.vue';
+
+export { KunListSubheader };
+export default KunListSubheader;

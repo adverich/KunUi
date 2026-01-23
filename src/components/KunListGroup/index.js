@@ -1,2 +1,4 @@
-import KunListGroup from './src/components/KunListGroup.vue'
-export default KunListGroup
+import KunListGroup from './src/components/KunListGroup.vue';
+
+export { KunListGroup };
+export default KunListGroup;

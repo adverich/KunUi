@@ -1,1 +1,4 @@
-export { default as KunDialog } from './components/KunDialog.vue'
+import KunDialog from './src/components/KunDialog.vue';
+
+export { KunDialog };
+export default KunDialog;

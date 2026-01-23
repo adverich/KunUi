@@ -1,2 +1,4 @@
-import KunVirtualScroller from './src/components/KunVirtualScroller.vue'
-export default KunVirtualScroller
+import KunVirtualScroller from './src/components/KunVirtualScroller.vue';
+
+export { KunVirtualScroller };
+export default KunVirtualScroller;

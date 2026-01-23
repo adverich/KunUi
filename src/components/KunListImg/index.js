@@ -1,2 +1,4 @@
-import KunListImg from './src/components/KunListImg.vue'
-export default KunListImg
+import KunListImg from './src/components/KunListImg.vue';
+
+export { KunListImg };
+export default KunListImg;

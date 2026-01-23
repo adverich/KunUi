@@ -1,2 +1,4 @@
-import KunSlider from './src/components/KunSlider.vue'
-export default KunSlider
+import KunSlider from './src/components/KunSlider.vue';
+
+export { KunSlider };
+export default KunSlider;

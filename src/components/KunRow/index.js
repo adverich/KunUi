@@ -1,2 +1,4 @@
-import KunRow from './src/components/KunRow.vue'
-export default KunRow
+import KunRow from './src/components/KunRow.vue';
+
+export { KunRow };
+export default KunRow;
