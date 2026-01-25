@@ -11,8 +11,7 @@
       </th>
 
       <!-- Checkbox de selección -->
-      <th v-if="showSelect" :class="mergedThClass" 
-      class="h-full w-10 flex flex-col items-center justify-center">
+      <th v-if="showSelect" :class="mergedThClass" class="h-full w-10 flex flex-col items-center justify-center print:hidden">
         <KunCheckbox
           :model-value="allSelected"
           @update:modelValue="toggleSelectAll"
