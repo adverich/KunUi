@@ -39,12 +39,20 @@
 </template>
 
 <script setup>
+/**
+ * KunTableRows.vue
+ * 
+ * Contenedor del cuerpo de la tabla (<tbody>).
+ * Itera sobre la lista de items paginados y renderiza:
+ * 1. La fila principal (KunTableRow)
+ * 2. La fila de expansión (si está activa)
+ */
 import { computed } from 'vue';
 import KunTableRow from './KunTableRow.vue';
 
 const props = defineProps({
-  items: Array,
-  tbodyClass: String,
+  items: Array,             // Lista de items a mostrar (paginados)
+  tbodyClass: String,       // Clases extra para <tbody>
   isExpanded: {
     type: Function,
     required: true,
@@ -57,13 +65,13 @@ const props = defineProps({
     type: Function,
     default: (_, index) => index,
   },
-  headers: Array,
-  showExpand: Boolean,
-  showSelect: Boolean,
-  hasActions: Boolean,
+  headers: Array,           // Configuración de columnas
+  showExpand: Boolean,      // Mostrar columna de expansión
+  showSelect: Boolean,      // Mostrar columna de selección
+  hasActions: Boolean,      // Mostrar columna de acciones
   loading: Boolean,
-  actionLoadingMap: Object,
-  customSlots: Object,
+  actionLoadingMap: Object, // Mapa de estados de carga
+  customSlots: Object,      // Slots personalizados pasados desde el padre
 });
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
@@ -71,7 +79,8 @@ const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 const baseTbodyClass = 'table-auto h-full w-full text-sm text-left';
 const mergedTbodyClass = [baseTbodyClass, props.tbodyClass];
 
-// Total de columnas visibles (data + selección + expand)
+// Calcula dinámicamente el colspan para la fila expandida
+// Data columns + Select column + Expand column + Actions column
 const fullColspan = computed(() => {
   let total = props.headers?.length || 0;
   if (props.showSelect) total += 1;

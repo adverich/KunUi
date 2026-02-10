@@ -81,8 +81,8 @@ const props = defineProps({
     elevation: [String, Number],
     extended: Boolean,
     extensionHeight: {
-        type: [String, Number],
-        default: 48,
+      type: [String, Number],
+      default: 48,
     },
     flat: Boolean,
     floating: Boolean,

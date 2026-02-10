@@ -3,49 +3,65 @@ import { computed, reactive, watch, ref, unref, onMounted } from 'vue'
 import { debounce } from '../../../../utils/utils.js'
 import { getValue, formatValue } from '@/utils/tableFormatters'
 
+/**
+ * Composable para lógica de filtrado avanzado.
+ * Características:
+ * - Búsqueda global (en todas las columnas searchables).
+ * - Búsqueda por columna específica.
+ * - Cache de valores stringificados para optimizar performance en tablas grandes.
+ * - Debounce en inputs de búsqueda.
+ */
 export default function useFilter(props, debounceTime, resolvedHeaders, debug = false) {
+    // Estado reactivo de filtros aplicados
     const appliedFilters = reactive({
-        search: '',
-        byColumn: {},
+        search: '', // Búsqueda global
+        byColumn: {}, // Mapa columna -> valor
     })
 
     const { items, customFilter, searchableKeys, headers } = props
-    const modalFilter = ref(false)
+    const modalFilter = ref(false) // Control del modal de filtros avanzados
 
-    // --- Helpers ---
+    // --- Helpers de Stringificación ---
+    // Convierte cualquier valor a string para comparaciones de texto
     const toSearchableString = (v) => {
         if (v == null) return ''
         if (typeof v === 'string') return v
         if (typeof v === 'number' || typeof v === 'boolean') return String(v)
         if (v instanceof Date) return v.toISOString()
         if (typeof v === 'object') {
-            if ('label' in v) return String(v.label)
+            if ('label' in v) return String(v.label) // Soporte para objetos tipo {id, label}
             if ('name' in v) return String(v.name)
             try { return String(v) } catch { return '' }
         }
         try { return String(v) } catch { return '' }
     }
 
+    // Predicado de filtrado por defecto (case insensitive includes)
     const defaultFilterFn = (itemValue, filterValue) => {
         const a = toSearchableString(itemValue).toLowerCase()
         const b = toSearchableString(filterValue).toLowerCase()
-        if (!b) return true
-        if (!a) return false
+        if (!b) return true // Si no hay filtro, pasa
+        if (!a) return false // Si hay filtro y no valor, falla
         return a.includes(b)
     }
 
-    // --- Headers y searchableKeys ---
+    // --- Configuración de Headers y Keys ---
     const headersRef = computed(() => resolvedHeaders.value ?? [])
+
+    // Determina qué columnas son buscables globalmente
     const searchableKeysRef = computed(() => {
         const sk = unref(searchableKeys)
         if (Array.isArray(sk) && sk.length) return sk
+        // Por defecto, todas las columnas definidas en headers son buscables
         return headersRef.value.map(h => h?.value).filter(Boolean)
     })
 
     // --- Cache para valores buscables ---
+    // Map<Item, { [key]: string }>
+    // Pre-calcula la representación en string de cada celda para no hacerlo en cada keyup
     const searchableCache = ref(new Map())
 
-    // 🔥 Centralizamos la reconstrucción del cache
+    // Genera el cache de strings para todos los items
     function rebuildCache() {
         searchableCache.value.clear()
         const list = unref(items)
@@ -56,18 +72,21 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
             searchableKeysRef.value.forEach(key => {
                 const header = headersRef.value.find(h => h.value === key)
                 let raw, shown
+                // 1. Obtener valor crudo (soportando relationPath)
                 try {
                     raw = header ? getValue(header, item) : item[key]
                 } catch (err) {
                     raw = ''
                     if (debug) console.error('[useFilter] ERROR getValue', { item, key, err })
                 }
+                // 2. Formatearlo (ej: fechas, monedas) -> Lo que ve el usuario es lo que busca
                 try {
                     shown = header ? formatValue(header, raw) : raw
                 } catch (err) {
                     shown = raw
                     if (debug) console.error('[useFilter] ERROR formatValue', { header, raw, err })
                 }
+                // 3. Guardar versión minúscula para búsqueda rápida
                 values[key] = toSearchableString(shown).toLowerCase()
             })
             searchableCache.value.set(item, values)
@@ -76,25 +95,25 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
         if (debug) console.log('[useFilter] Cache reconstruida', searchableCache.value)
     }
 
-    // --- Watchers ---
+    // --- Watchers para invalidar cache ---
     // 1) Cuando cambia la referencia completa de items
     watch(() => unref(items), () => rebuildCache(), { immediate: true })
 
     // 2) Cuando cambia la longitud del array (push, splice, pop, etc.)
     watch(() => unref(items)?.length, () => rebuildCache())
 
-    // --- Getters y filtros ---
-    const getDisplayValue = (item, key) => {
-        const val = searchableCache.value.get(item)?.[key] ?? ''
-        if (debug) console.log('[getDisplayValue]', { item, key, val })
-        return val
-    }
+    // --- Lógica Principal de Filtrado ---
 
+    // Verifica si un item cumple con todos los criterios
     const matchesFilter = (item, key, value) => {
+        // En búsqueda global usa el cache stringificado
+        // En filtros específicos podría requerir lógica custom
+
         const rawValue = getRawValue(item, key)
         const cf = unref(customFilter)
 
         if (typeof cf === 'function') {
+            // Delegar a función custom si existe
             const header = headersRef.value.find(h => h?.value === key)
             try {
                 return cf(item, key, value, header)
@@ -104,7 +123,7 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
             }
         }
 
-        // Resolvemos la lista de filters tanto si viene como ref o como array
+        // Lógica para filtros de columna (arrays/selects múltiples)
         const filtersList = unref(props.filters) ?? props.filters
         const filterDef = Array.isArray(filtersList) ? filtersList.find(f => f.value === key) : undefined
         const itemValueKey = filterDef?.['item-value'] ?? 'id'
@@ -116,26 +135,38 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
             return v
         }
 
+        // Si el filtro es un array (multiselect), verificamos si incluye el valor
         if (Array.isArray(value)) {
             return value.some(v => defaultFilterFn(rawValue, extractFilterVal(v)))
         }
         return defaultFilterFn(rawValue, extractFilterVal(value))
     }
 
+    // Computed principal que retorna los items filtrados
     const filteredItems = computed(() => {
         const list = unref(items)
         if (!Array.isArray(list)) return []
 
         return list.filter(item => {
-            // Filtro global
+            // 1. Filtro global (Search Bar)
+            // Se busca el string en CUALQUIERA de las columnas cacheadas
             const q = appliedFilters.search
             if (q) {
-                const keys = searchableKeysRef.value
-                const ok = keys.some(key => matchesFilter(item, key, q))
-                if (!ok) return false
+                // Usamos el cache pre-generado para velocidad
+                const cachedValues = searchableCache.value.get(item)
+                if (cachedValues) {
+                    const match = Object.values(cachedValues).some(val => val.includes(q))
+                    if (!match) return false
+                } else {
+                    // Fallback si no hay cache (no debería pasar)
+                    const keys = searchableKeysRef.value
+                    const ok = keys.some(key => matchesFilter(item, key, q))
+                    if (!ok) return false
+                }
             }
 
-            // Filtros por columna
+            // 2. Filtros por columna (Modal)
+            // Deben cumplirse TODOS (AND)
             for (const key in appliedFilters.byColumn) {
                 const value = appliedFilters.byColumn[key]
                 if (value != null && value !== '' && !matchesFilter(item, key, value)) return false

@@ -158,8 +158,21 @@
 </template>
 
 <script setup>
+/**
+ * KunTable.vue
+ * 
+ * Componente principal de tabla de datos con funcionalidades avanzadas:
+ * - Paginación
+ * - Ordenamiento (simple y múltiple)
+ * - Filtrado (búsqueda global y por columnas)
+ * - Selección de filas
+ * - Expansión de filas
+ * - Adaptable a móvil (vista de tarjetas)
+ */
 import { computed, onMounted, ref, toRefs, watch, nextTick } from 'vue';
 import { isMobile } from '@/utils/_platform';
+
+// Componentes UI internos y externos
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
 import IconFilter from '../../../../icons/IconFilter.vue';
 import IconSearch from '../../../../icons/IconSearch.vue';
@@ -170,6 +183,7 @@ import KunTableIterators from './KunTableIterators.vue';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunTableFilter from './KunTableFilter.vue';
 
+// Composables para lógica separada
 import useExpand from '../composables/useExpand';
 import useOptions from '../composables/useOptions';
 import useSelect from '../composables/useSelect';
@@ -177,11 +191,15 @@ import useFilter from '../composables/useFilter';
 
 import kunTableProps from '../composables/KunTableProps';
 
+// Eventos emitidos por la tabla
 const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy', 'update:search', 'focusOnSearch']);
+
+// Props definidos en un archivo separado para reutilización
 const props = defineProps(kunTableProps());
 const propsRefs = toRefs(props);
 const selectedItems = defineModel('selectedItems', { type: Array, default: () => [] })
 
+// Destructuring de props reactivos para uso en template
 const {
   headers,
   showExpand,
@@ -197,14 +215,17 @@ const {
   debounceTime,
 } = propsRefs;
 
-// Estado de búsqueda
+// --- Lógica de Búsqueda ---
 const searchQuery = ref(props.search);
+// Sincronizar prop 'search' con el estado local
 watch(() => props.search, (val) => {
   if (val !== searchQuery.value) {
     searchQuery.value = val;
   }
 });
 
+// --- Procesamiento de Headers ---
+// Resuelve funciones en headers que vienen como strings (útil para configs guardadas en DB)
 const resolvedHeaders = computed(() => {
   return props.headers.map(header => {
     const newHeader = { ...header };
@@ -225,18 +246,28 @@ const resolvedHeaders = computed(() => {
   });
 });
 
+// --- Integración de Composables ---
+
+// Lógica de filtrado (Búsqueda global y filtros por columna)
 const { filteredItems, setSearch, modalFilter, applyColumnFilters, clearFilters, appliedFilters } = useFilter(propsRefs, debounceTime, resolvedHeaders);
 
-// Sincronizar búsqueda
+// Sincronizar input de búsqueda con el filtro
 watch(searchQuery, (val) => {
-  emits('update:search', val);   // opcional: si querés que sea bidireccional
+  emits('update:search', val);
   setSearch(val);
 });
 
+// Lógica de paginación y ordenamiento
 const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems);
+
+// Lógica de selección de filas
 const { isSelected, toggleSelect, toggleSelectAll, allSelected, someSelected, moreThanPaginated, clearSelection, selectCompleteAll } = useSelect(paginatedItems, selectedItems, filteredItems);
+
+// Lógica de expansión de filas
 const { isExpanded, toggleExpand } = useExpand();
 
+// --- Computed para Slots ---
+// Pasa todas las propiedades útiles a los slots personalizados
 const slotProps = computed(() => ({
   items: paginatedItems.value,
   headers: headers.value,
@@ -250,12 +281,14 @@ const slotProps = computed(() => ({
   hasActions: props.hasActions,
 }));
 
+// --- Estilos ---
 const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col border border-slate-200 dark:border-slate-800 rounded';
 const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
 
 const baseTableClass = 'table-auto w-full h-fit text-sm text-left';
 const mergedTableClass = [baseTableClass, tableClass.value];
 
+// --- Control de UI para Búsqueda (móvil/desktop) ---
 onMounted(() => showIconSearch());
 const searchRef = ref(null);
 const showSearch = ref(true);
@@ -272,6 +305,7 @@ function focusOnSearch(){
     searchRef.value.focus();
   })
 }
+
 function showIconSearch(){
   if(!isMobile.value) return;
   searchClass.value = "w-fit";
@@ -279,6 +313,7 @@ function showIconSearch(){
   showSearchBtn.value = true;
   emits('focusOnSearch', false);
 }
+
 function hideIconSearch(){
   if(!isMobile.value) return;
   searchClass.value = "w-full border";

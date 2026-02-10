@@ -66,34 +66,52 @@
 </template>
 
 <script setup>
+/**
+ * KunTableRow.vue
+ * 
+ * Componente de fila individual (<tr>).
+ * Responsable de:
+ * 1. Renderizar celdas de datos con formateo automático (getValue/formatValue).
+ * 2. Renderizar checkboxes y botones de expansión.
+ * 3. Renderizar columna de acciones.
+ * 4. Gestionar estilos condicionales por fila.
+ */
 import { computed } from 'vue';
 import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue"
 import { getValue, formatValue } from '@/utils/tableFormatters';
+
 const props = defineProps({
-  item: Object,
-  index: Number,
-  headers: Array,
-  showExpand: Boolean,
-  showSelect: Boolean,
-  isExpanded: Boolean,
-  isSelected: Boolean,
-  rowClass: String,
-  trClass: String,
-  tdClass: String,
-  selectedClass: String,
-  stripedClass: String,
-  hasActions: Boolean,
-  actionsAlign: String,
-  loading: { type: [Boolean, Object], default: false },
-  rowClassCondition: [String, Function],
-  customSlots: Object,
+  item: Object,             // Objeto de datos de la fila
+  index: Number,            // Índice en la paginación actual
+  headers: Array,           // Definición de columnas a mostrar
+  showExpand: Boolean,      // ¿Mostrar botón expandir?
+  showSelect: Boolean,      // ¿Mostrar checkbox seleccionar?
+  isExpanded: Boolean,      // Estado de expansión de esta fila
+  isSelected: Boolean,      // Estado de selección de esta fila
+  
+  // Clases personalizadas
+  rowClass: String,         // Clase base para la fila
+  trClass: String,          // Clase extra para tr
+  tdClass: String,          // Clase para celdas
+  selectedClass: String,    // Clase cuando está seleccionada
+  stripedClass: String,     // Clase para alternancia (striped)
+  
+  hasActions: Boolean,      // ¿Tiene columna de acciones?
+  actionsAlign: String,     // Alineación de acciones
+  loading: { type: [Boolean, Object], default: false }, // Estado de carga (ej: al borrar)
+  
+  rowClassCondition: [String, Function], // Función para clases condicionales por fila
+  customSlots: Object,      // Slots custom (scoped slots pasados desde el padre)
 });
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 
+// --- Gestión de Estilos de Celda y Fila ---
+
 const baseTdClass = 'px-1 py-2 whitespace-normal word-break text-sm text-black dark:text-white';
 const mergedTdClass = computed(() => props.tdClass || baseTdClass);
 
+// Resuelve clases condicionales dinámicas (ej: filas rojas si stock < 0)
 function resolveTdClass(item, index) {
   const result = typeof props.rowClassCondition === 'function'
     ? props.rowClassCondition({ item, index })
@@ -108,6 +126,7 @@ const baseTrClass = 'bg-surface';
 const trClass = computed(() => props.trClass || baseTrClass);
 const conditionalRowClass = computed(() => resolveTdClass(props.item, props.index));
 
+// Combina todas las clases: base + striped + seleccionada + condicional
 const mergedTableClass = computed(() => [
   rowClass.value,
   props.stripedClass,

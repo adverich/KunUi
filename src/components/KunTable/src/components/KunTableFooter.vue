@@ -1,24 +1,38 @@
 <script setup>
+/**
+ * KunTableFooter.vue
+ * 
+ * Barra de paginación que se muestra al pie de la tabla.
+ * Funciones:
+ * - Selector de items por página.
+ * - Navegación entre páginas (anterior/siguiente).
+ * - Selector directo de página (dropdown estilo lista).
+ * - Mostrar contadores (Ej: 1-10 de 100).
+ */
 import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue'
 
 const props = defineProps({
-  itemsLength: { type: Number, default: 0 },
-  itemsPerPage: { type: [Number, String], default: 10 },
-  currentPage: { type: Number, default: 1 },
-  pageOptions: { type: Array, default: () => [5,10,25,50,100] },
+  itemsLength: { type: Number, default: 0 },         // Total de items (filtrados)
+  itemsPerPage: { type: [Number, String], default: 10 }, // Items actuales por página
+  currentPage: { type: Number, default: 1 },         // Página actual
+  pageOptions: { type: Array, default: () => [5,10,25,50,100] }, // Opciones del selector
 })
 
 const emit = defineEmits(['update:page', 'update:itemsPerPage'])
+
+// --- Cálculos de Paginación ---
 
 const totalPages = computed(() => {
   const ipp = Number(props.itemsPerPage) || 1
   return props.itemsLength === 0 ? 0 : Math.ceil(props.itemsLength / ipp)
 })
 
+// Primer índice mostrado (base 1)
 const start = computed(() => {
   return props.itemsLength === 0 ? 0 : (props.currentPage - 1) * Number(props.itemsPerPage) + 1
 })
 
+// Último índice mostrado
 const end = computed(() => {
   const raw = props.currentPage * Number(props.itemsPerPage)
   return raw > props.itemsLength ? props.itemsLength : raw
@@ -31,9 +45,12 @@ const next = () => {
   if (props.currentPage < totalPages.value) emit('update:page', props.currentPage + 1)
 }
 
+// Control de apertura de dropdowns
 const detailsRef = ref(null);
 const ippDetailsRef = ref(null);
 
+// Genera el array de páginas a mostrar en el selector (con elipsis inteligente)
+// Ej: 1, 2, ..., 5, 6, 7, ..., 100
 const pagesToShow = computed(() => {
   const tp = totalPages.value
   if (tp === 0) return []
@@ -61,11 +78,14 @@ function goToPage(n) {
   if (detailsRef.value) detailsRef.value.open = false
 }
 
+// Al cambiar items por página, volvemos a la 1ra
 function onItemsPerPageSelect(v) {
   emit('update:itemsPerPage', v)
-  emit('update:page', 1) // opcional, para resetear a página 1
+  emit('update:page', 1) 
   ippDetailsRef.value?.removeAttribute("open")
 }
+
+// --- CIerre de Popups al hacer click afuera (Simulación de menú contextual) ---
 
 function handleClickOutsideIpp(e) {
   if (ippDetailsRef.value && !ippDetailsRef.value.contains(e.target)) {
@@ -89,6 +109,7 @@ onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutsideIpp)
 });
 
+// Watcher de seguridad: Si cambia itemsLength y la página actual queda fuera de rango, resetear.
 watch(() => totalPages.value, (newVal, oldVal) => {
   if (props.currentPage > newVal && newVal > 0) {
     emit('update:page', newVal);

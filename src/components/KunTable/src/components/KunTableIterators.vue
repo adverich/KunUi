@@ -32,13 +32,20 @@
 </template>
 
 <script setup>
+/**
+ * KunTableIterators.vue
+ * 
+ * Contenedor para la vista móvil (tarjetas).
+ * Se utiliza en lugar de KunTableRows cuando `isMobile` es true.
+ * Itera sobre los items y renderiza KunTableIterator (tarjeta individual).
+ */
 import KunTableIterator from './KunTableIterator.vue';
 
 const props = defineProps({
-  items: Array,
-  headers: Array,
-  isExpanded: Function,
-  isSelected: Function,
+  items: Array,             // Items a mostrar
+  headers: Array,           // Headers (para keys y labels en tarjeta)
+  isExpanded: Function,     // Función de estado expansión
+  isSelected: Function,     // Función de estado selección
   showExpand: Boolean,
   showSelect: Boolean,
   hasActions: Boolean,

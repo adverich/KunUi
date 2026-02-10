@@ -58,6 +58,15 @@
 </template>
 
 <script setup>
+/**
+ * KunTableHeaders.vue
+ * 
+ * Renderiza la fila de encabezados de la tabla (<thead>).
+ * Maneja interacciones como:
+ * - Ordenamiento al hacer clic en columnas
+ * - Selección de "todas las filas"
+ * - Expansión/Colapso global (si aplica)
+ */
 import { ref, watch, onMounted } from 'vue';
 import arrowUp from '@/icons/IconArrowUp.vue'
 import arrowDown from '@/icons/IconArrowDown.vue'
@@ -65,28 +74,30 @@ import arrowDownUp from '@/icons/IconArrowDownUp.vue'
 import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue"
 
 const props = defineProps({
-  headers: Array,
-  showSelect: Boolean,
-  showExpand: Boolean,
-  isExpanded: Boolean,
-  allSelected: Boolean,
-  someSelected: Boolean,
-  moreThanPaginated: Boolean,
-  sortBy: Object,
-  theadClass: String,
-  trClass: String,
-  thClass: String,
-  hasActions: Boolean,
-  actionLabel: String,
-  customHeaders: Object,
+  headers: Array,          // Array de definición de columnas
+  showSelect: Boolean,     // Mostrar checkbox de selección masiva
+  showExpand: Boolean,     // Mostrar botón de expansión global (opcional)
+  isExpanded: Boolean,     // Estado global de expansión
+  allSelected: Boolean,    // Estado: ¿Están todos seleccionados?
+  someSelected: Boolean,   // Estado: ¿Hay algunos seleccionados (indeterminado)?
+  moreThanPaginated: Boolean, // Estado: ¿Hay más seleccionados que los visibles?
+  sortBy: Object,          // Objeto de configuración de orden actual
+  theadClass: String,      // Clases extra para <thead>
+  trClass: String,         // Clases extra para <tr>
+  thClass: String,         // Clases extra para <th>
+  hasActions: Boolean,     // Mostrar columna de acciones
+  actionLabel: String,     // Etiqueta para columna acciones
+  customHeaders: Object,   // Slots personalizados para headers específicos
 });
 
 const emits = defineEmits(['toggle-select-all', 'sort', 'expandAll', 'collapseAll']);
 
+// Maneja clic en checkbox maestro
 function toggleSelectAll() {
   emits('toggle-select-all');
 }
 
+// Maneja lógica de cambio de orden (asc -> desc -> asc)
 function toggleSort(header) {
   if (!header.sortable) return;
 
@@ -98,10 +109,12 @@ function toggleSort(header) {
     current = props.sortBy === header.value ? { key: header.value, order: 'asc' } : null;
   }
 
+  // Alternar orden: si es asc pasa a desc, sino a asc
   const newOrder = current?.order === 'asc' ? 'desc' : 'asc';
   emits('sort', { key: header.value, order: newOrder });
 }
 
+// Helper para saber el orden actual de una columna
 function getSortOrder(header) {
   if (Array.isArray(props.sortBy)) {
     return props.sortBy.find(s => s.key === header.value)?.order;
@@ -112,12 +125,14 @@ function getSortOrder(header) {
   return undefined;
 }
 
+// Retorna el ícono correcto según estado de orden
 const getSortIcon = (header) => {
   const order = getSortOrder(header);
   if (!order) return arrowDownUp;
   return order === 'asc' ? arrowUp : arrowDown;
 }
 
+// --- Clases Base ---
 const baseTheadClass = 'bg-surface sticky top-0 z-5';
 const mergedTheadClass = [baseTheadClass, props.theadClass];
 
@@ -127,9 +142,11 @@ const mergedTrClass = [baseTrClass, props.trClass];
 const baseThClass = 'px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 uppercase tracking-wider';
 const mergedThClass = [baseThClass, props.thClass];
 
+// --- Control de Checkbox Indeterminado ---
 const checkboxRef = ref(null);
 const updateIndeterminate = () => {
   if (checkboxRef.value) {
+    // Ajusta la propiedad visual 'indeterminate' del input nativo si es necesario
     checkboxRef.value.indeterminate = props.someSelected && !props.allSelected && props.moreThanPaginated;
   }
 };

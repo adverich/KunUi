@@ -1,5 +1,9 @@
 import { ref } from 'vue';
 
+/**
+ * Composable simple para gestionar filas expandidas.
+ * Mantiene un array de items que están expandidos.
+ */
 export default function useExpand() {
     const expandedItems = ref([]);
 

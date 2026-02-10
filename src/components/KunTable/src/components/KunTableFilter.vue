@@ -29,6 +29,12 @@
 </template>
 
 <script setup>
+/**
+ * KunTableFilter.vue
+ * 
+ * Diálogo modal para configuración avanzada de filtros por columna.
+ * Muestra un formulario con todos los filtros disponibles definidos en 'filters' prop.
+ */
 import { computed, onMounted, ref, watch } from 'vue';
 import KunDialog from '../../../KunDialog/src/components/KunDialog.vue';
 import KunRow from '../../../KunRow/src/components/KunRow.vue';
@@ -39,17 +45,22 @@ import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
 import IconClose from '../../../../icons/IconClose.vue';
 
 const props = defineProps({
-    modelValue: Boolean,
-    filters: Array,
-    activeFilters: Object,
+    modelValue: Boolean, // Controla visibilidad del diálogo
+    filters: Array,      // Definición de filtros [{value: 'col', items: [], label: ''}]
+    activeFilters: Object, // Filtros actualmente aplicados { col: [values] }
 })
 const emits = defineEmits(['update:modelValue', 'applyFilters', 'clearFilters']);
+
+// Sincronizar v-model del diálogo
 const filterDialog = computed({
   get: () => props.modelValue,
   set: (val) => emits('update:modelValue', val),
 });
 
+// Estado local de filtros seleccionados antes de aplicar
 const selectedFilters = ref({});
+
+// Al montar, cargas los filtros que ya estaban activos
 onMounted(() => {
     selectedFilters.value = { ...props.filters.reduce((acc, filter) => {
         const key = filter.value;
@@ -73,6 +84,7 @@ function closeDialog(){
     emits('update:modelValue', false);
 }
 
+// Limpiar keys vacías para no enviar basura
 watch(selectedFilters, (val) => {
   for (const key in val) {
     if (Array.isArray(val[key]) && val[key].length === 0) {
