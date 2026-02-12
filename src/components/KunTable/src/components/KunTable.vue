@@ -258,7 +258,7 @@ watch(searchQuery, (val) => {
 });
 
 // Lógica de paginación y ordenamiento
-const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems);
+const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems, resolvedHeaders);
 
 // Lógica de selección de filas
 const { isSelected, toggleSelect, toggleSelectAll, allSelected, someSelected, moreThanPaginated, clearSelection, selectCompleteAll } = useSelect(paginatedItems, selectedItems, filteredItems);

@@ -6,7 +6,7 @@ import { getValue } from '@/utils/tableFormatters'
  * - Paginación (página actual, items por página)
  * - Ordenamiento (simple o múltiple)
  */
-export default function useOptions(props, emits, filteredItems) {
+export default function useOptions(props, emits, filteredItems, headers) {
     const { page, itemsPerPage, sortBy, mutliSort } = props;
 
     // Normaliza el formato de ordenamiento a un array de objetos {key, order}
@@ -50,7 +50,8 @@ export default function useOptions(props, emits, filteredItems) {
 
         // Pre-carga de headers para optimizar búsqueda en el loop de sort
         const sortConfigs = options.sortBy.map(s => {
-            const header = props.headers?.value?.find(h => h.value === s.key);
+            const headerList = headers || props.headers;
+            const header = headerList.value?.find(h => h.value === s.key);
             return {
                 ...s,
                 header
