@@ -16,8 +16,8 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "@vitejs/plugin-vue": "^5.2.4",
-    "autoprefixer": "^10.4.23",
-    "prettier": "^3.7.4",
+    "autoprefixer": "^10.4.24",
+    "prettier": "^3.8.1",
     "vite": "^6.4.1",
     "vite-plugin-vue-devtools": "^7.7.9"
   },

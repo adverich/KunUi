@@ -33,6 +33,12 @@ export default function useOptions(props, emits, filteredItems, headers) {
     // --- Sincronización bidireccional de props <-> estado interno ---
     watch(() => page.value, (val) => options.page = val);
     watch(() => itemsPerPage.value, (val) => options.itemsPerPage = val);
+
+    // Sincronizar cambios externos de sortBy
+    watch(() => sortBy.value, (val) => {
+        options.sortBy = normalizeSortBy(val);
+    }, { deep: true });
+
     watch(() => options.sortBy, (val) => emits?.('update:sortBy', val));
 
     watch(() => options.page, (val) => emits?.('update:page', val));
