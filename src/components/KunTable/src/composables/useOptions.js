@@ -35,11 +35,20 @@ export default function useOptions(props, emits, filteredItems, headers) {
     watch(() => itemsPerPage.value, (val) => options.itemsPerPage = val);
 
     // Sincronizar cambios externos de sortBy
+    // Solo se actualiza si el padre cambia el prop a un valor diferente al estado interno
+    // El estado interno (options.sortBy) es la fuente de verdad para ordenamiento
     watch(() => sortBy.value, (val) => {
-        options.sortBy = normalizeSortBy(val);
+        const normalized = normalizeSortBy(val);
+        const currentStr = JSON.stringify(options.sortBy);
+        const newStr = JSON.stringify(normalized);
+        if (currentStr !== newStr) {
+            options.sortBy = normalized;
+        }
     }, { deep: true });
 
-    watch(() => options.sortBy, (val) => emits?.('update:sortBy', val));
+    watch(() => options.sortBy, (val) => {
+        emits?.('update:sortBy', val);
+    }, { deep: true });
 
     watch(() => options.page, (val) => emits?.('update:page', val));
     watch(() => options.itemsPerPage, (val) => emits?.('update:itemsPerPage', val));
