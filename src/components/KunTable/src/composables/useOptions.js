@@ -1,16 +1,9 @@
-import { computed, watch, reactive } from 'vue';
+import { computed, watch, reactive, ref } from 'vue';
 import { getValue } from '@/utils/tableFormatters'
 
-/**
- * Composable para manejar opciones de visualización de la tabla:
- * - Paginación (página actual, items por página)
- * - Ordenamiento (simple o múltiple)
- */
 export default function useOptions(props, emits, filteredItems, headers) {
     const { page, itemsPerPage, sortBy, mutliSort } = props;
 
-    // Normaliza el formato de ordenamiento a un array de objetos {key, order}
-    // Acepta string ('key') o array (['key', {key: 'other', order: 'desc'}])
     const normalizeSortBy = (rawSortBy) => {
         if (typeof rawSortBy === 'string') {
             return [{ key: rawSortBy, order: 'asc' }];
@@ -23,30 +16,19 @@ export default function useOptions(props, emits, filteredItems, headers) {
         return [];
     };
 
-    // Estado reactivo interno para opciones
+    const internalSortBy = ref(normalizeSortBy(sortBy.value));
+
     const options = reactive({
         page: page.value,
         itemsPerPage: itemsPerPage.value,
-        sortBy: normalizeSortBy(sortBy.value),
+        get sortBy() { return internalSortBy.value; },
+        set sortBy(val) { internalSortBy.value = val; }
     });
 
-    // --- Sincronización bidireccional de props <-> estado interno ---
     watch(() => page.value, (val) => options.page = val);
     watch(() => itemsPerPage.value, (val) => options.itemsPerPage = val);
 
-    // Sincronizar cambios externos de sortBy
-    // Solo se actualiza si el padre cambia el prop a un valor diferente al estado interno
-    // El estado interno (options.sortBy) es la fuente de verdad para ordenamiento
-    watch(() => sortBy.value, (val) => {
-        const normalized = normalizeSortBy(val);
-        const currentStr = JSON.stringify(options.sortBy);
-        const newStr = JSON.stringify(normalized);
-        if (currentStr !== newStr) {
-            options.sortBy = normalized;
-        }
-    }, { deep: true });
-
-    watch(() => options.sortBy, (val) => {
+    watch(internalSortBy, (val) => {
         emits?.('update:sortBy', val);
     }, { deep: true });
 

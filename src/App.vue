@@ -33,7 +33,8 @@
 
 
     <div class="h-full w-full flex overflow-auto">
-      <DatePickerExample />
+      <KunTable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" />
+      <!-- <DatePickerExample /> -->
     </div>
   </div>
 </template>
