@@ -46,33 +46,9 @@
 import { watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
 import KunDialogOverlay from './KunDialogOverlay.vue'
 import KunDialogContent from './KunDialogContent.vue'
+import { kunDialogProps } from '../composables/kunDialogProps'
 
-const props = defineProps({
-  modelValue: Boolean,
-  overlay: { type: Boolean, default: true },
-  fullscreen: { type: Boolean, default: false },
-  scrollable: { type: Boolean, default: false },
-  persistent: { type: Boolean, default: false },
-  dialogClass: { type: String, default: '' },
-  xPosition: {
-    type: String,
-    default: 'center', // 'start' | 'center' | 'end'
-    validator: v => ['start', 'center', 'end'].includes(v),
-  },
-  yPosition: {
-    type: String,
-    default: 'center', // 'start' | 'center' | 'end'
-    validator: v => ['top', 'center', 'bottom'].includes(v),
-  },
-  contentClass: { type: String, default: '' },
-  bgColor: { type: String, default: 'bg-surface-dark' },
-  minHeight: { type: String, default: 'h-fit' },
-  height: { type: String, default: 'h-fit' },
-  maxHeight: { type: String, default: 'max-h-dvh' },
-  minWidth: { type: String, default: 'min-w-1/3' },
-  width: { type: String, default: 'w-full' },
-  maxWidth: { type: String, default: 'max-w-full' },
-})
+const props = defineProps(kunDialogProps)
 
 const emits = defineEmits(['update:modelValue']);
 const baseDialogClass = "fixed inset-0 z-250 flex";

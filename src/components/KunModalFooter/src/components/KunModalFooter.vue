@@ -36,35 +36,9 @@
 
 <script setup>
 import { computed } from "vue";
-const props = defineProps({
-    modelValue: {
-        type: Boolean,
-        required: true,
-    },
-    id: {
-        type: Number,
-    },
-    message: {
-        type: String,
-        default: "Mensaje predeterminado",
-    },
-    color: {
-        type: String,
-        default: "green", // Valores posibles: blue, green, red, yellow, gray
-    },
-    width: {
-        type: String,
-        default: "300px", // Ancho personalizable
-    },
-    height: {
-        type: String,
-        default: "auto", // Altura personalizable
-    },
-    isFixed: {
-        type: Boolean,
-        default: false, // Por defecto, no es fijo
-    },
-});
+import { kunModalFooterProps } from '../composables/kunModalFooterProps'
+
+const props = defineProps(kunModalFooterProps)
 const emit = defineEmits(["update:modelValue", "removeMessage"]);
 
 function closeMessage() {

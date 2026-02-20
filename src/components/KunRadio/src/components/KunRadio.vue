@@ -2,23 +2,9 @@
 import { computed, inject } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 import { icons } from "@/icons"
+import { kunRadioProps } from '../composables/kunRadioProps'
 
-const props = defineProps({
-  modelValue: [String, Number, Boolean, Object],
-  label: String,
-  color: String,
-  baseColor: String,
-  trueValue: { default: true },
-  falseValue: { default: false },
-  trueIcon: { type: [String, Object], default: null },
-  falseIcon: { type: [String, Object], default: null },
-  value: [String, Number, Boolean, Object],
-  disabled: Boolean,
-  readonly: Boolean,
-  error: Boolean,
-  name: String,
-  id: String,
-})
+const props = defineProps(kunRadioProps)
 
 const emits = defineEmits(['update:modelValue', 'focus', 'blur'])
 

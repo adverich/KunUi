@@ -19,30 +19,11 @@
 import { watch, computed } from "vue";
 import KunModalFooter from "./KunModalFooter.vue";
 import { useKunModalFooter } from "../composables/useKunModalFooter";
+import { kunMultipleModalFooterProps } from '../composables/kunMultipleModalFooterProps'
+
 const { useMessages, useAddMessage } = useKunModalFooter();
 
-const props = defineProps({
-messages: {
-    type: Array,
-    default: () => [],
-},
-position: {
-    type: String,
-    default: "bottom-right",
-},
-stackDirection: {
-    type: String,
-    default: "bottom-to-top", // bottom-to-top, top-to-bottom
-},
-width: {
-    type: String,
-    default: "300px",
-},
-height: {
-    type: String,
-    default: "auto",
-},
-});
+const props = defineProps(kunMultipleModalFooterProps)
 const emit = defineEmits(["update:messages", "removeMessage"]);
 
 // Observa cambios externos en los mensajes

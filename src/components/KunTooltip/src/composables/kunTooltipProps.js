@@ -1,0 +1,15 @@
+export const kunTooltipProps = {
+  class: [String, Array, Object],
+  text: String,
+  location: { type: String, default: 'top' },
+  openOn: { type: String, default: 'hover' },
+  transition: { type: String, default: 'fade' },
+  disabled: Boolean,
+  delay: { type: [Number, String], default: 0 },
+  closeDelay: { type: [Number, String], default: 100 },
+  textColor: { type: String, default: 'text-black dark:text-white' },
+  bgColor: { type: String, default: 'bg-gray-600/75 dark:bg-gray-700/75' },
+  rounded: { type: String, default: 'rounded' },
+  textSize: { type: String, default: 'text-sm' },
+  dist: { type: [Number, Object], default: () => ({ x: 0, y: 8 }) },
+}

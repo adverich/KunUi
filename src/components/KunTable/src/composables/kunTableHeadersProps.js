@@ -1,0 +1,16 @@
+export const kunTableHeadersProps = {
+  headers: Array,
+  showSelect: Boolean,
+  showExpand: Boolean,
+  isExpanded: Boolean,
+  allSelected: Boolean,
+  someSelected: Boolean,
+  moreThanPaginated: Boolean,
+  sortBy: Object,
+  theadClass: String,
+  trClass: String,
+  thClass: String,
+  hasActions: Boolean,
+  actionLabel: String,
+  customHeaders: Object,
+}

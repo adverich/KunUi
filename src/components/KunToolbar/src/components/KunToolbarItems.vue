@@ -9,15 +9,10 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  color: String,
-  variant: {
-    type: String,
-    default: 'text',
-    validator: (v) =>
-      ['flat', 'text', 'elevated', 'tonal', 'outlined', 'plain'].includes(v),
-  },
-})
+import { computed } from 'vue'
+import { kunToolbarItemsProps } from '../composables/kunToolbarItemsProps'
+
+const props = defineProps(kunToolbarItemsProps)
 
 const colorClass = computed(() =>
   props.color ? `bg-${props.color}` : ''

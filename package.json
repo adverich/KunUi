@@ -6,7 +6,9 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "AGENTS.md",
+    "README.md"
   ],
   "scripts": {
     "dev": "vite",

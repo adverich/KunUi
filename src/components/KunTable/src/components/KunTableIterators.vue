@@ -40,22 +40,9 @@
  * Itera sobre los items y renderiza KunTableIterator (tarjeta individual).
  */
 import KunTableIterator from './KunTableIterator.vue';
+import { kunTableIteratorsProps } from '../composables/kunTableIteratorsProps'
 
-const props = defineProps({
-  items: Array,             // Items a mostrar
-  headers: Array,           // Headers (para keys y labels en tarjeta)
-  isExpanded: Function,     // Función de estado expansión
-  isSelected: Function,     // Función de estado selección
-  showExpand: Boolean,
-  showSelect: Boolean,
-  hasActions: Boolean,
-  actionLoadingMap: Object,
-  itemKey: {
-    type: Function,
-    default: (_, index) => index,
-  },
-  customSlots: Object,
-});
+const props = defineProps(kunTableIteratorsProps)
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 </script>

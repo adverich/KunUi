@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 import { useCheckboxModel } from '../composables/useCheckboxModel'
 import { useValidation } from '../composables/useValidation'
+import { kunCheckboxProps } from '../composables/kunCheckboxProps'
 import { vRipple } from '@/directives/ripple.js'
 import { icons } from '@/icons'
 
@@ -13,47 +14,7 @@ const emit = defineEmits([
   'click:prepend'
 ])
 
-const props = defineProps({
-  modelValue: [Boolean, Array, String, Number, Object],
-  trueValue: { type: null, default: true },
-  falseValue: { type: null, default: false },
-  value: null,
-  indeterminate: Boolean,
-  multiple: Boolean,
-  disabled: Boolean,
-  readonly: Boolean,
-  error: Boolean,
-  label: String,
-  hint: String,
-  persistentHint: Boolean,
-  errorMessages: [String, Array],
-  rules: Array,
-  validateOn: String,
-  ripple: { type: [Boolean, Object], default: true },
-  density: { type: String, default: 'default' },
-  direction: { type: String, default: 'horizontal' },
-  color: String,
-  iconColor: [String, Boolean],
-  baseColor: String,
-  trueIcon: { type: null, default: undefined },
-  falseIcon: { type: null, default: undefined },
-  indeterminateIcon: { type: null, default: undefined },
-  prependIcon: { type: null, default: undefined },
-  appendIcon: { type: null, default: undefined },
-  name: String,
-  id: String,
-  glow: Boolean,
-  hideDetails: [Boolean, String],
-  centerAffix: { type: Boolean, default: true },
-  valueComparator: Function,
-  validationValue: null,
-  focused: Boolean,
-  maxErrors: { type: [String, Number], default: 1 },
-  width: [String, Number],
-  minWidth: [String, Number],
-  maxWidth: [String, Number],
-  size: { type: String, default: 'md' } // 'sm', 'md', 'lg' o clases personalizadas
-})
+const props = defineProps(kunCheckboxProps)
 
 const isFocused = ref(props.focused ?? false)
 watch(() => props.focused, v => isFocused.value = v)

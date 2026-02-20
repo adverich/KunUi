@@ -6,20 +6,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  title: String,
-  titleImage: String,
-  titleImageSize: {
-    type: String,
-    default: 'h-6'
-  },
-  textSize: {
-    type: String,
-    default: 'text-base'
-  },
-  fontWeight: {
-    type: String,
-    default: 'font-medium'
-  }
-})
+import { kunAppbarTitleProps } from '../composables/kunAppbarTitleProps'
+
+const props = defineProps(kunAppbarTitleProps)
 </script>

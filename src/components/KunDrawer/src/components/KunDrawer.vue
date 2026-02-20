@@ -37,6 +37,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useAppbarHeight } from '@/utils/useLayout'
+import { kunDrawerProps } from '../composables/kunDrawerProps'
 
 /* Emits */
 const emits = defineEmits([
@@ -51,43 +52,7 @@ function emitModel(val) {
   emits('update:modelValue', val)
 }
 
-const props = defineProps({
-  modelValue: Boolean,
-  absolute: Boolean,
-  border: [Boolean, String, Number],
-  color: String,
-  elevation: [String, Number],
-  floating: Boolean,
-  image: String,
-  location: { type: String, default: 'start' },
-  permanent: Boolean,
-  persistent: Boolean,
-  rail: Boolean,
-  railWidth: { type: String, default: 'w-[56px]' },
-  rounded: [Boolean, String, Number],
-  scrim: { type: [Boolean, String], default: true },
-  tag: { type: [String, Object], default: 'nav' },
-  temporary: Boolean,
-  width: { type: String, default: 'w-[256px]' },
-  fullHeight: Boolean,
-  scrollable: { type: Boolean, default: true },
-
-  /* Swipe */
-  swipeable: { type: Boolean, default: false },
-  swipeThreshold: { type: Number, default: 50 },
-  swipeEdgeSize: { type: Number, default: 30 },
-  swipeTransition: { type: String, default: 'transition-transform duration-300 ease-in-out' },
-
-  swipeHandleSize: { type: Number, default: 24 },
-  swipeMinVelocity: { type: Number, default: 0.35 },
-  scrimTransition: { type: String, default: 'opacity 200ms ease' },
-
-  animationDuration: { type: Number, default: 300 },
-  animationEasing: { type: String, default: 'ease-in-out' },
-
-  /* Nuevo */
-  peekSize: { type: Number, default: 0 } // borde visible cuando está cerrado
-})
+const props = defineProps(kunDrawerProps)
 
 /* Layout */
 const appbarHeight = useAppbarHeight()

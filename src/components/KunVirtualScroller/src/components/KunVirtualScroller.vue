@@ -1,24 +1,8 @@
 <script setup>
 import { ref, watch, computed, onMounted, nextTick } from 'vue'
+import { kunVirtualScrollerProps } from '../composables/kunVirtualScrollerProps'
 
-const props = defineProps({
-  items: {
-    type: Array,
-    required: true,
-  },
-  estimatedItemHeight: {
-    type: Number,
-    default: 48,
-  },
-  buffer: {
-    type: Number,
-    default: 5,
-  },
-  scrollToIndex: {
-    type: Number,
-    default: null,
-  },
-})
+const props = defineProps(kunVirtualScrollerProps)
 
 const containerRef = ref(null)
 const scrollTop = ref(0)

@@ -10,13 +10,9 @@
  * - Mostrar contadores (Ej: 1-10 de 100).
  */
 import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue'
+import { kunTableFooterProps } from '../composables/kunTableFooterProps'
 
-const props = defineProps({
-  itemsLength: { type: Number, default: 0 },         // Total de items (filtrados)
-  itemsPerPage: { type: [Number, String], default: 10 }, // Items actuales por página
-  currentPage: { type: Number, default: 1 },         // Página actual
-  pageOptions: { type: Array, default: () => [5,10,25,50,100] }, // Opciones del selector
-})
+const props = defineProps(kunTableFooterProps)
 
 const emit = defineEmits(['update:page', 'update:itemsPerPage'])
 

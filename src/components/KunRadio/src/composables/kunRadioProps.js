@@ -1,0 +1,16 @@
+export const kunRadioProps = {
+  modelValue: [String, Number, Boolean, Object],
+  label: String,
+  color: String,
+  baseColor: String,
+  trueValue: { default: true },
+  falseValue: { default: false },
+  trueIcon: { type: [String, Object], default: null },
+  falseIcon: { type: [String, Object], default: null },
+  value: [String, Number, Boolean, Object],
+  disabled: Boolean,
+  readonly: Boolean,
+  error: Boolean,
+  name: String,
+  id: String,
+}

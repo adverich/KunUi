@@ -1,0 +1,17 @@
+export const kunAvatarProps = {
+  image: String,
+  icon: String,
+  text: String,
+  alt: String,
+  size: { type: [String, Number], default: "default" },
+  rounded: { type: [String, Number, Boolean], default: undefined },
+  border: { type: [String, Number, Boolean], default: false },
+  color: { type: String, default: undefined },
+  density: { type: String, default: "default" },
+  end: Boolean,
+  start: Boolean,
+  tag: { type: String, default: "div" },
+  theme: String,
+  tile: Boolean,
+  variant: { type: String, default: "flat" },
+}

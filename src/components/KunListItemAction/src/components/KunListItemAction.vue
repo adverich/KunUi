@@ -12,22 +12,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  text: {
-    type: [String, Number],
-    default: null
-  },
-  textColor: {
-    type: String,
-    default: 'text-black dark:text-white',
-  },
-  fontSize:{
-    type: String,
-    default: 'text-sm'
-  },
-  fontWeight:{
-    type: String,
-    default: 'font-medium'
-  },
-})
+import { kunListItemActionProps } from '../composables/kunListItemActionProps'
+
+const props = defineProps(kunListItemActionProps)
 </script>

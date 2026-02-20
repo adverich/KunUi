@@ -5,10 +5,10 @@
   />
 </template>
 
-<script setup lang="ts">
-const props = defineProps({
-  persistent: Boolean,
-})
+<script setup>
+import { kunDialogOverlayProps } from '../composables/kunDialogOverlayProps'
+
+const props = defineProps(kunDialogOverlayProps)
 
 const emit = defineEmits(['click'])
 

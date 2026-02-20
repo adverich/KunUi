@@ -136,6 +136,7 @@
 import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs, getCurrentInstance } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
 import { RouterLink } from 'vue-router'
+import { kunListItemProps } from '../composables/kunListItemProps'
 
 const attrs = useAttrs();
 const contentClass = computed(() => attrs.class)
@@ -144,45 +145,7 @@ const otherAttrs = computed(() => {
   return rest
 })
 
-const props = defineProps({
-  value: [String, Number, Boolean, Object, Array, null],
-  to: [String, Object],
-  href: String,
-  replace: Boolean,
-  exact: Boolean,
-  tag: { type: String, default: 'li' },
-
-  disabled: Boolean,
-  active: Boolean,
-  activeClass: { type: String, default: 'bg-surface-light' },
-  selectable: { type: Boolean, default: false },
-
-  variant: { type: String, default: 'text' },
-  density: { type: String, default: 'default' },
-  rounded: { type: [Boolean, String], default: true },
-  tile: Boolean,
-  ripple: { type: [Boolean, Object], default: true },
-
-  bgItems: { type: String, default: 'bg-transparent' },
-  textColor: { type: String, default: 'text-black dark:text-white' },
-  hoverBg: { type: String, default: 'hover:bg-surface-light' },
-  noGutters: Boolean,
-  itemPosition: { type: String, default: 'items-start' },
-
-  prependIcon: [String, Object, Function],
-  prependAvatar: String,
-  prependClass: String,
-  appendIcon: [String, Object, Function],
-  appendAvatar: String,
-  appendClass: String,
-  title: [String, Number, Boolean],
-  titleClass: { type: String, default: 'font-medium' },
-  subtitle: [String, Number, Boolean],
-  subtitleClass: { type: String, default: 'text-sm text-slate-800 dark:text-slate-200' },
-  containerClass: { type: [String, Array, Object], default: '' },
-
-  id: [String, Number],
-})
+const props = defineProps(kunListItemProps)
 
 const emits = defineEmits(['click'])
 

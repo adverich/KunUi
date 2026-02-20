@@ -1,0 +1,23 @@
+export const kunTabsProps = {
+  modelValue: [String, Number, Array],
+  items: Array,
+  alignTabs: { type: String, default: 'start' },
+  direction: { type: String, default: 'horizontal' },
+  bgColor: { type: String, default: '' },
+  color: String,
+  sliderColor: { type: String, default: 'bg-primary' },
+  selectedClass: { type: String, default: 'text-primary font-medium' },
+  grow: Boolean,
+  fixedTabs: Boolean,
+  centerActive: Boolean,
+  hideSlider: Boolean,
+  showArrows: Boolean,
+  nextIcon: { type: String, default: 'ri-arrow-right-s-line' },
+  prevIcon: { type: String, default: 'ri-arrow-left-s-line' },
+  height: [String, Number],
+  multiple: Boolean,
+  mandatory: {
+    type: [Boolean, String],
+    default: false,
+  },
+}

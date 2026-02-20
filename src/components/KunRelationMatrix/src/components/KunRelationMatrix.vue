@@ -52,25 +52,9 @@
 import KunCheckbox from '@/components/KunCheckbox/src/components/KunCheckbox.vue'
 import { getNestedValue } from '@/utils/tableFormatters.js'
 import KunVirtualScroller from '@/components/KunVirtualScroller/src/components/KunVirtualScroller.vue'
+import { kunRelationMatrixProps } from '../composables/kunRelationMatrixProps'
 
-const props = defineProps({
-  relationTitle: { type: String, default: 'Relaciones' },
-  rows: Array,
-  columns: Array,
-  rowKey: { type: String, default: 'id' },
-  columnKey: { type: String, default: 'id' },
-  relationKey: { type: String, default: 'users' },
-  rowLabel: String,
-  columnLabel: String,
-  relationDirection: {
-    type: String,
-    default: 'column',
-    validator: v => ['column', 'row'].includes(v),
-  },
-  getRelatedEntities: Function,
-  onToggleRelation: Function,
-  returnObject: { type: Boolean, default: false },
-})
+const props = defineProps(kunRelationMatrixProps)
 
 function getSource(row, col) {
   return props.relationDirection === 'column' ? col : row

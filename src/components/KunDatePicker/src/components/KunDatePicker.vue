@@ -186,58 +186,18 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch, provide, inject } from 'vue';
 import KunTextField from '../../../KunTextField/src/components/KunTextField.vue';
 import KunNumberField from '../../../KunNumberField/src/components/KunNumberField.vue';
 import { usePosition } from '../composables/usePosition';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
+import { kunDatePickerProps } from '../composables/kunDatePickerProps'
 
 import arrowUp from '@/icons/IconArrowUp.vue'
 import arrowDown from '@/icons/IconArrowDown.vue'
 
-const props = defineProps({
-  modelValue: { type: [Date, Array, String], default: null },
-  range: { type: Boolean, default: false },
-  label: { type: String, default: '' },
-  placeholder: { type: String, default: '' },
-  disabled: { type: Boolean, default: false },
-  errorMessage: { type: String, default: '' },
-
-  // Logic
-  autoApply: { type: Boolean, default: true },
-  mode: { type: String, default: 'date' }, 
-
-  // Time Options
-  enableTime: { type: Boolean, default: false },
-  enableSeconds: { type: Boolean, default: false },
-
-  // Defaults
-  startDate: { type: [Date, String], default: null },
-  startTime: { type: [String, Object], default: null }, // 'HH:mm:ss' or object
-
-  minDate: { type: Date, default: null },
-  maxDate: { type: Date, default: null },
-  locale: { type: String, default: 'es-ES' },
-
-  // Formatting
-  valueFormat: { type: String, default: null }, 
-  format: { type: String, default: null }, // Alias/Standard prop
-  displayFormat: { type: String, default: null },
-  formats: { type: Object, default: () => null }, // { value: string, display: string }
-
-  // Styling
-  width: { type: [String, Number], default: null },
-  calendarWidth: { type: [String, Number], default: 320 },
-  fullWidth: { type: Boolean, default: false }, 
-  align: { type: String, default: 'left' }, 
-  daySize: { type: String, default: '2rem' }, 
-  fontSize: { type: String, default: '0.875rem' },
-  maxHeight: { type: String, default: '400px' }, 
-
-  inputClass: { default: '' },
-  dialogClass: { default: '' },
-});
+const props = defineProps(kunDatePickerProps)
 
 const emit = defineEmits(['update:modelValue', 'change', 'close', 'open']);
 
@@ -247,16 +207,16 @@ const containerRef = ref(null);
 const triggerRef = ref(null);
 const popoverRef = ref(null);
 const isOpen = ref(false);
-const viewMode = ref<'days' | 'months' | 'years'>('days');
+const viewMode = ref('days');
 
-const tempValue = ref<Date | Date[] | null>(null);
+const tempValue = ref(null);
 const currentMonth = ref(new Date().getMonth());
 const currentYear = ref(new Date().getFullYear());
 const time = ref({ hours: 0, minutes: 0, seconds: 0 });
 
 // Helpers
-function parseDateString(val: string): Date | null {
-    const d = new Date(val); 
+function parseDateString(val) {
+    const d = new Date(val);
     if (!isNaN(d.getTime())) return d;
     if (effectiveMode.value === 'time') {
        const [h, m, s] = val.split(':').map(Number);
@@ -267,7 +227,7 @@ function parseDateString(val: string): Date | null {
     return null;
 }
 
-function formatDate(date: Date, format: string): string {
+function formatDate(date, format) {
     const year = date.getFullYear().toString();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -275,7 +235,7 @@ function formatDate(date: Date, format: string): string {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    const map: Record<string, string> = {
+    const map = {
         YYYY: year,
         yyyy: year,
         YY: year.slice(-2),
@@ -290,7 +250,7 @@ function formatDate(date: Date, format: string): string {
     return format.replace(/YYYY|yyyy|YY|yy|MM|DD|dd|HH|mm|ss/g, matched => map[matched]);
 }
 
-function parseFromFormat(val: string, format: string): Date | null {
+function parseFromFormat(val, format) {
     if (!val || !format) return null;
     
     const formatParts = format.match(/[a-zA-Z]+/g); 
@@ -329,7 +289,7 @@ function parseFromFormat(val: string, format: string): Date | null {
     return d;
 }
 
-function parseSmart(val: any): Date | null {
+function parseSmart(val) {
     if (!val) return null;
     if (val instanceof Date) return val;
     if (typeof val === 'string') {
@@ -377,10 +337,10 @@ watch(() => props.modelValue, (val) => {
     initFromValue(val);
 }, { immediate: true });
 
-function initFromValue(val: any) {
+function initFromValue(val) {
     if (val) {
         if (props.range && Array.isArray(val) && val.length > 0) {
-             const parsedRange = val.map(v => parseSmart(v)).filter(v => v) as Date[];
+             const parsedRange = val.map(v => parseSmart(v)).filter(v => v);
              
              if (parsedRange.length === 2 && parsedRange[0] > parsedRange[1]) {
                  parsedRange.reverse();
@@ -421,9 +381,8 @@ function initDefaults() {
 
     // 2. Initialize Time
     if (props.startTime) {
-        if (typeof props.startTime === 'object') {
-             // @ts-ignore
-             time.value = { hours: 0, minutes: 0, seconds: 0, ...props.startTime };
+         if (typeof props.startTime === 'object') {
+              time.value = { hours: 0, minutes: 0, seconds: 0, ...props.startTime };
         } else if (typeof props.startTime === 'string') {
              const [h, m, s] = props.startTime.split(':').map(Number);
              time.value = { hours: h || 0, minutes: m || 0, seconds: s || 0 };
@@ -434,7 +393,7 @@ function initDefaults() {
     }
 }
 
-function extractTime(date: Date) {
+function extractTime(date) {
     time.value = {
         hours: date.getHours(),
         minutes: date.getMinutes(),
@@ -474,7 +433,7 @@ const weekDays = computed(() => {
     return days;
 });
 
-function getConfigFormat(type: 'value' | 'display') {
+function getConfigFormat(type) {
     if (props.formats && props.formats[type]) return props.formats[type];
     // fallback to legacy
     if (type === 'value') return props.valueFormat || props.format;
@@ -486,10 +445,10 @@ const displayInputValue = computed(() => {
     if (!props.modelValue) return '';
     
     // Formatting for Display
-    const dateOpts: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    const timeOpts: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', second: shouldEnableSeconds.value ? '2-digit' : undefined };
+    const dateOpts = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    const timeOpts = { hour: '2-digit', minute: '2-digit', second: shouldEnableSeconds.value ? '2-digit' : undefined };
     
-    const manualFormat = (d: Date) => {
+    const manualFormat = (d) => {
         const fmt = getConfigFormat('display');
         if (fmt) return formatDate(d, fmt);
         
@@ -501,7 +460,7 @@ const displayInputValue = computed(() => {
         return str;
     };
 
-    const parseAndFormat = (val: any) => {
+    const parseAndFormat = (val) => {
         const d = parseSmart(val);
         if (d) return manualFormat(d);
         return String(val);
@@ -591,13 +550,13 @@ function closePopover() {
     emit('close');
 }
 
-function handleOtherOpen(e: Event) {
-    if ((e as CustomEvent).detail.id !== instanceId && isOpen.value) closePopover();
+function handleOtherOpen(e) {
+    if (e.detail.id !== instanceId && isOpen.value) closePopover();
 }
 
-function clickOutside(e: MouseEvent) {
+function clickOutside(e) {
     if (!isOpen.value) return;
-    const target = e.target as HTMLElement;
+    const target = e.target;
     if (popoverRef.value && popoverRef.value.contains(target)) return;
     if (triggerRef.value && ((triggerRef.value.rootRef && triggerRef.value.rootRef.contains(target)) || (triggerRef.value.$el && triggerRef.value.$el.contains(target)))) return;
     closePopover();
@@ -613,7 +572,7 @@ onUnmounted(() => {
 });
 
 // Date Manipulation
-function changeMonth(delta: number) {
+function changeMonth(delta) {
     let newMonth = currentMonth.value + delta;
     if (newMonth > 11) { newMonth = 0; currentYear.value++; } 
     else if (newMonth < 0) { newMonth = 11; currentYear.value--; }
@@ -621,16 +580,16 @@ function changeMonth(delta: number) {
 }
 
 function toggleViewMode() { viewMode.value = viewMode.value === 'days' ? 'years' : 'days'; }
-function selectYear(year: number) { 
+function selectYear(year) { 
     currentYear.value = year; 
     viewMode.value = 'months'; 
 }
-function selectMonth(monthIndex: number) {
+function selectMonth(monthIndex) {
     currentMonth.value = monthIndex;
     viewMode.value = 'days';
 }
 
-function mergeTime(date: Date) {
+function mergeTime(date) {
     const d = new Date(date);
     if (shouldShowTime.value) {
         d.setHours(time.value.hours || 0, time.value.minutes || 0, time.value.seconds || 0, 0);
@@ -640,7 +599,7 @@ function mergeTime(date: Date) {
     return d;
 }
 
-function adjustTime(unit: 'hours' | 'minutes' | 'seconds', delta: number) {
+function adjustTime(unit, delta) {
     if (unit === 'hours') {
         let newH = (time.value.hours + delta) % 24;
         if (newH < 0) newH += 24;
@@ -653,7 +612,7 @@ function adjustTime(unit: 'hours' | 'minutes' | 'seconds', delta: number) {
     updateTime();
 }
 
-function selectDay(dateObj: any) {
+function selectDay(dateObj) {
     const selectedDate = mergeTime(dateObj.date);
 
     if (props.range) {
@@ -661,7 +620,7 @@ function selectDay(dateObj: any) {
         if (current.length === 2) current = [];
         if (current.length === 0) current = [selectedDate];
         else if (current.length === 1) {
-            let start = current[0] as Date;
+            let start = current[0];
             let end = selectedDate;
             if (end < start) [start, end] = [end, start];
             current = [start, end];
@@ -699,19 +658,18 @@ function getValueToEmit() {
          fmt = shouldEnableSeconds.value ? 'HH:mm:ss' : 'HH:mm';
     }
     
-    const formatter = (d: Date) => {
+    const formatter = (d) => {
         if (fmt) return formatDate(d, fmt);
         return d;
     };
 
     if (Array.isArray(val)) return val.map(d => formatter(d));
-    return formatter(val as Date);
+    return formatter(val);
 }
 
 function applySelection() {
-    // Ensure time applied
     if (shouldShowTime.value && tempValue.value && !Array.isArray(tempValue.value)) {
-        tempValue.value = mergeTime(tempValue.value as Date);
+        tempValue.value = mergeTime(tempValue.value);
     } else if (effectiveMode.value === 'time' && !tempValue.value) {
         updateTime();
     }
@@ -722,7 +680,7 @@ function applySelection() {
     closePopover();
 }
 
-function dayClasses(dayObj: any) {
+function dayClasses(dayObj) {
     const { date, isCurrentMonth } = dayObj;
     const now = new Date();
     const isToday = isSameDay(date, now);
@@ -730,7 +688,7 @@ function dayClasses(dayObj: any) {
     let inRange = false;
     
     // Compare logic
-    const same = (a: any, b: Date) => (a instanceof Date) && isSameDay(a, b);
+    const same = (a, b) => (a instanceof Date) && isSameDay(a, b);
     
     // We check tempValue for visual feedback
     const val = tempValue.value;
@@ -755,7 +713,7 @@ function dayClasses(dayObj: any) {
     return `${base} ${text} ${hover} ${todayBorder}`;
 }
 
-function isSameDay(d1: Date, d2: Date) {
+function isSameDay(d1, d2) {
     return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
 }
 </script>

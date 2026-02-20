@@ -24,20 +24,9 @@
 
 <script setup>
 import { ref, provide, computed, onUpdated } from 'vue'
+import { kunListProps } from '../composables/kunListProps'
 
-const props = defineProps({
-  nav: Boolean,
-  sub: Boolean,
-  dense: Boolean,
-  selectable: { type: Boolean, default: false },
-  selectionMode: {
-    type: String,
-    default: 'single',
-    validator: v => ['single', 'multiple'].includes(v),
-  },
-  bgList: { type: String, default: 'bg-transparent' },
-  borderColor: { type: String, default: 'border-gray-300 dark:border-gray-700' }
-})
+const props = defineProps(kunListProps)
 
 const emit = defineEmits(['keyDown', 'click:select', 'update:selected'])
 

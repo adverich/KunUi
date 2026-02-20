@@ -26,25 +26,9 @@
 
 <script setup>
 import { computed } from 'vue';
+import { kunLoaderCircularProps } from '../composables/kunLoaderCircularProps'
 
-const props = defineProps({
-  fullscreen: {
-    type: Boolean,
-    default: false,
-  },
-  size: {
-    type: [Number, String],
-    default: 24, // 🔹 Pequeño por defecto para botones
-  },
-  width: {
-    type: [Number, String],
-    default: 4, // 🔹 Grosor adecuado para el botón
-  },
-  gradient: {
-    type: String,
-    default: 'conic-gradient(from 0deg, #ffffff, #3b82f6)',
-  },
-});
+const props = defineProps(kunLoaderCircularProps);
 
 const parsedSize = computed(() => Number(props.size));
 const parsedWidth = computed(() => Number(props.width));

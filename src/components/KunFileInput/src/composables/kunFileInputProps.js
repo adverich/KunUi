@@ -1,0 +1,27 @@
+export const kunFileInputProps = {
+  modelValue: [File, Array],
+  multiple: Boolean,
+  clearable: Boolean,
+  chips: Boolean,
+  showSize: [Boolean, Number],
+  label: String,
+  disabled: Boolean,
+  error: Boolean,
+  errorMessages: [String, Array],
+  hint: String,
+  persistentHint: Boolean,
+  counter: Boolean,
+  counterString: String,
+  counterSizeString: String,
+  prependIcon: String,
+  appendIcon: String,
+  clearIcon: String,
+  variant: {
+    type: String,
+    default: 'filled',
+  },
+  rules: {
+    type: Array,
+    default: () => [],
+  },
+}

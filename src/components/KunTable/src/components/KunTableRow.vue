@@ -79,30 +79,9 @@
 import { computed } from 'vue';
 import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue"
 import { getValue, formatValue } from '@/utils/tableFormatters';
+import { kunTableRowProps } from '../composables/kunTableRowProps'
 
-const props = defineProps({
-  item: Object,             // Objeto de datos de la fila
-  index: Number,            // Índice en la paginación actual
-  headers: Array,           // Definición de columnas a mostrar
-  showExpand: Boolean,      // ¿Mostrar botón expandir?
-  showSelect: Boolean,      // ¿Mostrar checkbox seleccionar?
-  isExpanded: Boolean,      // Estado de expansión de esta fila
-  isSelected: Boolean,      // Estado de selección de esta fila
-  
-  // Clases personalizadas
-  rowClass: String,         // Clase base para la fila
-  trClass: String,          // Clase extra para tr
-  tdClass: String,          // Clase para celdas
-  selectedClass: String,    // Clase cuando está seleccionada
-  stripedClass: String,     // Clase para alternancia (striped)
-  
-  hasActions: Boolean,      // ¿Tiene columna de acciones?
-  actionsAlign: String,     // Alineación de acciones
-  loading: { type: [Boolean, Object], default: false }, // Estado de carga (ej: al borrar)
-  
-  rowClassCondition: [String, Function], // Función para clases condicionales por fila
-  customSlots: Object,      // Slots custom (scoped slots pasados desde el padre)
-});
+const props = defineProps(kunTableRowProps)
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 

@@ -7,14 +7,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  tag: {
-    type: String,
-    default: 'div',
-  },
-  text: {
-    type: String,
-    default: '',
-  },
-})
+import { kunToolbarTitleProps } from '../composables/kunToolbarTitleProps'
+
+const props = defineProps(kunToolbarTitleProps)
 </script>

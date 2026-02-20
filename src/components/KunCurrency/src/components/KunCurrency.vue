@@ -1,42 +1,11 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useKunConfig, resolveConfigValue } from '../../../../config/kunConfig.js';
+import { kunCurrencyProps } from '../composables/kunCurrencyProps'
 
 const globalConfig = useKunConfig();
 
-const props = defineProps({
-    currency:{
-        type: Object,
-        default: null,
-    },
-    hideCurrency:{
-        type: Boolean,
-        default: false
-    },
-    locale:{
-        type: String,
-        default: null
-    },
-    precision:{
-        type: Number,
-        default: null,
-    },
-    modelValue:{
-        default: null,
-    },
-    placeholder:{
-        type: String,
-        default: '0.00'
-    },
-    prefix:{
-        type: String,
-        default: null
-    },
-    suffix:{
-        type: String,
-        default: ''
-    },
-})
+const props = defineProps(kunCurrencyProps)
 
 // Valores resueltos con fallback a config global
 const resolvedLocale = computed(() => 

@@ -49,30 +49,9 @@
  */
 import { computed } from 'vue';
 import KunTableRow from './KunTableRow.vue';
+import { kunTableRowsProps } from '../composables/kunTableRowsProps'
 
-const props = defineProps({
-  items: Array,             // Lista de items a mostrar (paginados)
-  tbodyClass: String,       // Clases extra para <tbody>
-  isExpanded: {
-    type: Function,
-    required: true,
-  },
-  isSelected: {
-    type: Function,
-    required: true,
-  },
-  itemKey: {
-    type: Function,
-    default: (_, index) => index,
-  },
-  headers: Array,           // Configuración de columnas
-  showExpand: Boolean,      // Mostrar columna de expansión
-  showSelect: Boolean,      // Mostrar columna de selección
-  hasActions: Boolean,      // Mostrar columna de acciones
-  loading: Boolean,
-  actionLoadingMap: Object, // Mapa de estados de carga
-  customSlots: Object,      // Slots personalizados pasados desde el padre
-});
+const props = defineProps(kunTableRowsProps)
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 

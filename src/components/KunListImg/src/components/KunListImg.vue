@@ -16,18 +16,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  src: {
-    type: String,
-    required: true
-  },
-  alt: {
-    type: String,
-    default: ''
-  },
-  bgColor: {
-    type: String,
-    default: 'bg-surface'
-  }
-})
+import { kunListImgProps } from '../composables/kunListImgProps'
+
+const props = defineProps(kunListImgProps)
 </script>

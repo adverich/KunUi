@@ -72,23 +72,9 @@ import arrowUp from '@/icons/IconArrowUp.vue'
 import arrowDown from '@/icons/IconArrowDown.vue'
 import arrowDownUp from '@/icons/IconArrowDownUp.vue'
 import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue"
+import { kunTableHeadersProps } from '../composables/kunTableHeadersProps'
 
-const props = defineProps({
-  headers: Array,          // Array de definición de columnas
-  showSelect: Boolean,     // Mostrar checkbox de selección masiva
-  showExpand: Boolean,     // Mostrar botón de expansión global (opcional)
-  isExpanded: Boolean,     // Estado global de expansión
-  allSelected: Boolean,    // Estado: ¿Están todos seleccionados?
-  someSelected: Boolean,   // Estado: ¿Hay algunos seleccionados (indeterminado)?
-  moreThanPaginated: Boolean, // Estado: ¿Hay más seleccionados que los visibles?
-  sortBy: Object,          // Objeto de configuración de orden actual
-  theadClass: String,      // Clases extra para <thead>
-  trClass: String,         // Clases extra para <tr>
-  thClass: String,         // Clases extra para <th>
-  hasActions: Boolean,     // Mostrar columna de acciones
-  actionLabel: String,     // Etiqueta para columna acciones
-  customHeaders: Object,   // Slots personalizados para headers específicos
-});
+const props = defineProps(kunTableHeadersProps)
 
 const emits = defineEmits(['toggle-select-all', 'sort', 'expandAll', 'collapseAll']);
 

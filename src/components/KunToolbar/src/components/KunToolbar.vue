@@ -69,34 +69,9 @@
 <script setup>
 import { computed, ref, useSlots } from 'vue'
 import KunToolbarTitle from './KunToolbarTitle.vue'
+import { kunToolbarProps } from '../composables/kunToolbarProps'
 
-const props = defineProps({
-    absolute: Boolean,
-    bgColor: String,
-    titlePosition: { type: String, default: 'left' },
-    bordered: { type: Boolean, default: false },
-    borderColor: String,
-    collapse: Boolean,
-    density: { type: String, default: 'default' },
-    elevation: [String, Number],
-    extended: Boolean,
-    extensionHeight: {
-      type: [String, Number],
-      default: 48,
-    },
-    flat: Boolean,
-    floating: Boolean,
-    height: [String, Number],
-    image: String,
-    rounded: [String, Boolean],
-    tag: { type: String, default: 'header' },
-    theme: String,
-    tile: Boolean,
-    title: String,
-    titleMaxWidth: { type: String, default: 'max-w-3/4' },
-    leftSectionClass: { type: String, default: 'flex items-center gap-x-2' },
-    rightSectionClass: { type: String, default: 'flex items-center gap-x-2 justify-end' },
-})
+const props = defineProps(kunToolbarProps)
 
 const slots = useSlots()
 const contentRef = ref(null)

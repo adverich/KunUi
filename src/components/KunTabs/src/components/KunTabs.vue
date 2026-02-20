@@ -54,30 +54,9 @@
 import { ref, computed, provide } from 'vue'
 import KunBtn from '@/components/KunBtn/src/components/KunBtn.vue'
 import { useTabsGroup } from '../composables/useTabsGroup'
+import { kunTabsProps } from '../composables/kunTabsProps'
 
-const props = defineProps({
-  modelValue: [String, Number, Array],
-  items: Array,
-  alignTabs: { type: String, default: 'start' },
-  direction: { type: String, default: 'horizontal' },
-  bgColor: { type: String, default: '' },
-  color: String,
-  sliderColor: { type: String, default: 'bg-primary' },
-  selectedClass: { type: String, default: 'text-primary font-medium' },
-  grow: Boolean,
-  fixedTabs: Boolean,
-  centerActive: Boolean,
-  hideSlider: Boolean,
-  showArrows: Boolean,
-  nextIcon: { type: String, default: 'ri-arrow-right-s-line' },
-  prevIcon: { type: String, default: 'ri-arrow-left-s-line' },
-  height: [String, Number],
-  multiple: Boolean,
-  mandatory: {
-    type: [Boolean, String],
-    default: false,
-  },
-})
+const props = defineProps(kunTabsProps)
 
 const emit = defineEmits(['update:modelValue'])
 

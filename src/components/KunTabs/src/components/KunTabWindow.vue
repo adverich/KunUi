@@ -1,33 +1,8 @@
 <script setup>
 import { computed, provide } from 'vue'
+import { kunTabWindowProps } from '../composables/kunTabWindowProps'
 
-const props = defineProps({
-  modelValue: [String, Number, Array],
-  items: {
-    type: Array,
-    default: () => [],
-  },
-  show: {
-    type: Boolean,
-    default: true,
-  },
-  selectedClass: {
-    type: String,
-    default: 'border-b-2 border-primary',
-  },
-  tag: {
-    type: String,
-    default: 'div',
-  },
-  transition: {
-    type: [String, Object],
-    default: 'fade', // puedes pasar nombre de transición o un objeto de transición
-  },
-  multiple: {
-    type: Boolean,
-    default: false,
-  },
-})
+const props = defineProps(kunTabWindowProps)
 
 const emit = defineEmits(['update:modelValue'])
 

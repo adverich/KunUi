@@ -12,29 +12,9 @@
 
 <script setup>
 import { ref, provide, watch, computed } from 'vue';
+import { kunFormProps } from '../composables/kunFormProps'
 
-const props = defineProps({
-  gap: {
-    type: String,
-    default: 'space-y-4'
-  },
-  padding: {
-    type: String,
-    default: 'px-2 py-4'
-  },
-  maxWidth: {
-    type: String,
-    default: 'max-w-full'
-  },
-  modelValue: { // v-model para exponer validez
-    type: Boolean,
-    default: true
-  },
-  validateOn: { // submit, lazy, input
-    type: String,
-    default: 'submit'
-  }
-});
+const props = defineProps(kunFormProps)
 
 const emit = defineEmits(['update:modelValue', 'submit']);
 

@@ -11,22 +11,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  text: {
-    type: [String, Number],
-    default: null
-  },
-  fontSize: {
-    type: String,
-    default: 'text-sm'
-  },
-  textColor: {
-    type: String,
-    default: 'text-gray-500 dark:text-gray-400'
-  },
-  fontWeight: {
-    type: String,
-    default: 'font-medium'
-  }
-})
+import { kunListItemTextProps } from '../composables/kunListItemTextProps'
+
+const props = defineProps(kunListItemTextProps)
 </script>

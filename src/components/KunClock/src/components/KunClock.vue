@@ -1,20 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import { kunClockProps } from '../composables/kunClockProps'
 
-const props = defineProps({
-  color: {
-    type: String,
-    default: 'inherit',
-  },
-  size: {
-    type: String,
-    default: '1rem',
-  },
-  format: {
-    type: String,
-    default: 'HH:mm:ss',
-  }
-});
+const props = defineProps(kunClockProps);
 
 const currentTime = ref('');
 let intervalId = null;

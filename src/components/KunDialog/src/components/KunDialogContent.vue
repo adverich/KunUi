@@ -6,17 +6,9 @@
 
 <script setup>
 import { computed } from 'vue'
-const props = defineProps({
-  fullscreen: Boolean,
-  scrollable: Boolean,
-  contentClass: String,
-  bgColor: String,
-  minWidth: String,
-  width: String,
-  maxWidth: String,
-  height: String,
-  maxHeight: String,
-})
+import { kunDialogContentProps } from '../composables/kunDialogContentProps'
+
+const props = defineProps(kunDialogContentProps)
 
 const baseClass = computed(() => {
   if (props.fullscreen) {

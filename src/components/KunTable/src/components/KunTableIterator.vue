@@ -86,23 +86,9 @@
 <script setup>
 import { computed } from 'vue';
 import { getValue, formatValue } from '@/utils/tableFormatters';
+import { kunTableIteratorProps } from '../composables/kunTableIteratorProps'
 
-const props = defineProps({
-  item: Object,
-  index: Number,
-  headers: Array,
-  showExpand: Boolean,
-  showSelect: Boolean,
-  isExpanded: Boolean,
-  isSelected: Boolean,
-  hasActions: Boolean,
-  loading: { type: [Boolean, Object], default: false },
-  rowClass: String,
-  border: { type: String, default: 'border border-slate-300 dark:border-slate-700' },
-  rounded: { type: String, default: 'rounded-sm'},
-  rowClassCondition: [String, Function],
-  customSlots: Object,
-});
+const props = defineProps(kunTableIteratorProps)
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 

@@ -12,22 +12,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  text: {
-    type: [String, Number],
-    default: null
-  },
-  textColor: {
-    type: String,
-    default: 'text-gray-500 dark:text-gray-400'
-  },
-  fontSize: {
-    type: String,
-    default: 'text-xs'
-  },
-  fontWeight: {
-    type: String,
-    default: 'font-medium'
-  }
-})
+import { kunListItemSubtitleProps } from '../composables/kunListItemSubtitleProps'
+
+const props = defineProps(kunListItemSubtitleProps)
 </script>

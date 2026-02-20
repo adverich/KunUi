@@ -41,14 +41,9 @@
 <script setup>
 import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
+import { kunListGroupProps } from '../composables/kunListGroupProps'
 
-const props = defineProps({
-  modelValue: { type: Boolean, default: false },
-  title: { type: String, default: '' },
-  expandIcon: { type: String, default: '$mdi-chevron-up' },
-  collapseIcon: { type: String, default: '$mdi-chevron-down' },
-  disabled: { type: Boolean, default: false },
-})
+const props = defineProps(kunListGroupProps)
 
 const emit = defineEmits(['update:modelValue'])
 

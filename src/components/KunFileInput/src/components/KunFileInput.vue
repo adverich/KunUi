@@ -76,34 +76,9 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { renderIconSlot } from '@/utils/renderIcon'
+import { kunFileInputProps } from '../composables/kunFileInputProps'
 
-const props = defineProps({
-  modelValue: [File, Array],
-  multiple: Boolean,
-  clearable: Boolean,
-  chips: Boolean,
-  showSize: [Boolean, Number],
-  label: String,
-  disabled: Boolean,
-  error: Boolean,
-  errorMessages: [String, Array],
-  hint: String,
-  persistentHint: Boolean,
-  counter: Boolean,
-  counterString: String,
-  counterSizeString: String,
-  prependIcon: String,
-  appendIcon: String,
-  clearIcon: String,
-  variant: {
-    type: String,
-    default: 'filled',
-  },
-  rules: {
-    type: Array,
-    default: () => [],
-  },
-})
+const props = defineProps(kunFileInputProps)
 
 const emit = defineEmits([
   'update:modelValue',

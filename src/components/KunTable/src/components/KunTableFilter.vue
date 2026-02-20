@@ -43,12 +43,9 @@ import KunAutocomplete from '../../../KunAutocomplete/src/components/KunAutocomp
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
 import IconClose from '../../../../icons/IconClose.vue';
+import { kunTableFilterProps } from '../composables/kunTableFilterProps'
 
-const props = defineProps({
-    modelValue: Boolean, // Controla visibilidad del diálogo
-    filters: Array,      // Definición de filtros [{value: 'col', items: [], label: ''}]
-    activeFilters: Object, // Filtros actualmente aplicados { col: [values] }
-})
+const props = defineProps(kunTableFilterProps)
 const emits = defineEmits(['update:modelValue', 'applyFilters', 'clearFilters']);
 
 // Sincronizar v-model del diálogo

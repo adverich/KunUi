@@ -1,20 +1,8 @@
 <script setup>
 import { computed, provide, toRefs } from 'vue'
+import { kunRadioGroupProps } from '../composables/kunRadioGroupProps'
 
-const props = defineProps({
-  modelValue: [String, Number, Boolean, Object],
-  color: String,
-  baseColor: String,
-  name: String,
-  disabled: Boolean,
-  readonly: Boolean,
-  direction: { type: String, default: 'vertical' }, // 'horizontal' | 'vertical'
-  inline: Boolean,
-  error: Boolean,
-  trueIcon: { type: [String, Object], default: 'mdi-radiobox-marked' },
-  falseIcon: { type: [String, Object], default: 'mdi-radiobox-blank' },
-  label: String,
-})
+const props = defineProps(kunRadioGroupProps)
 
 const emit = defineEmits(['update:modelValue'])
 

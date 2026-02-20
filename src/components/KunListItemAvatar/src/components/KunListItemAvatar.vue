@@ -11,32 +11,9 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  text: {
-    type: [String, Number],
-    default: null
-  },
-  size: {
-    type: String,
-    default: 'md' // sm, md, lg
-  },
-  rounded: {
-    type: String,
-    default: 'rounded-full'
-  },
-  bgColor: {
-    type: String,
-    default: 'bg-surface-light'
-  },
-  textColor: {
-    type: String,
-    default: 'text-white'
-  },
-  fontWeight: {
-    type: String,
-    default: 'font-medium'
-  }
-})
+import { kunListItemAvatarProps } from '../composables/kunListItemAvatarProps'
+
+const props = defineProps(kunListItemAvatarProps)
 
 const sizeClass = {
   sm: 'w-6 h-6 text-xs',

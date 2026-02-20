@@ -1,19 +1,8 @@
 <script setup>
 import { computed } from "vue"
+import { kunSkeletonProps } from '../composables/kunSkeletonProps'
 
-const props = defineProps({
-  loading: { type: Boolean, default: true },
-  variant: { type: String, default: "rect" }, // rect, circle, text
-  width: { type: [String, Number], default: "100%" },
-  height: { type: [String, Number], default: "1rem" },
-  rounded: { type: String, default: "md" }, // none, sm, md, lg, full
-  animation: { type: String, default: "shimmer" }, // shimmer, pulse, shimmer-vertical, none
-  duration: { type: Number, default: 1500 }, // ms
-  colorFrom: { type: String, default: "bg-gray-200" },
-  colorTo: { type: String, default: "bg-gray-300" },
-  repeat: { type: Boolean, default: true },
-  class: { type: [String, Array, Object], default: "" }
-})
+const props = defineProps(kunSkeletonProps)
 
 // 🔹 Clases base para forma
 const shapeClass = computed(() => {
