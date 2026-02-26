@@ -198,6 +198,9 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
     }
 
     const getRawValue = (item, key) => {
+        // Prioritize raw item property if it exists
+        if (Object.prototype.hasOwnProperty.call(item, key)) return item[key]
+
         const header = headersRef.value.find(h => h?.value === key)
         try {
             return header ? getValue(header, item) : item[key]
