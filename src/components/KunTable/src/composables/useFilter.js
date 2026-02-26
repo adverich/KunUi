@@ -169,7 +169,8 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
             // Deben cumplirse TODOS (AND)
             for (const key in appliedFilters.byColumn) {
                 const value = appliedFilters.byColumn[key]
-                if (value != null && value !== '' && !matchesFilter(item, key, value)) return false
+                const isEmptyArray = Array.isArray(value) && value.length === 0
+                if (value != null && value !== '' && !isEmptyArray && !matchesFilter(item, key, value)) return false
             }
             return true
         })
