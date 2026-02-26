@@ -200,8 +200,17 @@ defineExpose({
   numberInput,
   rootRef,
   focus: () => {
+    // Intentar focus inmediato si el elemento ya existe
+    if (numberInput.value) {
+      numberInput.value.focus();
+    }
+    
+    // Usar nextTick siempre como respaldo para asegurar que el focus 
+    // se aplique después de cualquier ciclo de renderizado pendiente
     nextTick(() => {
-      numberInput.value?.focus();
+      if (numberInput.value) {
+        numberInput.value.focus();
+      }
     });
   }
 });
