@@ -2,10 +2,12 @@
 
 Una librería de componentes Vue.js 3 con Tailwind CSS, ligera y fácil de usar.
 
+> **Para desarrolladores de la librería**: Consulta `AGENTS.md` para documentación interna y guías de desarrollo.
+
 ## Instalación
 
 ```bash
-npm install adverich-kun-ui
+pnpm add adverich-kun-ui
 ```
 
 ## Uso
@@ -113,6 +115,27 @@ import 'adverich-kun-ui/dist/adverich-kun-ui.css'
 
 - Vue 3.5+
 - Tailwind CSS 4.0+
+
+## Desarrollo (contribuir)
+
+Si quieres contribuir al desarrollo de KunUI:
+
+```bash
+# Clonar el repositorio
+git clone https://github.com/adverich/KunUi.git
+cd KunUi
+
+# Instalar dependencias (requiere pnpm)
+pnpm install
+
+# Iniciar servidor de desarrollo
+pnpm run dev
+
+# Build para producción
+pnpm run build
+```
+
+> **Importante**: Este proyecto utiliza **pnpm** como gestor de paquetes. No uses npm ni yarn.
 
 ## Licencia
 

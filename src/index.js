@@ -1,3 +1,27 @@
+/**
+ * KunUI - Vue.js 3 Component Library with Tailwind CSS
+ * 
+ * @package adverich-kun-ui
+ * @documentation For AI agents documentation, see: AGENTS.md
+ * 
+ * @example
+ * // Installation
+ * npm install adverich-kun-ui
+ * 
+ * @example
+ * // Global registration
+ * import { createApp } from 'vue'
+ * import KunUI from 'adverich-kun-ui'
+ * import 'adverich-kun-ui/dist/adverich-kun-ui.css'
+ * 
+ * const app = createApp(App)
+ * app.use(KunUI)
+ * 
+ * @example
+ * // Individual component import
+ * import { KunBtn, KunTextField, KunDialog } from 'adverich-kun-ui'
+ */
+
 import { defineAsyncComponent } from 'vue'
 import './styles/style.css'
 import './utils/utils.js'

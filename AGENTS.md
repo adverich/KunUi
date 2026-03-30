@@ -2,10 +2,39 @@
 
 KunUI es una librería de componentes Vue.js 3 con Tailwind CSS.
 
-## Instalación
+---
+
+## ⚠️ Importante para Agentes de IA
+
+### Package Manager Requerido: **pnpm**
+
+Este proyecto utiliza **pnpm** como gestor de paquetes. **No uses npm ni yarn** para instalar dependencias o ejecutar scripts.
 
 ```bash
-npm install adverich-kun-ui
+# ❌ NO usar
+npm install
+npm run build
+
+# ✅ USAR
+pnpm install
+pnpm run build
+```
+
+### Comandos disponibles
+
+| Comando | Descripción |
+|---------|-------------|
+| `pnpm install` | Instala todas las dependencias |
+| `pnpm run dev` | Inicia el servidor de desarrollo (Vite) |
+| `pnpm run build` | Compila la librería para producción |
+| `pnpm run preview` | Vista previa del build |
+
+---
+
+## Instalación (para usuarios de la librería)
+
+```bash
+pnpm add adverich-kun-ui
 ```
 
 ```javascript
@@ -432,3 +461,57 @@ kunConfig.configure({
 - **Densidad**: 'default', 'comfortable', 'compact'
 - **v-model**: La mayoría de inputs usan v-model para two-way binding
 - **Slots**: Nombre de slot = nombre del prop sin "Icon" (prependIcon -> #prepend)
+
+---
+
+## Estructura del Proyecto
+
+```
+kun-ui/
+├── src/
+│   ├── components/       # Componentes Vue (KunBtn, KunTable, etc.)
+│   │   └── KunBtn/
+│   │       ├── src/
+│   │       │   └── components/
+│   │       │       └── KunBtn.vue
+│   │       └── src/composables/
+│   │           └── kunBtnProps.js
+│   ├── config/           # Configuración global (kunConfig)
+│   ├── directives/       # Directivas personalizadas
+│   ├── icons/            # Íconos SVG
+│   ├── plugins/          # Plugins de Vite
+│   ├── styles/           # Estilos globales
+│   ├── utils/            # Utilidades y helpers
+│   └── index.js          # Punto de entrada
+├── dist/                 # Build output (generado)
+├── AGENTS.md             # Esta documentación
+├── README.md             # README para usuarios
+├── package.json
+├── vite.config.js
+└── tailwind.config.js
+```
+
+## Desarrollo
+
+### Modificar un componente
+
+1. Ubica el componente en `src/components/[NombreComponente]/`
+2. Edita el archivo `.vue` en `src/components/[NombreComponente]/src/components/`
+3. Si necesitas cambiar props, edita el composable en `src/components/[NombreComponente]/src/composables/`
+4. Ejecuta `pnpm run dev` para ver los cambios en tiempo real
+5. Ejecuta `pnpm run build` para generar el build de producción
+
+### Agregar un nuevo componente
+
+1. Crea la carpeta `src/components/KunNuevoComponente/`
+2. Agrega la estructura:
+   ```
+   KunNuevoComponente/
+   ├── src/
+   │   ├── components/
+   │   │   └── KunNuevoComponente.vue
+   │   └── composables/
+   │       └── kunNuevoComponenteProps.js
+   ```
+3. El plugin `kunUiAutoExportsPlugin` registrará automáticamente el componente
+4. Documenta el componente en este archivo (AGENTS.md)

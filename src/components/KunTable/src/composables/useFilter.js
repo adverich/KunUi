@@ -37,12 +37,22 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
     }
 
     // Predicado de filtrado por defecto (case insensitive includes)
+    // Usado para búsqueda global (search bar) donde se espera match parcial
     const defaultFilterFn = (itemValue, filterValue) => {
         const a = toSearchableString(itemValue).toLowerCase()
         const b = toSearchableString(filterValue).toLowerCase()
         if (!b) return true // Si no hay filtro, pasa
         if (!a) return false // Si hay filtro y no valor, falla
         return a.includes(b)
+    }
+
+    // Predicado de filtrado por match exacto (case insensitive)
+    // Usado para filtros por columna (KunAutocomplete) donde se espera match exacto
+    const exactMatchFilter = (itemValue, filterValue) => {
+        const a = toSearchableString(itemValue).toLowerCase()
+        const b = toSearchableString(filterValue).toLowerCase()
+        if (!b) return true // Si no hay filtro, pasa
+        return a === b
     }
 
     // --- Configuración de Headers y Keys ---
@@ -137,9 +147,9 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
 
         // Si el filtro es un array (multiselect), verificamos si incluye el valor
         if (Array.isArray(value)) {
-            return value.some(v => defaultFilterFn(rawValue, extractFilterVal(v)))
+            return value.some(v => exactMatchFilter(rawValue, extractFilterVal(v)))
         }
-        return defaultFilterFn(rawValue, extractFilterVal(value))
+        return exactMatchFilter(rawValue, extractFilterVal(value))
     }
 
     // Computed principal que retorna los items filtrados
