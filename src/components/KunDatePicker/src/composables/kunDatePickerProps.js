@@ -18,6 +18,7 @@ export const kunDatePickerProps = {
   format: { type: String, default: null },
   displayFormat: { type: String, default: null },
   formats: { type: Object, default: () => null },
+  outputFormat: { type: String, default: null }, // 'date' | 'datetime' | 'time' | 'iso'
   width: { type: [String, Number], default: null },
   calendarWidth: { type: [String, Number], default: 320 },
   fullWidth: { type: Boolean, default: false },

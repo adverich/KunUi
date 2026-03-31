@@ -651,14 +651,38 @@ function updateTime() {
 function getValueToEmit() {
     const val = tempValue.value;
     if (!val) return null;
-    let fmt = getConfigFormat('value');
+    
+    // Check explicit outputFormat prop first
+    const outputFmt = props.outputFormat;
+    
+    // Determine format based on outputFormat prop
+    let fmt = outputFmt;
+    
+    // If outputFormat is not specified, fall back to valueFormat/config
+    if (!fmt) {
+        fmt = getConfigFormat('value');
+    }
     
     // Default time format if mode is time and no format specified
     if (!fmt && effectiveMode.value === 'time') {
          fmt = shouldEnableSeconds.value ? 'HH:mm:ss' : 'HH:mm';
     }
-    
+
     const formatter = (d) => {
+        // Explicit outputFormat handling
+        if (outputFmt) {
+            if (outputFmt === 'date') {
+                return formatDate(d, 'YYYY-MM-DD');
+            } else if (outputFmt === 'datetime') {
+                return formatDate(d, shouldEnableSeconds.value ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD HH:mm');
+            } else if (outputFmt === 'time') {
+                return formatDate(d, shouldEnableSeconds.value ? 'HH:mm:ss' : 'HH:mm');
+            } else if (outputFmt === 'iso') {
+                return d.toISOString();
+            }
+        }
+        
+        // Fallback to configured format or return Date object
         if (fmt) return formatDate(d, fmt);
         return d;
     };
