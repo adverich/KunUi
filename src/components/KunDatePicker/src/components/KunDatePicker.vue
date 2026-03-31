@@ -698,14 +698,32 @@ function formatDateWithTimezone(date, format) {
     if (!date) return '';
     if (!(date instanceof Date) || isNaN(date.getTime())) return '';
     
-    // Si hay timezone configurada, ajustar la fecha
+    // Para formatos de solo fecha (sin hora), usar directamente los componentes de la fecha
+    // sin conversión de timezone para evitar que retroceda un día
+    const isDateOnlyFormat = !/HH|mm|ss/i.test(format);
+    
+    if (isDateOnlyFormat) {
+        // Formato solo fecha - usar componentes locales directamente
+        const year = date.getFullYear().toString();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        
+        return format
+            .replace(/YYYY/g, year)
+            .replace(/yyyy/g, year)
+            .replace(/YY/g, year.slice(-2))
+            .replace(/yy/g, year.slice(-2))
+            .replace(/MM/g, month)
+            .replace(/DD/g, day)
+            .replace(/dd/g, day);
+    }
+    
+    // Para formatos con hora, usar timezone si está configurada
     if (props.timezone) {
         try {
-            // Extraer componentes de fecha según el formato
             const needsDate = /YYYY|yyyy|YY|yy|MM|DD|dd/i.test(format);
-            const needsTime = /HH|mm|ss/i.test(format);
             
-            if (needsDate && needsTime) {
+            if (needsDate) {
                 // datetime format
                 const formatter = new Intl.DateTimeFormat('en-US', {
                     timeZone: props.timezone,
@@ -732,27 +750,7 @@ function formatDateWithTimezone(date, format) {
                     .replace(/HH/g, partMap.hour || '00')
                     .replace(/mm/g, partMap.minute || '00')
                     .replace(/ss/g, partMap.second || '00');
-            } else if (needsDate) {
-                // date only format
-                const formatter = new Intl.DateTimeFormat('en-US', {
-                    timeZone: props.timezone,
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                });
-                const parts = formatter.formatToParts(date);
-                const partMap = {};
-                parts.forEach(p => { partMap[p.type] = p.value; });
-                
-                return format
-                    .replace(/YYYY/g, partMap.year || '')
-                    .replace(/yyyy/g, partMap.year || '')
-                    .replace(/YY/g, partMap.year ? String(partMap.year).slice(-2) : '')
-                    .replace(/yy/g, partMap.year ? String(partMap.year).slice(-2) : '')
-                    .replace(/MM/g, partMap.month || '')
-                    .replace(/DD/g, partMap.day || '')
-                    .replace(/dd/g, partMap.day || '');
-            } else if (needsTime) {
+            } else {
                 // time only format
                 const formatter = new Intl.DateTimeFormat('en-US', {
                     timeZone: props.timezone,
@@ -775,7 +773,7 @@ function formatDateWithTimezone(date, format) {
         }
     }
     
-    // Sin timezone, usar formato normal
+    // Sin timezone o formato con hora, usar formato normal
     return formatDate(date, format);
 }
 
