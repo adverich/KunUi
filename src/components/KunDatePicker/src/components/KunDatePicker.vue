@@ -492,16 +492,16 @@ const calendarDays = computed(() => {
     for (let i = 0; i < startOffset; i++) {
         days.push({
             day: daysInPrevMonth - startOffset + i + 1,
-            date: new Date(year, month - 1, daysInPrevMonth - startOffset + i + 1),
+            date: new Date(year, month - 1, daysInPrevMonth - startOffset + i + 1, 12, 0, 0),
             isCurrentMonth: false
         });
     }
     for (let i = 1; i <= daysInMonth; i++) {
-        days.push({ day: i, date: new Date(year, month, i), isCurrentMonth: true });
+        days.push({ day: i, date: new Date(year, month, i, 12, 0, 0), isCurrentMonth: true });
     }
     const remaining = 42 - days.length;
     for (let i = 1; i <= remaining; i++) {
-        days.push({ day: i, date: new Date(year, month + 1, i), isCurrentMonth: false });
+        days.push({ day: i, date: new Date(year, month + 1, i, 12, 0, 0), isCurrentMonth: false });
     }
     return days;
 });
