@@ -671,7 +671,7 @@ function getValueToEmit() {
     }
 
     const formatter = (d) => {
-        // Explicit outputFormat handling
+        // Explicit outputFormat handling - valores predefinidos
         if (outputFmt) {
             if (outputFmt === 'date') {
                 return formatDateWithTimezone(d, 'YYYY-MM-DD');
@@ -682,6 +682,7 @@ function getValueToEmit() {
             } else if (outputFmt === 'iso') {
                 return d.toISOString();
             }
+            // Si no es un valor predefinido, usar como formato personalizado
         }
 
         // Fallback to configured format or return Date object
@@ -699,11 +700,8 @@ function formatDateWithTimezone(date, format) {
     // Si hay timezone configurada, ajustar la fecha
     if (props.timezone) {
         try {
-            // Convertir a la timezone especificada usando Intl.DateTimeFormat
-            const options = { timeZone: props.timezone };
-            
             // Extraer componentes de fecha según el formato
-            const needsDate = /YYYY|YY|MM|DD/i.test(format);
+            const needsDate = /YYYY|yyyy|YY|yy|MM|DD|dd/i.test(format);
             const needsTime = /HH|mm|ss/i.test(format);
             
             if (needsDate && needsTime) {
@@ -724,9 +722,12 @@ function formatDateWithTimezone(date, format) {
                 
                 return format
                     .replace(/YYYY/g, partMap.year)
+                    .replace(/yyyy/g, partMap.year)
                     .replace(/YY/g, String(partMap.year).slice(-2))
+                    .replace(/yy/g, String(partMap.year).slice(-2))
                     .replace(/MM/g, partMap.month)
                     .replace(/DD/g, partMap.day)
+                    .replace(/dd/g, partMap.day)
                     .replace(/HH/g, partMap.hour || '00')
                     .replace(/mm/g, partMap.minute || '00')
                     .replace(/ss/g, partMap.second || '00');
@@ -744,9 +745,12 @@ function formatDateWithTimezone(date, format) {
                 
                 return format
                     .replace(/YYYY/g, partMap.year)
+                    .replace(/yyyy/g, partMap.year)
                     .replace(/YY/g, String(partMap.year).slice(-2))
+                    .replace(/yy/g, String(partMap.year).slice(-2))
                     .replace(/MM/g, partMap.month)
-                    .replace(/DD/g, partMap.day);
+                    .replace(/DD/g, partMap.day)
+                    .replace(/dd/g, partMap.day);
             } else if (needsTime) {
                 // time only format
                 const formatter = new Intl.DateTimeFormat('en-US', {
