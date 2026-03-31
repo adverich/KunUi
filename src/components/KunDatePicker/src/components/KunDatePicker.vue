@@ -594,7 +594,9 @@ function mergeTime(date) {
     if (shouldShowTime.value) {
         d.setHours(time.value.hours || 0, time.value.minutes || 0, time.value.seconds || 0, 0);
     } else {
-        d.setHours(0, 0, 0, 0); 
+        // Usar mediodía (12:00) para evitar problemas de zona horaria
+        // Al convertir a UTC, las fechas no retroceden un día
+        d.setHours(12, 0, 0, 0);
     }
     return d;
 }
@@ -651,18 +653,18 @@ function updateTime() {
 function getValueToEmit() {
     const val = tempValue.value;
     if (!val) return null;
-    
+
     // Check explicit outputFormat prop first
     const outputFmt = props.outputFormat;
-    
+
     // Determine format based on outputFormat prop
     let fmt = outputFmt;
-    
+
     // If outputFormat is not specified, fall back to valueFormat/config
     if (!fmt) {
         fmt = getConfigFormat('value');
     }
-    
+
     // Default time format if mode is time and no format specified
     if (!fmt && effectiveMode.value === 'time') {
          fmt = shouldEnableSeconds.value ? 'HH:mm:ss' : 'HH:mm';
@@ -672,23 +674,104 @@ function getValueToEmit() {
         // Explicit outputFormat handling
         if (outputFmt) {
             if (outputFmt === 'date') {
-                return formatDate(d, 'YYYY-MM-DD');
+                return formatDateWithTimezone(d, 'YYYY-MM-DD');
             } else if (outputFmt === 'datetime') {
-                return formatDate(d, shouldEnableSeconds.value ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD HH:mm');
+                return formatDateWithTimezone(d, shouldEnableSeconds.value ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD HH:mm');
             } else if (outputFmt === 'time') {
-                return formatDate(d, shouldEnableSeconds.value ? 'HH:mm:ss' : 'HH:mm');
+                return formatDateWithTimezone(d, shouldEnableSeconds.value ? 'HH:mm:ss' : 'HH:mm');
             } else if (outputFmt === 'iso') {
                 return d.toISOString();
             }
         }
-        
+
         // Fallback to configured format or return Date object
-        if (fmt) return formatDate(d, fmt);
+        if (fmt) return formatDateWithTimezone(d, fmt);
         return d;
     };
 
     if (Array.isArray(val)) return val.map(d => formatter(d));
     return formatter(val);
+}
+
+function formatDateWithTimezone(date, format) {
+    if (!date) return '';
+    
+    // Si hay timezone configurada, ajustar la fecha
+    if (props.timezone) {
+        try {
+            // Convertir a la timezone especificada usando Intl.DateTimeFormat
+            const options = { timeZone: props.timezone };
+            
+            // Extraer componentes de fecha según el formato
+            const needsDate = /YYYY|YY|MM|DD/i.test(format);
+            const needsTime = /HH|mm|ss/i.test(format);
+            
+            if (needsDate && needsTime) {
+                // datetime format
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: props.timezone,
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: /ss/i.test(format) ? '2-digit' : undefined,
+                    hour12: false
+                });
+                const parts = formatter.formatToParts(date);
+                const partMap = {};
+                parts.forEach(p => { partMap[p.type] = p.value; });
+                
+                return format
+                    .replace(/YYYY/g, partMap.year)
+                    .replace(/YY/g, String(partMap.year).slice(-2))
+                    .replace(/MM/g, partMap.month)
+                    .replace(/DD/g, partMap.day)
+                    .replace(/HH/g, partMap.hour || '00')
+                    .replace(/mm/g, partMap.minute || '00')
+                    .replace(/ss/g, partMap.second || '00');
+            } else if (needsDate) {
+                // date only format
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: props.timezone,
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                });
+                const parts = formatter.formatToParts(date);
+                const partMap = {};
+                parts.forEach(p => { partMap[p.type] = p.value; });
+                
+                return format
+                    .replace(/YYYY/g, partMap.year)
+                    .replace(/YY/g, String(partMap.year).slice(-2))
+                    .replace(/MM/g, partMap.month)
+                    .replace(/DD/g, partMap.day);
+            } else if (needsTime) {
+                // time only format
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: props.timezone,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: /ss/i.test(format) ? '2-digit' : undefined,
+                    hour12: false
+                });
+                const parts = formatter.formatToParts(date);
+                const partMap = {};
+                parts.forEach(p => { partMap[p.type] = p.value; });
+                
+                return format
+                    .replace(/HH/g, partMap.hour || '00')
+                    .replace(/mm/g, partMap.minute || '00')
+                    .replace(/ss/g, partMap.second || '00');
+            }
+        } catch (e) {
+            console.warn('Invalid timezone:', props.timezone, e);
+        }
+    }
+    
+    // Sin timezone, usar formato normal
+    return formatDate(date, format);
 }
 
 function applySelection() {

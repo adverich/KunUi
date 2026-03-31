@@ -14,6 +14,7 @@ export const kunDatePickerProps = {
   minDate: { type: Date, default: null },
   maxDate: { type: Date, default: null },
   locale: { type: String, default: 'es-ES' },
+  timezone: { type: String, default: null }, // e.g., 'America/Argentina/Buenos_Aires'
   valueFormat: { type: String, default: null },
   format: { type: String, default: null },
   displayFormat: { type: String, default: null },
