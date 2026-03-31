@@ -682,7 +682,7 @@ function getValueToEmit() {
             } else if (outputFmt === 'iso') {
                 return d.toISOString();
             }
-            // Si no es un valor predefinido, usar como formato personalizado
+            // Si no es un valor predefinido, usar como formato personalizado directamente
         }
 
         // Fallback to configured format or return Date object
@@ -696,6 +696,7 @@ function getValueToEmit() {
 
 function formatDateWithTimezone(date, format) {
     if (!date) return '';
+    if (!(date instanceof Date) || isNaN(date.getTime())) return '';
     
     // Si hay timezone configurada, ajustar la fecha
     if (props.timezone) {
@@ -721,13 +722,13 @@ function formatDateWithTimezone(date, format) {
                 parts.forEach(p => { partMap[p.type] = p.value; });
                 
                 return format
-                    .replace(/YYYY/g, partMap.year)
-                    .replace(/yyyy/g, partMap.year)
-                    .replace(/YY/g, String(partMap.year).slice(-2))
-                    .replace(/yy/g, String(partMap.year).slice(-2))
-                    .replace(/MM/g, partMap.month)
-                    .replace(/DD/g, partMap.day)
-                    .replace(/dd/g, partMap.day)
+                    .replace(/YYYY/g, partMap.year || '')
+                    .replace(/yyyy/g, partMap.year || '')
+                    .replace(/YY/g, partMap.year ? String(partMap.year).slice(-2) : '')
+                    .replace(/yy/g, partMap.year ? String(partMap.year).slice(-2) : '')
+                    .replace(/MM/g, partMap.month || '')
+                    .replace(/DD/g, partMap.day || '')
+                    .replace(/dd/g, partMap.day || '')
                     .replace(/HH/g, partMap.hour || '00')
                     .replace(/mm/g, partMap.minute || '00')
                     .replace(/ss/g, partMap.second || '00');
@@ -744,13 +745,13 @@ function formatDateWithTimezone(date, format) {
                 parts.forEach(p => { partMap[p.type] = p.value; });
                 
                 return format
-                    .replace(/YYYY/g, partMap.year)
-                    .replace(/yyyy/g, partMap.year)
-                    .replace(/YY/g, String(partMap.year).slice(-2))
-                    .replace(/yy/g, String(partMap.year).slice(-2))
-                    .replace(/MM/g, partMap.month)
-                    .replace(/DD/g, partMap.day)
-                    .replace(/dd/g, partMap.day);
+                    .replace(/YYYY/g, partMap.year || '')
+                    .replace(/yyyy/g, partMap.year || '')
+                    .replace(/YY/g, partMap.year ? String(partMap.year).slice(-2) : '')
+                    .replace(/yy/g, partMap.year ? String(partMap.year).slice(-2) : '')
+                    .replace(/MM/g, partMap.month || '')
+                    .replace(/DD/g, partMap.day || '')
+                    .replace(/dd/g, partMap.day || '');
             } else if (needsTime) {
                 // time only format
                 const formatter = new Intl.DateTimeFormat('en-US', {
