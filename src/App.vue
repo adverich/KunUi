@@ -33,6 +33,12 @@
 
 
     <div class="h-full w-full flex overflow-auto">
+
+      <KunDatePicker v-model="date" range 
+        :formats="{ input: 'yyyy-MM-dd', display: isMobile ? 'dd-MM-yy' : 'dd-MM-yyyy' }"
+        timezone="America/Argentina/Buenos_Aires" outputFormat="yyyy-MM-dd" 
+      />
+
       <KunTable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" />
       <!-- <DatePickerExample /> -->
     </div>
@@ -52,7 +58,7 @@ import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
-import DatePickerExample from './components/KunDatePicker/examples/DatePickerExample.vue'
+import KunDatePicker from './components/KunDatePicker/src/components/KunDatePicker.vue'
 
 const leftDrawerStatus = ref(false);
 
@@ -68,6 +74,7 @@ const selected = ref({})
 const objectArea = ref({name: '', age: null})
 const modelText = ref(null);
 const minQuantity = ref(0);
+const date = ref([]);
 
 function addProduct(item){
   focusLastInserted();

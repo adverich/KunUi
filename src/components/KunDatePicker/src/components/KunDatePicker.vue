@@ -252,8 +252,8 @@ function formatDate(date, format) {
 
 function parseFromFormat(val, format) {
     if (!val || !format) return null;
-    
-    const formatParts = format.match(/[a-zA-Z]+/g); 
+
+    const formatParts = format.match(/[a-zA-Z]+/g);
     const valueParts = val.match(/\d+/g);
 
     if (!formatParts || !valueParts || formatParts.length !== valueParts.length) return null;
@@ -261,7 +261,7 @@ function parseFromFormat(val, format) {
     let year = new Date().getFullYear();
     let month = 0;
     let day = 1;
-    let hours = 0;
+    let hours = 12; // Usar mediodía para evitar problemas de timezone
     let minutes = 0;
     let seconds = 0;
 
@@ -285,7 +285,7 @@ function parseFromFormat(val, format) {
     });
 
     const d = new Date(year, month, day, hours, minutes, seconds);
-    if (d.getMonth() !== month) return null; 
+    if (d.getMonth() !== month) return null;
     return d;
 }
 
@@ -293,16 +293,17 @@ function parseSmart(val) {
     if (!val) return null;
     if (val instanceof Date) return val;
     if (typeof val === 'string') {
-        const fmt = getConfigFormat('value');
+        // Primero intentar con el formato de input
+        const fmt = getConfigFormat('input') || getConfigFormat('value');
         if (fmt) {
             const d = parseFromFormat(val, fmt);
             if (d && !isNaN(d.getTime())) return d;
         }
-        
+
         // Try native (ISO/standard)
         const d = new Date(val);
         if (!isNaN(d.getTime())) return d;
-        
+
         // Time mode fallback
         if (effectiveMode.value === 'time') {
              const [h, m, s] = val.split(/[:\s]/).map(Number);
@@ -310,7 +311,7 @@ function parseSmart(val) {
              def.setHours(h||0, m||0, s||0, 0);
              return def;
         }
-        
+
         // ISO fix space to T
         const iso = val.replace(' ', 'T');
         const dx = new Date(iso);
@@ -438,6 +439,7 @@ function getConfigFormat(type) {
     // fallback to legacy
     if (type === 'value') return props.valueFormat || props.format;
     if (type === 'display') return props.displayFormat || props.format;
+    if (type === 'input') return props.formats?.input || props.valueFormat || props.format;
     return null;
 }
 
