@@ -264,28 +264,248 @@ Botones de radio.
 
 ### KunTable
 
-Tabla con ordenamiento, paginación y selección.
+Tabla de datos avanzada con paginación, ordenamiento, filtrado y selección.
 
 ```vue
-<KunTable 
-  :items="data"
-  :headers="headers"
-  :searchable="true"
-  :show-select="true"
-  v-model:selectedItems="selected"
-/>
+<template>
+  <KunTable 
+    :items="usuarios"
+    :headers="headers"
+    :searchable="true"
+    :filterable="true"
+    :show-select="true"
+    v-model:selectedItems="seleccionados"
+    @update:sortBy="handleSort"
+  >
+    <template #item.actions="{ item }">
+      <KunBtn icon="mdi-pencil" size="xs" />
+      <KunBtn icon="mdi-delete" size="xs" />
+    </template>
+  </KunTable>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const usuarios = ref([...])
+
+const headers = [
+  { key: 'nombre', value: 'nombre', label: 'Nombre', sortable: true },
+  { key: 'email', value: 'email', label: 'Email', sortable: true },
+  { key: 'rol', value: 'rol', label: 'Rol', sortable: true },
+  { key: 'estado', value: 'estado', label: 'Estado' },
+]
+
+const seleccionados = ref([])
+
+const handleSort = (sortBy) => {
+  console.log('Ordenar por:', sortBy)
+}
+</script>
 ```
 
 | Prop | Tipo | Default | Descripción |
 |------|------|---------|-------------|
 | items | Array | [] | Datos a mostrar |
-| headers | Array | [] | Configuración de columnas |
-| searchable | Boolean | false | Habilita búsqueda |
-| showSelect | Boolean | false | Muestra checkboxes |
+| headers | Array | [] | Configuración de columnas (ver estructura abajo) |
+| selectedItems | Array | [] | v-model: Items seleccionados |
+| searchable | Boolean | false | Habilita barra de búsqueda global |
+| search | String | '' | v-model: Término de búsqueda |
+| filterable | Boolean | false | Habilita filtros avanzados por columna |
+| filters | Array | [] | Configuración de filtros (ver estructura abajo) |
+| showSelect | Boolean | false | Muestra checkboxes de selección |
 | showExpand | Boolean | false | Habilita expansión de filas |
+| hasActions | Boolean | false | Muestra columna de acciones |
+| actionLabel | String | 'Acciones' | Etiqueta de columna de acciones |
+| actionLoadingMap | Object | {} | Mapa de estado loading por ID de item |
 | itemsPerPage | Number | 10 | Items por página |
-| sortBy | Array/String | [] | Ordenamiento |
-| hasActions | Boolean | false | Columna de acciones |
+| page | Number | 1 | Página actual |
+| sortBy | Array/String | [] | v-model: Criterio de ordenamiento |
+| multiSort | Boolean | false | Permite ordenar por múltiples columnas |
+| pageOptions | Array | [5, 10, 25, 50, 100] | Opciones del selector de items por página |
+| searchableKeys | Array | null | Claves específicas para búsqueda global |
+| searchPlaceholder | String | 'Buscar...' | Placeholder del input de búsqueda |
+| debounceTime | Number | 300 | Debounce en ms para búsqueda |
+| customFilter | Function | null | Función de filtrado personalizada |
+| functionMap | Object | {} | Mapa de funciones para columnas tipo 'function' |
+| hideDefaultHeader | Boolean | false | Oculta header por defecto |
+| hideDefaultFooter | Boolean | false | Oculta footer por defecto |
+| noDataText | String | 'No hay elementos disponibles' | Texto cuando no hay datos |
+| loadingText | String | 'Cargando...' | Texto de estado de carga |
+
+**Estructura de `headers`:**
+
+```javascript
+const headers = [
+  {
+    key: 'nombre',           // Identificador único
+    value: 'nombre',         // Clave para acceder al dato (soporta paths: 'usuario.nombre')
+    label: 'Nombre',         // Texto visible en el header
+    sortable: true,          // Permite ordenar por esta columna
+    headerAlign: 'left',     // Alineación: 'left', 'center', 'right'
+    columnType: 'function',  // Opcional: tipo de columna
+    columnFunction: 'formatDate',  // Nombre de función en functionMap
+    relationPath: 'user.id'  // Path alternativo para datos anidados
+  }
+]
+```
+
+**Estructura de `filters`:**
+
+```javascript
+const filters = [
+  {
+    value: 'rol',            // Clave del filtro (debe coincidir con header.value)
+    label: 'Rol',            // Etiqueta visible
+    text: 'Rol',             // Texto alternativo
+    name: 'roles',           // Nombre para textos genéricos
+    items: [...],            // Lista de opciones para el filtro
+    placeholderText: 'Seleccionar rol',
+    textNoItem: 'No hay roles disponibles'
+  }
+]
+```
+
+**Slots:**
+
+| Slot | Props | Descripción |
+|------|-------|-------------|
+| `#item.{key}` | `{ item, index, value, header }` | Contenido personalizado de celda |
+| `#header.{key}` | `{ header }` | Header personalizado de columna |
+| `#item.actions` | `{ item, index, loading }` | Columna de acciones (si `hasActions`) |
+| `#expand` | `{ item, index }` | Contenido de fila expandida |
+| `#thead` | `{ items, headers, page, itemsPerPage, ... }` | Header completo personalizado |
+| `#tfoot` | `{ items, headers, ... }` | Footer personalizado |
+| `#body.prepend` | `{ items, headers, ... }` | Contenido antes del tbody |
+| `#body.append` | `{ items, headers, ... }` | Contenido después del tbody |
+| `#prependHeader` | - | Contenido antes de la barra de búsqueda |
+| `#prependSearch` | - | Contenido antes del input de búsqueda |
+| `#appendSearch` | - | Contenido después del input de búsqueda |
+| `#footer` | `{ items, headers, page, itemsPerPage, ... }` | Footer completo personalizado |
+
+**Eventos:**
+
+| Evento | Payload | Descripción |
+|--------|---------|-------------|
+| `update:page` | `Number` | Cambia la página actual |
+| `update:itemsPerPage` | `Number` | Cambia items por página |
+| `update:sortBy` | `Array` | Cambia criterio de ordenamiento |
+| `update:search` | `String` | Cambia término de búsqueda |
+| `update:selectedItems` | `Array` | Cambia items seleccionados |
+| `focusOnSearch` | `Boolean` | Input de búsqueda enfocado/desenfocado |
+
+**Clases personalizables:**
+
+| Prop | Tipo | Descripción |
+|------|------|-------------|
+| wrapperClass | String | Clase del contenedor principal |
+| tableClass | String | Clase de la etiqueta `<table>` |
+| theadClass | String | Clase del `<thead>` |
+| tbodyClass | String | Clase del `<tbody>` |
+| tfootClass | String | Clase del `<tfoot>` |
+| trClass | String | Clase de las filas `<tr>` |
+| thClass | String | Clase de los headers `<th>` |
+| tdClass | String/Function | Clase de las celdas `<td>` |
+| rowClass | String | Clase adicional para filas |
+| rowClassCondition | String/Function | Condición para aplicar rowClass |
+| selectedClass | String | Clase para filas seleccionadas |
+| stripedClass | String | Clase para filas alternas (striped) |
+
+**Características:**
+
+- **Búsqueda global:** Filtra en todas las columnas marcadas como `sortable` o en `searchableKeys`
+- **Filtros por columna:** Modal con KunAutocomplete para filtrar por columnas específicas
+- **Ordenamiento:** Simple o múltiple (con `multiSort`). Soporta strings, números y fechas
+- **Selección:** Individual, por página, o todos los filtrados
+- **Expansión:** Filas expandibles con slot `#expand`
+- **Responsive:** En móvil se transforma a vista de tarjetas (KunTableIterators)
+- **Serialización:** Soporta funciones serializadas via `functionMap` para columnas dinámicas
+
+**Ejemplo completo:**
+
+```vue
+<template>
+  <KunTable 
+    :items="usuarios"
+    :headers="headers"
+    :filters="filtros"
+    :searchable="true"
+    :filterable="true"
+    :show-select="true"
+    v-model:selectedItems="seleccionados"
+    :items-per-page="15"
+  >
+    <template #item.estado="{ item, value }">
+      <KunBadge 
+        :color="value === 'activo' ? 'bg-green-500' : 'bg-red-500'"
+        :text="value" 
+      />
+    </template>
+    
+    <template #item.actions="{ item, loading }">
+      <KunBtn 
+        icon="mdi-pencil" 
+        size="xs" 
+        :loading="loading"
+        @click="editar(item)" 
+      />
+      <KunBtn 
+        icon="mdi-delete" 
+        size="xs" 
+        variant="text"
+        @click="eliminar(item)" 
+      />
+    </template>
+    
+    <template #expand="{ item }">
+      <div class="p-4 bg-surface-light">
+        <p><strong>Biografía:</strong> {{ item.biografia }}</p>
+      </div>
+    </template>
+  </KunTable>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+
+const usuarios = ref([
+  { id: 1, nombre: 'Juan', email: 'juan@example.com', rol: 'admin', estado: 'activo' },
+  { id: 2, nombre: 'María', email: 'maria@example.com', rol: 'editor', estado: 'inactivo' },
+])
+
+const headers = [
+  { key: 'nombre', value: 'nombre', label: 'Nombre', sortable: true },
+  { key: 'email', value: 'email', label: 'Email', sortable: true },
+  { key: 'rol', value: 'rol', label: 'Rol', sortable: true },
+  { key: 'estado', value: 'estado', label: 'Estado', sortable: true },
+]
+
+const filtros = [
+  {
+    value: 'rol',
+    label: 'Rol',
+    items: [
+      { id: 1, name: 'Admin' },
+      { id: 2, name: 'Editor' },
+      { id: 3, name: 'Viewer' }
+    ]
+  },
+  {
+    value: 'estado',
+    label: 'Estado',
+    items: [
+      { id: 'activo', name: 'Activo' },
+      { id: 'inactivo', name: 'Inactivo' }
+    ]
+  }
+]
+
+const seleccionados = ref([])
+
+const editar = (item) => console.log('Editar', item)
+const eliminar = (item) => console.log('Eliminar', item)
+</script>
+```
 
 ---
 

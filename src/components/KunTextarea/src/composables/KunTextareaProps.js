@@ -7,7 +7,7 @@ export const kunTextareaProps = {
   bgColor: String,
   textColor: String,
   textAlign: { type: String, default: 'left' },
-  formatModel: { type: String, default: 'auto' },
+  formatModel: { type: String, default: 'auto' }, // 'auto' | 'json' | 'plain'
 
   loading: Boolean,
 
@@ -72,4 +72,8 @@ export const kunTextareaProps = {
   focusRingColor: { type: String, default: 'focus:ring-slate-400 dark:focus:ring-slate-600' },
   loadingColor: String,
   clearIcon: Boolean,
+  debounceTime: {
+    type: Number,
+    default: 300,
+  },
 }

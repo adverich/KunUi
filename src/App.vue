@@ -33,11 +33,11 @@
 
 
     <div class="h-full w-full flex overflow-auto">
-
-      <KunDatePicker v-model="date" range 
-        :formats="{ input: 'yyyy-MM-dd', display: isMobile ? 'dd-MM-yy' : 'dd-MM-yyyy' }"
-        timezone="America/Argentina/Buenos_Aires" outputFormat="yyyy-MM-dd" 
-      />
+      <div class="h-full w-1/3 flex flex-col overflow-auto">
+        <div class="flex flex-col h-full overflow-auto">
+          <KunTextarea v-model="dataJson" auto-grow variant="outlined" />
+        </div>
+      </div>
 
       <KunTable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" />
       <!-- <DatePickerExample /> -->
@@ -58,7 +58,6 @@ import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
-import KunDatePicker from './components/KunDatePicker/src/components/KunDatePicker.vue'
 
 const leftDrawerStatus = ref(false);
 
@@ -71,10 +70,7 @@ const products = ref(generateFakeProductsFull(105));
 const currentTheme = ref('dark')
 const selected = ref({})
 
-const objectArea = ref({name: '', age: null})
-const modelText = ref(null);
-const minQuantity = ref(0);
-const date = ref([]);
+const dataJson = ref('{"config":{"currency":"ARS","customers":{"birthayRemember":false},"dateLocale":"es-AR","decimalPrecision":2,"getInvoiceTypesBy":"role","getPaymentMethodsBy":"role","hasBarcodeCamScanner":false,"hasCashRegisterControl":false,"hasEmployeeVisitControl":false,"hasGenericProducts":true,"hasFreeCustomer":true,"hasPointReward":false,"hasSendReceiptMail":false,"hasSendReceiptWsp":false,"includeNoTradeSales":true,"locale":"es-AR","numberFieldMode":"natural","receipt":{"applyRoundingTo":"total","discountBeforeVat":false,"hasVatDiscriminated":true,"imputePaymentsToInvoice":false,"logBilling":false,"onlyAuthorizeLogBilling":false,"printInvoicePhone":true,"printInvoiceAddress":true,"printCXPhone":false,"printCXAddress":false,"printEmployeePhone":false,"printOVPhone":false,"printOVAddress":false,"printSku":false,"showDiscount":false,"skipAppliedPromo":false,"showRoundingDifference":false,"subtotalIncludesDisc":false},"roundAndPrec":{"currencyRoundingPrecision":1,"decimalPrecision":2,"roundingMode":"halfUp"},"workOffLine":true}}')
 
 function addProduct(item){
   focusLastInserted();

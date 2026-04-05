@@ -43,6 +43,7 @@
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
+        @keydown.enter="handleJsonEnter"
         @click="$emit('click:control', $event)"
         @mousedown="$emit('mousedown:control', $event)"
         class="bg-field-background"
@@ -127,7 +128,7 @@
 </template>
 
 <script setup>
-import { useAttrs, computed, ref, getCurrentInstance, nextTick } from 'vue'
+import { useAttrs, computed, ref, getCurrentInstance } from 'vue'
 import { kunTextareaProps } from '../composables/kunTextareaProps'
 import useTextarea from '../composables/useKunTextareaComposable'
 import { renderIconSlot } from '@/utils/renderIcon'
@@ -152,17 +153,68 @@ const {
   displayedMessages,
   adjustHeight,
   handleJsonEnter,
+  isLocalChange,
 } = useTextarea(props, emits, textareaRef)
 
-const handleInput = (e) => {
-  internalValue.value = e.target.value  // Actualiza el texto de inmediato
-  debouncedUpdateModel(e.target.value) // Actualiza el modelo después del delay
-
-  if (props.autoGrow) adjustHeight()
+// Función para guardar/restaurar la posición del cursor
+const saveCursor = () => {
+  const el = textareaRef.value
+  return el ? { start: el.selectionStart, end: el.selectionEnd } : null
 }
+
+const restoreCursor = (pos) => {
+  const el = textareaRef.value
+  if (el && pos !== null) {
+    el.setSelectionRange(pos.start, pos.end)
+  }
+}
+
+// Funciones para guardar/restaurar scroll de contenedores padres
+const saveScrollPositions = () => {
+  const positions = []
+  let el = textareaRef.value?.parentElement
+  while (el) {
+    if (el.scrollHeight > el.clientHeight) {
+      positions.push({ el, scrollTop: el.scrollTop })
+    }
+    el = el.parentElement
+  }
+  positions.push({ el: window, scrollTop: window.scrollY || window.pageYOffset })
+  return positions
+}
+
+const restoreScrollPositions = (positions) => {
+  positions.forEach(({ el, scrollTop }) => {
+    if (el === window) {
+      el.scrollTo(0, scrollTop)
+    } else {
+      el.scrollTop = scrollTop
+    }
+  })
+}
+
+const handleInput = (e) => {
+  const value = e.target.value
+  const cursorPos = { start: e.target.selectionStart, end: e.target.selectionEnd }
+  const scrollState = saveScrollPositions()
+  
+  isLocalChange.value = true
+  
+  // Ajustar altura preservando scroll y cursor
+  if (props.autoGrow) {
+    requestAnimationFrame(() => {
+      adjustHeight()
+      restoreCursor(cursorPos)
+      restoreScrollPositions(scrollState)
+    })
+  }
+  
+  debouncedUpdateModel(value)
+}
+
 const debouncedUpdateModel = debounce((val) => {
   updateModel(val)
-}, 100)
+}, props.debounceTime)
 
 const handleFocus = () => {
   isFocused.value = true
@@ -205,7 +257,7 @@ const densityClass = computed(() =>
 )
 
 const textareaClasses = computed(() => [
-  'w-full resize-none p-2 transition-colors duration-150',
+  'w-full resize-none p-2 transition-colors duration-150 text-black dark:text-white',
   props.inputClass,
   {
     'rounded': !props.tile,
@@ -213,7 +265,6 @@ const textareaClasses = computed(() => [
     [`rounded-${props.rounded}`]: typeof props.rounded === 'string' || typeof props.rounded === 'number',
     'shadow-md': props.variant === 'solo' && !props.flat,
     'shadow-none': props.flat,
-    [`text-${props.textColor}`]: props.textColor,
     [props.bgColor]: props.bgColor,
     'text-gray-500 bg-surface': props.disabled,
     'focus:outline-none focus:ring-1': !props.disabled,

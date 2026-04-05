@@ -5,18 +5,39 @@ export default function useTextarea(props, emit, textareaRef) {
     const rawModelValue = ref(props.modelValue)
     const isFocused = ref(false)
     const errorMessages = ref([])
+    const isLocalChange = ref(false) // Rastrea si el cambio es local (del input)
 
     // -------- FORMATO JSON ----------
     const isJsonMode = computed(() => {
-        return props.formatModel === 'json' || (props.formatModel === 'auto' && typeof props.modelValue === 'object')
+        // Si es 'plain', nunca formatear como JSON
+        if (props.formatModel === 'plain') return false
+        
+        // Si es 'json', siempre formatear
+        if (props.formatModel === 'json') return true
+        
+        // Si es 'auto', detectar automáticamente
+        if (props.formatModel === 'auto') {
+            // Detectar si es objeto directamente
+            if (typeof props.modelValue === 'object' && props.modelValue !== null) return true
+            // Detectar si es string que parece JSON
+            if (typeof props.modelValue === 'string') {
+                const trimmed = props.modelValue.trim()
+                return (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+                       (trimmed.startsWith('[') && trimmed.endsWith(']'))
+            }
+        }
+        return false
     })
 
     function formatInputValue(val) {
         if (isJsonMode.value && val != null) {
             try {
-                return JSON.stringify(val, null, 2)
+                // Si ya es string, intentar parsear y re-formatear
+                const parsed = typeof val === 'string' ? JSON.parse(val) : val
+                return JSON.stringify(parsed, null, 2)
             } catch {
-                return ''
+                // Si no es JSON válido, devolver el string tal cual
+                return val ?? ''
             }
         }
         return val ?? ''
@@ -24,10 +45,23 @@ export default function useTextarea(props, emit, textareaRef) {
 
     function parseInputValue(val) {
         if (isJsonMode.value && typeof val === 'string') {
+            // Si el valor original era un string, mantener como string
+            const wasOriginallyString = typeof props.modelValue === 'string'
+            
+            if (wasOriginallyString) {
+                // Solo validar que es JSON válido, pero devolver como string
+                try {
+                    JSON.parse(val) // Validar
+                    return val // Devolver como string formateado
+                } catch {
+                    return val // Si no es válido, devolver tal cual
+                }
+            }
+            
+            // Si el valor original era un objeto, convertir a objeto
             try {
                 return JSON.parse(val)
             } catch {
-                // si no es JSON válido, devolvemos el string tal cual
                 return val
             }
         }
@@ -40,34 +74,114 @@ export default function useTextarea(props, emit, textareaRef) {
         emit('update:modelValue', parsed)
     }
 
+    // -------- CRECIMIENTO AUTOMÁTICO ----------
+    // Función para guardar scroll positions de todos los contenedores
+    const saveAllScrollPositions = () => {
+        const textarea = textareaRef.value
+        if (!textarea) return { textarea: 0, parents: [] }
+
+        const textareaScrollTop = textarea.scrollTop
+        const parents = []
+
+        // Recorrer todos los elementos padres hasta el root
+        let parent = textarea.parentElement
+        while (parent) {
+            if (parent.scrollHeight > parent.clientHeight) {
+                parents.push({
+                    element: parent,
+                    scrollTop: parent.scrollTop
+                })
+            }
+            parent = parent.parentElement
+        }
+
+        return { textarea: textareaScrollTop, parents }
+    }
+
+    // Función para restaurar scroll positions
+    const restoreAllScrollPositions = (scrollState) => {
+        if (!scrollState) return
+
+        // Restaurar scroll del textarea
+        if (textareaRef.value) {
+            textareaRef.value.scrollTop = scrollState.textarea
+        }
+
+        // Restaurar scroll de los contenedores padres
+        scrollState.parents.forEach(({ element, scrollTop }) => {
+            element.scrollTop = scrollTop
+        })
+    }
+
+    const adjustHeight = () => {
+        if (!textareaRef.value) return
+
+        // Guardar todos los scrolls antes de modificar
+        const scrollState = saveAllScrollPositions()
+
+        // Usar requestAnimationFrame para evitar reflows sincrónicos
+        requestAnimationFrame(() => {
+            const textarea = textareaRef.value
+            if (!textarea) return
+
+            textarea.style.height = 'auto'
+            textarea.style.overflowY = 'hidden'
+
+            const scrollHeight = textarea.scrollHeight
+            const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight) || 24
+            const maxRows = Number(props.maxRows || 0)
+
+            if (props.maxRows && maxRows > 0) {
+                const maxHeight = maxRows * lineHeight
+                textarea.style.height = Math.min(scrollHeight, maxHeight) + 'px'
+            } else {
+                textarea.style.height = (scrollHeight - 16) + 'px'
+            }
+
+            // Restaurar todos los scroll positions
+            restoreAllScrollPositions(scrollState)
+        })
+    }
+
     // -------- WATCH PRINCIPAL ----------
     watch(
         () => props.modelValue,
         (val) => {
+            // Preservar scroll position ANTES de actualizar
+            const scrollState = saveAllScrollPositions()
+            const textarea = textareaRef.value
+            const cursorStart = textarea ? textarea.selectionStart : null
+            const cursorEnd = textarea ? textarea.selectionEnd : null
+
             rawModelValue.value = val
-            internalValue.value = formatInputValue(val)
-            if (props.autoGrow) nextTick(() => adjustHeight())
+            const formattedVal = formatInputValue(val)
+            internalValue.value = formattedVal
+
+            // Actualizar el DOM directamente y restaurar scroll/cursor
+            if (textarea) {
+                // Solo actualizar el valor del DOM si es diferente (evita rerenderizado innecesario)
+                if (textarea.value !== formattedVal) {
+                    textarea.value = formattedVal
+                }
+
+                requestAnimationFrame(() => {
+                    if (props.autoGrow) adjustHeight()
+
+                    // Restaurar scroll y cursor
+                    restoreAllScrollPositions(scrollState)
+                    if (cursorStart !== null && cursorEnd !== null) {
+                        textarea.setSelectionRange(cursorStart, cursorEnd)
+                    }
+                })
+            }
+            
+            // Resetear isLocalChange después de procesar
+            if (isLocalChange.value) {
+                isLocalChange.value = false
+            }
         },
         { immediate: true, deep: true }
     )
-
-    // -------- CRECIMIENTO AUTOMÁTICO ----------
-    const adjustHeight = () => {
-        if (!textareaRef.value) return
-        textareaRef.value.style.height = 'auto'
-        textareaRef.value.style.overflowY = 'hidden'
-
-        const scrollHeight = textareaRef.value.scrollHeight
-        const lineHeight = parseFloat(getComputedStyle(textareaRef.value).lineHeight) || 24
-        const maxRows = Number(props.maxRows || 0)
-
-        if (props.maxRows && maxRows > 0) {
-            const maxHeight = maxRows * lineHeight
-            textareaRef.value.style.height = Math.min(scrollHeight, maxHeight) + 'px'
-        } else {
-            textareaRef.value.style.height = (scrollHeight - 16) + 'px'
-        }
-    }
 
     // -------- JSON: auto identación con tabulador ----------
     function handleJsonEnter(event) {
@@ -146,5 +260,6 @@ export default function useTextarea(props, emit, textareaRef) {
         updateModel,
         adjustHeight,
         handleJsonEnter,
+        isLocalChange,
     }
 }
