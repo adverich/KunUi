@@ -158,20 +158,35 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
         if (!Array.isArray(list)) return []
 
         return list.filter(item => {
-            // 1. Filtro global (Search Bar)
-            // Se busca el string en CUALQUIERA de las columnas cacheadas
+            // 1. Filtro global (Search Bar) - Búsqueda multi-token
+            // Se tokeniza el query por espacios y se busca que TODOS los tokens
+            // estén presentes en CUALQUIERA de las columnas cacheadas
             const q = appliedFilters.search
             if (q) {
-                // Usamos el cache pre-generado para velocidad
-                const cachedValues = searchableCache.value.get(item)
-                if (cachedValues) {
-                    const match = Object.values(cachedValues).some(val => val.includes(q))
-                    if (!match) return false
-                } else {
-                    // Fallback si no hay cache (no debería pasar)
-                    const keys = searchableKeysRef.value
-                    const ok = keys.some(key => matchesFilter(item, key, q))
-                    if (!ok) return false
+                // Tokenizar por espacios y filtrar vacíos
+                const tokens = q.split(/\s+/).filter(t => t.length > 0)
+                
+                if (tokens.length > 0) {
+                    // Usamos el cache pre-generado para velocidad
+                    const cachedValues = searchableCache.value.get(item)
+                    if (cachedValues) {
+                        // Cada token debe hacer match en ALGUNA columna
+                        const allTokensMatch = tokens.every(token => {
+                            return Object.values(cachedValues).some(val => val.includes(token))
+                        })
+                        if (!allTokensMatch) return false
+                    } else {
+                        // Fallback si no hay cache: lógica multi-token sin cache
+                        const keys = searchableKeysRef.value
+                        const allTokensMatch = tokens.every(token => {
+                            return keys.some(key => {
+                                const rawValue = getRawValue(item, key)
+                                const strValue = toSearchableString(rawValue).toLowerCase()
+                                return strValue.includes(token)
+                            })
+                        })
+                        if (!allTokensMatch) return false
+                    }
                 }
             }
 

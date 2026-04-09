@@ -29,3 +29,7 @@ dist-ssr
 
 # Qwen settings (optional, can be committed if team-wide)
 .qwen/
+
+# NPM token
+.npmrc.npmrc 
+.npmrc 

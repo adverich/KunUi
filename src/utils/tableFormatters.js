@@ -70,7 +70,10 @@ export const formatters = {
 
     date: value => {
         if (!value || value === "0000-00-00" || !isValidDate(value)) return "Nunca";
-        const date = new Date(value);
+        // Crear fecha con mediodía para evitar problemas de timezone
+        // Al usar hora 12, la conversión a zona horaria no cambia el día
+        const [year, month, day] = value.split('-').map(Number);
+        const date = new Date(year, month - 1, day, 12, 0, 0);
         const config = kunConfig.current;
         const locale = config.locale;
 
