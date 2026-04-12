@@ -562,6 +562,74 @@ Alerta/notificación flotante.
 
 ---
 
+### KunToast y KunToaster
+
+Sistema de notificaciones toast programático inspirado en Nuxt UI.
+
+```vue
+<script setup>
+import { useToast } from 'adverich-kun-ui'
+
+const toast = useToast()
+
+// Toast básico
+toast.add({
+  title: 'Éxito',
+  description: 'Operación completada',
+  color: 'success'
+})
+
+// Con acciones
+toast.add({
+  title: 'Archivo eliminado',
+  description: '¿Deshacer?',
+  color: 'warning',
+  actions: [{ label: 'Deshacer', variant: 'text', onClick: () => {} }]
+})
+
+// Actualizar (loading → success)
+const t = toast.add({ title: 'Cargando...', duration: 0 })
+toast.update(t.id, { title: '¡Completado!', color: 'success' })
+</script>
+```
+
+**Montar KunToaster** (una sola vez en App.vue):
+
+```vue
+<template>
+  <div id="app">
+    <RouterView />
+    <KunToaster position="bottom-right" :duration="5000" :max="5" />
+  </div>
+</template>
+```
+
+| Prop KunToaster | Tipo | Default | Descripción |
+|-----------------|------|---------|-------------|
+| position | String | 'bottom-right' | Posición: 'top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right' |
+| duration | Number | 5000 | Duración global en ms |
+| max | Number | 5 | Máximo de toasts visibles |
+| expand | Boolean | false | Modo apilado |
+| zIndex | String/Number | 3000 | Z-index del contenedor |
+
+| Prop KunToast | Tipo | Default | Descripción |
+|---------------|------|---------|-------------|
+| title | String/VNode/Function | '' | Título del toast |
+| description | String/VNode/Function | '' | Descripción detallada |
+| icon | String/Object/Function | null | Ícono personalizado |
+| color | String | 'primary' | Variante: 'primary', 'success', 'error', 'warning', 'info', 'neutral' |
+| orientation | String | 'vertical' | Layout: 'vertical', 'horizontal' |
+| duration | Number | null | Duración en ms (null usa global, 0 = sin auto-dismiss) |
+| progress | Boolean | true | Barra de progreso |
+| closable | Boolean | true | Botón de cierre |
+| actions | Array | [] | Botones `{ label, icon, variant, onClick, closeOnClick }` |
+
+**Métodos de useToast():** add(config), update(id, config), remove(id), clear()
+
+**Slots de KunToast:** leading, title, description, actions, close
+
+---
+
 ### KunDrawer
 
 Panel lateral de navegación.

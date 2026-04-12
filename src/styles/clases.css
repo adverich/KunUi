@@ -66,6 +66,44 @@
     background-color: var(--warning);
 }
 
+/* Border colors para KunToast */
+.border-primary {
+    border-color: var(--primary);
+}
+
+.border-success {
+    border-color: var(--success);
+}
+
+.border-error {
+    border-color: var(--error);
+}
+
+.border-warning {
+    border-color: var(--warning);
+}
+
+.border-surface {
+    border-color: var(--surface);
+}
+
+/* Text colors para KunToast icons */
+.text-primary {
+    color: var(--primary);
+}
+
+.text-success {
+    color: var(--success);
+}
+
+.text-error {
+    color: var(--error);
+}
+
+.text-warning {
+    color: var(--warning);
+}
+
 
 .bg-button {
     background-color: var(--button);
