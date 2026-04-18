@@ -35,7 +35,9 @@
     <div class="h-full w-full flex overflow-auto">
       <div class="h-full w-1/3 flex flex-col overflow-auto">
         <div class="flex flex-col h-full overflow-auto">
+          <KunAutocomplete v-model="product" :items="products" />
           <KunTextarea v-model="dataJson" auto-grow variant="outlined" />
+          <KunAutocomplete v-model="product" :items="products" />
         </div>
       </div>
 
@@ -66,6 +68,7 @@ const productCategories = ref(generateFakeCategories(20));
 const productFamilies = ref(generateFakeFamilies(100));
 const productMkups = ref(generateFakeMkups(5));
 const products = ref(generateFakeProductsFull(105));
+const product = ref();
 
 const currentTheme = ref('dark')
 const selected = ref({})

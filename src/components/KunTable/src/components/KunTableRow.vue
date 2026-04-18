@@ -53,7 +53,7 @@
           :index="index"
           :header="header"
         >
-          {{ formatValue(header, getValue(header, item)) }}
+          {{ formatValue(header, getValue(header, item), item) }}
         </slot>
       </template>
     </td>

@@ -4,6 +4,8 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
     const menuPositionStyle = ref({});
     const contentEl = ref(null);
     const activatorEl = ref(null);
+    const smartMaxHeight = ref(null);
+    const currentPlacement = ref('bottom');
 
     const locationMap = {
         top: { class: 'origin-bottom' },
@@ -13,6 +15,7 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
     }
 
     const originClass = computed(() => {
+        if (currentPlacement.value === 'top') return 'origin-bottom';
         return locationMap[props.location]?.class || 'origin-top'
     })
 
@@ -37,17 +40,31 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
                 return;
             }
 
-            const origin = props.origin || defaultOriginFromLocation(props.location);
-            const [verticalOrigin, horizontalOrigin] = origin.split(' ');
-
+            const viewportHeight = window.innerHeight;
+            const viewportWidth = window.innerWidth;
+            const margin = 8;
             const pxHideDetails = props.hideDetails ? 0 : 19;
             const contentWidth = menuEl.offsetWidth;
             const contentHeight = menuEl.offsetHeight;
 
-            let top = 0;
-            let left = 0;
+            // Smart vertical positioning: check available space above and below
+            const spaceBelow = viewportHeight - parentRect.bottom + pxHideDetails - margin;
+            const spaceAbove = parentRect.top - margin;
 
-            // Horizontal (X)
+            const fitBelow = spaceBelow >= contentHeight;
+            const fitAbove = spaceAbove >= contentHeight;
+
+            // Prefer below unless it doesn't fit and above has more room
+            const placeAbove = !fitBelow && (fitAbove || spaceAbove > spaceBelow);
+            currentPlacement.value = placeAbove ? 'top' : 'bottom';
+
+            // Horizontal positioning
+            const origin = (props.origin && props.origin !== 'auto')
+                ? props.origin
+                : defaultOriginFromLocation(props.location);
+            const [, horizontalOrigin] = origin.split(' ');
+
+            let left = 0;
             if (horizontalOrigin === 'right') {
                 left = parentRect.right - contentWidth;
             } else if (horizontalOrigin === 'center') {
@@ -56,37 +73,28 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
                 left = parentRect.left;
             }
 
-            // Vertical (Y)
-            if (verticalOrigin === 'top') {
-                top = parentRect.top - contentHeight;
-            } else if (verticalOrigin === 'center') {
-                top = parentRect.top + (parentRect.height / 2) - (contentHeight / 2);
-            } else {
-                top = parentRect.bottom - pxHideDetails;
-            }
+            // Horizontal boundary check
+            if (left + contentWidth > viewportWidth - margin) left = viewportWidth - contentWidth - margin;
+            if (left < margin) left = margin;
 
-            menuPositionStyle.value = {
+            const newStyle = {
                 position: 'fixed',
-                top: `${top}px`,
                 left: `${left}px`,
                 width: props.width === 'w-full' ? `${parentRect.width}px` : undefined,
             };
 
-            // console.log('[KunMenu] Debug:', {
-            //     origin,
-            //     parent: {
-            //         top: parentRect.top,
-            //         bottom: parentRect.bottom,
-            //         height: parentRect.height,
-            //     },
-            //     menu: {
-            //         height: contentHeight,
-            //         offsetHeight: menuEl.offsetHeight,
-            //         rectHeight: menuRect.height,
-            //     },
-            //     calculatedTop: top,
-            //     expectedTop: parentRect.top - contentHeight,
-            // });
+            if (placeAbove) {
+                // Grow upwards using bottom CSS property
+                newStyle.top = 'auto';
+                newStyle.bottom = `${viewportHeight - parentRect.top}px`;
+                smartMaxHeight.value = spaceAbove;
+            } else {
+                newStyle.top = `${parentRect.bottom - pxHideDetails}px`;
+                newStyle.bottom = 'auto';
+                smartMaxHeight.value = spaceBelow;
+            }
+
+            menuPositionStyle.value = newStyle;
         });
     }
 
@@ -99,13 +107,6 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
             default: return 'bottom left';
         }
     }
-
-
-
-
-
-
-
 
     function initializeMenu() {
         const el = props.parentRef?.$el || contentEl.value?.parentElement
@@ -122,6 +123,15 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
     }
 
     const computedMaxHeight = computed(() => {
+        const propsMax = typeof props.maxHeight === 'number'
+            ? props.maxHeight
+            : (props.maxHeight ? parseInt(props.maxHeight) : null);
+
+        if (smartMaxHeight.value !== null) {
+            const finalMax = propsMax ? Math.min(propsMax, smartMaxHeight.value) : smartMaxHeight.value;
+            return `${finalMax}px`;
+        }
+
         return typeof props.maxHeight === 'number'
             ? props.maxHeight + 'px'
             : props.maxHeight
