@@ -70,6 +70,7 @@ export * from 'virtual:kun-ui/auto-exports';
 
 // Exportar config para uso externo
 export { kunConfig, useKunConfig, resolveConfigValue } from './config/kunConfig.js';
+export { kunDocumentConfig } from './config/kunDocumentConfig.js';
 
 // 4. Exportación por defecto
 export default {
