@@ -1,7 +1,9 @@
-const state = {
+import { reactive } from 'vue';
+
+const state = reactive({
     documentTypes: [],
     countries: [],
-};
+});
 
 export const kunDocumentConfig = {
     get documentTypes() { return state.documentTypes; },
