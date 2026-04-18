@@ -33,7 +33,7 @@
 
 
     <KunRow class="h-full flex flex-col overflow-auto bg-transparent">
-      <KunCol cols="6" class="h-full flex flex-col overflow-auto py-1">
+      <KunCol cols="4" class="h-full flex flex-col overflow-auto py-1">
         <KunRow no-gutters class="h-full overflow-auto">
           <KunCol cols="12" class="h-full flex flex-col overflow-auto py-1">
             <KunAutocomplete v-model="product" :items="products" />
@@ -43,7 +43,7 @@
         </KunRow>
       </KunCol>
 
-      <KunCol cols="6" class="h-full flex flex-col overflow-auto py-1">
+      <KunCol cols="8" class="h-full flex flex-col overflow-auto py-1">
         <KunTable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" />
         <!-- <DatePickerExample /> -->
       </KunCol>
@@ -106,7 +106,7 @@ const headers = [
   // {value: 'product_brand', label: 'Marca', align: 'center', headerAlign: 'center' },
   {value: 'price_base', label: 'Precio', align: 'center', headerAlign: 'center', columnFormat: 'function', columnFunction: getTotalAmount },
   {value: 'total_price', label: 'Precio total', align: 'center', headerAlign: 'center', columnType: 'function', columnFunction: getTotalAmount, columnFormat: 'money' },
-  {value: 'created_at', label: 'Fecha', align: 'center', headerAlign: 'center', columnFormat: 'dateTime' },
+  {value: 'cuit', label: 'cuit', align: 'center', headerAlign: 'center', columnType: 'document', columnFormat: 'document' },
 ]
 
 const filters = [
@@ -203,9 +203,11 @@ function generateFakeProductsFull(count = 100) {
     const product_category = getRandomItem(productCategories.value);
     const product_family = getRandomItem(productFamilies.value);
     const product_mkup = getRandomItem(productMkups.value);
+    const cuit = 20324501364;
 
     products.push({
       id,
+      cuit,
       company_id,
       bar_code: generateRandomBarcode(),
       sku: null,

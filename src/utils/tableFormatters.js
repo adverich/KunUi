@@ -133,27 +133,36 @@ export function getValue(header, item) {
 function formatDocValueByTypeId(value, documentTypeId, documentTypes, countries) {
     const clean = cleanDoc(String(value ?? ''));
     if (!clean) return clean;
-    if (!documentTypeId || !documentTypes?.length) return clean;
+    if (!documentTypeId || !documentTypes?.length) {
+        console.warn('[KunTable][doc] sin documentTypeId o documentTypes vacío:', { documentTypeId, documentTypesLen: documentTypes?.length });
+        return clean;
+    }
 
     const docType = documentTypes.find(dt => dt.id == documentTypeId);
-    if (!docType) return clean;
+    if (!docType) {
+        console.warn('[KunTable][doc] no se encontró docType con id:', documentTypeId, '| disponibles:', documentTypes.map(d => d.id));
+        return clean;
+    }
 
     const countryId = docType.country_id ?? docType.country?.id;
     let docCode = null;
     if (countryId && countries?.length) {
         const country = countries.find(c => c.id == countryId);
         const iso2 = country?.iso2 || country?.iso_code || country?.code;
+        console.log('[KunTable][doc] country_id:', countryId, '| country:', country, '| iso2:', iso2);
         if (iso2) docCode = `doc_${iso2.toLowerCase()}`;
+    } else {
+        console.warn('[KunTable][doc] sin countryId o countries vacío:', { countryId, countriesLen: countries?.length });
     }
     if (!docCode) {
         const iso2 = docType.country_iso2 || docType.country?.iso2;
         if (iso2) docCode = `doc_${iso2.toLowerCase()}`;
     }
-    if (!docCode) return clean;
 
     const docFormat = docType.short_name?.toLowerCase() || docType.name?.toLowerCase();
-    if (!docFormat) return clean;
+    console.log('[KunTable][doc] docType:', JSON.stringify(docType), '| docCode:', docCode, '| docFormat:', docFormat, '| value:', value);
 
+    if (!docCode || !docFormat) return clean;
     return formatDocValue(value, docCode, docFormat);
 }
 
@@ -175,6 +184,7 @@ export function formatValue(header, value, item = null) {
         const docTypeId = item?.document_type_id
             ?? item?.entity?.document_type_id
             ?? null;
+        console.log('[KunTable][doc] formatValue — header.value:', header.value, '| docTypeId:', docTypeId, '| value:', value, '| documentTypes len:', kunDocumentConfig.documentTypes?.length, '| countries len:', kunDocumentConfig.countries?.length);
         return formatDocValueByTypeId(value, docTypeId, kunDocumentConfig.documentTypes, kunDocumentConfig.countries);
     }
 
