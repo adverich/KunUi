@@ -32,18 +32,22 @@
     </KunDrawer>
 
 
-    <div class="h-full w-full flex overflow-auto">
-      <div class="h-full w-1/3 flex flex-col overflow-auto">
-        <div class="flex flex-col h-full overflow-auto">
-          <KunAutocomplete v-model="product" :items="products" />
-          <KunTextarea v-model="dataJson" auto-grow variant="outlined" />
-          <KunAutocomplete v-model="product" :items="products" />
-        </div>
-      </div>
+    <KunRow class="h-full flex flex-col overflow-auto bg-transparent">
+      <KunCol cols="6" class="h-full flex flex-col overflow-auto py-1">
+        <KunRow no-gutters class="h-full overflow-auto">
+          <KunCol cols="12" class="h-full flex flex-col overflow-auto py-1">
+            <KunAutocomplete v-model="product" :items="products" />
+            <KunTextarea v-model="dataJson" auto-grow variant="outlined" />
+            <KunAutocomplete v-model="product" :items="products" />
+          </KunCol>
+        </KunRow>
+      </KunCol>
 
-      <KunTable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" />
-      <!-- <DatePickerExample /> -->
-    </div>
+      <KunCol cols="6" class="h-full flex flex-col overflow-auto py-1">
+        <KunTable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" />
+        <!-- <DatePickerExample /> -->
+      </KunCol>
+    </KunRow>
   </div>
 </template>
 
@@ -60,6 +64,8 @@ import KunTextarea from './components/KunTextarea/src/components/KunTextarea.vue
 import KunAutocomplete from './components/KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunTextField from './components/KunTextField/src/components/KunTextField.vue';
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
+import KunRow from './components/KunRow/src/components/KunRow.vue';
+import KunCol from './components/KunCol/src/components/KunCol.vue';
 
 const leftDrawerStatus = ref(false);
 

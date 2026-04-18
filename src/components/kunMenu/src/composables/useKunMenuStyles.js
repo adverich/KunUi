@@ -44,8 +44,11 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
             const viewportWidth = window.innerWidth;
             const margin = 8;
             const pxHideDetails = props.hideDetails ? 0 : 19;
-            const contentWidth = menuEl.offsetWidth;
             const contentHeight = menuEl.offsetHeight;
+
+            // When width='w-full' the menu gets the Tailwind class w-full (100vw on body teleport),
+            // so offsetWidth is unreliable until the inline style is applied. Use parentRect.width instead.
+            const effectiveWidth = props.width === 'w-full' ? parentRect.width : menuEl.offsetWidth;
 
             // Smart vertical positioning: check available space above and below
             const spaceBelow = viewportHeight - parentRect.bottom + pxHideDetails - margin;
@@ -66,16 +69,18 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
 
             let left = 0;
             if (horizontalOrigin === 'right') {
-                left = parentRect.right - contentWidth;
+                left = parentRect.right - effectiveWidth;
             } else if (horizontalOrigin === 'center') {
-                left = parentRect.left + (parentRect.width / 2) - (contentWidth / 2);
+                left = parentRect.left + (parentRect.width / 2) - (effectiveWidth / 2);
             } else {
                 left = parentRect.left;
             }
 
-            // Horizontal boundary check
-            if (left + contentWidth > viewportWidth - margin) left = viewportWidth - contentWidth - margin;
-            if (left < margin) left = margin;
+            // Horizontal boundary check (skip for w-full: menu matches parent width, parent is already in viewport)
+            if (props.width !== 'w-full') {
+                if (left + effectiveWidth > viewportWidth - margin) left = viewportWidth - effectiveWidth - margin;
+                if (left < margin) left = margin;
+            }
 
             const newStyle = {
                 position: 'fixed',
