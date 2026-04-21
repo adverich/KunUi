@@ -35,10 +35,12 @@
         />
 
         <!-- Clearable -->
-        <button v-if="clearable && inputValue" type="button" @click="clearInput"
+         <KunIcon v-if="clearable && inputValue" @click="clearInput" size="small" color="error" :icon="icons.close"
+          class="mr-1 mt-1" :class="textColor" :disabled="disabled || readonly" />
+        <!-- <button v-if="clearable && inputValue" type="button" @click="clearInput"
           class="ml-2" :class="textColor" :disabled="disabled || readonly">
           &times;
-        </button>
+        </button> -->
       
         <slot />
       
