@@ -19,17 +19,20 @@ const emit = defineEmits(['update:page', 'update:itemsPerPage'])
 // --- Cálculos de Paginación ---
 
 const totalPages = computed(() => {
+  if (Number.isFinite(props.totalPages) && props.totalPages >= 0) return props.totalPages
   const ipp = Number(props.itemsPerPage) || 1
   return props.itemsLength === 0 ? 0 : Math.ceil(props.itemsLength / ipp)
 })
 
 // Primer índice mostrado (base 1)
 const start = computed(() => {
+  if (Number.isFinite(props.from)) return props.from
   return props.itemsLength === 0 ? 0 : (props.currentPage - 1) * Number(props.itemsPerPage) + 1
 })
 
 // Último índice mostrado
 const end = computed(() => {
+  if (Number.isFinite(props.to)) return props.to
   const raw = props.currentPage * Number(props.itemsPerPage)
   return raw > props.itemsLength ? props.itemsLength : raw
 })
