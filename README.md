@@ -111,6 +111,27 @@ import 'adverich-kun-ui/dist/adverich-kun-ui.css'
 - `KunModalFooter` - Pie de modal
 - `KunMultipleModalFooter` - Múltiples pies de modal
 
+## Backgrounds utilitarios
+
+La librería ahora incluye fondos globales listos para usar en contenedores, shells o layouts, con nombres más descriptivos de la tonalidad NeoPos:
+
+- `bg-neopos-ice-grid` - Cian frío con grilla pizarra de `26px`
+- `bg-neopos-mist-grid` - Azul neblina más suave, abierta y liviana con grilla de `32px`
+- `bg-neopos-blueprint-grid` - Azul técnico más marcado con grilla compacta de `18px`
+- `bg-neopos-aurora-grid` - Glow cian + índigo con doble radial y grilla de `24px`
+
+Ejemplo:
+
+```vue
+<template>
+  <section class="bg-neopos-ice-grid min-h-dvh">
+    <RouterView />
+  </section>
+</template>
+```
+
+Las cuatro clases adaptan automáticamente el patrón cuando existe `.dark` en un ancestro.
+
 ## Requisitos
 
 - Vue 3.5+
