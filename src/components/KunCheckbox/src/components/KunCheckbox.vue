@@ -57,14 +57,9 @@ const iconSizeClass = computed(() => ({
   <div
     :class="[
       'kun-checkbox',
-      'flex',
-      direction === 'vertical' ? 'flex-col items-start' : 'flex-row items-center',
-      'gap-2',
+      'flex flex-col',
       props.color,
-      {
-        'opacity-50 pointer-events-none': props.disabled || props.readonly,
-        'text-red-600': props.error || !isValid,
-      }
+      { 'text-red-600': props.error || !isValid }
     ]"
     :style="{
       width: props.width && `${props.width}px`,
@@ -82,15 +77,15 @@ const iconSizeClass = computed(() => ({
       class="hidden"
     />
 
-    <div class="flex items-center gap-2" @click="$emit('click:prepend')">
-      <slot name="prepend" />
-      <KunIcon v-if="props.prependIcon" :icon="props.prependIcon" />
-    </div>
-
     <div
-      class="relative inline-flex items-center justify-center cursor-pointer"
-      :class="[iconSizeClass]"
-      v-ripple="props.ripple"
+      :class="[
+        'flex gap-2',
+        direction === 'vertical' ? 'flex-col items-start' : 'flex-row items-center',
+        {
+          'cursor-pointer': !props.disabled && !props.readonly,
+          'opacity-50 pointer-events-none': props.disabled || props.readonly,
+        }
+      ]"
       role="checkbox"
       :aria-checked="props.indeterminate ? 'mixed' : isChecked"
       :aria-disabled="props.disabled"
@@ -100,17 +95,28 @@ const iconSizeClass = computed(() => ({
       @blur="() => { isFocused = false; emit('update:focused', false); if (props.validateOn?.includes('blur')) validate() }"
       @keydown.space.prevent="toggle"
     >
-      <KunIcon :icon="iconToRender" :class="[...iconClass, iconSizeClass]" />
-      <slot name="input" />
-    </div>
+      <div class="flex items-center gap-2" @click.stop="$emit('click:prepend')">
+        <slot name="prepend" />
+        <KunIcon v-if="props.prependIcon" :icon="props.prependIcon" />
+      </div>
 
-    <div class="cursor-pointer" v-if="props.label || $slots.label">
-      <slot name="label" :label="props.label">{{ props.label }}</slot>
-    </div>
+      <div
+        class="relative inline-flex items-center justify-center"
+        :class="[iconSizeClass]"
+        v-ripple="props.ripple"
+      >
+        <KunIcon :icon="iconToRender" :class="[...iconClass, iconSizeClass]" />
+        <slot name="input" />
+      </div>
 
-    <div class="flex items-center gap-2" @click="$emit('click:append')">
-      <slot name="append" />
-      <KunIcon v-if="props.appendIcon" :icon="props.appendIcon" />
+      <div v-if="props.label || $slots.label">
+        <slot name="label" :label="props.label">{{ props.label }}</slot>
+      </div>
+
+      <div class="flex items-center gap-2" @click.stop="$emit('click:append')">
+        <slot name="append" />
+        <KunIcon v-if="props.appendIcon" :icon="props.appendIcon" />
+      </div>
     </div>
 
     <div
