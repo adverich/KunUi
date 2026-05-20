@@ -173,7 +173,7 @@ import { computed, onMounted, ref, toRefs, watch, nextTick } from 'vue';
 import { isMobile } from '@/utils/_platform';
 
 // Componentes UI internos y externos
-import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
+import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
 import IconFilter from '../../../../icons/IconFilter.vue';
 import IconSearch from '../../../../icons/IconSearch.vue';
 import KunTableHeaders from './KunTableHeaders.vue';

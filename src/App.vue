@@ -44,7 +44,7 @@
       </KunCol>
 
       <KunCol cols="8" class="h-full flex flex-col overflow-auto py-1">
-        <KunTable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" />
+        <KunTable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" showExpand />
         <!-- <DatePickerExample /> -->
       </KunCol>
     </KunRow>

@@ -16,6 +16,7 @@ import IconMenuDownOutline from './IconMenuDownOutline.vue'
 import IconMenuUpOutline from './IconMenuUpOutline.vue'
 import IconMinus from './IconMinus.vue'
 import IconPencil from './IconPencil.vue'
+import IconPlus from './IconPlus.vue'
 import IconRadioboxBlank from './IconRadioboxBlank.vue'
 import IconRadioboxMarked from './IconRadioboxMarked.vue'
 import IconSearch from './IconSearch.vue'
@@ -41,6 +42,7 @@ export const icons = {
     menuUpOutline: IconMenuUpOutline,
     minus: IconMinus,
     pencil: IconPencil,
+    plus: IconPlus,
     radioboxBlank: IconRadioboxBlank,
     radioboxMarked: IconRadioboxMarked,
     search: IconSearch,

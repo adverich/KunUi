@@ -3,10 +3,10 @@
     <!-- Expand Icon -->
     <td v-if="showExpand" class="print:hidden" :class="mergedTdClass">
       <slot v-if="$slots.expandIcon" name="expand-icon" :item="item" :index="index" />
-      <button v-else @click="emits('toggle-expand', item)">
-        <span v-if="isExpanded">−</span>
-        <span v-else>+</span>
-      </button>
+
+      <KunBtn v-else @click="emits('toggle-expand', item)" rounded="rounded-full" size="xxs" bgColor="bg-transparent">
+        <KunIcon :icon="isExpanded ? icons.minus : icons.plus" :color="isExpanded ? 'text-red-500' : 'text-green-500'" />
+      </KunBtn>
     </td>
 
     <!-- Selection Checkbox -->
@@ -77,9 +77,12 @@
  * 4. Gestionar estilos condicionales por fila.
  */
 import { computed } from 'vue';
-import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue"
+import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue";
 import { getValue, formatValue } from '@/utils/tableFormatters';
-import { kunTableRowProps } from '../composables/kunTableRowProps'
+import { kunTableRowProps } from '../composables/kunTableRowProps';
+import KunBtn from '@/components/KunBtn/src/components/KunBtn.vue';
+import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
+import { icons } from '@/icons'
 
 const props = defineProps(kunTableRowProps)
 
