@@ -54,42 +54,42 @@ const colSpans = computed(() => {
 
 const colStyles = computed(() => {
   return {
-    '--kun-col-span': colSpans.value.base,
-    '--kun-col-span-sm': colSpans.value.sm,
-    '--kun-col-span-md': colSpans.value.md,
-    '--kun-col-span-lg': colSpans.value.lg,
-    '--kun-col-span-xl': colSpans.value.xl,
+    '--kun-col-grid-column': `span ${colSpans.value.base} / span ${colSpans.value.base}`,
+    '--kun-col-grid-column-sm': `span ${colSpans.value.sm} / span ${colSpans.value.sm}`,
+    '--kun-col-grid-column-md': `span ${colSpans.value.md} / span ${colSpans.value.md}`,
+    '--kun-col-grid-column-lg': `span ${colSpans.value.lg} / span ${colSpans.value.lg}`,
+    '--kun-col-grid-column-xl': `span ${colSpans.value.xl} / span ${colSpans.value.xl}`,
   }
 })
 </script>
 
 <style scoped>
 .kun-col {
-  grid-column: span var(--kun-col-span) / span var(--kun-col-span);
+  grid-column: var(--kun-col-grid-column);
   min-width: 0;
 }
 
 @media (min-width: 40rem) {
   .kun-col {
-    grid-column: span var(--kun-col-span-sm) / span var(--kun-col-span-sm);
+    grid-column: var(--kun-col-grid-column-sm);
   }
 }
 
 @media (min-width: 48rem) {
   .kun-col {
-    grid-column: span var(--kun-col-span-md) / span var(--kun-col-span-md);
+    grid-column: var(--kun-col-grid-column-md);
   }
 }
 
 @media (min-width: 64rem) {
   .kun-col {
-    grid-column: span var(--kun-col-span-lg) / span var(--kun-col-span-lg);
+    grid-column: var(--kun-col-grid-column-lg);
   }
 }
 
 @media (min-width: 80rem) {
   .kun-col {
-    grid-column: span var(--kun-col-span-xl) / span var(--kun-col-span-xl);
+    grid-column: var(--kun-col-grid-column-xl);
   }
 }
 </style>
