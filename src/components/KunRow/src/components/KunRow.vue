@@ -1,12 +1,23 @@
 <template>
-  <div :class="mergedClasses" v-bind="$attrs">
+  <div :class="rowClasses" :style="rowStyles" v-bind="$attrs">
     <slot />
   </div>
 </template>
 
 <script setup>
-import { useAttrs, computed, provide } from 'vue'
-const attrs = useAttrs()
+import { computed, provide } from 'vue'
+
+const DEFAULT_COLS = 12
+
+const normalizeCols = (value) => {
+  const parsedValue = Number.parseInt(value, 10)
+
+  if (!Number.isInteger(parsedValue) || parsedValue <= 0) {
+    return DEFAULT_COLS
+  }
+
+  return parsedValue
+}
 
 const props = defineProps({
   noGutters: {
@@ -26,16 +37,18 @@ const props = defineProps({
     default: 'space-around',
   },
   cols: {
-    type: String,
-    default: '12', // total de columnas del grid
+    type: [String, Number],
+    default: DEFAULT_COLS,
   }
 })
 
 provide('noGutters', props.noGutters)
 provide('dense', props.dense)
+const resolvedCols = computed(() => normalizeCols(props.cols))
+provide('rowCols', resolvedCols)
 
 const rowClasses = computed(() => {
-  const classes = ['grid', `grid-cols-${props.cols}`];
+  const classes = []
 
   if (!props.noGutters) {
     classes.push(props.dense ? '' : 'gap-4')
@@ -64,8 +77,10 @@ const rowClasses = computed(() => {
   return classes
 })
 
-const mergedClasses = computed(() => {
-  const userClasses = attrs.class ?? 'w-full'
-  return [...rowClasses.value, userClasses].join(' ')
+const rowStyles = computed(() => {
+  return {
+    display: 'grid',
+    gridTemplateColumns: `repeat(${resolvedCols.value}, minmax(0, 1fr))`,
+  }
 })
 </script>
