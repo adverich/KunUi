@@ -10,7 +10,7 @@
         :is-expanded="isExpanded(item)"
         :is-selected="isSelected(item)"
         :has-actions="hasActions"
-        :loading="actionLoadingMap?.[item.id] || false"
+        :loading="getActionLoading(item, index)"
         @toggle-expand="emits('toggle-expand', item)"
         @toggle-select="emits('toggle-select', item)"
         @row-click="emits('row-click', $event)"
@@ -18,7 +18,7 @@
         :customSlots="customSlots"
       >
         <template v-for="(_, name) in $slots" #[name]="slotProps">
-          <slot :name="name" v-bind="{ ...slotProps, item, index, loading: actionLoadingMap?.[item.id] || false }" />
+          <slot :name="name" v-bind="{ ...slotProps, item, index, loading: getActionLoading(item, index) }" />
         </template>
       </KunTableIterator>
 

@@ -48,6 +48,7 @@ export default () => ({
     showSelect: { type: Boolean, default: false }, // Muestra checkboxes de selección
     showExpand: { type: Boolean, default: false }, // Habilita expansión de filas
     showGroupBy: { type: Boolean, default: false }, // (Futuro) Agrupamiento
+    rowKey: { type: [String, Function], default: 'id' }, // Clave estable para identidad de filas
 
     // --- Visualización y Estilos ---
     hideDefaultHeader: { type: Boolean, default: false },

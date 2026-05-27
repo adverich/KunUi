@@ -7,6 +7,10 @@ export const kunTableIteratorsProps = {
   showSelect: Boolean,
   hasActions: Boolean,
   actionLoadingMap: Object,
+  getActionLoading: {
+    type: Function,
+    default: () => false,
+  },
   itemKey: {
     type: Function,
     default: (_, index) => index,

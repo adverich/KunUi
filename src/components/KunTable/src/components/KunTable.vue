@@ -12,12 +12,12 @@
       <div class="inline-flex items-center justify-center whitespace-nowrap" v-if="selectedItems.length">
         <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
         <template v-if="paginatedItems.length !== filteredItems.length">
-          <span v-if="paginatedItems.length === selectedItems.length" @click="selectCompleteAll"
+          <span v-if="allSelected && !allFilteredSelected" @click="selectCompleteAll"
             class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2 ml-2"
           >
             Seleccionar todos los {{ filteredItems.length }} registros
           </span>
-          <span v-if="filteredItems.length === selectedItems.length" @click="clearSelection" 
+          <span v-if="allFilteredSelected" @click="clearSelection" 
             class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2 ml-2"
           >
             Anular selección
@@ -95,9 +95,11 @@
             :show-expand="showExpand"
             :has-actions="hasActions"
             :action-loading-map="actionLoadingMap"
+            :item-key="getRowRenderKey"
             @toggle-expand="toggleExpand"
             @toggle-select="toggleSelect"
             :customSlots="customSlots"
+            :get-action-loading="getActionLoading"
           >
             <template v-for="(_, name) in $slots" #[name]="slotProps">
               <slot :name="name" v-bind="slotProps" />
@@ -118,9 +120,11 @@
             :show-expand="showExpand"
             :has-actions="hasActions"
             :action-loading-map="actionLoadingMap"
+            :item-key="getRowRenderKey"
             @toggle-expand="toggleExpand"
             @toggle-select="toggleSelect"
             :customSlots="customSlots"
+            :get-action-loading="getActionLoading"
           >
             <template v-for="(_, name) in $slots" #[name]="slotProps">
             <slot :name="name" v-bind="slotProps" />
@@ -188,6 +192,7 @@ import useExpand from '../composables/useExpand';
 import useOptions from '../composables/useOptions';
 import useSelect from '../composables/useSelect';
 import useFilter from '../composables/useFilter';
+import { resolveRowKeyValue } from '../composables/useRowKey';
 
 import kunTableProps from '../composables/KunTableProps';
 
@@ -204,6 +209,7 @@ const {
   headers,
   showExpand,
   showSelect,
+  rowKey,
   rowClass,
   hideDefaultFooter,
   hideDefaultHeader,
@@ -260,8 +266,25 @@ watch(searchQuery, (val) => {
 // Lógica de paginación y ordenamiento
 const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems, resolvedHeaders);
 
+const getRowKeyValue = (item, index = -1) => resolveRowKeyValue(item, rowKey.value, index);
+const getRowRenderKey = (item, index = -1) => getRowKeyValue(item, index) ?? `kun-table-row-${index}`;
+const getActionLoading = (item, index = -1) => {
+  const key = getRowKeyValue(item, index);
+  return key === null ? false : props.actionLoadingMap?.[key] || false;
+};
+
 // Lógica de selección de filas
-const { isSelected, toggleSelect, toggleSelectAll, allSelected, someSelected, moreThanPaginated, clearSelection, selectCompleteAll } = useSelect(paginatedItems, selectedItems, filteredItems);
+const {
+  isSelected,
+  toggleSelect,
+  toggleSelectAll,
+  allSelected,
+  allFilteredSelected,
+  someSelected,
+  moreThanPaginated,
+  clearSelection,
+  selectCompleteAll
+} = useSelect(paginatedItems, selectedItems, filteredItems, getRowKeyValue);
 
 // Lógica de expansión de filas
 const { isExpanded, toggleExpand } = useExpand();
@@ -279,6 +302,7 @@ const slotProps = computed(() => ({
   isExpanded,
   sortBy: options.sortBy,
   hasActions: props.hasActions,
+  getRowKey: getRowKeyValue,
 }));
 
 // --- Estilos ---

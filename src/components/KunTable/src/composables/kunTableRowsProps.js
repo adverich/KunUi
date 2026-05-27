@@ -19,5 +19,9 @@ export const kunTableRowsProps = {
   hasActions: Boolean,
   loading: Boolean,
   actionLoadingMap: Object,
+  getActionLoading: {
+    type: Function,
+    default: () => false,
+  },
   customSlots: Object,
 }

@@ -96,9 +96,11 @@
             :show-expand="showExpand"
             :has-actions="hasActions"
             :action-loading-map="actionLoadingMap"
+            :item-key="getRowRenderKey"
             @toggle-expand="toggleExpand"
             @toggle-select="toggleSelect"
             :customSlots="customSlots"
+            :get-action-loading="getActionLoading"
           >
             <template v-for="(_, name) in $slots" #[name]="innerSlotProps">
               <slot :name="name" v-bind="innerSlotProps" />
@@ -119,9 +121,11 @@
             :show-expand="showExpand"
             :has-actions="hasActions"
             :action-loading-map="actionLoadingMap"
+            :item-key="getRowRenderKey"
             @toggle-expand="toggleExpand"
             @toggle-select="toggleSelect"
             :customSlots="customSlots"
+            :get-action-loading="getActionLoading"
           >
             <template v-for="(_, name) in $slots" #[name]="innerSlotProps">
               <slot :name="name" v-bind="innerSlotProps" />
@@ -183,6 +187,7 @@ import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunTableFilter from '../../../KunTable/src/components/KunTableFilter.vue';
 
 import useExpand from '../../../KunTable/src/composables/useExpand';
+import { resolveRowKeyValue } from '../../../KunTable/src/composables/useRowKey';
 import kunTableServerSideProps from '../composables/KunTableServerSideProps';
 
 const emits = defineEmits([
@@ -202,6 +207,7 @@ const {
   headers,
   showExpand,
   showSelect,
+  rowKey,
   rowClass,
   hideDefaultFooter,
   hideDefaultHeader,
@@ -310,7 +316,24 @@ const resolvedHeaders = computed(() => {
   });
 });
 
-const isSelected = (item) => selectedItems.value.some(i => i?.id === item?.id);
+const getRowKeyValue = (item, index = -1) => resolveRowKeyValue(item, rowKey.value, index);
+const getRowRenderKey = (item, index = -1) => getRowKeyValue(item, index) ?? `kun-table-server-row-${index}`;
+const getActionLoading = (item, index = -1) => {
+  const key = getRowKeyValue(item, index);
+  return key === null ? false : props.actionLoadingMap?.[key] || false;
+};
+const isSameItem = (leftItem, rightItem, leftIndex = -1, rightIndex = -1) => {
+  const leftKey = getRowKeyValue(leftItem, leftIndex);
+  const rightKey = getRowKeyValue(rightItem, rightIndex);
+
+  if (leftKey !== null && rightKey !== null) {
+    return leftKey === rightKey;
+  }
+
+  return leftItem === rightItem;
+};
+
+const isSelected = (item) => selectedItems.value.some((selectedItem, index) => isSameItem(selectedItem, item, index));
 
 const clearSelection = () => {
   selectedItems.value = [];
@@ -318,7 +341,7 @@ const clearSelection = () => {
 
 const toggleSelect = (item) => {
   if (isSelected(item)) {
-    selectedItems.value = selectedItems.value.filter(i => i?.id !== item?.id);
+    selectedItems.value = selectedItems.value.filter((selectedItem, index) => !isSameItem(selectedItem, item, index));
     return;
   }
   selectedItems.value = [...selectedItems.value, item];
@@ -336,7 +359,9 @@ const toggleSelectAll = () => {
 };
 
 watch(rows, () => {
-  selectedItems.value = selectedItems.value.filter(item => rows.value.some(row => row?.id === item?.id));
+  selectedItems.value = selectedItems.value.filter((item, selectedIndex) => {
+    return rows.value.some((row, rowIndex) => isSameItem(item, row, selectedIndex, rowIndex));
+  });
 }, { deep: true });
 
 const { isExpanded, toggleExpand } = useExpand();
@@ -441,6 +466,7 @@ const slotProps = computed(() => ({
   isExpanded,
   sortBy: options.sortBy,
   hasActions: props.hasActions,
+  getRowKey: getRowKeyValue,
   pagination: pagination.value,
 }));
 

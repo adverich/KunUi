@@ -317,7 +317,8 @@ const handleSort = (sortBy) => {
 | showExpand | Boolean | false | Habilita expansión de filas |
 | hasActions | Boolean | false | Muestra columna de acciones |
 | actionLabel | String | 'Acciones' | Etiqueta de columna de acciones |
-| actionLoadingMap | Object | {} | Mapa de estado loading por ID de item |
+| actionLoadingMap | Object | {} | Mapa de estado loading por `rowKey` |
+| rowKey | String/Function | 'id' | Clave estable de fila. Fallback automático a `uuid`; también acepta función compuesta |
 | itemsPerPage | Number | 10 | Items por página |
 | page | Number | 1 | Página actual |
 | sortBy | Array/String | [] | v-model: Criterio de ordenamiento |
