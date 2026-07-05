@@ -22,6 +22,12 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
     let _rafId = null;
     let _scrollHandlers = [];
 
+    function resolveParentEl() {
+        const p = props.parentRef;
+        if (!p) return activatorEl.value;
+        return p?.$el ?? p?.value ?? p ?? null;
+    }
+
     function getScrollableAncestors(element) {
         const ancestors = [];
         let current = element.parentElement;
@@ -44,7 +50,6 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
 
         const el = parentEl?.$el || parentEl;
         if (!(el instanceof HTMLElement)) return;
-
         const scrollableAncestors = getScrollableAncestors(el);
 
         const onScroll = () => {
@@ -79,7 +84,7 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
     }
 
     function repositionMenu(attempt = 0) {
-        const parentEl = props.parentRef || activatorEl.value;
+        const parentEl = resolveParentEl();
         const menuEl = contentEl.value;
 
         if (!(parentEl instanceof HTMLElement) || !(menuEl instanceof HTMLElement)) return;
@@ -173,7 +178,7 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
     }
 
     function initializeMenu() {
-        const el = props.parentRef?.$el || contentEl.value?.parentElement
+        const el = resolveParentEl() || contentEl.value?.parentElement
 
         if (!(el instanceof HTMLElement)) {
             console.warn('[KunMenu] Activator no válido:', el)

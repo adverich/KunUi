@@ -38,6 +38,11 @@ import { useKunMenuComposable } from '../composables/useKunMenuComposable'
 const props = defineProps(kunMenuProps)
 const emits = defineEmits(['update:modelValue', 'click:outside', 'handleEscape'])
 
+const parentEl = computed(() => {
+  const p = props.parentRef
+  return p?.$el ?? p?.value ?? p ?? null
+})
+
 const {
   menuVisible,
   handleActivatorClick,
@@ -63,7 +68,7 @@ const { onClickOutside } = useKunMenuComposable()
 const { addEventListeners, removeEventListeners } = onClickOutside(
   contentEl,
   () => {
-    const activator = props.parentRef || activatorEl.value;
+    const activator = parentEl.value || activatorEl.value;
     const lastEvent = window.__lastClickEvent;
 
     if (activator?.contains?.(lastEvent?.target)) return;
@@ -71,7 +76,7 @@ const { addEventListeners, removeEventListeners } = onClickOutside(
     hideMenu()
     emits('click:outside')
   },
-  [props.parentRef?.$el]
+  props.parentRef ? [{ value: parentEl.value }] : []
 )
 
 onMounted(() => {
@@ -96,7 +101,7 @@ watch(menuVisible, (visible) => {
 
   if (visible) {
     repositionMenu()
-    startScrollTracking(props.parentRef)
+    startScrollTracking(parentEl.value)
     el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false });
     addEventListeners();
   } else {
@@ -120,7 +125,7 @@ function preventBodyScrollWhenAtEdge(e) {
 }
 
 function cleanupActivatorListeners() {
-  const el = props.parentRef?.$el
+  const el = parentEl.value
   if (el) {
     el.removeEventListener('click', handleActivatorClick)
     el.removeEventListener('mouseenter', () => handleHover('enter'))
