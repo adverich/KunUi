@@ -19,6 +19,65 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
         return locationMap[props.location]?.class || 'origin-top'
     })
 
+    let _rafId = null;
+    let _scrollHandlers = [];
+
+    function getScrollableAncestors(element) {
+        const ancestors = [];
+        let current = element.parentElement;
+
+        while (current) {
+            const style = window.getComputedStyle(current);
+            const { overflowY, overflow } = style;
+            if (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay' ||
+                overflow === 'auto' || overflow === 'scroll' || overflow === 'overlay') {
+                ancestors.push(current);
+            }
+            current = current.parentElement;
+        }
+
+        return ancestors;
+    }
+
+    function startScrollTracking(parentEl) {
+        stopScrollTracking();
+
+        const el = parentEl?.$el || parentEl;
+        if (!(el instanceof HTMLElement)) return;
+
+        const scrollableAncestors = getScrollableAncestors(el);
+
+        const onScroll = () => {
+            if (_rafId) return;
+            _rafId = requestAnimationFrame(() => {
+                _rafId = null;
+                repositionMenu();
+            });
+        };
+
+        const winOptions = { capture: true, passive: true };
+        window.addEventListener('scroll', onScroll, winOptions);
+        _scrollHandlers.push({ target: window, handler: onScroll, options: winOptions });
+
+        scrollableAncestors.forEach(ancestor => {
+            const opts = { passive: true };
+            ancestor.addEventListener('scroll', onScroll, opts);
+            _scrollHandlers.push({ target: ancestor, handler: onScroll, options: opts });
+        });
+    }
+
+    function stopScrollTracking() {
+        if (_rafId) {
+            cancelAnimationFrame(_rafId);
+            _rafId = null;
+        }
+
+        _scrollHandlers.forEach(({ target, handler, options }) => {
+            target.removeEventListener('scroll', handler, options);
+        });
+        _scrollHandlers = [];
+    }
+
     function repositionMenu(attempt = 0) {
         const parentEl = props.parentRef || activatorEl.value;
         const menuEl = contentEl.value;
@@ -128,23 +187,16 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
     }
 
     const computedMaxHeight = computed(() => {
-        const propsMax = typeof props.maxHeight === 'number'
-            ? props.maxHeight
-            : (props.maxHeight ? parseInt(props.maxHeight) : null);
-
-        if (smartMaxHeight.value !== null) {
-            const finalMax = propsMax ? Math.min(propsMax, smartMaxHeight.value) : smartMaxHeight.value;
-            return `${finalMax}px`;
-        }
-
-        return typeof props.maxHeight === 'number'
-            ? props.maxHeight + 'px'
-            : props.maxHeight
+        if (props.maxHeight) return undefined
+        if (smartMaxHeight.value === null) return undefined
+        return `${smartMaxHeight.value}px`
     })
 
     return {
         initializeMenu,
         repositionMenu,
+        startScrollTracking,
+        stopScrollTracking,
         contentEl,
         activatorEl,
         originClass,

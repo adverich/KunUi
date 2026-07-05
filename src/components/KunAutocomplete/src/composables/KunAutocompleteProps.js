@@ -72,7 +72,7 @@ export const KunAutocompleteProps = {
 
   // ***** STYLE ***** //
   height: { default: "h-[500px]" },
-  maxHeight: { default: "max-h-1/2" },
+  maxHeight: { default: undefined },
   density: { type: String, default: "default" },
   zIndex: { type: String, default: "z-250" },
   hideDetails: {

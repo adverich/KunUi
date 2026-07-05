@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-dvh overflow-hidden">
+  <div class="flex h-dvh flex-col overflow-hidden">
     <KunAppbar bg-color="bg-slate-400 dark:bg-slate-800" @toggle-drawer="leftDrawerStatus = !leftDrawerStatus" showDrawerButton>
       <template #actions>
         <KunSwitch v-model="currentTheme" true-value="light" false-value="dark" on-color="bg-black" off-color="bg-white"
@@ -36,9 +36,9 @@
       <KunCol cols="4" class="h-full flex flex-col overflow-auto py-1">
         <KunRow no-gutters class="h-full overflow-auto">
           <KunCol cols="12" class="h-full flex flex-col overflow-auto py-1">
-            <KunAutocomplete v-model="product" :items="products" />
+            <KunAutocomplete v-model="product" :items="products" max-height="max-h-[100px]" label="productosss" />
             <KunTextarea v-model="dataJson" auto-grow variant="outlined" />
-            <KunAutocomplete v-model="product" :items="products" />
+            <KunAutocomplete v-model="product" :items="products" max-height="max-h-[100px]" />
           </KunCol>
         </KunRow>
       </KunCol>

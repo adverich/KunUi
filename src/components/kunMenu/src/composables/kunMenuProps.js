@@ -25,8 +25,8 @@ export const kunMenuProps = {
     contained: Boolean,
     disabled: Boolean,
     eager: Boolean,
-    height: [String, Number],
     minHeight: [String, Number],
+    height: [String, Number],
     maxHeight: [String, Number],
     width: {
         type: [String, Number],

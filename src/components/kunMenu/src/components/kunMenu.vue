@@ -14,7 +14,7 @@
         role="menu" 
         tabindex="-1"
         class="relative shadow-xl rounded-b overflow-y-auto focus:outline-none border border-gray-300 dark:border-gray-700"
-        :class="[props.class, originClass, width, height, minWidth, maxWidth, minHeight, maxHeight, zIndex, bgColor]"
+        :class="[props.class, originClass, width, minWidth, maxWidth, minHeight, height, maxHeight, zIndex, bgColor]"
         :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }" 
         @keydown.escape.stop="handleEscape"
       >
@@ -50,6 +50,8 @@ const {
 const {
   initializeMenu,
   repositionMenu,
+  startScrollTracking,
+  stopScrollTracking,
   contentEl,
   activatorEl,
   originClass,
@@ -80,6 +82,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  stopScrollTracking()
   const el = contentEl.value
   if (el) {
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
@@ -93,9 +96,11 @@ watch(menuVisible, (visible) => {
 
   if (visible) {
     repositionMenu()
+    startScrollTracking(props.parentRef)
     el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false });
     addEventListeners();
   } else {
+    stopScrollTracking()
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
     removeEventListeners();
   }

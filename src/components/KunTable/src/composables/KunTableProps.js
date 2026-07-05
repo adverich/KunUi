@@ -62,7 +62,7 @@ export default () => ({
     trClass: { type: String, default: '' },
     thClass: { type: String, default: '' },
     tdClass: { type: [String, Function], default: '' },
-    selectedClass: { type: String, default: 'bg-blue-100' },
+    selectedClass: { type: String, default: 'bg-blue-100 dark:bg-blue-900' },
     stripedClass: { type: String, default: '' },
     tfootClass: { type: String, default: '', },
     rowClass: { type: String, default: '' },
