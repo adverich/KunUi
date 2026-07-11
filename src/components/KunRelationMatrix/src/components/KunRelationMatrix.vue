@@ -64,10 +64,16 @@ function getTarget(row, col) {
   return props.relationDirection === 'column' ? row : col
 }
 
+function getTargetKey() {
+  return props.relationDirection === 'column' ? props.rowKey : props.columnKey
+}
+
 function getTargetId(row, col) {
-  return props.relationDirection === 'column'
-    ? row?.[props.rowKey]
-    : col?.[props.columnKey]
+  return getNestedValue(getTarget(row, col), getTargetKey())
+}
+
+function getRelationTargetId(relation) {
+  return getNestedValue(relation, getTargetKey())
 }
 
 function hasRelation(row, col) {
@@ -75,7 +81,7 @@ function hasRelation(row, col) {
   const targetId = getTargetId(row, col)
   const related = props.getRelatedEntities?.(row, col) ?? getNestedValue(source, props.relationKey)
   const list = Array.isArray(related) ? related : []
-  return list.some(r => r?.id === targetId)
+  return list.some(relation => getRelationTargetId(relation) === targetId)
 }
 
 function onCheckboxChange(row, col, checked) {
@@ -97,16 +103,16 @@ function onCheckboxChange(row, col, checked) {
   }
 
   if (checked) {
-    const alreadyExists = related.some(r => r?.id === targetId)
+    const alreadyExists = related.some(relation => getRelationTargetId(relation) === targetId)
     if (!alreadyExists) {
       if (props.returnObject) {
         related.push(target)
       } else {
-        related.push({ id: targetId })
+        related.push({ [getTargetKey()]: targetId })
       }
     }
   } else {
-    const index = related.findIndex(r => r.id === targetId)
+    const index = related.findIndex(relation => getRelationTargetId(relation) === targetId)
     if (index !== -1) related.splice(index, 1)
   }
 
@@ -114,7 +120,7 @@ function onCheckboxChange(row, col, checked) {
     row,
     column: col,
     hasRelation: checked,
-    existingRelationData: related.find(r => r?.id === targetId)
+    existingRelationData: related.find(relation => getRelationTargetId(relation) === targetId)
   })
 }
 </script>
