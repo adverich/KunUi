@@ -9,7 +9,7 @@
         <slot name="prependHeader" />
       </div>
 
-      <div class="inline-flex items-center justify-center whitespace-nowrap" v-if="selectedItems.length">
+      <div class="inline-flex items-center justify-center whitespace-nowrap" v-if="selectedItems.length && smAndUp">
         <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
         <template v-if="paginatedItems.length !== filteredItems.length">
           <span v-if="allSelected && !allFilteredSelected" @click="selectCompleteAll"
@@ -174,7 +174,7 @@
  * - Adaptable a móvil (vista de tarjetas)
  */
 import { computed, onMounted, ref, toRefs, watch, nextTick } from 'vue';
-import { isMobile } from '@/utils/_platform';
+import { isMobile, smAndUp } from '@/utils/_platform';
 
 // Componentes UI internos y externos
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
