@@ -3,6 +3,7 @@ export const kunDatePickerProps = {
   range: { type: Boolean, default: false },
   label: { type: String, default: '' },
   placeholder: { type: String, default: '' },
+  onlyIcon: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   errorMessage: { type: String, default: '' },
   autoApply: { type: Boolean, default: true },

@@ -673,6 +673,21 @@ Selector de fecha y hora.
 <KunDatePicker v-model="date" label="Fecha" mode="date" />
 <KunDatePicker v-model="datetime" mode="datetime" :enable-time="true" />
 <KunDatePicker v-model="range" :range="true" />
+<KunDatePicker v-model="date" only-icon aria-label="Seleccionar fecha" />
+```
+
+| Prop | Tipo | Default | Descripción |
+|------|------|---------|-------------|
+| onlyIcon | Boolean | false | Reemplaza el campo por un botón de ícono que abre el calendario |
+
+**Slots:** `#icon` reemplaza `IconCalendarOutline` en el activador cuando `onlyIcon` está habilitado.
+
+```vue
+<KunDatePicker v-model="date" only-icon aria-label="Seleccionar fecha">
+  <template #icon>
+    <MiIcono />
+  </template>
+</KunDatePicker>
 ```
 
 ---

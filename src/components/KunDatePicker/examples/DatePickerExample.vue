@@ -64,6 +64,21 @@
                     Result: {{ rangeStr }}
                  </div>
             </section>
+
+            <!-- Icon-only trigger -->
+            <section class="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+                <h2 class="text-xl font-semibold mb-4">Activador de solo ícono</h2>
+                <KunDatePicker
+                    v-model="iconDate"
+                    only-icon
+                    label="Seleccionar fecha"
+                    value-format="YYYY-MM-DD"
+                    title="Abrir selector de fecha"
+                />
+                <div class="mt-2 text-xs text-slate-500 font-mono bg-slate-100 p-2 rounded">
+                    Result: {{ iconDate }}
+                </div>
+            </section>
         </div>
     </div>
   </div>
@@ -77,4 +92,5 @@ const dateStr = ref('2025-12-27');
 const dateTimeStr = ref(null);
 const timeStr = ref('03:30:00');
 const rangeStr = ref([]);
+const iconDate = ref(null);
 </script>

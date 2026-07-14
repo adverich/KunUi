@@ -33,7 +33,7 @@
 
 
     <KunRow class="h-full flex flex-col overflow-auto bg-transparent">
-      <KunCol cols="4" class="h-full flex flex-col overflow-auto py-1">
+      <!-- <KunCol cols="4" class="h-full flex flex-col overflow-auto py-1">
         <KunRow no-gutters class="h-full overflow-auto">
           <KunCol cols="12" class="h-full flex flex-col overflow-auto py-1">
             <KunAutocomplete v-model="product" :items="products" max-height="max-h-[100px]" label="productosss" />
@@ -41,11 +41,13 @@
             <KunAutocomplete v-model="product" :items="products" max-height="max-h-[100px]" />
           </KunCol>
         </KunRow>
-      </KunCol>
+      </KunCol> -->
 
+      <KunCol cols="4">
+        <KunDatePicker :only-icon="true" />
+      </KunCol>
       <KunCol cols="8" class="h-full flex flex-col overflow-auto py-1">
         <KunTable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" showExpand />
-        <!-- <DatePickerExample /> -->
       </KunCol>
     </KunRow>
   </div>
@@ -66,6 +68,7 @@ import KunTextField from './components/KunTextField/src/components/KunTextField.
 import KunNumberField from './components/KunNumberField/src/components/KunNumberField.vue';
 import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
+import KunDatePicker from './components/KunDatePicker/src/components/KunDatePicker.vue';
 
 const leftDrawerStatus = ref(false);
 

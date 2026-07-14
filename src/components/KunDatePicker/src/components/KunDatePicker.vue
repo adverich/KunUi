@@ -1,7 +1,23 @@
 <template>
-    <div class="relative w-full" ref="containerRef">
+    <div ref="containerRef" class="relative" :class="onlyIcon ? 'w-fit' : 'w-full'">
+        <!-- Icon-only trigger -->
+        <KunBtn
+            v-if="onlyIcon"
+            ref="triggerRef"
+            v-bind="$attrs"
+            :icon="triggerIcon"
+            :disabled="disabled"
+            :aria-label="$attrs['aria-label'] || label || 'Abrir calendario'"
+            :aria-expanded="isOpen"
+            aria-haspopup="dialog"
+            variant="plain"
+            size="md"
+            @click="togglePopover"
+        />
+
         <!-- Trigger Input -->
         <KunTextField
+            v-else
             ref="triggerRef"
             :model-value="displayInputValue"
             :label="label"
@@ -187,7 +203,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch, provide, inject } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick, watch, provide, inject, h, useSlots } from 'vue';
 import KunTextField from '../../../KunTextField/src/components/KunTextField.vue';
 import KunNumberField from '../../../KunNumberField/src/components/KunNumberField.vue';
 import { usePosition } from '../composables/usePosition';
@@ -196,8 +212,14 @@ import { kunDatePickerProps } from '../composables/kunDatePickerProps'
 
 import arrowUp from '@/icons/IconArrowUp.vue'
 import arrowDown from '@/icons/IconArrowDown.vue'
+import IconCalendarOutline from '@/icons/IconCalendarOutline.vue'
+
+defineOptions({ inheritAttrs: false })
 
 const props = defineProps(kunDatePickerProps)
+const slots = useSlots()
+
+const triggerIcon = () => slots.icon?.() ?? h(IconCalendarOutline)
 
 const emit = defineEmits(['update:modelValue', 'change', 'close', 'open']);
 

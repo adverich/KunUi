@@ -3,6 +3,7 @@ import IconArrowDown from './IconArrowDown.vue'
 import IconArrowDownUp from './IconArrowDownUp.vue'
 import IconArrowUp from './IconArrowUp.vue'
 import IconAsterisk from './IconAsterisk.vue'
+import IconCalendarOutline from './IconCalendarOutline.vue'
 import IconCheck from './IconCheck.vue'
 import IconCheckBlankOutline from './IconCheckBlankOutline.vue'
 import IconCheckIndetOutline from './IconCheckIndetOutline.vue'
@@ -29,6 +30,7 @@ export const icons = {
     arrowDownUp: IconArrowDownUp,
     arrowUp: IconArrowUp,
     asterisk: IconAsterisk,
+    calendarOutline: IconCalendarOutline,
     check: IconCheck,
     checkboxBlank: IconCheckBlankOutline,
     checkboxIndeterminate: IconCheckIndetOutline,
