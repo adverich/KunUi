@@ -9,7 +9,7 @@
         <slot name="prependHeader" />
       </div>
 
-      <div class="inline-flex items-center justify-center whitespace-nowrap" v-if="selectedItems.length && mdAndUp">
+      <div class="inline-flex items-center justify-center whitespace-nowrap" v-if="selectedItems.length && !hideSelected">
         <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
         <template v-if="paginatedItems.length !== filteredItems.length">
           <span v-if="allSelected && !allFilteredSelected" @click="selectCompleteAll"
@@ -219,6 +219,7 @@ const {
   items,
   searchable,
   debounceTime,
+  hideSelected
 } = propsRefs;
 
 // --- Lógica de Búsqueda ---

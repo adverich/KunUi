@@ -53,6 +53,7 @@ export default () => ({
     // --- Visualización y Estilos ---
     hideDefaultHeader: { type: Boolean, default: false },
     hideDefaultFooter: { type: Boolean, default: false },
+    hideSelected: { type: Boolean, default: false },
 
     // Clases personalizadas
     wrapperClass: { type: String, default: '' },

@@ -47,7 +47,9 @@
         <KunDatePicker :only-icon="true" />
       </KunCol>
       <KunCol cols="8" class="h-full flex flex-col overflow-auto py-1">
-        <KunTable class="text-white" searchable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" showExpand />
+        <KunTable class="text-white" searchable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" 
+          :showSelect="true" showExpand :hide-selected="smAndDown ? true : false" 
+        />
       </KunCol>
     </KunRow>
   </div>
@@ -55,6 +57,7 @@
 
 <script setup>
 import { ref, computed, nextTick } from 'vue';
+import { smAndDown } from '@/utils/_platform';
 import KunIcon from './components/KunIcon/src/components/KunIcon.vue';
 import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue';
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue';
