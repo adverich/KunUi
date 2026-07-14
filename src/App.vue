@@ -32,7 +32,7 @@
     </KunDrawer>
 
 
-    <KunRow class="h-full flex flex-col overflow-auto bg-transparent">
+    <KunRow class="h-full flex flex-col overflow-auto bg-blue-700">
       <!-- <KunCol cols="4" class="h-full flex flex-col overflow-auto py-1">
         <KunRow no-gutters class="h-full overflow-auto">
           <KunCol cols="12" class="h-full flex flex-col overflow-auto py-1">
@@ -47,7 +47,7 @@
         <KunDatePicker :only-icon="true" />
       </KunCol>
       <KunCol cols="8" class="h-full flex flex-col overflow-auto py-1">
-        <KunTable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" showExpand />
+        <KunTable class="text-white" searchable :items="products" :headers="headers" :filters="filters" v-model:selected="selected" :showSelect="true" showExpand />
       </KunCol>
     </KunRow>
   </div>
