@@ -8,7 +8,7 @@
         <slot name="prependHeader" />
       </div>
 
-      <div class="inline-flex items-center justify-center whitespace-nowrap" v-if="selectedItems.length">
+      <div class="inline-flex items-center justify-center whitespace-nowrap" v-if="selectedItems.length && !hideSelected">
         <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
         <span
           v-if="selectedItems.length"
@@ -216,6 +216,7 @@ const {
   pageOptions,
   searchable,
   filters,
+  hideSelected
 } = propsRefs;
 
 const normalizeSortBy = (rawSortBy) => {
