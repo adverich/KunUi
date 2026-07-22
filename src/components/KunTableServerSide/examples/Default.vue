@@ -33,11 +33,18 @@ const result = ref({
 
 function handleQuery(nextQuery) {
   console.log('Query server-side:', nextQuery);
+  loading.value = true;
+  window.setTimeout(() => {
+    query.page = nextQuery.page;
+    query.per_page = nextQuery.per_page;
+    query.sortBy = nextQuery.sortBy ?? query.sortBy;
+    loading.value = false;
+  }, 800);
 }
 </script>
 
 <template>
-  <div class="p-4">
+  <div class="p-4 h-[480px]">
     <KunTableServerSide
       :result="result"
       :headers="headers"

@@ -13,4 +13,5 @@ export const kunTableHeadersProps = {
   hasActions: Boolean,
   actionLabel: String,
   customHeaders: Object,
+  disabled: Boolean,
 }

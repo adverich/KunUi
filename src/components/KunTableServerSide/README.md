@@ -41,3 +41,5 @@ Admite además las props visuales y de comportamiento compartidas con `KunTable`
 - Espera una respuesta paginada estilo Laravel `paginate()`.
 - La búsqueda, filtros, ordenamiento y paginación se resuelven en el servidor.
 - La selección aplica a los items visibles de la página actual.
+- Con `loading=true` y filas visibles: muestra overlay con spinner, marca `aria-busy` y bloquea sort, paginación, búsqueda y filtros.
+- Con `loading=true` y sin filas: muestra `loadingText` en el empty state (sin overlay redundante).

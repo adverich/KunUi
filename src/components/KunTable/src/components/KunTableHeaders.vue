@@ -28,9 +28,13 @@
       <th
         v-for="header in headers"
         :key="header.key"
-        :class="[mergedThClass, header.headerAlign === 'right' ? 'text-right' : header.headerAlign === 'left' ? 'text-left' : 'text-center']"
+        :class="[
+          mergedThClass,
+          header.headerAlign === 'right' ? 'text-right' : header.headerAlign === 'left' ? 'text-left' : 'text-center',
+          disabled && header.sortable ? 'opacity-60' : '',
+        ]"
         @click="toggleSort(header)"
-        :style="{ cursor: header.sortable ? 'pointer' : 'default' }"
+        :style="{ cursor: header.sortable && !disabled ? 'pointer' : 'default' }"
       >
         <template v-if="customHeaders?.[`header.${header.value}`]">
           <component
@@ -85,7 +89,7 @@ function toggleSelectAll() {
 
 // Maneja lógica de cambio de orden (asc -> desc -> asc)
 function toggleSort(header) {
-  if (!header.sortable) return;
+  if (props.disabled || !header.sortable) return;
 
   let current = null;
 

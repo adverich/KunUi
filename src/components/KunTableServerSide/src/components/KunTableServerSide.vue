@@ -1,8 +1,14 @@
 <template>
-  <div :class="mergedWrapperClass" v-bind="$attrs" style="user-select: text">
+  <div
+    :class="mergedWrapperClass"
+    v-bind="$attrs"
+    style="user-select: text"
+    :aria-busy="loading ? 'true' : undefined"
+  >
     <div
       v-if="searchable || filterable || $slots.prependHeader || $slots.prependSearch || $slots.appendSearch"
       class="p-2 bg-surface print:hidden flex w-full justify-between"
+      :class="{ 'pointer-events-none opacity-60': loading }"
     >
       <div class="w-full flex items-center" v-if="showSearchBtn || !isMobile">
         <slot name="prependHeader" />
@@ -52,7 +58,7 @@
       </div>
     </div>
 
-    <div class="flex-1 overflow-auto bg-surface">
+    <div class="relative flex-1 overflow-auto bg-surface">
       <table :class="mergedTableClass" v-if="rows.length">
         <template v-if="$slots.colgroup && !isMobile">
           <colgroup><slot name="colgroup" v-bind="slotProps" /></colgroup>
@@ -72,6 +78,7 @@
           :th-class="thClass"
           :has-actions="hasActions"
           :action-label="actionLabel"
+          :disabled="loading"
           @sort="updateSort"
           @toggle-select-all="toggleSelectAll"
           :customHeaders="customSlots"
@@ -143,9 +150,21 @@
           {{ loading ? loadingText : noDataText }}
         </div>
       </div>
+
+      <div
+        v-if="loading && rows.length"
+        class="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-white/60 dark:bg-black/50 print:hidden"
+      >
+        <KunLoaderCircular :size="40" :width="4" />
+        <span class="text-sm text-slate-700 dark:text-slate-200">{{ loadingText }}</span>
+      </div>
     </div>
 
-    <div v-if="!hideDefaultFooter" class="sticky bottom-0 z-10 print:hidden">
+    <div
+      v-if="!hideDefaultFooter"
+      class="sticky bottom-0 z-10 print:hidden"
+      :class="{ 'pointer-events-none opacity-50': loading }"
+    >
       <KunTableFooter
         :items-length="pagination.total"
         :items-per-page="options.itemsPerPage"
@@ -185,6 +204,7 @@ import KunTableRows from '../../../KunTable/src/components/KunTableRows.vue';
 import KunTableIterators from '../../../KunTable/src/components/KunTableIterators.vue';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunTableFilter from '../../../KunTable/src/components/KunTableFilter.vue';
+import KunLoaderCircular from '../../../KunLoaderCircular/src/components/KunLoaderCircular.vue';
 
 import useExpand from '../../../KunTable/src/composables/useExpand';
 import { resolveRowKeyValue } from '../../../KunTable/src/composables/useRowKey';
@@ -448,6 +468,7 @@ const clearFilters = () => {
 };
 
 const updateSort = ({ key, order }) => {
+  if (props.loading) return;
   const existing = options.sortBy.find(s => s.key === key);
   if (existing) {
     options.sortBy = [{ key, order }];
