@@ -17,28 +17,32 @@ export function useKunInfiniteScroll({
             : 20
     )
 
-    /////////***************************** *//////////////////////////////////
-    // MEJORAR EL FILTRADO PORQUE SOLO ESTA BUSCANDO Y FILTRANDO POR STRINGS
-    /////////***************************** *//////////////////////////////////
     const filteredItems = computed(() => {
         const list = items.value || [];
-        const q = search.value == null ? '' : String(search.value).trim().toLowerCase();
-        if (!q) return list;
+        const terms = search.value == null
+            ? []
+            : String(search.value).trim().toLowerCase().split(/\s+/).filter(Boolean);
+
+        if (terms.length === 0) return list;
 
         const keys = safeSearchableKeys.value;
 
         return list.filter(item => {
+            let values;
+
             if (keys.length > 0) {
-                // Buscar solo por las claves indicadas (soporta rutas a.b.c)
-                return keys.some(key => {
-                    const val = getByPath(item, key);
-                    if (val == null) return false;
-                    return toStringArray(val, 1).some(s => s.toLowerCase().includes(q));
-                });
+                // Buscar solo por las claves indicadas (soporta rutas a.b.c).
+                values = keys.flatMap(key => toStringArray(getByPath(item, key), 1));
+            } else {
+                // Sin keys: si es primitivo, comparar directo; si es objeto/array, comparar sus valores (shallow).
+                values = toStringArray(item, 1);
             }
 
-            // Sin keys: si es primitivo, comparar directo; si es objeto/array, comparar sus valores (shallow)
-            return toStringArray(item, 1).some(s => s.toLowerCase().includes(q));
+            const normalizedValues = values.map(value => value.toLowerCase());
+
+            // Cada término debe aparecer en alguno de los valores; pueden coincidir
+            // en claves diferentes y en cualquier orden.
+            return terms.every(term => normalizedValues.some(value => value.includes(term)));
         });
     });
 
