@@ -1,6 +1,12 @@
 <template>
-  <div class="relative w-full">
-    <label v-if="label" class="block text-sm font-medium mb-1">
+  <div class="relative flex w-full flex-col">
+    <label
+      v-if="label"
+      :class="[
+        'absolute left-2 z-10 px-1 text-black/80 transition-all duration-200 ease-in-out pointer-events-none select-none dark:text-white/80',
+        isLabelActive ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80',
+      ]"
+    >
       {{ label }}
     </label>
 
@@ -50,7 +56,7 @@
       <button
         v-if="clearable && fileNames.length"
         @click.stop="clearFiles"
-        class="text-gray-500 hover:text-red-500"
+        class="cursor-pointer text-gray-500 hover:text-red-500"
       >
         <span v-if="clearIcon">{{ renderIconSlot(clearIcon) }}</span>
         <span v-else>✕</span>
@@ -127,6 +133,7 @@ function onBlur() {
 }
 
 const fileNames = computed(() => internalValue.value.map(f => f.name))
+const isLabelActive = computed(() => props.dirty || isFocused.value || fileNames.value.length > 0)
 const totalBytes = computed(() => internalValue.value.reduce((acc, f) => acc + f.size, 0))
 const totalBytesReadable = computed(() => {
   const size = totalBytes.value

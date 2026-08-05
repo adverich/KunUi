@@ -5,6 +5,10 @@ export const kunFileInputProps = {
   chips: Boolean,
   showSize: [Boolean, Number],
   label: String,
+  dirty: {
+    type: Boolean,
+    default: true,
+  },
   disabled: Boolean,
   error: Boolean,
   errorMessages: [String, Array],
