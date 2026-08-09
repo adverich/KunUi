@@ -356,16 +356,24 @@ const headers = [
 ```javascript
 const filters = [
   {
-    value: 'rol',            // Clave del filtro (debe coincidir con header.value)
+    value: 'rol',            // Clave del filtro (debe coincidir con header.value / row key)
     label: 'Rol',            // Etiqueta visible
     text: 'Rol',             // Texto alternativo
     name: 'roles',           // Nombre para textos genéricos
     items: [...],            // Lista de opciones para el filtro
+    'item-value': 'id',      // Clave de comparación (default: 'id')
     placeholderText: 'Seleccionar rol',
     textNoItem: 'No hay roles disponibles'
   }
 ]
 ```
+
+**Matching de filtros por columna:**
+
+- Selección múltiple dentro de un filtro: **OR** (pasa si coincide alguno de los valores seleccionados).
+- Varios filtros activos: **AND**.
+- Celda escalar: igualdad exacta (case-insensitive) contra `item-value`.
+- Celda array (relaciones M2M, p. ej. `price_lists`): **includes-any** — pasa si algún miembro del array tiene `item-value` (default `id`) entre los seleccionados.
 
 **Slots:**
 

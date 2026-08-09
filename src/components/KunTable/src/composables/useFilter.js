@@ -145,11 +145,24 @@ export default function useFilter(props, debounceTime, resolvedHeaders, debug = 
             return v
         }
 
-        // Si el filtro es un array (multiselect), verificamos si incluye el valor
-        if (Array.isArray(value)) {
-            return value.some(v => exactMatchFilter(rawValue, extractFilterVal(v)))
+        // Extrae el valor comparable de un miembro de celda (relación) o deja el primitivo
+        const extractCellVal = (v) => {
+            if (v != null && typeof v === 'object' && !Array.isArray(v)) {
+                return v[itemValueKey]
+            }
+            return v
         }
-        return exactMatchFilter(rawValue, extractFilterVal(value))
+
+        // Multiselect: OR entre valores seleccionados.
+        // Celda array (M2M): includes-any sobre miembros; celda escalar: igualdad exacta.
+        const selectedVals = (Array.isArray(value) ? value : [value]).map(extractFilterVal)
+        const cellVals = Array.isArray(rawValue)
+            ? rawValue.map(extractCellVal)
+            : [rawValue]
+
+        return selectedVals.some((sel) =>
+            cellVals.some((cell) => exactMatchFilter(cell, sel))
+        )
     }
 
     // Computed principal que retorna los items filtrados
