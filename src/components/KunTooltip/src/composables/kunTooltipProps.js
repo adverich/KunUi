@@ -12,4 +12,5 @@ export const kunTooltipProps = {
   rounded: { type: String, default: 'rounded' },
   textSize: { type: String, default: 'text-sm' },
   dist: { type: [Number, Object], default: () => ({ x: 0, y: 8 }) },
+  flip: { type: Boolean, default: true },
 }

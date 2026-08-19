@@ -26,8 +26,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, onBeforeUnmount, nextTick } from 'vue'
 import { kunTooltipProps } from '../composables/kunTooltipProps'
+import { useTooltipPosition } from '../composables/useTooltipPosition'
 
 const props = defineProps(kunTooltipProps)
 
@@ -37,7 +38,17 @@ const tooltipId = 'tooltip-' + Math.random().toString(36).slice(2, 11)
 const isVisible = ref(false)
 const activatorRef = ref(null)
 const tooltipRef = ref(null)
-const tooltipStyle = ref({})
+
+const { tooltipStyle, updatePosition } = useTooltipPosition(
+  activatorRef,
+  tooltipRef,
+  isVisible,
+  () => ({
+    location: props.location,
+    flip: props.flip,
+    dist: props.dist,
+  }),
+)
 
 // Timers
 let openTimer = null
@@ -111,48 +122,13 @@ const activatorProps = computed(() => {
 })
 
 // Clases
-const baseClass = "absolute px-3 py-2 shadow"
+const baseClass = 'fixed px-3 py-2 shadow'
 const mergedClass = computed(() => [baseClass, props.textColor, props.bgColor, props.textSize, props.rounded, props.class])
-
-const offset = computed(() => {
-  if (typeof props.dist === 'number') return { x: 0, y: props.dist }
-  return { x: props.dist.x ?? 0, y: props.dist.y ?? 0 }
-})
-
-// Posicionamiento
-function updatePosition() {
-  const a = activatorRef.value?.getBoundingClientRect()
-  const t = tooltipRef.value?.getBoundingClientRect()
-  if (!a || !t) return
-
-  const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-  const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
-  const { x, y } = offset.value
-
-  const positions = {
-    top:    { top: `${a.top + scrollTop - t.height - y}px`, left: `${a.left + scrollLeft + a.width/2 - t.width/2 + x}px` },
-    bottom: { top: `${a.bottom + scrollTop + y}px`, left: `${a.left + scrollLeft + a.width/2 - t.width/2 + x}px` },
-    left:   { top: `${a.top + scrollTop + a.height/2 - t.height/2 + y}px`, left: `${a.left + scrollLeft - t.width - x}px` },
-    right:  { top: `${a.top + scrollTop + a.height/2 - t.height/2 + y}px`, left: `${a.right + scrollLeft + x}px` },
-  }
-
-  tooltipStyle.value = positions[props.location] || positions.top
-}
-
-// Scroll / Resize
-const onScrollOrResize = () => { if (isVisible.value) updatePosition() }
-
-onMounted(() => {
-  window.addEventListener('scroll', onScrollOrResize)
-  window.addEventListener('resize', onScrollOrResize)
-})
 
 onBeforeUnmount(() => {
   clearTimeout(openTimer)
   clearTimeout(closeTimer)
   clearTimeout(safetyTimer)
   isVisible.value = false
-  window.removeEventListener('scroll', onScrollOrResize)
-  window.removeEventListener('resize', onScrollOrResize)
 })
 </script>
