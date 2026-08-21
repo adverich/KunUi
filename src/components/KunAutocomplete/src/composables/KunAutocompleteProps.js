@@ -69,6 +69,10 @@ export const KunAutocompleteProps = {
     type: Boolean,
     default: false,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 
   // ***** STYLE ***** //
   height: { default: "h-[500px]" },

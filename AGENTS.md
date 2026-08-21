@@ -145,6 +145,7 @@ Selector con autocompletado y búsqueda.
 | itemSubtitle | String/Array | null | Campo(s) para subtítulo |
 | returnObject | Boolean | false | Retorna objeto completo |
 | multiple | Boolean | false | Selección múltiple |
+| disabled | Boolean | false | Deshabilita el campo y sus acciones |
 | clearable | Boolean | false | Botón de limpiar |
 | searchableKeys | Array | [] | Campos para búsqueda |
 | hasCreateItem | Boolean | false | Muestra botón de crear |

@@ -104,6 +104,8 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     function getSelectedItem(item) {
+        if (props.disabled || checkDisabled(item)) return;
+
         try {
             let updated = null;
             selectedItem.value = fullCopy(item);
@@ -232,6 +234,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     function openMenu() {
+        if (props.disabled) return;
         if (!menuModel.value) menuModel.value = true;
     }
 
@@ -240,6 +243,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     function toggleMenu() {
+        if (props.disabled) return;
         menuModel.value = !menuModel.value;
     }
 
@@ -258,6 +262,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     function onMenuKeydown(event) {
+        if (props.disabled) return;
         const key = event.key;
         if (isAlphanumeric(key) || key === "Backspace") {
             openMenu();
@@ -284,16 +289,19 @@ export function useAutocomplete(props, emits, modelValue, items) {
 
     // FUNCION PARA EMITIR EVENTO DE CREACION DE NUEVO ITEM
     function createItem() {
+        if (props.disabled) return;
         menuModel.value = false;
         emits("createItem");
     }
 
     function removeItem(item) {
+        if (props.disabled) return;
         let index = modelValue.value.indexOf(item);
         modelValue.value.splice(index, 1);
     }
 
     function clearSelection() {
+        if (props.disabled) return;
         if (search.value !== "") search.value = "";
 
         if (modelValue.value !== null) {

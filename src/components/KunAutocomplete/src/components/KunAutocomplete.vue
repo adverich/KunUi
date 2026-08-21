@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-fit" ref="parentRef">
-    <KunTextField v-model="search" :label="label" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
+    <KunTextField v-model="search" :label="label" :disabled="disabled" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
       autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
       @blur="textFieldBlur" @keyDown="textKeyDown" @keyDown.enter.prevent="handleEnter"
       :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
@@ -10,7 +10,7 @@
         <div
           v-if="isArray(modelValue) && isNotEmpty(modelValue)"
           class="flex flex-nowrap items-center space-x-1 min-w-[calc(100%-56px)] overflow-x-auto overflow-y-hidden"
-          @click="toggleMenu"
+          @click="!disabled && toggleMenu()"
         >
           <template v-for="item in modelValue" :key="item.id ?? item.name">
             <KunChip size="small" variant="pill">
@@ -21,7 +21,7 @@
                   :icon="icons.close"
                   size="small"
                   class="ml-1"
-                  @click="removeItem(item)"
+                  @click.stop="removeItem(item)"
                 />
               </div>
             </KunChip>
@@ -135,12 +135,20 @@ watch(() => modelValue.value, (newValue, oldValue) => {
   }
 })
 
+watch(() => props.disabled, (disabled) => {
+  if (disabled) {
+    closeMenu();
+  }
+})
+
 function handleEscape() {
   menuModel.value = false;
   textFieldRef.value.inputField?.focus();
 }
 
 function textKeyDown(e) {
+  if (props.disabled) return;
+
   const key = e.key
 
   if (key === 'Tab' || key === 'Shift' || key === 'Escape') {
@@ -166,6 +174,7 @@ function txtUpdated(event) {
 }
 
 function txtFocused() {
+  if (props.disabled) return;
   validate(modelValue);
 }
 
@@ -179,6 +188,8 @@ function textFieldBlur() {
 }
 
 function handleEnter(e) {
+  if (props.disabled) return;
+
   if (!search.value) return;
 
   let found = null;
@@ -229,6 +240,6 @@ function handleEnter(e) {
 }
 
 defineExpose({
-  focus: () => nextTick(() => textFieldRef.value?.focus())
+  focus: () => !props.disabled && nextTick(() => textFieldRef.value?.focus())
 });
 </script>
