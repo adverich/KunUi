@@ -3,7 +3,7 @@ import path from "path";
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import kunUiAutoExportsPlugin from './src/plugins/vite-plugin-kun-exports';
+import kunUiAutoExportsPlugin from './src/plugins/vite-plugin-kun-exports.js';
 import fs from 'fs';
 
 /**
@@ -14,8 +14,8 @@ function copyDocsPlugin() {
     name: 'copy-docs-plugin',
     writeBundle() {
       // Copiar AGENTS.md al directorio dist
-      const srcAgents = path.resolve(__dirname, 'AGENTS.md');
-      const destAgents = path.resolve(__dirname, 'dist', 'AGENTS.md');
+      const srcAgents = path.resolve(import.meta.dirname, 'AGENTS.md');
+      const destAgents = path.resolve(import.meta.dirname, 'dist', 'AGENTS.md');
       
       if (fs.existsSync(srcAgents)) {
         fs.copyFileSync(srcAgents, destAgents);
@@ -23,8 +23,8 @@ function copyDocsPlugin() {
       }
 
       // Copiar README.md al directorio dist
-      const srcReadme = path.resolve(__dirname, 'README.md');
-      const destReadme = path.resolve(__dirname, 'dist', 'README.md');
+      const srcReadme = path.resolve(import.meta.dirname, 'README.md');
+      const destReadme = path.resolve(import.meta.dirname, 'dist', 'README.md');
       
       if (fs.existsSync(srcReadme)) {
         fs.copyFileSync(srcReadme, destReadme);
@@ -44,7 +44,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/index.js'),
+      entry: path.resolve(import.meta.dirname, 'src/index.js'),
       name: 'KunUI',
       formats: ['es'],
       fileName: (format) => `kun-ui.${format}.js`,
@@ -64,7 +64,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(import.meta.dirname, './src')
     },
     dedupe: ['vue']
   },

@@ -146,8 +146,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
             else modelValue.value = updated;
 
             emits('selectedItem', selectedItem.value);
-        } catch (e) {
-            console.log(e)
+        } catch {
         } finally {
             nextTick(() => {
                 lightReset();
