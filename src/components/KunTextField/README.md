@@ -14,9 +14,11 @@ import KunTextField from '@/components/KunTextField/KunTextField.vue';
 </template>
 ```
 
-## Props
+## Atributos HTML
 
-Este componente no recibe props.
+Los atributos `id`, `name`, `autocomplete`, `required`, `readonly`, `disabled`,
+`inputmode`, `minlength`, `maxlength`, `pattern` y `spellcheck` se aplican al
+`<input>` nativo interno. `rules` sigue disponible para validación de negocio/UI.
 
 
 ## Eventos

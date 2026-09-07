@@ -28,6 +28,11 @@ export const KunNumberFieldProps = {
   error: { type: Boolean, default: false },
   errorMessages: [String, Array],
   rules: { type: Array, default: () => [] },
+  // Atributos HTML nativos
+  id: { type: String, default: null },
+  name: { type: String, default: null },
+  autocomplete: { type: String, default: 'off' },
+  required: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   readonly: { type: Boolean, default: false },
   clearable: { type: Boolean, default: false },

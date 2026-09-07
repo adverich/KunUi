@@ -44,6 +44,7 @@
       </KunCol> -->
 
       <KunCol cols="4">
+        <KunSwitch v-model="switchBtn" />
         <KunDatePicker :only-icon="true" />
       </KunCol>
       <KunCol cols="8" class="h-full flex flex-col overflow-auto py-1">
@@ -84,6 +85,7 @@ const product = ref();
 
 const currentTheme = ref('dark')
 const selected = ref({})
+const switchBtn = ref(false);
 
 const dataJson = ref('{"config":{"currency":"ARS","customers":{"birthayRemember":false},"dateLocale":"es-AR","decimalPrecision":2,"getInvoiceTypesBy":"role","getPaymentMethodsBy":"role","hasBarcodeCamScanner":false,"hasCashRegisterControl":false,"hasEmployeeVisitControl":false,"hasGenericProducts":true,"hasFreeCustomer":true,"hasPointReward":false,"hasSendReceiptMail":false,"hasSendReceiptWsp":false,"includeNoTradeSales":true,"locale":"es-AR","numberFieldMode":"natural","receipt":{"applyRoundingTo":"total","discountBeforeVat":false,"hasVatDiscriminated":true,"imputePaymentsToInvoice":false,"logBilling":false,"onlyAuthorizeLogBilling":false,"printInvoicePhone":true,"printInvoiceAddress":true,"printCXPhone":false,"printCXAddress":false,"printEmployeePhone":false,"printOVPhone":false,"printOVAddress":false,"printSku":false,"showDiscount":false,"skipAppliedPromo":false,"showRoundingDifference":false,"subtotalIncludesDisc":false},"roundAndPrec":{"currencyRoundingPrecision":1,"decimalPrecision":2,"roundingMode":"halfUp"},"workOffLine":true}}')
 

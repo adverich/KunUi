@@ -12,7 +12,7 @@
       {{ label }}
     </label>
 
-    <div class="w-full flex flex-col justify-center relative" v-bind="$attrs">
+    <div class="w-full flex flex-col justify-center relative">
       <div
         class="flex items-center w-full h-full border"
         :class="[bgInput, rounded,
@@ -47,15 +47,21 @@
 
         <!-- Input -->
         <input
+          v-bind="$attrs"
           :id="uid"
+          :name="name"
           ref="numberInput"
           type="text"
           :value="inputValue"
           :placeholder="placeholder"
           :readonly="readonly"
           :disabled="disabled"
+          :required="required"
           :maxlength="maxlength"
-          autocomplete="off"
+          :autocomplete="autocomplete"
+          :min="nativeMin"
+          :max="nativeMax"
+          :step="step"
           class="w-full h-full bg-transparent rounded focus:outline-none"
           :aria-invalid="error ? 'true' : 'false'"
           :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '']"
@@ -177,7 +183,7 @@ const emits = defineEmits([
   'keyUp'
 ]);
 
-const uid = `number-input-${getCurrentInstance().uid}`;
+const uid = props.id || `number-input-${getCurrentInstance().uid}`;
 const slots = useSlots();
 const prependIconSlot = !!slots['prepend-icon'];
 const appendIconSlot = !!slots['append-icon'];
@@ -220,4 +226,7 @@ const inputDensity = computed(() =>
   props.density === "comfortable" ? "p-2" :
   "p-3"
 );
+
+const nativeMin = computed(() => Number.isFinite(Number(props.min)) ? props.min : null);
+const nativeMax = computed(() => Number.isFinite(Number(props.max)) ? props.max : null);
 </script>

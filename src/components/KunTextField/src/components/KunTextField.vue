@@ -8,7 +8,7 @@
       {{ label }}
     </label>
 
-    <div class="w-full flex flex-col justify-center relative" v-bind="$attrs">
+    <div class="w-full flex flex-col justify-center relative">
       <div class="flex flex-row items-center w-full h-full border" :class="[bgInput, rounded, 
         inputFocused ? 'border-slate-400 dark:border-slate-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : borderColor,
         disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text', 
@@ -24,8 +24,10 @@
         <slot name="prepend-input-content" />
 
         <!-- Input -->
-        <input ref="inputField" :type="inputType" :value="inputValue" :id="uid" :placeholder="placeholder"
-          :disabled="disabled" :readonly="readonly" :maxlength="maxlength" autocomplete="off"
+        <input ref="inputField" v-bind="$attrs" :type="inputType" :value="inputValue" :id="uid" :name="name"
+          :placeholder="placeholder" :autocomplete="autocomplete" :required="required" :disabled="disabled"
+          :readonly="readonly" :inputmode="inputmode" :minlength="minlength" :maxlength="maxlength"
+          :pattern="pattern" :spellcheck="spellcheck"
           class="w-full h-full bg-transparent focus:outline-none" :aria-invalid="hasError ? 'true' : 'false'"
           :class="[inputDensity, textColor, placeholderColor, rounded, textCenter ? 'text-center' : '', inputStyle]"
           :aria-describedby="hasError ? `error-${uid}` : null" 
@@ -144,7 +146,7 @@ defineExpose({
   }
 });
 
-const uid = `input-${getCurrentInstance().uid}`;
+const uid = props.id || `input-${getCurrentInstance().uid}`;
 const isActive = computed(() => ( inputFocused.value || inputValue.value !== '' || props.dirty ));
 
 const slots = useSlots();
