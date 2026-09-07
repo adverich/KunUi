@@ -30,4 +30,6 @@ export const kunDatePickerProps = {
   maxHeight: { type: String, default: '400px' },
   inputClass: { default: '' },
   dialogClass: { default: '' },
+  inputProps: { type: Object, default: () => ({}) },
+  timeFieldProps: { type: Object, default: () => ({}) },
 }

@@ -15,7 +15,7 @@ export const kunListItemProps = {
   tile: Boolean,
   ripple: { type: [Boolean, Object], default: true },
   bgItems: { type: String, default: 'bg-transparent' },
-  textColor: { type: String, default: 'text-black dark:text-white' },
+  textColor: { type: String, default: 'text-ui' },
   hoverBg: { type: String, default: 'hover:bg-surface-light' },
   noGutters: Boolean,
   itemPosition: { type: String, default: 'items-start' },
@@ -28,7 +28,7 @@ export const kunListItemProps = {
   title: [String, Number, Boolean],
   titleClass: { type: String, default: 'font-medium' },
   subtitle: [String, Number, Boolean],
-  subtitleClass: { type: String, default: 'text-sm text-slate-800 dark:text-slate-200' },
+  subtitleClass: { type: String, default: 'text-sm text-ui-muted' },
   containerClass: { type: [String, Array, Object], default: '' },
   id: [String, Number],
 }

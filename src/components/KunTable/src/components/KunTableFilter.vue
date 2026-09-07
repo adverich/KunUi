@@ -3,7 +3,7 @@
         <div class="w-full">
             <div class="flex justify-end px-1">
                 <KunBtn @click="closeDialog" rounded="rounded-full" size="xxs" bgColor="bg-transparent">
-                    <KunIcon color="text-red-500" :icon="IconClose" size="text-lg" />
+                    <KunIcon color="text-error" :icon="IconClose" size="text-lg" />
                 </KunBtn>
             </div>
             <KunRow>

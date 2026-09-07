@@ -5,7 +5,7 @@
       <slot v-if="$slots.expandIcon" name="expand-icon" :item="item" :index="index" />
 
       <KunBtn v-else @click="emits('toggle-expand', item)" rounded="rounded-full" size="xxs" bgColor="bg-transparent">
-        <KunIcon :icon="isExpanded ? icons.minus : icons.plus" :color="isExpanded ? 'text-red-500' : 'text-green-500'" />
+        <KunIcon :icon="isExpanded ? icons.minus : icons.plus" :color="isExpanded ? 'text-error' : 'text-success'" />
       </KunBtn>
     </td>
 
@@ -22,7 +22,7 @@
         :ripple="false"
         :true-value="true"
         :false-value="false"
-        :color="isSelected ? 'text-green-600 dark:text-green-400' : ''"
+        :color="isSelected ? 'text-success' : ''"
         hide-details
       />
     </td>
@@ -90,7 +90,7 @@ const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 
 // --- Gestión de Estilos de Celda y Fila ---
 
-const baseTdClass = 'px-1 py-2 whitespace-normal word-break text-sm text-black dark:text-white';
+const baseTdClass = 'px-1 py-2 whitespace-normal word-break text-sm text-ui';
 const mergedTdClass = computed(() => props.tdClass || baseTdClass);
 
 // Resuelve clases condicionales dinámicas (ej: filas rojas si stock < 0)
@@ -102,7 +102,7 @@ function resolveTdClass(item, index) {
   return result?.trim() || '';
 }
 
-const baseRowClass = 'hover:bg-select-hover border-t border-slate-300 dark:border-slate-700';
+const baseRowClass = 'hover:bg-ui-selection-hover border-t border-ui';
 const rowClass = computed(() => props.rowClass || baseRowClass);
 const baseTrClass = 'bg-surface';
 const trClass = computed(() => props.trClass || baseTrClass);

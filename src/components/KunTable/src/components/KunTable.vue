@@ -13,12 +13,12 @@
         <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
         <template v-if="paginatedItems.length !== filteredItems.length">
           <span v-if="allSelected && !allFilteredSelected" @click="selectCompleteAll"
-            class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2 ml-2"
+            class="bg-secondary hover:bg-ui-primary rounded cursor-pointer px-2 ml-2"
           >
             Seleccionar todos los {{ filteredItems.length }} registros
           </span>
           <span v-if="allFilteredSelected" @click="clearSelection" 
-            class="bg-secondary hover:!bg-blue-500 rounded cursor-pointer px-2 ml-2"
+            class="bg-secondary hover:bg-ui-primary rounded cursor-pointer px-2 ml-2"
           >
             Anular selección
           </span>
@@ -28,7 +28,7 @@
       <div class="min-w-1/3 flex h-full items-center justify-end">
         <slot name="prependSearch" />
 
-        <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-green-200 dark:bg-green-800">
+        <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-success">
           <KunIcon class="h-fit" :icon="IconFilter" size="text-lg" />
         </KunBtn>
 
@@ -307,7 +307,7 @@ const slotProps = computed(() => ({
 }));
 
 // --- Estilos ---
-const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col border border-slate-200 dark:border-slate-800 rounded';
+const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col border border-ui rounded';
 const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
 
 const baseTableClass = 'table-auto w-full h-fit text-sm text-left';

@@ -59,13 +59,13 @@ const heightClass = computed(() => {
 // Clase para el color
 const colorClass = computed(() => {
     const colors = {
-        blue: "bg-blue-300 dark:bg-blue-700",
-        green: "bg-green-300 dark:bg-green-700",
-        red: "bg-red-300 dark:bg-red-700",
-        yellow: "bg-yellow-300 dark:bg-yellow-700",
-        gray: "bg-gray-300 dark:bg-gray-700",
-        orange: "bg-amber-300 dark:bg-amber-700",
+        blue: "bg-primary",
+        green: "bg-success",
+        red: "bg-error",
+        yellow: "bg-warning",
+        gray: "bg-ui-hover",
+        orange: "bg-warning",
     };
-    return colors[props.color] || "bg-blue-700";
+    return colors[props.color] || "bg-primary";
 });
 </script>

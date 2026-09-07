@@ -29,7 +29,7 @@ export const KunSliderProps = {
     },
     tickColor: {
         type: String,
-        default: 'border-red-400'
+        default: 'border-error'
     },
     vertical: {
         type: Boolean,
@@ -53,11 +53,11 @@ export const KunSliderProps = {
     },
     trackColor: {
         type: String,
-        default: 'bg-blue-500'
+        default: 'bg-primary'
     },
     thumbColor: {
         type: String,
-        default: 'bg-blue-500'
+        default: 'bg-primary'
     },
     class: {
         type: [String, Array, Object],

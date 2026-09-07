@@ -79,7 +79,7 @@ const currentSize = computed(() => sizeClasses[props.size] || sizeClasses.md)
     <!-- Vertical -->
     <template v-if="vertical">
       <label class="flex flex-col items-center gap-1 cursor-pointer">
-        <span v-if="label && labelPosition === 'top'" class="text-sm text-gray-900">
+        <span v-if="label && labelPosition === 'top'" class="text-sm text-ui">
           {{ label }}
         </span>
 
@@ -109,7 +109,7 @@ const currentSize = computed(() => sizeClasses[props.size] || sizeClasses.md)
           </div>
         </div>
 
-        <span v-if="label && labelPosition === 'bottom'" class="text-sm text-gray-900">
+        <span v-if="label && labelPosition === 'bottom'" class="text-sm text-ui">
           {{ label }}
         </span>
       </label>
@@ -147,14 +147,14 @@ const currentSize = computed(() => sizeClasses[props.size] || sizeClasses.md)
             </div>
         </div>
 
-        <div v-if="label" class="text-sm text-gray-900">
+        <div v-if="label" class="text-sm text-ui">
           {{ label }}
         </div>
       </label>
     </template>
 
     <!-- Details -->
-    <div v-if="!hideDetails" class="text-xs text-gray-500 mt-1 ml-14" v-bind="$attrs">
+    <div v-if="!hideDetails" class="text-xs text-ui-muted mt-1 ml-14" v-bind="$attrs">
       <slot name="details" />
     </div>
   </div>

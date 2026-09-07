@@ -24,7 +24,7 @@ export const kunBtnProps = {
   bgColor: { type: String, default: 'bg-button' },
   textColor: {
     type: String,
-    default: 'text-slate-800 dark:text-slate-200'
+    default: 'text-ui'
   },
   to: [String, Object],
   href: String,

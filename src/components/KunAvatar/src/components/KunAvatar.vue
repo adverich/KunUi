@@ -29,7 +29,7 @@ const computedClasses = computed(() => [
   sizes[props.size] || sizes.default,
   props.rounded ? "rounded-full" : props.tile ? "rounded-none" : "rounded",
   props.border ? `border border-${props.border}` : "",
-  props.color ? `bg-${props.color}` : "bg-gray-200",
+  props.color ? `bg-${props.color}` : "bg-ui-surface-subtle",
   props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3",
   props.start ? "ms-2" : "",
   props.end ? "me-2" : "",
@@ -40,7 +40,7 @@ const computedImageClasses = computed(() => [
 ]);
 
 const computedIconClasses = computed(() => [
-  "absolute text-white text-xl",
+  "absolute text-ui-inverse text-xl",
 ]);
 
 const computedTextClasses = computed(() => [

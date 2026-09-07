@@ -50,7 +50,7 @@ export function useChip(props, emit) {
                 base.push(`${props.color} ${props.textColor} shadow-none`)
                 break
             case 'outlined':
-                base.push(`border border-current ${props.textColor} bg-transparent hover:bg-gray-100`)
+                base.push(`border border-current ${props.textColor} bg-transparent hover:bg-ui-hover`)
                 break
             case 'pill':
                 base.push(`${props.color} ${props.textColor} rounded-full`)

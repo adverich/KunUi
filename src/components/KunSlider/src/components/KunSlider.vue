@@ -7,7 +7,7 @@
       props.class
     ]"
   >
-    <div v-if="label" class="mb-2 text-sm font-medium text-gray-800 dark:text-gray-200">
+    <div v-if="label" class="mb-2 text-sm font-medium text-ui">
       <slot name="label">{{ label }}</slot>
     </div>
 
@@ -41,7 +41,7 @@
           <div
             v-for="(label, i) in tickCount"
             :key="i"
-            class="h-1/2 flex flex-col items-center justify-center relative bg-red-700"
+            class="h-1/2 flex flex-col items-center justify-center relative bg-error"
           >
             <!-- Invisible clickable area, no modifica el layout -->
             <div
@@ -108,7 +108,7 @@
       <slot name="append" />
     </div>
 
-    <div class="flex justify-between text-xs text-gray-500 mt-1 w-full">
+    <div class="flex justify-between text-xs text-ui-muted mt-1 w-full">
       <span>{{ min }}</span>
       <span>{{ max }}</span>
     </div>

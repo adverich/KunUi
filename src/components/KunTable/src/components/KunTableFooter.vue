@@ -119,7 +119,7 @@ watch(() => totalPages.value, (newVal, oldVal) => {
 </script>
 
 <template>
-  <div class="flex items-center justify-between p-2 text-sm border-t border-slate-300 dark:border-slate-700 bg-surface-dark">
+  <div class="flex items-center justify-between p-2 text-sm border-t border-ui bg-surface-dark">
     <div>
       Mostrando {{ start }} - {{ end }} de {{ itemsLength }}
     </div>
@@ -128,7 +128,7 @@ watch(() => totalPages.value, (newVal, oldVal) => {
       <!-- itemsPerPage -->
       <details ref="ippDetailsRef" class="relative inline-block">
         <summary
-          class="px-3 py-1 border rounded cursor-pointer text-slate-800 dark:text-slate-200 select-none"
+          class="px-3 py-1 border border-ui rounded cursor-pointer text-ui select-none"
           aria-haspopup="listbox"
         >
           {{ itemsPerPage }} por página
@@ -142,8 +142,8 @@ watch(() => totalPages.value, (newVal, oldVal) => {
             <button
               v-for="opt in pageOptions"
               :key="opt"
-              class="text-center px-2 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700 w-full cursor-pointer"
-              :class="{'font-semibold bg-slate-100 dark:bg-slate-700': opt === Number(itemsPerPage)}"
+              class="text-center px-2 py-1 rounded hover:bg-ui-hover w-full cursor-pointer"
+              :class="{'font-semibold bg-ui-hover': opt === Number(itemsPerPage)}"
               @click="onItemsPerPageSelect(opt)"
             >
               {{ opt }} items
@@ -154,7 +154,7 @@ watch(() => totalPages.value, (newVal, oldVal) => {
 
       <!-- prev -->
       <button
-        class="px-2 py-1 border rounded text-slate-800 dark:text-slate-200 hover:bg-button-hover disabled:opacity-50"
+        class="px-2 py-1 border border-ui rounded text-ui hover:bg-button-hover disabled:opacity-50"
         :disabled="currentPage <= 1"
         @click="prev"
       >←</button>
@@ -162,7 +162,7 @@ watch(() => totalPages.value, (newVal, oldVal) => {
       <!-- Página selector: usa <details> para desplegar lista de páginas -->
       <details ref="detailsRef" class="relative inline-block">
         <summary
-          class="px-3 py-1 border rounded cursor-pointer text-slate-800 dark:text-slate-200 select-none"
+          class="px-3 py-1 border border-ui rounded cursor-pointer text-ui select-none"
           aria-haspopup="listbox"
         >
           Página {{ currentPage }} de {{ totalPages }}
@@ -176,14 +176,14 @@ watch(() => totalPages.value, (newVal, oldVal) => {
             <template v-for="p in pagesToShow" :key="String(p)">
               <div
                 v-if="p === 'start-ellipsis' || p === 'end-ellipsis'"
-                class="px-2 py-1 text-center text-slate-500"
+                class="px-2 py-1 text-center text-ui-muted"
               >
                 …
               </div>
               <button
                 v-else
-                class="text-center px-2 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700 w-full cursor-pointer"
-                :class="{'font-semibold bg-dark:bg-slate-700': p === currentPage}"
+                class="text-center px-2 py-1 rounded hover:bg-ui-hover w-full cursor-pointer"
+                :class="{'font-semibold bg-ui-hover': p === currentPage}"
                 @click="goToPage(p)"
               >
                 Página {{ p }} 
@@ -195,7 +195,7 @@ watch(() => totalPages.value, (newVal, oldVal) => {
 
       <!-- next -->
       <button
-        class="px-2 py-1 border rounded text-slate-700 dark:text-slate-300 hover:bg-button-hover disabled:opacity-50"
+        class="px-2 py-1 border border-ui rounded text-ui hover:bg-button-hover disabled:opacity-50"
         :disabled="currentPage >= totalPages || totalPages === 0"
         @click="next"
       >→</button>

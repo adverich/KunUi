@@ -6,8 +6,8 @@ export const kunSkeletonProps = {
   rounded: { type: String, default: "md" },
   animation: { type: String, default: "shimmer" },
   duration: { type: Number, default: 1500 },
-  colorFrom: { type: String, default: "bg-gray-200" },
-  colorTo: { type: String, default: "bg-gray-300" },
+  colorFrom: { type: String, default: "bg-ui-surface-subtle" },
+  colorTo: { type: String, default: "bg-ui-hover" },
   repeat: { type: Boolean, default: true },
   class: { type: [String, Array, Object], default: "" }
 }

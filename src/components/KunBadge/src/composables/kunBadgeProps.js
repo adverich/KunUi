@@ -1,7 +1,7 @@
 export const kunBadgeProps = {
   text: { type: [String, Number], default: '' },
-  bgColor: { type: String, default: 'bg-red-500' },
-  textColor: { type: String, default: 'text-white' },
+  bgColor: { type: String, default: 'bg-error' },
+  textColor: { type: String, default: 'text-ui-inverse' },
   textSize: { type: String, default: 'text-xs' },
   fontWeight: { type: String, default: 'font-bold' },
   rounded: { type: String, default: 'rounded-full' },

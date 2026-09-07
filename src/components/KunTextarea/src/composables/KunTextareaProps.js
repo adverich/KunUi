@@ -69,7 +69,7 @@ export const kunTextareaProps = {
   rounded: [String, Number],
   flat: Boolean,
   color: String,
-  focusRingColor: { type: String, default: 'focus:ring-slate-400 dark:focus:ring-slate-600' },
+  focusRingColor: { type: String, default: 'ring-ui-focus' },
   loadingColor: String,
   clearIcon: Boolean,
   debounceTime: {

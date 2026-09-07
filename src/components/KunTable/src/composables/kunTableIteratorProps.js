@@ -9,7 +9,7 @@ export const kunTableIteratorProps = {
   hasActions: Boolean,
   loading: { type: [Boolean, Object], default: false },
   rowClass: String,
-  border: { type: String, default: 'border border-slate-300 dark:border-slate-700' },
+  border: { type: String, default: 'border border-ui' },
   rounded: { type: String, default: 'rounded-sm' },
   rowClassCondition: [String, Function],
   customSlots: Object,

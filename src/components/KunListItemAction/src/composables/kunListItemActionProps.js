@@ -5,7 +5,7 @@ export const kunListItemActionProps = {
   },
   textColor: {
     type: String,
-    default: 'text-black dark:text-white',
+    default: 'text-ui',
   },
   fontSize: {
     type: String,

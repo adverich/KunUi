@@ -19,7 +19,7 @@
           :ripple="false"
           :true-value="true"
           :false-value="false"
-          :color="someSelected && !allSelected && !moreThanPaginated ? 'text-yellow-600 dark:text-yellow-400' : allSelected ? 'text-green-600 dark:text-green-400' : moreThanPaginated ? 'text-green-900 dark:text-green-600' : ''"
+          :color="someSelected && !allSelected && !moreThanPaginated ? 'text-warning' : allSelected || moreThanPaginated ? 'text-success' : ''"
           hide-details
         />
       </th>
@@ -47,7 +47,7 @@
           <slot :name="`header.${header.key}`" :header="header">
             <span>{{ header.label ?? header.text }}</span>
             <span v-if="header.sortable" class="inline-flex items-center gap-1 ml-1 print:hidden">
-              <component :is="getSortIcon(header)" class="w-4 h-4 text-gray-500" />
+              <component :is="getSortIcon(header)" class="w-4 h-4 text-ui-muted" />
             </span>
           </slot>
         </template>
@@ -129,7 +129,7 @@ const mergedTheadClass = [baseTheadClass, props.theadClass];
 const baseTrClass = '';
 const mergedTrClass = [baseTrClass, props.trClass];
 
-const baseThClass = 'px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 uppercase tracking-wider';
+const baseThClass = 'px-3 py-2 text-xs font-medium text-ui-muted uppercase tracking-wider';
 const mergedThClass = [baseThClass, props.thClass];
 
 // --- Control de Checkbox Indeterminado ---

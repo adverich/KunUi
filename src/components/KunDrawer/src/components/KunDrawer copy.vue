@@ -26,7 +26,7 @@
   <Transition name="kun-scrim">
     <div
       v-if="scrim && (modelValue || isDragging) && !permanent && !persistent"
-      class="fixed inset-0 bg-black/40 z-30"
+      class="fixed inset-0 bg-ui-overlay z-30"
       @click="close"
     />
   </Transition>

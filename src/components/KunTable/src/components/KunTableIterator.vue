@@ -36,11 +36,11 @@
         :key="header.value"
         class="flex justify-between text-sm"
       >
-        <div class="font-semibold text-slate-600 dark:text-slate-300">
+        <div class="font-semibold text-ui-muted">
           {{ header.label ?? header.text }}
         </div>
         <div
-          class="text-right text-slate-800 dark:text-slate-100"
+          class="text-right text-ui"
           :class="{
             'text-right': header.align === 'right',
             'text-center': header.align === 'center',
@@ -73,7 +73,7 @@
 
     <!-- Acciones -->
     <div v-if="hasActions" class="flex justify-between items-start mt-4 text-sm">
-      <div class="font-semibold text-slate-600 dark:text-slate-300">
+      <div class="font-semibold text-ui-muted">
         Acciones
       </div>
       <div class="text-right">

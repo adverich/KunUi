@@ -59,7 +59,7 @@ const iconSizeClass = computed(() => ({
       'kun-checkbox',
       'flex flex-col',
       props.color,
-      { 'text-red-600': props.error || !isValid }
+      { 'text-ui-error': props.error || !isValid }
     ]"
     :style="{
       width: props.width && `${props.width}px`,
@@ -121,7 +121,7 @@ const iconSizeClass = computed(() => ({
 
     <div
       v-if="!props.hideDetails && (errorMessages?.length || props.hint || props.persistentHint)"
-      class="text-xs text-gray-500 mt-1"
+      class="text-xs text-ui-muted mt-1"
     >
       <slot name="details">
         <div v-if="(props.error || !isValid) && errorMessages?.length">

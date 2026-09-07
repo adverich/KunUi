@@ -13,6 +13,6 @@ export const kunLoaderCircularProps = {
   },
   gradient: {
     type: String,
-    default: 'conic-gradient(from 0deg, #ffffff, #3b82f6)',
+    default: 'conic-gradient(from 0deg, var(--surface-raised), var(--primary))',
   },
 }

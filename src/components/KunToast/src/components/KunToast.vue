@@ -188,7 +188,7 @@ const colorClasses = computed(() => {
     },
     neutral: {
       root: 'border-l-4 border-surface',
-      icon: 'text-slate-500 dark:text-slate-400'
+      icon: 'text-ui-muted'
     }
   }
   return colorMap[props.color] || colorMap.primary
@@ -206,8 +206,8 @@ const wrapperClasses = 'flex gap-3 p-4'
 const iconContainerClass = 'flex-shrink-0'
 const iconClass = 'w-5 h-5'
 
-const titleClass = 'text-sm font-semibold text-slate-900 dark:text-slate-100'
-const descriptionClass = 'text-sm text-slate-600 dark:text-slate-400 mt-1'
+const titleClass = 'text-sm font-semibold text-ui'
+const descriptionClass = 'text-sm text-ui-muted mt-1'
 
 const actionsClass = 'flex gap-2 mt-2'
 const rightActionsClass = computed(() => {
@@ -216,11 +216,11 @@ const rightActionsClass = computed(() => {
     : 'flex items-start gap-2 flex-shrink-0'
 })
 
-const closeButtonClass = 'p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer text-slate-500 dark:text-slate-400'
+const closeButtonClass = 'p-1 rounded hover:bg-ui-hover transition-colors cursor-pointer text-ui-muted'
 const closeIconClass = 'w-4 h-4'
 
 // Progress bar
-const progressContainerClass = 'h-1 w-full bg-slate-200 dark:bg-slate-700 rounded-b'
+const progressContainerClass = 'h-1 w-full bg-ui-surface-subtle rounded-b'
 const progressBarClass = 'h-full rounded-b transition-all duration-100 ease-linear'
 const progressColorClass = computed(() => {
   if (props.progressColor) return props.progressColor
@@ -230,7 +230,7 @@ const progressColorClass = computed(() => {
     error: 'bg-error',
     warning: 'bg-warning',
     info: 'bg-primary',
-    neutral: 'bg-slate-500'
+    neutral: 'bg-ui-hover'
   }
   return colorMap[props.color] || colorMap.primary
 })

@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full flex flex-col bg-blue-800">
+  <div class="h-full w-full flex flex-col bg-ui-surface">
     <template v-for="(item, index) in items" :key="itemKey(item, index)">
       <KunTableIterator
         :item="item"

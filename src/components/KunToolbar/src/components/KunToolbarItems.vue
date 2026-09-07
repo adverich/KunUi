@@ -27,9 +27,9 @@ const variantClass = computed(() => {
     case 'elevated':
       return 'shadow-md'
     case 'tonal':
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-ui-surface-subtle text-ui'
     case 'outlined':
-      return 'border border-gray-300'
+      return 'border border-ui'
     case 'plain':
       return ''
     default:

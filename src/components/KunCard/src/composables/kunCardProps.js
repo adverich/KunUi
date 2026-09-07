@@ -4,7 +4,7 @@ export const kunCardProps = {
     subtitle: { type: String, default: null },
     subTitleSize: {},
     text: { type: String, default: null },
-    textColor: { type: String, default: 'text-black dark:text-white' },
+    textColor: { type: String, default: 'text-ui' },
     bgColor: { type: String, default: 'bg-transparent' },
     flat: { type: Boolean, default: false },
     rounded: {
@@ -13,7 +13,7 @@ export const kunCardProps = {
         validator: v => typeof v === 'boolean' || ['sm', 'md', 'lg', 'xl'].includes(v)
     },
     outlined: { type: Boolean, default: false },
-    outlineColor: { type: String, default: 'border-gray-300 dark:border-gray-600' },
+    outlineColor: { type: String, default: 'border-ui' },
     elevation: {
         type: [String, Number],
         default: 1,

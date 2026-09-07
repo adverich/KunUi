@@ -153,6 +153,39 @@
     outline-color: var(--textarea-outline-focus);
 }
 
+/* Utilidades semánticas: los componentes no deben depender de una paleta fija. */
+.bg-ui-surface { background-color: var(--surface); }
+.bg-ui-surface-raised { background-color: var(--surface-raised); }
+.bg-ui-surface-subtle { background-color: var(--surface-subtle); }
+.bg-ui-hover { background-color: var(--surface-hover); }
+.bg-ui-selection { background-color: var(--selection); }
+.bg-ui-overlay { background-color: var(--overlay); }
+.text-ui { color: var(--on-color); }
+.text-ui-muted { color: var(--on-color-muted); }
+.text-ui-disabled { color: var(--on-color-disabled); }
+.text-ui-inverse { color: var(--on-color-inverse); }
+.text-ui-selection { color: var(--selection-text); }
+.placeholder-ui::placeholder { color: var(--on-color-muted); opacity: .8; }
+.border-ui { border-color: var(--border); }
+.border-ui-subtle { border-color: var(--border-subtle); }
+.border-ui-focus { border-color: var(--field-border-focus); }
+.ring-ui-focus { --tw-ring-color: var(--field-ring-focus); }
+.bg-ui-primary { background-color: var(--primary); }
+.text-ui-primary { color: var(--primary); }
+.border-ui-primary { border-color: var(--primary); }
+.bg-ui-success { background-color: var(--success); }
+.text-ui-success { color: var(--success); }
+.bg-ui-error { background-color: var(--error); }
+.bg-ui-error-soft { background-color: var(--error-soft); }
+.text-ui-error { color: var(--error); }
+
+.hover\:bg-ui-hover:hover { background-color: var(--surface-hover); }
+.hover\:bg-ui-selection-hover:hover { background-color: var(--selection-hover); }
+.hover\:bg-ui-primary:hover { background-color: var(--primary); }
+.hover\:text-ui:hover { color: var(--on-color); }
+.hover\:border-ui-primary:hover { border-color: var(--primary); }
+.shadow-ui-focus { box-shadow: 0 0 0 1px var(--field-ring-focus); }
+
 .bg-neopos-ice-grid {
     background-color: var(--background);
     background-image:
@@ -195,6 +228,7 @@
 }
 
 :root.dark .bg-neopos-ice-grid,
+:root[data-theme="dark"] .bg-neopos-ice-grid,
 .dark .bg-neopos-ice-grid {
     background-image:
         radial-gradient(circle at top left, rgba(32, 160, 224, 0.16), transparent 20rem),
@@ -203,6 +237,7 @@
 }
 
 :root.dark .bg-neopos-mist-grid,
+:root[data-theme="dark"] .bg-neopos-mist-grid,
 .dark .bg-neopos-mist-grid {
     background-image:
         radial-gradient(circle at top left, rgba(32, 160, 224, 0.12), transparent 22rem),
@@ -211,6 +246,7 @@
 }
 
 :root.dark .bg-neopos-blueprint-grid,
+:root[data-theme="dark"] .bg-neopos-blueprint-grid,
 .dark .bg-neopos-blueprint-grid {
     background-image:
         radial-gradient(circle at top left, rgba(32, 160, 224, 0.18), transparent 18rem),
@@ -219,6 +255,7 @@
 }
 
 :root.dark .bg-neopos-aurora-grid,
+:root[data-theme="dark"] .bg-neopos-aurora-grid,
 .dark .bg-neopos-aurora-grid {
     background-image:
         radial-gradient(circle at top left, rgba(32, 160, 224, 0.22), transparent 16rem),
@@ -259,6 +296,7 @@
 }
 
 :root.dark .bg-shell-grid,
+:root[data-theme="dark"] .bg-shell-grid,
 .dark .bg-shell-grid {
     background-image:
         radial-gradient(circle at top left, rgba(32, 160, 224, 0.16), transparent 20rem),
@@ -267,6 +305,7 @@
 }
 
 :root.dark .bg-shell-grid-soft,
+:root[data-theme="dark"] .bg-shell-grid-soft,
 .dark .bg-shell-grid-soft {
     background-image:
         radial-gradient(circle at top left, rgba(32, 160, 224, 0.12), transparent 22rem),
@@ -275,6 +314,7 @@
 }
 
 :root.dark .bg-shell-grid-dense,
+:root[data-theme="dark"] .bg-shell-grid-dense,
 .dark .bg-shell-grid-dense {
     background-image:
         radial-gradient(circle at top left, rgba(32, 160, 224, 0.18), transparent 18rem),

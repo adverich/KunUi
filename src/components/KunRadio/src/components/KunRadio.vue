@@ -21,10 +21,10 @@ const icon = computed(() =>
 
 const colorClass = computed(() =>
   props.disabled
-    ? 'text-gray-400'
+    ? 'text-ui-disabled'
     : isSelected.value
     ? props.color || 'text-primary'
-    : props.baseColor || 'text-gray-500'
+    : props.baseColor || 'text-ui-muted'
 )
 
 const uid = Math.random().toString(36).slice(2, 10)

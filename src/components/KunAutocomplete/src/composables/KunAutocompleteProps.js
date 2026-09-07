@@ -61,7 +61,7 @@ export const KunAutocompleteProps = {
 
   hasCreateItem: { type: Boolean, default: false },
   btnCreateClass: { type: String, default: "w-full" },
-  btnCreateBg: { typer: String, default: "bg-green-700" },
+  btnCreateBg: { type: String, default: "bg-success" },
   btnCreateText: { typer: String, default: "Crear item" },
 
   multiple: { type: Boolean, default: false },
@@ -87,10 +87,15 @@ export const KunAutocompleteProps = {
     type: Boolean,
     default: true,
   },
+  /** Props visuales y atributos que se reenvían al KunTextField interno. */
+  textFieldProps: { type: Object, default: () => ({}) },
+  iconColor: { type: String, default: 'text-ui-primary' },
+  requiredIconColor: { type: String, default: 'text-ui-primary' },
+  emptyTextClass: { type: String, default: 'text-ui-muted' },
   bgMenuColor: { type: String, default: "bg-menu" },
   bgItemListColor: { type: String, default: "bg-transparent" },
-  selectedItemListColor: { type: String, default: "bg-select-background" },
-  hoverItemListColor: { type: String, default: "hover:bg-select-hover" },
+  selectedItemListColor: { type: String, default: "bg-ui-selection text-ui-selection" },
+  hoverItemListColor: { type: String, default: "hover:bg-ui-selection-hover" },
   attach: {
     type: Boolean,
     default: false

@@ -17,7 +17,7 @@ export const kunListItemAvatarProps = {
   },
   textColor: {
     type: String,
-    default: 'text-white'
+    default: 'text-ui-inverse'
   },
   fontWeight: {
     type: String,

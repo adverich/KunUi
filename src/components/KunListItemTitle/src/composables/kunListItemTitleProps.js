@@ -5,7 +5,7 @@ export const kunListItemTitleProps = {
   },
   textColor: {
     type: String,
-    default: 'text-gray-500 dark:text-gray-400'
+    default: 'text-ui'
   },
   fontSize: {
     type: String,

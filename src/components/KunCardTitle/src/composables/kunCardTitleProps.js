@@ -11,7 +11,7 @@ export const kunCardTitleProps = {
     },
     textColor: {
         type: String,
-        default: 'text-gray-800 dark:text-gray-200'
+        default: 'text-ui'
     },
     dense: {
         type: Boolean,

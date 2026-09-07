@@ -17,10 +17,10 @@ export function useTooltip(props) {
 
     const arrowClass = computed(() => {
         switch (props.location) {
-            case 'top': return 'border-b border-l border-gray-800 dark:border-gray-700'
-            case 'bottom': return 'border-t border-l border-gray-800 dark:border-gray-700'
-            case 'left': return 'border-r border-t border-gray-800 dark:border-gray-700'
-            case 'right': return 'border-l border-t border-gray-800 dark:border-gray-700'
+            case 'top': return 'border-b border-l border-ui'
+            case 'bottom': return 'border-t border-l border-ui'
+            case 'left': return 'border-r border-t border-ui'
+            case 'right': return 'border-l border-t border-ui'
             default: return ''
         }
     })

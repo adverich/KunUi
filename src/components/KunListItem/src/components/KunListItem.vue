@@ -201,7 +201,7 @@ if (listContext && props.selectable && props.value !== null) {
 const baseItemClass = 'w-full flex transition duration-150 ease-in-out'
 const variantClass = computed(() => {
   switch (props.variant) {
-    case 'outlined': return 'border border-gray-300 dark:border-gray-700'
+    case 'outlined': return 'border border-ui'
     case 'elevated': return 'shadow-md'
     case 'tonal': return 'bg-surface'
     case 'flat': return 'bg-transparent'

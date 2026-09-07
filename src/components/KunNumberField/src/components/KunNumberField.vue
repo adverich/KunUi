@@ -16,9 +16,9 @@
       <div
         class="flex items-center w-full h-full border"
         :class="[bgInput, rounded,
-          focus ? 'border-slate-400 dark:border-slate-600 shadow-[0_0_0_1px_rgba(59,130,246,0.5)]' : borderColor,
+          focus ? 'border-ui-focus shadow-ui-focus' : borderColor,
           disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
-          error ? 'bg-red-200 dark:bg-red-900' : ''
+          error ? 'bg-ui-error-soft' : ''
         ]"
       >
 
@@ -26,7 +26,7 @@
         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
           <button
             type="button"
-            class="p-3 text-lg border-r border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer hover:opacity-80"
+            class="p-3 text-lg border-r border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80"
             @click="onDecrement"
             :disabled="disabled || readonly"
           >−</button>
@@ -79,7 +79,7 @@
           <KunBtn
             @click="onClear"
             rounded="rounded-full"
-            bgColor="bg-red-500/75"
+            bgColor="bg-error"
             :disabled="disabled || readonly"
             class="h-6 w-6"
           >
@@ -92,32 +92,32 @@
           <div v-if="controlVariant === 'default'" class="flex items-center h-full">
             <button
               type="button"
-              class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
+              class="flex items-center border-l border-ui p-3 justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80"
               @click="onIncrement"
               :disabled="disabled || readonly"
             >▲</button>
 
             <button
               type="button"
-              class="flex items-center border-l border-slate-600 p-3 justify-center text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer hover:opacity-80"
+              class="flex items-center border-l border-ui p-3 justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80"
               @click="onDecrement"
               :disabled="disabled || readonly"
             >▼</button>
           </div>
 
           <!-- Controls: STACKED -->
-          <div v-if="controlVariant === 'stacked'" class="flex flex-col items-center justify-center border-l border-slate-600">
-            <div class="border-b border-slate-600 pb-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onIncrement">
+          <div v-if="controlVariant === 'stacked'" class="flex flex-col items-center justify-center border-l border-ui">
+            <div class="border-b border-ui pb-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onIncrement">
               <button
                 type="button"
-                class="text-xs text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer"
+                class="text-xs text-ui disabled:opacity-50 cursor-pointer"
                 :disabled="disabled || readonly"
               >▲</button>
             </div>
-            <div class="border-t border-slate-600 pt-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onDecrement">
+            <div class="border-t border-ui pt-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onDecrement">
               <button
                 type="button"
-                class="text-xs text-black dark:text-white hover:text-black/80 dark:hover:text-white/80 disabled:opacity-50 cursor-pointer"
+                class="text-xs text-ui disabled:opacity-50 cursor-pointer"
                 :disabled="disabled || readonly"
               >▼</button>
             </div>
@@ -138,7 +138,7 @@
         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
           <button
             type="button"
-            class="p-3 text-lg border-l border-slate-600 text-black dark:text-white disabled:opacity-50 cursor-pointer hover:opacity-80"
+            class="p-3 text-lg border-l border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80"
             @click="onIncrement"
             :disabled="disabled || readonly"
           >+</button>
@@ -150,7 +150,7 @@
 
       <!-- Details -->
       <div v-if="!hideDetails" class="h-[1.25rem]">
-        <div v-if="error || errorMessages" class="text-red-500 text-sm text-center">
+        <div v-if="error || errorMessages" class="text-ui-error text-sm text-center">
           <div v-if="Array.isArray(errorMessages)">
             <div v-for="(msg, i) in errorMessages" :key="i">{{ msg }}</div>
           </div>

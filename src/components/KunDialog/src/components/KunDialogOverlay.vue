@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed inset-0 bg-black/50 transition-opacity duration-300"
+    class="fixed inset-0 bg-ui-overlay transition-opacity duration-300"
     @click="onClick"
   />
 </template>

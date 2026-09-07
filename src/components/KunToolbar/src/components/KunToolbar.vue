@@ -109,7 +109,7 @@ const mergedClass = computed(() =>
     props.flat ? '' : `shadow-md`,
     props.absolute ? 'absolute inset-0' : '',
     roundedClass.value,
-    props.bordered ? props.borderColor : 'border-b border-slate-200 dark:border-slate-800',
+    props.bordered ? props.borderColor : 'border-b border-ui',
     heightClass.value,
     elevationClass.value
 )

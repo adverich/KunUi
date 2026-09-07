@@ -5,7 +5,7 @@ export const kunListItemSubtitleProps = {
   },
   textColor: {
     type: String,
-    default: 'text-gray-500 dark:text-gray-400'
+    default: 'text-ui-muted'
   },
   fontSize: {
     type: String,

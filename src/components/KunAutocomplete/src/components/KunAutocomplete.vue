@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-fit" ref="parentRef">
-    <KunTextField v-model="search" :label="label" :disabled="disabled" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
+    <KunTextField v-model="search" v-bind="textFieldProps" :label="label" :disabled="disabled" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
       autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
       @blur="textFieldBlur" @keyDown="textKeyDown" @keyDown.enter.prevent="handleEnter"
       :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
@@ -32,9 +32,9 @@
       <template v-if="hasIcons" v-slot:append-inner>
         <KunIcon v-if="clearable && modelValue" @click="clearSelection" size="small" color="error" :icon="icons.close"
           class="mr-1 mt-1" />
-        <KunIcon color="teal-darken-1" size="large" class="cursor-pointer"
+        <KunIcon :color="iconColor" size="large" class="cursor-pointer"
           :icon="menuModel ? icons.menuUpOutline : icons.menuDownOutline" @click.stop="openMenu" />
-        <KunIcon v-if="required" color="teal-darken-1" size="x-small" class="mb-4" :icon="icons.asterisk" />
+        <KunIcon v-if="required" :color="requiredIconColor" size="x-small" class="mb-4" :icon="icons.asterisk" />
       </template>
 
       <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :z-index="zIndex"
@@ -60,9 +60,9 @@
               </KunListItem>
             </template>
             <template v-else>
-              <KunListItem disabled>
-                <KunListItemTitle class="text-center w-full text-gray-500">
-                  No hay elementos disponibles
+          <KunListItem disabled>
+                <KunListItemTitle :class="['text-center w-full', emptyTextClass]">
+                  {{ textNoItems }}
                 </KunListItemTitle>
               </KunListItem>
             </template>

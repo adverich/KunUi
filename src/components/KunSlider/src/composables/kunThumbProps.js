@@ -4,7 +4,7 @@ export const kunThumbProps = {
   thumbLabel: Boolean,
   thumbColor: {
     type: String,
-    default: 'bg-blue-500'
+    default: 'bg-primary'
   },
   min: {
     type: Number,

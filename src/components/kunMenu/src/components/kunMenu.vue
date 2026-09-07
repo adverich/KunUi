@@ -13,7 +13,7 @@
         ref="contentEl" 
         role="menu" 
         tabindex="-1"
-        class="relative shadow-xl rounded-b overflow-y-auto focus:outline-none border border-gray-300 dark:border-gray-700"
+        class="relative shadow-xl rounded-b overflow-y-auto focus:outline-none border border-ui"
         :class="[props.class, originClass, width, minWidth, maxWidth, minHeight, height, maxHeight, zIndex, bgColor]"
         :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }" 
         @keydown.escape.stop="handleEscape"

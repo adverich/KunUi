@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :class="[
-        'absolute left-2 z-10 px-1 text-black/80 transition-all duration-200 ease-in-out pointer-events-none select-none dark:text-white/80',
+        'absolute left-2 z-10 px-1 text-ui transition-all duration-200 ease-in-out pointer-events-none select-none',
         isLabelActive ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80',
       ]"
     >
@@ -13,12 +13,12 @@
     <div
       class="flex items-center gap-2 rounded px-3 py-2 cursor-pointer transition"
       :class="[
-        variant === 'outlined' ? 'border border-slate-400 dark:border-slate-600' :
-        variant === 'solo' ? 'border-slate-400 dark:border-slate-600 shadow-inner' :
-        'bg-surface border border-slate-400 dark:border-slate-600',
-        disabled ? 'border-slate-400 dark:border-slate-600 cursor-not-allowed' : 'hover:border-blue-500',
-        error || validationErrors.length ? 'border-red-500' : '',
-        isFocused ? 'ring-2 ring-blue-500' : '',
+        variant === 'outlined' ? 'border border-ui' :
+        variant === 'solo' ? 'border-ui shadow-inner' :
+        'bg-surface border border-ui',
+        disabled ? 'border-ui cursor-not-allowed' : 'hover:border-ui-primary',
+        error || validationErrors.length ? 'border-error' : '',
+        isFocused ? 'ring-2 ring-ui-focus' : '',
       ]"
       v-bind="$attrs" 
       @click="() => inputRef?.click()"
@@ -43,7 +43,7 @@
       <div class="flex-1 truncate">
         <slot name="selection" :fileNames="fileNames" :totalBytes="totalBytes" :totalBytesReadable="totalBytesReadable">
           <span v-if="fileNames.length">{{ fileNames.join(', ') }}</span>
-          <span v-else class="text-gray-400">Seleccionar archivo</span>
+          <span v-else class="text-ui-disabled">Seleccionar archivo</span>
         </slot>
       </div>
 
@@ -56,7 +56,7 @@
       <button
         v-if="clearable && fileNames.length"
         @click.stop="clearFiles"
-        class="cursor-pointer text-gray-500 hover:text-red-500"
+        class="cursor-pointer text-ui-muted hover:text-ui-error"
       >
         <span v-if="clearIcon">{{ renderIconSlot(clearIcon) }}</span>
         <span v-else>✕</span>
@@ -64,15 +64,15 @@
     </div>
 
     <div v-if="hint || validationErrors.length" class="mt-1 text-sm">
-      <div v-if="validationErrors.length" class="text-red-500">
+      <div v-if="validationErrors.length" class="text-ui-error">
         <div v-for="(msg, i) in validationErrors" :key="i">{{ msg }}</div>
       </div>
-      <div v-else-if="hint" class="text-gray-500">
+      <div v-else-if="hint" class="text-ui-muted">
         {{ hint }}
       </div>
     </div>
 
-    <div v-if="counter" class="mt-1 text-xs text-gray-400 text-right">
+    <div v-if="counter" class="mt-1 text-xs text-ui-disabled text-right">
       {{ counterString ?? `${fileNames.length} archivo(s)` }}
       <span v-if="showSize"> — {{ totalBytesReadable }}</span>
     </div>

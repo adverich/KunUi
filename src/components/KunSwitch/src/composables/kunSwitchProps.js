@@ -5,9 +5,9 @@ export const kunSwitchProps = {
   label: String,
   labelPosition: { type: String, default: 'right' },
   disabled: Boolean,
-  onColor: { type: String, default: 'bg-green-600' },
+  onColor: { type: String, default: 'bg-success' },
   offColor: { type: String, default: 'bg-surface-light' },
-  iconColor: { type: String, default: 'bg-white' },
+  iconColor: { type: String, default: 'bg-ui-surface-raised' },
   inset: Boolean,
   hideDetails: { type: Boolean, default: false },
   size: {

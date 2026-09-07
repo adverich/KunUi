@@ -25,7 +25,7 @@
             :disabled="disabled"
             readonly
             input-style="cursor-pointer"
-            v-bind="$attrs"
+            v-bind="{ ...$attrs, ...inputProps }"
             @handleClick="togglePopover"
             @click="togglePopover"
             @keyDown.enter="togglePopover"
@@ -36,7 +36,7 @@
             hide-details
         >
             <template #append-inner>
-                <div class="cursor-pointer text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors" @click.stop="togglePopover">
+                <div class="cursor-pointer text-ui-muted hover:text-ui transition-colors" @click.stop="togglePopover">
                     <svg v-if="mode === 'time'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -60,22 +60,22 @@
                 <div
                     v-if="isOpen"
                     ref="popoverRef"
-                    class="fixed shadow-2xl rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex flex-col font-sans select-none overflow-hidden"
+                    class="fixed shadow-2xl rounded-xl border border-ui bg-ui-surface-raised text-ui flex flex-col font-sans select-none overflow-hidden"
                     :class="[dialogClass]"
                     :style="[popoverStyle, dimensionsStyle]"
                     @click.stop
                 >
                     <!-- Header (Month/Year Navigation) -->
-                    <div v-if="mode !== 'time'" class="px-2 py-3 flex items-center justify-between border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50 flex-shrink-0">
-                        <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400" @click="changeMonth(-1)">
+                    <div v-if="mode !== 'time'" class="px-2 py-3 flex items-center justify-between border-b border-ui-subtle bg-ui-surface-subtle flex-shrink-0">
+                        <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-ui-hover transition-colors text-ui-muted focus:outline-none focus:ring-2 ring-ui-focus" @click="changeMonth(-1)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                             </svg>
                         </button>
-                        <div class="font-semibold text-slate-800 dark:text-slate-100 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1 rounded transition-colors text-center" @click="toggleViewMode">
+                        <div class="font-semibold text-ui cursor-pointer hover:bg-ui-hover px-3 py-1 rounded transition-colors text-center" @click="toggleViewMode">
                             {{ currentMonthName }} {{ currentYear }}
                         </div>
-                        <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400" @click="changeMonth(1)">
+                        <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-ui-hover transition-colors text-ui-muted focus:outline-none focus:ring-2 ring-ui-focus" @click="changeMonth(1)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                             </svg>
@@ -87,7 +87,7 @@
                         <!-- Days View -->
                         <div v-if="viewMode === 'days'">
                             <div class="grid grid-cols-7 mb-2 text-center">
-                                <span v-for="day in weekDays" :key="day" class="text-[0.7rem] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                                <span v-for="day in weekDays" :key="day" class="text-[0.7rem] font-bold text-ui-muted uppercase tracking-widest">
                                     {{ day }}
                                 </span>
                             </div>
@@ -106,8 +106,8 @@
                         <!-- Years View -->
                         <div v-else-if="viewMode === 'years'" class="grid grid-cols-3 gap-2">
                             <div v-for="year in yearList" :key="year"
-                                class="p-2 text-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors text-sm border border-transparent"
-                                :class="{'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800 font-bold': year === currentYear}"
+                                class="p-2 text-center rounded-lg hover:bg-ui-hover cursor-pointer transition-colors text-sm border border-transparent"
+                                :class="{'bg-ui-selection text-ui-primary border-ui-primary font-bold': year === currentYear}"
                                 @click="selectYear(year)"
                             >
                                 {{ year }}
@@ -117,8 +117,8 @@
                         <!-- Months View -->
                         <div v-else-if="viewMode === 'months'" class="grid grid-cols-3 gap-2">
                             <div v-for="(month, index) in monthNames" :key="index"
-                                class="p-2 text-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors text-sm border border-transparent"
-                                :class="{'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800 font-bold': index === currentMonth}"
+                                class="p-2 text-center rounded-lg hover:bg-ui-hover cursor-pointer transition-colors text-sm border border-transparent"
+                                :class="{'bg-ui-selection text-ui-primary border-ui-primary font-bold': index === currentMonth}"
                                 @click="selectMonth(index)"
                             >
                                 {{ month }}
@@ -127,12 +127,13 @@
                     </div>
 
                     <!-- Time Picker -->
-                    <div v-if="shouldShowTime" class="border-t border-slate-100 dark:border-slate-700 p-3 bg-slate-50/50 dark:bg-slate-800/50 grid gap-2 text-center flex-shrink-0" :class="[enableSeconds ? 'grid-cols-3' : 'grid-cols-2']">
+                    <div v-if="shouldShowTime" class="border-t border-ui-subtle p-3 bg-ui-surface-subtle grid gap-2 text-center flex-shrink-0" :class="[enableSeconds ? 'grid-cols-3' : 'grid-cols-2']">
                         <div class="flex flex-col items-center gap-1">
                             <div class="py-3" v-if="mode === 'time'">
                                 <KunBtn @click="adjustTime('hours', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
                             </div>
                             <KunNumberField 
+                                v-bind="timeFieldProps"
                                 v-model="time.hours" 
                                 :min="0" :max="23" 
                                 @change="updateTime" 
@@ -142,7 +143,7 @@
                                 noArrows hide-details
                                 density="compact"
                                 placeholder="00"
-                                bg-input="bg-white dark:bg-slate-700"
+                                bg-input="bg-ui-surface-raised"
                             />
                             <div class="py-3" v-if="mode === 'time'">
                                 <KunBtn @click="adjustTime('hours', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
@@ -153,6 +154,7 @@
                                 <KunBtn @click="adjustTime('minutes', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
                             </div>
                             <KunNumberField 
+                                v-bind="timeFieldProps"
                                 v-model="time.minutes" 
                                 :min="0" :max="59" 
                                 @change="updateTime" 
@@ -162,7 +164,7 @@
                                 noArrows hide-details
                                 density="compact"
                                 placeholder="00"
-                                bg-input="bg-white dark:bg-slate-700"
+                                bg-input="bg-ui-surface-raised"
                             />
                             <div class="py-3" v-if="mode === 'time'">
                                 <KunBtn @click="adjustTime('minutes', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
@@ -173,6 +175,7 @@
                                 <KunBtn @click="adjustTime('seconds', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
                             </div>
                             <KunNumberField 
+                                v-bind="timeFieldProps"
                                 v-model="time.seconds" 
                                 :min="0" :max="59" 
                                 @change="updateTime" 
@@ -182,7 +185,7 @@
                                 noArrows hide-details
                                 density="compact"
                                 placeholder="00"
-                                bg-input="bg-white dark:bg-slate-700"
+                                bg-input="bg-ui-surface-raised"
                             />
                             <div class="py-3" v-if="mode === 'time'">
                                 <KunBtn @click="adjustTime('seconds', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
@@ -191,7 +194,7 @@
                     </div>
 
                     <!-- Actions Footer -->
-                    <div v-if="!autoApply" class="p-3 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-2 bg-white dark:bg-slate-800 flex-shrink-0">
+                    <div v-if="!autoApply" class="p-3 border-t border-ui-subtle flex justify-end gap-2 bg-ui-surface-raised flex-shrink-0">
                             <KunBtn @click="closePopover" size="xs">Cancelar</KunBtn>
                             <KunBtn @click="applySelection" size="xs" bgColor="bg-success">Aplicar</KunBtn>
                     </div>
@@ -837,13 +840,13 @@ function dayClasses(dayObj) {
     }
 
     const base = 'flex items-center justify-center font-medium text-sm z-10'; 
-    const text = !isCurrentMonth ? 'text-slate-300 dark:text-slate-600' : 'text-slate-700 dark:text-slate-200';
+    const text = !isCurrentMonth ? 'text-ui-disabled' : 'text-ui';
     
-    if (isSelected) return `${base} bg-blue-600 text-white shadow-md hover:bg-blue-700 rounded-full`;
-    if (inRange) return `${base} bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-none`;
+    if (isSelected) return `${base} bg-ui-primary text-ui-inverse shadow-md hover:bg-ui-primary rounded-full`;
+    if (inRange) return `${base} bg-ui-selection text-ui-selection rounded-none`;
     
-    const hover = 'hover:bg-slate-100 dark:hover:bg-slate-700';
-    const todayBorder = isToday ? 'border border-blue-500 text-blue-600 dark:text-blue-400 font-bold' : '';
+    const hover = 'hover:bg-ui-hover';
+    const todayBorder = isToday ? 'border border-ui-primary text-ui-primary font-bold' : '';
     return `${base} ${text} ${hover} ${todayBorder}`;
 }
 
@@ -855,8 +858,7 @@ function isSameDay(d1, d2) {
 <style scoped>
 .custom-scrollbar::-webkit-scrollbar { width: 5px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
-.dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: 20px; }
 .scale-95 { transform: scale(0.95); }
 .scale-100 { transform: scale(1); }
 </style>

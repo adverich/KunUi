@@ -14,10 +14,10 @@ export const KunNumberFieldProps = {
 
   // Estilo y diseño
   rounded: { type: String, default: 'rounded' },
-  borderColor: { type: String, default: 'border-gray-300 dark:border-gray-700' },
-  textColor: { type: String, default: 'text-black dark:text-white' },
-  labelColor: { type: String, default: 'text-black/80 dark:text-white/80' },
-  placeholderColor: { type: String, default: 'placeholder-black/60 dark:placeholder-white/60' },
+  borderColor: { type: String, default: 'border-ui' },
+  textColor: { type: String, default: 'text-ui' },
+  labelColor: { type: String, default: 'text-ui' },
+  placeholderColor: { type: String, default: 'placeholder-ui' },
   bgInput: { type: String, default: 'bg-field-background' },
   textCenter: { type: Boolean, default: false },
   controlVariant: { type: String, default: 'default' },

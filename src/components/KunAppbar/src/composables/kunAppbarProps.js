@@ -13,7 +13,7 @@ export const kunAppbarProps = {
   height: String,
   elevation: { type: String, default: 'md' },
   bordered: { type: Boolean, default: false },
-  borderColor: { type: String, default: 'border-b border-slate-200 dark:border-slate-800' },
+  borderColor: { type: String, default: 'border-b border-ui' },
   showDrawerButton: { type: Boolean, default: true },
   buttonClass: { type: String, default: 'px-2' },
   buttonBg: { type: String, default: 'bg-button-disabled opacity-75' },

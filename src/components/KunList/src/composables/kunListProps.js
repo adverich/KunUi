@@ -9,5 +9,5 @@ export const kunListProps = {
     validator: v => ['single', 'multiple'].includes(v),
   },
   bgList: { type: String, default: 'bg-transparent' },
-  borderColor: { type: String, default: 'border-gray-300 dark:border-gray-700' }
+  borderColor: { type: String, default: 'border-ui' }
 }

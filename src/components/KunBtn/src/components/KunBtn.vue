@@ -143,9 +143,9 @@ const variantClasses = computed(() => {
     case 'default': return `${bg} ${text} shadow hover:brightness-95`
     case 'tonal':   return `${bg} ${text} shadow-sm hover:shadow-md`
     case 'soft':    return `${bg} ${text} hover:bg-opacity-30 shadow-sm`
-    case 'outlined':return `bg-transparent ${text} border ${bg} border-opacity-40 hover:bg-black/5`
-    case 'plain':   return `bg-transparent ${text} hover:bg-transparent active:bg-black/10`
-    case 'text':    return `${bg} ${text} hover:bg-opacity-10 active:bg-black/5`
+    case 'outlined':return `bg-transparent ${text} border ${bg} border-opacity-40 hover:bg-ui-hover`
+    case 'plain':   return `bg-transparent ${text} hover:bg-ui-hover active:bg-ui-hover`
+    case 'text':    return `${bg} ${text} hover:bg-opacity-10 active:bg-ui-hover`
     default:        return `${bg} ${text}`
   }
 })

@@ -21,7 +21,7 @@
       <KunVirtualScroller :items="rows" :estimatedItemHeight="36" class="w-full">
         <template #default="{ item: row }">
           <div
-            class="grid items-center hover:bg-slate-500"
+            class="grid items-center hover:bg-ui-hover"
             :style="`grid-template-columns: repeat(${columns.length + 1}, minmax(120px, 1fr))`"
           >
             <div class="px-2 py-1 border-b font-medium text-lg">
@@ -34,7 +34,7 @@
             >
               <KunCheckbox
                 :modelValue="hasRelation(row, col)"
-                :color="hasRelation(row, col) ? 'text-green-600 dark:text-green-400' : ''"
+                :color="hasRelation(row, col) ? 'text-success' : ''"
                 @update:modelValue="checked => onCheckboxChange(row, col, checked)"
                 size="lg"
                 :label="''"

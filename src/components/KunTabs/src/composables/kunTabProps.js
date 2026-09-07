@@ -11,7 +11,7 @@ export const kunTabProps = {
   },
   baseColor: {
     type: String,
-    default: 'text-slate-500 dark:text-slate-300',
+    default: 'text-ui-muted',
   },
   colorClass: {
     type: String,

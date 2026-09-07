@@ -22,7 +22,7 @@
             :bgColor="buttonBg"
             minWidth="fit-content"
             rounded="rounded-full"
-            textColor="text-black dark:text-white"
+            textColor="text-ui"
 
             @click="$emit('toggle-drawer')"
           >

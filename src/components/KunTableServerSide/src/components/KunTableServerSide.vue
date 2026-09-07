@@ -19,7 +19,7 @@
         <span
           v-if="selectedItems.length"
           @click="clearSelection"
-          class="bg-blue-300 dark:bg-blue-700 hover:!bg-blue-500 rounded cursor-pointer px-2 ml-2"
+          class="bg-ui-selection hover:bg-ui-primary rounded cursor-pointer px-2 ml-2"
         >
           Anular selección
         </span>
@@ -34,7 +34,7 @@
           @click="modalFilter = true"
           rounded="rounded-full"
           size="xs"
-          bgColor="bg-green-200 dark:bg-green-800"
+          bgColor="bg-success"
         >
           <KunIcon class="h-fit" :icon="IconFilter" size="text-lg" />
         </KunBtn>
@@ -153,10 +153,10 @@
 
       <div
         v-if="loading && rows.length"
-        class="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-white/60 dark:bg-black/50 print:hidden"
+        class="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-ui-overlay print:hidden"
       >
         <KunLoaderCircular :size="40" :width="4" />
-        <span class="text-sm text-slate-700 dark:text-slate-200">{{ loadingText }}</span>
+        <span class="text-sm text-ui">{{ loadingText }}</span>
       </div>
     </div>
 
@@ -492,7 +492,7 @@ const slotProps = computed(() => ({
   pagination: pagination.value,
 }));
 
-const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col border border-slate-200 dark:border-slate-800 rounded';
+const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col border border-ui rounded';
 const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
 
 const baseTableClass = 'table-auto w-full h-fit text-sm text-left';

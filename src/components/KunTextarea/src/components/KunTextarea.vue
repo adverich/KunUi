@@ -58,7 +58,7 @@
         :class="clearIconClasses"
       >
         <slot name="clear" v-bind="clearSlotBindings">
-          <button type="button" @click="handleClear" class="text-gray-500 hover:text-gray-700" v-if="clearIcon">
+          <button type="button" @click="handleClear" class="text-ui-muted hover:text-ui" v-if="clearIcon">
             <component :is="renderIconSlot(clearIcon)" />
           </button>
         </slot>
@@ -99,7 +99,7 @@
       <div
         v-if="!hideDetails || (hideDetails === 'auto' && (displayedMessages.length || hint))"
         class="text-xs mt-1 space-y-1"
-        :class="{ 'text-red-500': hasError, 'text-gray-500': !hasError }"
+        :class="{ 'text-ui-error': hasError, 'text-ui-muted': !hasError }"
       >
         <slot name="details">
           <template v-if="hasError">
@@ -118,7 +118,7 @@
       </div>
 
       <!-- Counter -->
-      <div v-if="counterVisible" class="text-xs text-right mt-1 text-gray-400">
+      <div v-if="counterVisible" class="text-xs text-right mt-1 text-ui-disabled">
         <slot name="counter" :counter="valueLength" :max="counterMax" :value="valueLength">
           {{ valueLength }}<span v-if="counterMax"> / {{ counterMax }}</span>
         </slot>
@@ -242,11 +242,11 @@ const variantClass = computed(() => {
     case 'filled':
       return [bg, 'border border-transparent']
     case 'outlined':
-      return 'border border-gray-300 dark:border-gray-700 bg-transparent'
+      return 'border border-ui bg-transparent'
     case 'underlined':
-      return 'border-b border-gray-300 dark:border-gray-700 bg-transparent rounded-none'
+      return 'border-b border-ui bg-transparent rounded-none'
     case 'solo':
-      return [bg || 'bg-white dark:bg-black', 'shadow-md border-transparent']
+      return [bg || 'bg-ui-surface-raised', 'shadow-md border-transparent']
     default:
       return ''
   }
@@ -257,7 +257,7 @@ const densityClass = computed(() =>
 )
 
 const textareaClasses = computed(() => [
-  'w-full resize-none p-2 transition-colors duration-150 text-black dark:text-white',
+  'w-full resize-none p-2 transition-colors duration-150 text-ui',
   props.inputClass,
   {
     'rounded': !props.tile,
@@ -266,10 +266,10 @@ const textareaClasses = computed(() => [
     'shadow-md': props.variant === 'solo' && !props.flat,
     'shadow-none': props.flat,
     [props.bgColor]: props.bgColor,
-    'text-gray-500 bg-surface': props.disabled,
+    'text-ui-disabled bg-surface': props.disabled,
     'focus:outline-none focus:ring-1': !props.disabled,
     [`${props.focusRingColor}`]: props.focusRingColor && !props.disabled && !hasError.value,
-    'border-red-500 ring-red-500 focus:ring-red-500': hasError.value,
+    'border-error ring-ui-focus': hasError.value,
     'resize-none': props.noResize || props.autoGrow,
     'resize': !props.noResize && !props.autoGrow,
   },
