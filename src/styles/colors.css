@@ -35,7 +35,7 @@
     --textarea-outline-focus: #9D2817;
 
     /* Roles semánticos compartidos por todos los componentes. */
-    --on-color: #172033;
+    --on-color: #000000;
     --on-color-muted: #5f6b7a;
     --on-color-disabled: #8a93a3;
     --on-color-inverse: #ffffff;
@@ -89,7 +89,7 @@
     --select-hover: #24292d;
     --textarea-outline-focus: #9D2817;
 
-    --on-color: #eef1ff;
+    --on-color: #ffffff;
     --on-color-muted: #abb5c8;
     --on-color-disabled: #69738a;
     --on-color-inverse: #090922;

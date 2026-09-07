@@ -27,7 +27,6 @@
             input-style="cursor-pointer"
             v-bind="{ ...$attrs, ...inputProps }"
             @handleClick="togglePopover"
-            @click="togglePopover"
             @keyDown.enter="togglePopover"
             @keyDown.space="togglePopover"
             :class="['cursor-pointer', inputClass]"

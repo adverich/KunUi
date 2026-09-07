@@ -9,10 +9,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, useAttrs } from "vue";
 import { kunAvatarProps } from '../composables/kunAvatarProps'
 
 const props = defineProps(kunAvatarProps);
+const attrs = useAttrs();
 
 defineEmits(["click", "hover", "contextmenu", "focus"]);
 
@@ -24,12 +25,17 @@ const sizes = {
   "x-large": "w-24 h-24 text-xl",
 };
 
+const hasBackgroundClass = computed(() => {
+  const classes = Array.isArray(attrs.class) ? attrs.class.join(' ') : String(attrs.class || '');
+  return /(?:^|\s)(?:bg-|dark:bg-)/.test(classes);
+});
+
 const computedClasses = computed(() => [
   "relative flex items-center justify-center overflow-hidden cursor-pointer transition-all",
   sizes[props.size] || sizes.default,
   props.rounded ? "rounded-full" : props.tile ? "rounded-none" : "rounded",
   props.border ? `border border-${props.border}` : "",
-  props.color ? `bg-${props.color}` : "bg-ui-surface-subtle",
+  props.color ? `bg-${props.color}` : hasBackgroundClass.value ? "" : "bg-ui-surface-subtle",
   props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3",
   props.start ? "ms-2" : "",
   props.end ? "me-2" : "",

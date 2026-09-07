@@ -7,7 +7,7 @@ export const kunTooltipProps = {
   disabled: Boolean,
   delay: { type: [Number, String], default: 0 },
   closeDelay: { type: [Number, String], default: 100 },
-  textColor: { type: String, default: 'text-ui-inverse' },
+  textColor: { type: String, default: 'text-ui' },
   bgColor: { type: String, default: 'bg-surface-dark' },
   rounded: { type: String, default: 'rounded' },
   textSize: { type: String, default: 'text-sm' },
