@@ -26,14 +26,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, onBeforeUnmount, nextTick, useId } from 'vue'
 import { kunTooltipProps } from '../composables/kunTooltipProps'
 import { useTooltipPosition } from '../composables/useTooltipPosition'
 
 const props = defineProps(kunTooltipProps)
 
 // ID único por tooltip
-const tooltipId = 'tooltip-' + Math.random().toString(36).slice(2, 11)
+const tooltipId = props.id || `tooltip-${useId()}`
 
 const isVisible = ref(false)
 const activatorRef = ref(null)

@@ -205,7 +205,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch, provide, inject, h, useSlots } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick, watch, provide, inject, h, useId, useSlots } from 'vue';
 import KunTextField from '../../../KunTextField/src/components/KunTextField.vue';
 import KunNumberField from '../../../KunNumberField/src/components/KunNumberField.vue';
 import { usePosition } from '../composables/usePosition';
@@ -226,7 +226,7 @@ const triggerIcon = () => slots.icon?.() ?? h(IconCalendarOutline)
 const emit = defineEmits(['update:modelValue', 'change', 'close', 'open']);
 
 // Global Click Manager
-const instanceId = Math.random().toString(36).substr(2, 9);
+const instanceId = props.id || `kun-datepicker-${useId()}`;
 const containerRef = ref(null);
 const triggerRef = ref(null);
 const popoverRef = ref(null);

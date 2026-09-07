@@ -165,7 +165,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, computed, nextTick, useSlots } from 'vue';
+import { useId, computed, nextTick, useSlots } from 'vue';
 import { KunNumberFieldProps } from '../composables/KunNumberFieldProps';
 import { useKunNumberField } from '../composables/useKunNumberFieldComposable';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
@@ -183,7 +183,7 @@ const emits = defineEmits([
   'keyUp'
 ]);
 
-const uid = props.id || `number-input-${getCurrentInstance().uid}`;
+const uid = props.id || `number-input-${useId()}`;
 const slots = useSlots();
 const prependIconSlot = !!slots['prepend-icon'];
 const appendIconSlot = !!slots['append-icon'];

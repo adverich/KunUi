@@ -1,5 +1,6 @@
 export const kunDatePickerProps = {
   modelValue: { type: [Date, Array, String], default: null },
+  id: { type: String, default: null },
   range: { type: Boolean, default: false },
   label: { type: String, default: '' },
   placeholder: { type: String, default: '' },

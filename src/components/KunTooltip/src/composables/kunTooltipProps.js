@@ -1,5 +1,6 @@
 export const kunTooltipProps = {
   class: [String, Array, Object],
+  id: { type: String, default: null },
   text: String,
   location: { type: String, default: 'top' },
   openOn: { type: String, default: 'hover' },

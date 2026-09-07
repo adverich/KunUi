@@ -133,7 +133,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs, getCurrentInstance } from 'vue'
+import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs, useId } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
 import { RouterLink } from 'vue-router'
 import { kunListItemProps } from '../composables/kunListItemProps'
@@ -153,10 +153,8 @@ const liRef = ref(null)
 const registerRef = inject('registerListItemRef', null)
 const listContext = inject('kunListContext', null)
 
-const computedId = computed(() => {
-  if (props.id) return props.id
-  return `kun-list-item-${getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2, 7)}`
-})
+const generatedId = useId()
+const computedId = computed(() => props.id || `kun-list-item-${generatedId}`)
 
 onMounted(() => {
   if (registerRef && liRef.value) registerRef(liRef.value)

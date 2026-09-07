@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick, useId } from 'vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { kunListGroupProps } from '../composables/kunListGroupProps'
 
@@ -50,7 +50,8 @@ const emit = defineEmits(['update:modelValue'])
 const contentRef = ref(null)
 const height = ref(0)
 
-const contentId = computed(() => `kun-list-group-content-${Math.random().toString(36).slice(2)}`)
+const generatedId = useId()
+const contentId = computed(() => props.id ? `${props.id}-content` : `kun-list-group-content-${generatedId}`)
 
 const toggle = () => {
   emit('update:modelValue', !props.modelValue)

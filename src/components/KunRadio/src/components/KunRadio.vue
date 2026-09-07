@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, useId } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 import { icons } from "@/icons"
 import { kunRadioProps } from '../composables/kunRadioProps'
@@ -27,7 +27,7 @@ const colorClass = computed(() =>
     : props.baseColor || 'text-ui-muted'
 )
 
-const uid = Math.random().toString(36).slice(2, 10)
+const uid = useId()
 const inputId = computed(() => props.id || `kun-radio-${uid}`)
 
 function handleChange() {

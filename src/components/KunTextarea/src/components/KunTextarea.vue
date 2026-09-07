@@ -35,6 +35,7 @@
       <!-- Textarea Mejorado -->
       <textarea
         ref="textareaRef"
+        :id="uid"
         :value="internalValue"
         :rows="autoGrow ? undefined : rows"
         :disabled="disabled"
@@ -128,7 +129,7 @@
 </template>
 
 <script setup>
-import { useAttrs, computed, ref, getCurrentInstance } from 'vue'
+import { useAttrs, computed, ref, useId } from 'vue'
 import { kunTextareaProps } from '../composables/kunTextareaProps'
 import useTextarea from '../composables/useKunTextareaComposable'
 import { renderIconSlot } from '@/utils/renderIcon'
@@ -139,7 +140,7 @@ const emits = defineEmits(['update:modelValue', 'click:clear', 'click:control', 
 const attrs = useAttrs()
 
 const textareaRef = ref(null)
-const uid = `textarea-${getCurrentInstance().uid}`
+const uid = props.id || `textarea-${useId()}`
 
 const {
   isFocused,

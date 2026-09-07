@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, useSlots, computed, ref, nextTick } from 'vue';
+import { useId, useSlots, computed, ref, nextTick } from 'vue';
 import { icons } from '@/icons'
 import inputProps from '../composables/KunTextFieldProps';
 import useKunTextField from '../composables/useKunTextFieldComposable';
@@ -146,7 +146,7 @@ defineExpose({
   }
 });
 
-const uid = props.id || `input-${getCurrentInstance().uid}`;
+const uid = props.id || `input-${useId()}`;
 const isActive = computed(() => ( inputFocused.value || inputValue.value !== '' || props.dirty ));
 
 const slots = useSlots();
