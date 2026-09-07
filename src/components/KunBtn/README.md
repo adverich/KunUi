@@ -20,18 +20,16 @@ import KunBtn from '@/components/KunBtn/KunBtn.vue';
 |---|---|---|---|
 | text | String | - |  |
 | size | Object | - |  |
-| type | String | - |  |
+| type | String | `button` | Tipo nativo del botón: `button`, `submit` o `reset`. |
 | minWidth | Object | - |  |
 | fontWeight | Object | - |  |
 | rounded | Object | - |  |
 | textAlign | Object | - |  |
 | variant | Object | - |  |
-| type | String | - |  |
 | disabled | Boolean | - |  |
 | loading | Boolean | - |  |
 | bgColor | Object | - |  |
 | textColor | Object | - |  |
-| type | String | - |  |
 | href | String | - |  |
 | replace | Boolean | - |  |
 | target | String | - |  |

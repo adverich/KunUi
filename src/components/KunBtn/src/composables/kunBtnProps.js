@@ -14,6 +14,11 @@ export const kunBtnProps = {
     default: 'default',
     validator: v => ['default', 'tonal', 'plain', 'outlined', 'soft', 'text'].includes(v)
   },
+  type: {
+    type: String,
+    default: 'button',
+    validator: v => ['button', 'submit', 'reset'].includes(v)
+  },
   disabled: Boolean,
   loading: Boolean,
   bgColor: { type: String, default: 'bg-button' },

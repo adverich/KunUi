@@ -103,7 +103,7 @@ const componentAttrs = computed(() => {
     }
   }
   return {
-    type: 'button',
+    type: props.type,
     disabled: props.loading || props.disabled
   }
 })
