@@ -701,6 +701,28 @@ Selector de fecha y hora.
 
 ---
 
+### KunColorPicker
+
+Selector de color con vista previa del color original y del seleccionado, control de opacidad, opción transparente y reset.
+
+```vue
+<KunColorPicker v-model="color" original-color="#2563EB" label="Color de acento" />
+```
+
+| Prop | Tipo | Default | Descripción |
+|------|------|---------|-------------|
+| modelValue | String | '#000000' | Color seleccionado; emite HEX opaco o `rgba()` con opacidad |
+| originalColor | String | null | Color al que vuelve `Restablecer`; si se omite usa el valor inicial |
+| allowTransparent | Boolean | true | Habilita el selector transparente |
+| resettable | Boolean | true | Muestra la acción Restablecer |
+| showPreview | Boolean | true | Muestra las vistas previa original y seleccionada |
+| colorType | String | 'all' | Formato emitido: `hex`, `rgb`, `hsl`; `all` deja elegirlo en el selector |
+| disabled | Boolean | false | Deshabilita el control |
+
+**Eventos:** `update:modelValue`, `change`, `reset`, `open`, `close`.
+
+---
+
 ### KunCard y subcomponentes
 
 Sistema de tarjetas.

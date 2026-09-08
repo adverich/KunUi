@@ -44,6 +44,9 @@
       </KunCol> -->
 
       <KunCol cols="4">
+        <div class="w-1/3">
+          <KunColorPicker v-model="colorSelected" />
+        </div>
         <KunSwitch v-model="switchBtn" />
         <KunDatePicker :only-icon="true" />
       </KunCol>
@@ -73,8 +76,10 @@ import KunNumberField from './components/KunNumberField/src/components/KunNumber
 import KunRow from './components/KunRow/src/components/KunRow.vue';
 import KunCol from './components/KunCol/src/components/KunCol.vue';
 import KunDatePicker from './components/KunDatePicker/src/components/KunDatePicker.vue';
+import KunColorPicker from './components/KunColorPicker/src/components/KunColorPicker.vue';
 
 const leftDrawerStatus = ref(false);
+const colorSelected = ref('#913131');
 
 const productBrands = ref(generateFakeBrands(500));
 const productCategories = ref(generateFakeCategories(20));

@@ -47,6 +47,7 @@ import 'adverich-kun-ui/dist/adverich-kun-ui.css'
 - `KunFileInput` - Input de archivos
 - `KunCurrency` - Campo de moneda
 - `KunDatePicker` - Selector de fecha
+- `KunColorPicker` - Selector de color con transparencia y reset
 - `KunSlider` - Slider/Rango
 - `KunForm` - Contenedor de formulario
 
