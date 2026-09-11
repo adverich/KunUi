@@ -25,11 +25,17 @@
       @focusin="onFocus"
       @focusout="onBlur"
     >
-      <slot name="prepend">
-        <span v-if="prependIcon">
-          {{ renderIconSlot(prependIcon) }}
-        </span>
-      </slot>
+      <span v-if="prependIcon || $slots.prepend" class="flex items-center">
+        <slot name="prepend">
+          <KunIcon v-if="prependIcon" :icon="prependIcon" :size="iconSize" :disabled="disabled" />
+        </slot>
+      </span>
+
+      <span v-if="prependInnerIcon || $slots['prepend-inner']" :class="prependInnerClass" class="flex items-center">
+        <slot name="prepend-inner">
+          <KunIcon v-if="prependInnerIcon" :icon="prependInnerIcon" :size="iconSize" :disabled="disabled" />
+        </slot>
+      </span>
 
       <input
         ref="inputRef"
@@ -47,19 +53,24 @@
         </slot>
       </div>
 
-      <slot name="append">
-        <span v-if="appendIcon">
-          {{ renderIconSlot(appendIcon) }}
-        </span>
-      </slot>
+      <span v-if="appendInnerIcon || $slots['append-inner']" :class="appendInnerClass" class="flex items-center">
+        <slot name="append-inner">
+          <KunIcon v-if="appendInnerIcon" :icon="appendInnerIcon" :size="iconSize" :disabled="disabled" />
+        </slot>
+      </span>
+
+      <span v-if="appendIcon || $slots.append" class="flex items-center">
+        <slot name="append">
+          <KunIcon v-if="appendIcon" :icon="appendIcon" :size="iconSize" :disabled="disabled" />
+        </slot>
+      </span>
 
       <button
         v-if="clearable && fileNames.length"
         @click.stop="clearFiles"
         class="cursor-pointer text-ui-muted hover:text-ui-error"
       >
-        <span v-if="clearIcon">{{ renderIconSlot(clearIcon) }}</span>
-        <span v-else>✕</span>
+        <KunIcon :icon="clearIcon || icons.close" :size="iconSize" :disabled="disabled" />
       </button>
     </div>
 
@@ -81,7 +92,8 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { renderIconSlot } from '@/utils/renderIcon'
+import { icons } from '@/icons'
+import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { kunFileInputProps } from '../composables/kunFileInputProps'
 
 const props = defineProps(kunFileInputProps)
