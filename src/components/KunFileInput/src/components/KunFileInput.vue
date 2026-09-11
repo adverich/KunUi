@@ -96,6 +96,8 @@ import { icons } from '@/icons'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { kunFileInputProps } from '../composables/kunFileInputProps'
 
+defineOptions({ inheritAttrs: false })
+
 const props = defineProps(kunFileInputProps)
 
 const emit = defineEmits([
@@ -103,6 +105,7 @@ const emit = defineEmits([
   'click:clear',
   'click:control',
   'update:focused',
+  'change',
 ])
 
 const inputRef = ref(null)
@@ -124,6 +127,7 @@ function onFileChange(e) {
   const fileArray = Array.from(files)
   internalValue.value = props.multiple ? fileArray : [fileArray[0]]
   emit('update:modelValue', props.multiple ? fileArray : fileArray[0])
+  emit('change', e)
   validate()
 }
 

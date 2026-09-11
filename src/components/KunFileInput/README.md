@@ -41,9 +41,16 @@ import KunFileInput from '@/components/KunFileInput/KunFileInput.vue';
 ## Eventos
 
 - `update:modelValue`
+- `change` — se emite al seleccionar archivos; payload: `Event` nativo del `<input type="file">`
 - `click:clear`
 - `click:control`
 - `update:focused`
+
+## Atributos (`$attrs`)
+
+El componente declara `inheritAttrs: false` y reenvía `$attrs` al contenedor interno
+(el área clickeable/foco), no al wrapper raíz. Esto evita el doble binding de
+listeners (`@change`, `@click`, etc.) y la duplicación de `id`/`aria-*` en el DOM.
 
 
 ## Dependencias

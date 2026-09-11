@@ -672,6 +672,10 @@ Input de archivos.
 <KunFileInput v-model="files" label="Subir archivo" multiple clearable />
 ```
 
+**Eventos:** update:modelValue, change, click:clear, click:control, update:focused
+
+**Nota:** usa `inheritAttrs: false` y reenvía `$attrs` al contenedor interno, de modo que `@change`/`@click` y `id`/`aria-*` no se duplican en el DOM.
+
 ---
 
 ### KunDatePicker
