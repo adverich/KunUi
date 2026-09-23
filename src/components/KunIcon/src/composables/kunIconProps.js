@@ -19,5 +19,9 @@ export const kunIconProps = {
     type: Boolean,
     default: false
   },
+  cursor: {
+    type: String,
+    default: null
+  },
   contentClass: [String, Array, Object],
 }

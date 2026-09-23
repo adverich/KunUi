@@ -1,7 +1,7 @@
 <template>
   <span
     class="flex items-center"
-    :class="[color, normalizedSize, disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer']"
+    :class="[color, normalizedSize, cursorClass, disabled ? 'opacity-50' : '']"
     @click="handleClick"
      v-bind="$attrs"
   >
@@ -57,5 +57,10 @@ const normalizedSize = computed(() => {
     return `text-[${rawSize}px]`;
   }
   return rawSize;
+});
+
+const cursorClass = computed(() => {
+  if (props.cursor) return props.cursor;
+  return props.disabled ? 'cursor-not-allowed' : 'cursor-pointer';
 });
 </script>
