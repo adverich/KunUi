@@ -12,7 +12,7 @@
           class="flex flex-nowrap items-center space-x-1 min-w-[calc(100%-56px)] overflow-x-auto overflow-y-hidden"
           @click="!disabled && toggleMenu()"
         >
-          <template v-for="item in modelValue" :key="item.id ?? item.name">
+          <template v-for="(item, idx) in modelValue" :key="typeof item === 'object' && item !== null ? (item.id ?? item.name ?? idx) : (item ?? idx)">
             <KunChip size="small" variant="pill">
               <div class="flex items-center">
                 {{ getArrayText(item) }}

@@ -8,11 +8,22 @@ export function useAutocomplete(props, emits, modelValue, items) {
     const menuModel = ref(false);
     const search = ref("");
 
-    const getArrayText = (item, string) => {
-        if (props.returnObject) return itemToString(item, props.itemTitle);
-        const finded = selectedItem.value.find((i) => i[props.itemValue] === item);
-        return itemToString(finded, props.itemTitle);
+    const getArrayText = (item) => {
+        const titleKey = props.itemTitle ?? props.itemText ?? textArr.value;
+        if (props.returnObject) return itemToString(item, titleKey, "hasDefault");
+        const resolved = resolveItem(item);
+        return itemToString(resolved, titleKey, "hasDefault");
     };
+
+    function resolveItem(rawVal) {
+        if (isObject(rawVal)) return rawVal;
+        const pool = items.value?.length ? items.value : (isArray(selectedItem.value) ? selectedItem.value : []);
+        const found = pool.find((candidate) => {
+            if (isObject(candidate)) return extractValueKey(candidate) === rawVal;
+            return candidate === rawVal;
+        });
+        return found ?? rawVal;
+    }
 
     const placeholder = computed(() => {
         if (selectedItem.value !== null && selectedItem.value !== undefined) {
@@ -88,12 +99,9 @@ export function useAutocomplete(props, emits, modelValue, items) {
             }
         }
         if (isArray(item)) {
-            if (!props.returnObject) {
-                return item.map((i) => i).join(" - ");
-            }
-            return item.map((i) => i[value]).join(" - ");
+            return item.map((el) => itemToString(el, value, hasDefault)).join(" - ");
         }
-        if (hasDefault && typeof item !== "number") {
+        if (hasDefault && item !== null && item !== undefined && typeof item !== "number" && typeof item !== "object") {
             if (item.includes(",")) {
                 return item.split(",");
             }
@@ -168,17 +176,27 @@ export function useAutocomplete(props, emits, modelValue, items) {
     function findItemByValue(value) {
         if (value === undefined || value === null) return null;
 
-        // Si es múltiple, buscar cada objeto en items
+        // Si es múltiple, buscar cada objeto en items (opción 4: mostrar el primitivo si aún no resuelve)
         if (props.multiple && Array.isArray(value)) {
-            return props.returnObject ? value : value.map(val => items.value.find(item => item[props.itemValue] === val)).filter(Boolean);
+            if (props.returnObject) return value;
+            return value.map((val) => {
+                if (isObject(val)) return val;
+                const pool = items.value?.length ? items.value : (isArray(selectedItem.value) ? selectedItem.value : []);
+                const found = pool.find((candidate) => {
+                    if (isObject(candidate)) return extractValueKey(candidate) === val;
+                    return candidate === val;
+                });
+                return found ?? val;
+            });
         }
 
         // Si es un objeto
         if (props.returnObject) return value;
 
-        // Single value: buscar en items el objeto cuyo itemValue coincida con value
-        const item = items.value.find(item =>
-            typeof item === 'object' ? item[props.itemValue] === value : item === value
+        // Single value: buscar en items el objeto cuya clave coincida con value
+        const pool = items.value?.length ? items.value : (isArray(selectedItem.value) ? selectedItem.value : []);
+        const item = pool.find((candidate) =>
+            isObject(candidate) ? extractValueKey(candidate) === value : candidate === value
         ) ?? value;
 
         return item;
@@ -319,7 +337,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
     }
 
     return {
-        selectedItem, textFieldRef, listRef, menuModel, search, getArrayText,
+        selectedItem, textFieldRef, listRef, menuModel, search, getArrayText, resolveItem,
         placeholder, textArr, itemToString, getSelectedItem,
         checkIfValueExist, removeFromArray, lightReset, openMenu, closeMenu, toggleMenu, focusOnMenu, onMenuKeydown, createItem,
         removeItem, clearSelection, checkDisabled, isAlphanumeric,
