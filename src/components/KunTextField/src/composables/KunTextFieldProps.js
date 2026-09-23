@@ -10,6 +10,8 @@ export default {
   suffix: { type: String, default: '' },
   prependIcon: String,
   appendIcon: String,
+  prependInnerIcon: { type: [String, Object, Function, Array], default: null },
+  appendInnerIcon: { type: [String, Object, Function, Array], default: null },
   prependInnerClass: String,
   appendInnerClass: String,
 

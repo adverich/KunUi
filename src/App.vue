@@ -44,6 +44,7 @@
       </KunCol> -->
 
       <KunCol cols="4">
+        <KunTextField />
         <div class="w-1/3">
           <KunColorPicker v-model="colorSelected" />
         </div>
