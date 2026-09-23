@@ -9,11 +9,12 @@
       <template #prepend-input-content>
         <div
           v-if="isArray(modelValue) && isNotEmpty(modelValue)"
-          class="flex min-w-0 flex-1 flex-nowrap items-center gap-1 overflow-x-auto overflow-y-hidden"
+          ref="chipsWrapRef"
+          class="flex min-w-0 max-w-full flex-nowrap items-center gap-1 overflow-hidden"
           @click="!disabled && toggleMenu()"
         >
           <template v-for="(item, idx) in modelValue" :key="typeof item === 'object' && item !== null ? (item.id ?? item.name ?? idx) : (item ?? idx)">
-            <KunChip size="small" variant="pill" class="shrink-0">
+            <KunChip v-show="idx < visibleCount" :data-chip="idx" size="small" variant="pill" class="shrink-0">
               <div class="flex items-center">
                 {{ getArrayText(item) }}
                 <KunIcon
@@ -26,6 +27,15 @@
               </div>
             </KunChip>
           </template>
+          <KunChip
+            v-if="hiddenCount > 0"
+            size="small"
+            variant="pill"
+            class="shrink-0"
+            :title="hiddenNames"
+          >
+            +{{ hiddenCount }} ...
+          </KunChip>
         </div>
       </template>
 
@@ -39,20 +49,20 @@
 
       <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :z-index="zIndex"
         :parent-ref="parentRef" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor" 
-        :close-on-content-click="closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
+        :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
       >
         <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b bg-select-background">
           <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass" >
             {{ btnCreateText }}
           </KunBtn>
         </div>
-        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="true">
+        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false">
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="{ item, index, empty }">
             <template v-if="!empty && (item !== undefined && item !== null)">
               <KunListItem :value="item" :key="`kun-list-${index + 1}`" :id="`kun-item-${index + 1}`" :disabled="checkDisabled(item)" 
               :bg-items="bgItemListColor" :hover-bg="hoverItemListColor" :activeClass="selectedItemListColor"
-              :density="density" :selectable="true">
+              :density="density" :selectable="true" :active="isItemSelected(item)" rounded="none">
                 <KunListItemTitle class="text-wrap">
                   {{ itemToString(item, itemTitle ?? textArr, 'hasDefault') }} 
                 </KunListItemTitle>
@@ -74,7 +84,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
 import { icons } from '@/icons'
 import { isNotEmpty, isArray } from '../../../../utils/utils.js'
 
@@ -100,12 +110,81 @@ const props = defineProps(KunAutocompleteProps);
 const emits = defineEmits(["update:modelValue", "selectedItem", "createItem", "validation", "search", "keyDown", "keyDownEnter", "notFound", "cleared"]);
 
 const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, closeMenu, toggleMenu, onMenuKeydown,
-  getSelectedItem, textArr, getArrayText, isAlphanumeric,
+  getSelectedItem, textArr, getArrayText, isAlphanumeric, checkIfValueExist, extractValueKey,
   createItem, checkDisabled, itemToString, placeholder, 
 } = useAutocomplete(props, emits, modelValue, items);
 
+function isItemSelected(item) {
+  try {
+    if (props.multiple) return checkIfValueExist(item);
+    const mv = modelValue.value;
+    if (mv === null || mv === undefined || mv === '') return false;
+    return extractValueKey(item) === extractValueKey(mv);
+  } catch {
+    return false;
+  }
+}
+
+// Truncado de chips: muestra los que entran y el resto como "+N ...". Nunca scroll horizontal.
+const chipsWrapRef = ref(null);
+const visibleCount = ref(9999);
+const totalSelected = computed(() => (isArray(modelValue.value) ? modelValue.value.length : 0));
+const hiddenCount = computed(() => Math.max(0, totalSelected.value - visibleCount.value));
+const hiddenNames = computed(() => {
+  if (!hiddenCount.value) return '';
+  try {
+    return modelValue.value.slice(visibleCount.value).map((v) => getArrayText(v)).join(', ');
+  } catch {
+    return '';
+  }
+});
+
+let overflowToken = 0;
+async function updateOverflow() {
+  const my = ++overflowToken;
+  await nextTick();
+  if (my !== overflowToken) return;
+  const el = chipsWrapRef.value;
+  if (!el || !totalSelected.value) return;
+  // Medición directa del navegador: se muestra todo y se oculta de a un chip
+  // hasta que no haya desborde. El contador "+N ..." ya renderizado cuenta
+  // solo en el cálculo, sin reservas estimadas. Tolerancia de 2px por redondeo
+  // de subpíxeles para no truncar un chip por 1px.
+  const TOL = 2;
+  const fits = () => el.scrollWidth <= el.clientWidth + TOL;
+  let n = totalSelected.value;
+  visibleCount.value = n;
+  await nextTick();
+  if (my !== overflowToken) return;
+  // Si aún no hay layout (diálogo cerrado, tab oculta), no recortar: ya habrá
+  // ResizeObserver al mostrarse.
+  if (!el.clientWidth) return;
+  let guard = totalSelected.value + 2;
+  while (guard-- > 0) {
+    const cur = chipsWrapRef.value;
+    if (!cur) return;
+    if (cur.scrollWidth <= cur.clientWidth + TOL) break;
+    if (n <= 0) break;
+    n--;
+    visibleCount.value = n;
+    await nextTick();
+    if (my !== overflowToken) return;
+  }
+}
+
+watch(() => modelValue.value, () => updateOverflow(), { deep: true });
+
+let ro = null;
 onMounted(() => {
   if (props.focusOnRender) textFieldRef.value.focus();
+  updateOverflow();
+  ro = new ResizeObserver(() => updateOverflow());
+  if (parentRef.value) ro.observe(parentRef.value);
+});
+
+onBeforeUnmount(() => {
+  overflowToken++;
+  ro?.disconnect();
 });
 
 const parentRef = ref(null);

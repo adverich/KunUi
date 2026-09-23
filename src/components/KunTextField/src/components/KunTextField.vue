@@ -30,7 +30,7 @@
           :placeholder="placeholder" :autocomplete="autocomplete" :required="required" :disabled="disabled"
           :readonly="readonly" :inputmode="inputmode" :minlength="minlength" :maxlength="maxlength"
           :pattern="pattern" :spellcheck="spellcheck"
-          class="w-full min-w-0 bg-transparent focus:outline-none leading-normal" :aria-invalid="hasError ? 'true' : 'false'"
+          class="min-w-12 flex-1 bg-transparent focus:outline-none leading-normal" :aria-invalid="hasError ? 'true' : 'false'"
           :class="[inputDensity, textColor, placeholderColor, rounded, textCenter ? 'text-center' : '', inputStyle]"
           :aria-describedby="hasError ? `error-${uid}` : null" 
           @input="handleInput" @blur="handleBlur" @focus="focusInput" 

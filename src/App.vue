@@ -44,7 +44,19 @@
       </KunCol> -->
 
       <KunCol cols="4">
-        <KunTextField />
+        <KunAutocomplete
+          v-model="selectedColumns"
+          :items="headers" density="comfortable"
+          item-value="value"
+          item-title="label"
+          item-text="label"
+          label="Columnas"
+          multiple
+          clearable
+          placeholder-text="Seleccionar columnas"
+          z-index="z-250"
+        />
+
         <div class="w-1/3">
           <KunColorPicker v-model="colorSelected" />
         </div>
@@ -88,6 +100,7 @@ const productFamilies = ref(generateFakeFamilies(100));
 const productMkups = ref(generateFakeMkups(5));
 const products = ref(generateFakeProductsFull(105));
 const product = ref();
+const selectedColumns = ref([]);
 
 const currentTheme = ref('dark')
 const selected = ref({})

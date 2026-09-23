@@ -345,7 +345,7 @@ export function useAutocomplete(props, emits, modelValue, items) {
     return {
         selectedItem, textFieldRef, listRef, menuModel, search, getArrayText, resolveItem,
         placeholder, textArr, itemToString, getSelectedItem,
-        checkIfValueExist, removeFromArray, lightReset, openMenu, closeMenu, toggleMenu, focusOnMenu, onMenuKeydown, createItem,
+        checkIfValueExist, extractValueKey, removeFromArray, lightReset, openMenu, closeMenu, toggleMenu, focusOnMenu, onMenuKeydown, createItem,
         removeItem, clearSelection, checkDisabled, isAlphanumeric,
     };
 }
