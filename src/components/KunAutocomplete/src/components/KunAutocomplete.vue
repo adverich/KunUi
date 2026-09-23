@@ -9,11 +9,11 @@
       <template #prepend-input-content>
         <div
           v-if="isArray(modelValue) && isNotEmpty(modelValue)"
-          class="flex flex-nowrap items-center space-x-1 min-w-[calc(100%-56px)] overflow-x-auto overflow-y-hidden"
+          class="flex min-w-0 flex-1 flex-nowrap items-center gap-1 overflow-x-auto overflow-y-hidden"
           @click="!disabled && toggleMenu()"
         >
           <template v-for="(item, idx) in modelValue" :key="typeof item === 'object' && item !== null ? (item.id ?? item.name ?? idx) : (item ?? idx)">
-            <KunChip size="small" variant="pill">
+            <KunChip size="small" variant="pill" class="shrink-0">
               <div class="flex items-center">
                 {{ getArrayText(item) }}
                 <KunIcon
