@@ -5,8 +5,8 @@
       <label
         v-if="label"
         :for="uid"
-        class="absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10"
-        :class="isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80'"
+        class="absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10"
+        :class="[labelLeftClass, isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80']"
       >
         {{ label }}
       </label>
@@ -129,7 +129,7 @@
 </template>
 
 <script setup>
-import { useAttrs, computed, ref, useId } from 'vue'
+import { useAttrs, computed, ref, useId, useSlots } from 'vue'
 import { kunTextareaProps } from '../composables/kunTextareaProps'
 import useTextarea from '../composables/useKunTextareaComposable'
 import { renderIconSlot } from '@/utils/renderIcon'
@@ -228,6 +228,13 @@ const handleBlur = () => {
 }
 
 const isActive = computed(() => isFocused.value || !!internalValue.value || props.dirty)
+const isLabelFloating = computed(() => isActive.value || !!props.placeholder)
+const slots = useSlots()
+const labelLeftClass = computed(() => {
+  if (isLabelFloating.value) return 'left-2'
+  if (props.prependInnerIcon || props.prependIcon || slots['prepend-inner'] || slots.prepend) return 'left-10'
+  return 'left-2'
+})
 const valueLength = computed(() => (typeof internalValue.value === 'string' ? internalValue.value.length : 0))
 const counterMax = computed(() => (props.counter === true ? 25 : props.counter || null))
 const counterVisible = computed(() => props.persistentCounter || (props.counter && isFocused.value))

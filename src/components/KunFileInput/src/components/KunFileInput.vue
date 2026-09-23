@@ -3,7 +3,8 @@
     <label
       v-if="label"
       :class="[
-        'absolute left-2 z-10 px-1 text-ui transition-all duration-200 ease-in-out pointer-events-none select-none',
+        'absolute z-10 px-1 text-ui transition-all duration-200 ease-in-out pointer-events-none select-none',
+        labelLeftClass,
         isLabelActive ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80',
       ]"
     >
@@ -91,7 +92,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, useSlots } from 'vue'
 import { icons } from '@/icons'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { kunFileInputProps } from '../composables/kunFileInputProps'
@@ -150,6 +151,13 @@ function onBlur() {
 
 const fileNames = computed(() => internalValue.value.map(f => f.name))
 const isLabelActive = computed(() => props.dirty || isFocused.value || fileNames.value.length > 0)
+const slots = useSlots()
+const hasLeadingIcon = computed(() => !!(props.prependIcon || props.prependInnerIcon || slots.prepend || slots['prepend-inner']))
+const labelLeftClass = computed(() => {
+  if (isLabelActive.value) return 'left-2'
+  if (hasLeadingIcon.value) return 'left-10'
+  return 'left-2'
+})
 const totalBytes = computed(() => internalValue.value.reduce((acc, f) => acc + f.size, 0))
 const totalBytesReadable = computed(() => {
   const size = totalBytes.value

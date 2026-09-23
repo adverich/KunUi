@@ -1,9 +1,9 @@
 <template>
   <div class="w-full flex flex-col relative" ref="rootRef">
     <!-- Label -->
-    <label v-if="label" :for="uid" :class="[labelColor, 
-      'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10 px-1',
-      isActive || placeholder ? '-top-2 text-xs opacity-80 translate-y-0' : 'top-1/2 -translate-y-1/2 text-sm opacity-60'
+    <label v-if="label" :for="uid" :class="[labelColor, labelLeftClass,
+      'absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10 px-1',
+      isFloating ? '-top-2 text-xs opacity-80 translate-y-0' : 'top-1/2 -translate-y-1/2 text-sm opacity-60'
     ]">
       {{ label }}
     </label>
@@ -152,10 +152,22 @@ defineExpose({
 
 const uid = props.id || `input-${useId()}`;
 const isActive = computed(() => ( inputFocused.value || inputValue.value !== '' || props.dirty ));
+const isFloating = computed(() => isActive.value || !!props.placeholder);
 
 const slots = useSlots();
 const hasPrependInner = computed(() => !!slots['prepend-inner'] || !!props.prependInnerIcon);
 const hasAppendInner = computed(() => !!slots['append-inner'] || !!props.appendInnerIcon);
+const hasPrefix = computed(() => !!props.prefix);
+
+// Desplaza el label cuando está dentro del campo para que no se solape con el icono interior o el prefijo.
+// Cuando flota (-top-2) siempre queda en left-2 sobre el borde.
+const labelLeftClass = computed(() => {
+  if (isFloating.value) return 'left-2';
+  if (hasPrependInner.value && hasPrefix.value) return 'left-[76px]';
+  if (hasPrependInner.value) return 'left-10';
+  if (hasPrefix.value) return 'left-10';
+  return 'left-2';
+});
 
 const showPass = ref(false);
 const passIcon = computed(() => showPass.value ? icons.eyeOffOutline : icons.eyeOutline);
