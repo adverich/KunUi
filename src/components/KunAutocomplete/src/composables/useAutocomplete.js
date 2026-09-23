@@ -28,9 +28,8 @@ export function useAutocomplete(props, emits, modelValue, items) {
     const placeholder = computed(() => {
         if (selectedItem.value !== null && selectedItem.value !== undefined) {
             if (isArray(selectedItem.value)) {
-                if (selectedItem.value.length) {
-                    return itemToString(selectedItem.value, props.itemTitle, "hasDefault");
-                }
+                // En múltiple los valores ya se muestran como chips: jamás eco como placeholder
+                // (evita "valores fantasma" de fondo al deseleccionar todo).
                 return props.placeholderText;
             }
             if (isObject(selectedItem.value)) {
@@ -242,6 +241,8 @@ export function useAutocomplete(props, emits, modelValue, items) {
             const currentKey = extractValueKey(currentItem);
             return currentKey !== keyToRemove;
         });
+        // Sincronización explícita para no dejar selección fantasma.
+        selectedItem.value = findItemByValue(modelValue.value);
     }
 
     function lightReset(event) {
@@ -313,8 +314,13 @@ export function useAutocomplete(props, emits, modelValue, items) {
 
     function removeItem(item) {
         if (props.disabled) return;
-        let index = modelValue.value.indexOf(item);
+        if (!isArray(modelValue.value)) return;
+        const index = modelValue.value.indexOf(item);
+        if (index === -1) return;
         modelValue.value.splice(index, 1);
+        // Sincronización explícita: el watcher también lo hace, pero así no quedan
+        // valores fantasma si la mutación in-place no dispara el watch a tiempo.
+        selectedItem.value = findItemByValue(modelValue.value);
     }
 
     function clearSelection() {
