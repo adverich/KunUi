@@ -105,6 +105,9 @@ function buildConfig() {
       props.orientation || (props.layout === 'grid' ? 'grid' : 'vertical'),
     itemDraggable: props.itemDraggable,
     dragHandle: dragHandleSelector.value,
+    autoScroll: props.autoScroll,
+    scrollSensitivity: props.scrollSensitivity,
+    scrollSpeed: props.scrollSpeed,
     onDragstart: (payload) => emit('drag-start', payload),
     onDragend: (payload) => emit('drag-end', payload),
     onSort: (payload) => {
@@ -141,6 +144,9 @@ watch(
     props.orientation,
     props.layout,
     props.itemDraggable,
+    props.autoScroll,
+    props.scrollSensitivity,
+    props.scrollSpeed,
     dragHandleSelector.value,
   ],
   () => {

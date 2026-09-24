@@ -677,7 +677,11 @@ const items = ref([
 | dragHandle | String | null | Selector del handle (`null` = ítem completo) |
 | itemDraggable | Function | null | `(item) => boolean` |
 | layout | String | `'list'` | `'list'` \| `'grid'` (solo CSS) |
-| draggingClass | String | `'opacity-50'` | Clase mientras se arrastra |
+| draggingClass | String | `''` | Clase extra mientras se arrastra |
+| dropZoneClass | String | `'kun-dnd-drop-zone'` | Placeholder in-list |
+| autoScroll | Boolean | true | Auto-scroll por bordes del ancestro overflow |
+| scrollSensitivity | Number | 50 | Distancia (px) al borde para iniciar scroll |
+| scrollSpeed | Number | 12 | Velocidad de scroll por frame |
 | tag | String | `'div'` | Tag del contenedor |
 
 **Eventos:** `update:modelValue`, `update:items`, `drag-start`, `drag-end`, `sort`, `transfer`
@@ -685,6 +689,8 @@ const items = ref([
 **Slots:** `#item="{ item, index, dragging }"`, `#handle`, `#empty`, default
 
 **Subcomponentes:** `KunDragAndDropItem`, `KunDragAndDropHandle`
+
+**Scroll durante drag:** HTML5 DnD bloquea la rueda del mouse. Con `autoScroll` (default), acercar el puntero al borde superior/inferior (o laterales) del contenedor `overflow: auto|scroll` más cercano desplaza la vista. No depende de la rueda.
 
 **Composable headless:**
 

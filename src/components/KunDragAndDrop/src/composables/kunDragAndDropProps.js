@@ -69,4 +69,16 @@ export const kunDragAndDropProps = {
     type: String,
     default: 'flex flex-col gap-2',
   },
+  autoScroll: {
+    type: Boolean,
+    default: true,
+  },
+  scrollSensitivity: {
+    type: Number,
+    default: 50,
+  },
+  scrollSpeed: {
+    type: Number,
+    default: 12,
+  },
 }

@@ -9,6 +9,10 @@ import {
   getInsertIndexFromPoint,
 } from '../utils/kunDragAndDropMath.js'
 import {
+  findScrollParent,
+  getAutoScrollDelta,
+} from '../utils/kunDragAndDropScroll.js'
+import {
   registerParent,
   unregisterParent,
   getActiveDrag,
@@ -62,6 +66,10 @@ function normalizeConfig(raw = {}) {
     onDragstart: typeof raw.onDragstart === 'function' ? raw.onDragstart : null,
     onDragend: typeof raw.onDragend === 'function' ? raw.onDragend : null,
     onValuesChange: typeof raw.onValuesChange === 'function' ? raw.onValuesChange : null,
+    /** Edge auto-scroll while dragging (HTML5 DnD blocks mouse wheel). */
+    autoScroll: raw.autoScroll !== false,
+    scrollSensitivity: Number.isFinite(raw.scrollSensitivity) ? raw.scrollSensitivity : 50,
+    scrollSpeed: Number.isFinite(raw.scrollSpeed) ? raw.scrollSpeed : 12,
   }
 }
 
@@ -146,6 +154,13 @@ export function useKunDragAndDrop(initialOrOptions, maybeConfig) {
   let sortQuietUntil = 0
   /** Dedup live transfer when pointer stays on the same insert slot */
   let lastTransferSig = null
+  /** @type {number|null} */
+  let autoScrollRaf = null
+  let autoScrollDx = 0
+  let autoScrollDy = 0
+  /** @type {Element|null} */
+  let autoScrollEl = null
+  let documentDragOverBound = false
 
   function getValues() {
     return unref(items) || []
@@ -252,10 +267,95 @@ export function useKunDragAndDrop(initialOrOptions, maybeConfig) {
     currentTargetKey = null
     sortQuietUntil = 0
     lastTransferSig = null
+    stopAutoScroll()
     if (dragImageEl?.parentNode) {
       dragImageEl.parentNode.removeChild(dragImageEl)
     }
     dragImageEl = null
+  }
+
+  function stopAutoScroll() {
+    autoScrollDx = 0
+    autoScrollDy = 0
+    autoScrollEl = null
+    if (autoScrollRaf != null) {
+      cancelAnimationFrame(autoScrollRaf)
+      autoScrollRaf = null
+    }
+  }
+
+  function tickAutoScroll() {
+    autoScrollRaf = null
+    if (!getActiveDrag() || !autoScrollEl) {
+      stopAutoScroll()
+      return
+    }
+    if (autoScrollDx === 0 && autoScrollDy === 0) return
+
+    if (autoScrollDy !== 0) {
+      autoScrollEl.scrollTop += autoScrollDy
+    }
+    if (autoScrollDx !== 0) {
+      autoScrollEl.scrollLeft += autoScrollDx
+    }
+    autoScrollRaf = requestAnimationFrame(tickAutoScroll)
+  }
+
+  /**
+   * Edge auto-scroll of the nearest overflow ancestor (HTML5 DnD blocks wheel).
+   */
+  function updateAutoScroll(clientX, clientY) {
+    const cfg = getConfig()
+    if (!cfg.autoScroll || !getActiveDrag()) {
+      stopAutoScroll()
+      return
+    }
+
+    let under = null
+    try {
+      under = document.elementFromPoint(clientX, clientY)
+    } catch {
+      /* ignore */
+    }
+    const scrollEl =
+      findScrollParent(under) || findScrollParent(getParentEl())
+    autoScrollEl = scrollEl
+    const { dx, dy } = getAutoScrollDelta(clientX, clientY, scrollEl, {
+      sensitivity: cfg.scrollSensitivity,
+      speed: cfg.scrollSpeed,
+    })
+    autoScrollDx = dx
+    autoScrollDy = dy
+
+    if ((dx !== 0 || dy !== 0) && autoScrollRaf == null) {
+      autoScrollRaf = requestAnimationFrame(tickAutoScroll)
+    }
+    if (dx === 0 && dy === 0 && autoScrollRaf != null) {
+      cancelAnimationFrame(autoScrollRaf)
+      autoScrollRaf = null
+    }
+  }
+
+  function onDocumentDragOver(e) {
+    // Session binder keeps auto-scroll alive even after live transfer ownership moves
+    if (!documentDragOverBound || !getActiveDrag()) return
+    e.preventDefault()
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
+    updateAutoScroll(e.clientX, e.clientY)
+  }
+
+  function bindDocumentDragSession() {
+    if (documentDragOverBound) return
+    documentDragOverBound = true
+    document.addEventListener('dragover', onDocumentDragOver, true)
+    document.addEventListener('dragend', onDocumentDragEnd, true)
+  }
+
+  function unbindDocumentDragSession() {
+    if (!documentDragOverBound) return
+    documentDragOverBound = false
+    document.removeEventListener('dragover', onDocumentDragOver, true)
+    document.removeEventListener('dragend', onDocumentDragEnd, true)
   }
 
   function warnChildCountMismatch() {
@@ -410,7 +510,7 @@ export function useKunDragAndDrop(initialOrOptions, maybeConfig) {
       fromIndex,
     })
 
-    bindDocumentDragEnd()
+    bindDocumentDragSession()
 
     cfg.onDragstart?.({
       item,
@@ -594,6 +694,7 @@ export function useKunDragAndDrop(initialOrOptions, maybeConfig) {
 
     e.preventDefault()
     if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
+    updateAutoScroll(e.clientX, e.clientY)
 
     if (dragOverRaf) return
     dragOverRaf = requestAnimationFrame(() => {
@@ -650,7 +751,8 @@ export function useKunDragAndDrop(initialOrOptions, maybeConfig) {
     const drag = getActiveDrag()
     if (!drag && !dragImageEl) {
       armedKey.value = null
-      unbindDocumentDragEnd()
+      stopAutoScroll()
+      unbindDocumentDragSession()
       return
     }
 
@@ -666,7 +768,7 @@ export function useKunDragAndDrop(initialOrOptions, maybeConfig) {
 
     clearDraggingVisual()
     clearActiveDrag()
-    unbindDocumentDragEnd()
+    unbindDocumentDragSession()
 
     cfg.onDragend?.({
       item,
@@ -682,14 +784,6 @@ export function useKunDragAndDrop(initialOrOptions, maybeConfig) {
 
   function onDocumentDragEnd(e) {
     finishDrag(e)
-  }
-
-  function bindDocumentDragEnd() {
-    document.addEventListener('dragend', onDocumentDragEnd, true)
-  }
-
-  function unbindDocumentDragEnd() {
-    document.removeEventListener('dragend', onDocumentDragEnd, true)
   }
 
   function bindParent(el) {
@@ -742,7 +836,8 @@ export function useKunDragAndDrop(initialOrOptions, maybeConfig) {
 
   onBeforeUnmount(() => {
     if (dragOverRaf) cancelAnimationFrame(dragOverRaf)
-    unbindDocumentDragEnd()
+    stopAutoScroll()
+    unbindDocumentDragSession()
     unbindParent()
     if (entry) unregisterParent(entry)
     entry = null
