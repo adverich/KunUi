@@ -640,6 +640,67 @@ toast.update(t.id, { title: '¡Completado!', color: 'success' })
 
 ---
 
+### KunDragAndDrop
+
+Lista/grid sortable **data-first** (inspirado en FormKit Drag and Drop). El array es la fuente de verdad; HTML5 nativo, sin dependencias.
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { KunDragAndDrop, useKunDragAndDrop } from 'adverich-kun-ui'
+
+const items = ref([
+  { id: 1, title: 'Uno' },
+  { id: 2, title: 'Dos' },
+])
+</script>
+
+<template>
+  <KunDragAndDrop v-model="items" />
+  <KunDragAndDrop v-model="todo" group="kanban" />
+  <KunDragAndDrop v-model="done" group="kanban" />
+  <KunDragAndDrop
+    v-model="items"
+    layout="grid"
+    drag-handle="[data-kun-dnd-handle]"
+  />
+</template>
+```
+
+| Prop | Tipo | Default | Descripción |
+|------|------|---------|-------------|
+| modelValue / items | Array | - | Lista ordenada |
+| itemKey | String/Function | `'id'` | Clave estable por ítem |
+| group | String | null | Transfer entre parents con el mismo group |
+| sortable | Boolean | true | Permite reordenar |
+| disabled | Boolean | false | Desactiva DnD |
+| dragHandle | String | null | Selector del handle (`null` = ítem completo) |
+| itemDraggable | Function | null | `(item) => boolean` |
+| layout | String | `'list'` | `'list'` \| `'grid'` (solo CSS) |
+| draggingClass | String | `'opacity-50'` | Clase mientras se arrastra |
+| tag | String | `'div'` | Tag del contenedor |
+
+**Eventos:** `update:modelValue`, `update:items`, `drag-start`, `drag-end`, `sort`, `transfer`
+
+**Slots:** `#item="{ item, index, dragging }"`, `#handle`, `#empty`, default
+
+**Subcomponentes:** `KunDragAndDropItem`, `KunDragAndDropHandle`
+
+**Composable headless:**
+
+```js
+import { useKunDragAndDrop } from 'adverich-kun-ui'
+
+const [parentRef, items, updateConfig] = useKunDragAndDrop(
+  [{ id: 1, title: 'A' }],
+  { group: 'board', dragHandle: '[data-kun-dnd-handle]' }
+)
+```
+
+Contrato: 1 valor del array = 1 hijo inmediato del parent, con `data-kun-dnd-item` y `data-kun-dnd-key` (o `KunDragAndDropItem`).
+
+---
+
 ### KunDrawer
 
 Panel lateral de navegación.

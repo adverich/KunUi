@@ -72,6 +72,12 @@ export * from 'virtual:kun-ui/auto-exports';
 export { kunConfig, useKunConfig, resolveConfigValue } from './config/kunConfig.js';
 export { kunDocumentConfig } from './config/kunDocumentConfig.js';
 
+// Composables headless
+export {
+  useKunDragAndDrop,
+  resolveItemKey,
+} from './components/KunDragAndDrop/src/composables/useKunDragAndDrop.js';
+
 // 4. Exportación por defecto
 export default {
   install,

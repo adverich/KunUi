@@ -80,6 +80,9 @@ import 'adverich-kun-ui/dist/adverich-kun-ui.css'
 - `KunVirtualScroller` - Scroll virtualizado
 - `KunInfiniteScroll` - Scroll infinito
 - `KunRelationMatrix` - Matriz de relaciones
+- `KunDragAndDrop` - Lista/grid sortable data-first (HTML5)
+- `KunDragAndDropItem` - Ítem draggable
+- `KunDragAndDropHandle` - Agarre de arrastre
 
 ### Listas
 - `KunList` - Lista
