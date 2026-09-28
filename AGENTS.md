@@ -242,11 +242,43 @@ Switch/Toggle para valores booleanos.
 
 ### KunSelect
 
-Selector desplegable.
+Selector desplegable simple (sin autocompletado). Inspirado en KunAutocomplete: mismo sistema de `item-value` / `item-title` / `returnObject` / `multiple`, pero con campo `readonly` — click o Enter/Espacio abre el menú, sin búsqueda ni filtrado.
 
 ```vue
-<KunSelect v-model="selected" :items="options" label="Seleccionar" />
+<KunSelect
+  v-model="selected"
+  v-model:items="items"
+  label="Seleccionar"
+  item-value="id"
+  item-title="name"
+  :rules="[v => !!v || 'Requerido']"
+/>
 ```
+
+| Prop | Tipo | Default | Descripción |
+|------|------|---------|-------------|
+| modelValue | Any | null | Valor seleccionado |
+| items | Array | [] | Lista de items (v-model:items) |
+| label | String | '' | Etiqueta |
+| itemValue | String | null | Campo para el valor |
+| itemTitle | String/Array | null | Campo(s) para mostrar |
+| itemSubtitle | String/Array | null | Campo(s) para subtítulo |
+| returnObject | Boolean | false | Retorna objeto completo |
+| multiple | Boolean | false | Selección múltiple (chips) |
+| disabled | Boolean | false | Deshabilita el campo |
+| readonly | Boolean | false | Solo lectura (no abre menú) |
+| clearable | Boolean | false | Botón de limpiar |
+| clearOnSelect | Boolean | false | Limpia al seleccionar |
+| closeOnSelect | Boolean | true | Cierra el menú al seleccionar (single) |
+| hasCreateItem | Boolean | false | Muestra botón de crear |
+| density | String | 'default' | Densidad |
+| hideDetails | Boolean | true | Oculta detalles |
+| zIndex | String | 'z-250' | Z-index del menú |
+| rules | Array | [] | Reglas de validación |
+
+**Eventos:** update:modelValue, selectedItem, createItem, validation, keyDown, cleared
+
+**Métodos expuestos:** focus(), validate()
 
 ---
 
