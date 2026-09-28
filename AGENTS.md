@@ -739,6 +739,88 @@ Contrato: 1 valor del array = 1 hijo inmediato del parent, con `data-kun-dnd-ite
 
 ---
 
+### KunCarousel y KunCarouselSlide
+
+Carousel inspirado en [Embla Carousel](https://github.com/davidjerleke/embla-carousel):
+mismas opciones y configuraciones del core (v9, con alias v8), implementado
+de forma nativa en Vue sin dependencias externas.
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(0)
+const slides = ref([...])
+</script>
+
+<template>
+  <KunCarousel v-model="selected" align="center" loop>
+    <KunCarouselSlide v-for="s in slides" :key="s.id">
+      <img :src="s.src" class="h-56 w-full object-cover rounded-xl" />
+    </KunCarouselSlide>
+  </KunCarousel>
+</template>
+```
+
+| Prop | Tipo | Default | Descripción |
+|------|------|---------|-------------|
+| modelValue | Number | - | v-model: índice del snap seleccionado |
+| align | String/Function | 'center' | 'start', 'center', 'end' o función `(viewSize, slideSize, index) => offset` |
+| axis | String | 'x' | 'x' horizontal, 'y' vertical |
+| direction | String | 'ltr' | 'ltr' \| 'rtl' |
+| containScroll | String/Boolean | 'trimSnaps' | false \| 'trimSnaps' \| 'keepSnaps' |
+| slidesToScroll | Number/String | 1 | Entero o 'auto' (agrupa por vista) |
+| dragFree | Boolean | false | Scroll libre con momento |
+| dragThreshold | Number | 10 | px mínimos para iniciar el drag |
+| loop | Boolean | false | Loop infinito seamless (clona slides en ambos extremos; fallback si no hay scroll suficiente) |
+| skipSnaps | Boolean | false | Saltea snaps con drags vigorosos |
+| duration | Number | 25 | Factor de animación (≈ duration × 16 ms de transición) |
+| startSnap | Number | 0 | Snap inicial (v9); `startIndex` es su alias v8 |
+| active | Boolean | true | Si es false, el carousel queda inactivo |
+| draggable | Boolean | true | Habilita drag (v9); `watchDrag` es su alias v8 |
+| resize | Boolean | true | Re-mide con ResizeObserver (alias v8: `watchResize`) |
+| focus | Boolean | true | Navega al foco de un slide (alias v8: `watchFocus`) |
+| slideChanges | Boolean | true | Observa altas/bajas de slides (alias v8: `watchSlides`) |
+| inViewThreshold | Number | 0 | Umbral de visibilidad (0-1) |
+| inViewMargin | String | '0px' | rootMargin del observer de visibilidad |
+| breakpoints | Object | {} | Overrides por media query: `{ '(min-width: 768px)': { slidesToScroll: 2 } }` |
+| slideSize | String | '100%' | flex-basis de cada slide ('50%', '300px', 'auto'...) |
+| gap | String | '1rem' | Espacio entre slides |
+| height | String | '400px' | Altura del viewport con axis="y" |
+| showArrows | Boolean | true | Flechas prev/next |
+| showDots | Boolean | true | Dots de navegación |
+| arrowsPosition | String | 'sides' | 'sides' (flotantes) \| 'bottom' (barra inferior) |
+| autoplay | Boolean | false | Autoplay integrado (equivale al plugin de Embla) |
+| autoplayDelay | Number | 3000 | Intervalo en ms |
+| autoplayDirection | Number | 1 | 1 avanza, -1 retrocede |
+| playOnInit | Boolean | true | Inicia el autoplay al montar |
+| stopOnInteraction | Boolean | true | Detiene el autoplay ante interacción |
+| stopOnMouseEnter | Boolean | false | Pausa el autoplay con hover |
+| keyboard | Boolean | true | Flechas/Home/End con el viewport enfocado |
+
+**Métodos (vía ref, paridad Embla):** goToNext, goToPrev, goTo, canGoToNext,
+canGoToPrev, selectedSnap, previousSnap, snapList, snapIndex, scrollProgress,
+slidesInView, slidesNotInView, reInit, destroy, rootNode, containerNode,
+slideNodes, play, stop — más alias v8 (scrollNext, scrollPrev, scrollTo,
+canScrollNext, canScrollPrev, selectedScrollSnap, previousScrollSnap,
+scrollSnapList).
+
+**Eventos:** update:modelValue, select, settle, scroll, reinit, destroy,
+pointerdown, pointermove, pointerup, slidesinview, slideschanged, slidefocus,
+autoplay:play, autoplay:stop, autoplay:interaction
+
+**Slots:** default (slides), #prev, #next, #dots
+
+**Showcase:** `/examples/KunCarousel` es una única página con todos los demos
+juntos, uno debajo del otro (Default, Loop, RightToLeft, SlidesToScroll,
+DragFree, Align, VariableWidths, YAxis, SlidesPerView, Thumbnails,
+Responsive, Autoplay, Flechas/Dots personalizados, Progress, LazyLoad),
+cada uno con snippet de código. Los demos viven en
+`src/components/KunCarousel/examples/_demos/` (no ruteados) y `examples/`
+contiene solo `Default.vue`, que los apila a todos.
+
+---
+
 ### KunDrawer
 
 Panel lateral de navegación.
