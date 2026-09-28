@@ -232,9 +232,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, provide } from 'vue'
 import { kunCarouselProps } from '../composables/kunCarouselProps'
 import { useKunCarouselEngine } from '../composables/useKunCarouselEngine'
+import { KUN_CAROUSEL_KEY } from '../composables/kunCarouselContext'
 
 const props = defineProps({
   ...kunCarouselProps,
@@ -275,10 +276,21 @@ const {
   canNext,
   isDragging,
   isSettled,
+  didDrag,
   autoplayPlaying,
   effectiveOptions,
   reInit,
 } = useKunCarouselEngine({ props, emit, viewportRef, containerRef })
+
+// Contexto para el contenido (slides, grillas, cards): evita cablear
+// refs a mano. Incluye el flag de drag para lógica de clicks.
+provide(KUN_CAROUSEL_KEY, {
+  api,
+  didDrag,
+  selectedIndex,
+  isDragging,
+  isSettled,
+})
 
 const isVertical = computed(() => effectiveOptions.value.axis === 'y')
 const isRtl = computed(() => !isVertical.value && effectiveOptions.value.direction === 'rtl')
@@ -355,6 +367,7 @@ defineExpose({
   canNext,
   isDragging,
   isSettled,
+  didDrag,
   autoplayPlaying,
   options: effectiveOptions,
 })

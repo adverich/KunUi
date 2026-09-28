@@ -100,6 +100,43 @@ Alias v8: `scrollNext`, `scrollPrev`, `scrollTo`, `canScrollNext`,
 | #next | `{ goToNext, disabled, canGoToNext }` | Flecha siguiente personalizada |
 | #dots | `{ snaps, selectedIndex, goTo }` | Dots personalizados |
 
+## Clicks en slides / grillas
+
+El click que el navegador dispara justo después de un drag se **suprime
+automáticamente** en fase de captura en el viewport, antes de llegar a
+cards, links o botones del slide. El flag interno se limpia en el próximo
+`pointerdown`, por lo que solo se bloquea el click inmediato al drag.
+
+Para lógica propia (sin cablear refs), el contenido puede inyectar el
+contexto del carousel con `useKunCarousel()`:
+
+```vue
+<script setup>
+import { useKunCarousel } from 'adverich-kun-ui'
+
+const carousel = useKunCarousel() // null fuera de un KunCarousel
+
+function onCardClick(item) {
+  if (carousel?.didDrag.value) return // venimos de un drag, no fue click
+  openDetail(item)
+}
+</script>
+
+<template>
+  <KunCarousel>
+    <KunCarouselSlide v-for="item in items" :key="item.id">
+      <button type="button" @click="onCardClick(item)">
+        {{ item.title }}
+      </button>
+    </KunCarouselSlide>
+  </KunCarousel>
+</template>
+```
+
+El contexto expone `{ api, didDrag, selectedIndex, isDragging, isSettled }`
+(`didDrag` es un `ref` booleano; también está expuesto vía ref del
+componente). `KUN_CAROUSEL_KEY` se exporta para casos avanzados.
+
 ## Notas
 
 - `loop` es infinito y seamless: clona slides en ambos extremos (con

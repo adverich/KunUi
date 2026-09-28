@@ -26,6 +26,12 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef })
   const isDragging = ref(false)
   const isSettled = ref(true)
   const autoplayPlaying = ref(false)
+  /**
+   * didDrag: true si el último gesto fue un drag (movimiento > dragThreshold).
+   * Se limpia en el próximo pointerdown. Sirve para suprimir el click
+   * post-drag y para que el contenido (grillas, cards) lo consulte.
+   */
+  const didDrag = ref(false)
 
   let destroyed = false
   let slideNodes = []
@@ -800,6 +806,8 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef })
     emit('pointerdown', api, e)
     if (props.stopOnInteraction) interactionStop()
     stopAutoplayTick()
+    // nuevo gesto: se limpia el flag de drag anterior
+    didDrag.value = false
     // consolidar un wrap pendiente: el clon y el original son idénticos,
     // el salto es invisible y el drag parte de la posición canónica
     normalizeWrap()
@@ -891,6 +899,8 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef })
     const velocity = dragVelocity()
     dragState = null
     isDragging.value = false
+    // hubo drag real: marcar para suprimir el click siguiente
+    if (wasMoved) didDrag.value = true
     emit('pointerup', api, e)
     if (!wasMoved) {
       restartAutoplayTick()
@@ -962,8 +972,10 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef })
 
   function onPointerCancel(e) {
     if (!dragState) return
+    const moved = dragState.moved
     dragState = null
     isDragging.value = false
+    if (moved) didDrag.value = true
     normalizeWrap()
     // vuelve al snap actual
     if (snaps.value.length) animateTo(snaps.value[selectedIndex.value], false)
@@ -1214,6 +1226,20 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef })
     e.preventDefault()
   }
 
+  /**
+   * Supresión del click post-drag (obligatoria): si el último gesto fue un
+   * drag, el click que el navegador dispara a continuación se bloquea en
+   * fase de captura antes de llegar a cualquier contenido del slide
+   * (cards, grillas, links). El flag vive hasta el próximo pointerdown,
+   * y como todo click empieza con pointerdown, solo se suprime el
+   * click inmediato al drag.
+   */
+  function onClickCapture(e) {
+    if (!didDrag.value) return
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
   function setupObservers() {
     const viewport = viewportRef.value
     const container = containerRef.value
@@ -1241,6 +1267,7 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef })
     viewport.addEventListener('mouseenter', onMouseEnter)
     viewport.addEventListener('mouseleave', onMouseLeave)
     viewport.addEventListener('dragstart', onNativeDragStart)
+    viewport.addEventListener('click', onClickCapture, true)
   }
 
   function teardownViewportListeners() {
@@ -1251,6 +1278,7 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef })
     viewport.removeEventListener('mouseenter', onMouseEnter)
     viewport.removeEventListener('mouseleave', onMouseLeave)
     viewport.removeEventListener('dragstart', onNativeDragStart)
+    viewport.removeEventListener('click', onClickCapture, true)
   }
 
   // ------------------------------------------------------------------
@@ -1340,6 +1368,7 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef })
     canNext,
     isDragging,
     isSettled,
+    didDrag,
     autoplayPlaying,
     effectiveOptions,
     reInit,

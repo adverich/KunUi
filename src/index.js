@@ -77,6 +77,10 @@ export {
   useKunDragAndDrop,
   resolveItemKey,
 } from './components/KunDragAndDrop/src/composables/useKunDragAndDrop.js';
+export {
+  useKunCarousel,
+  KUN_CAROUSEL_KEY,
+} from './components/KunCarousel/src/composables/kunCarouselContext.js';
 
 // 4. Exportación por defecto
 export default {

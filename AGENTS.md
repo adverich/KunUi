@@ -811,6 +811,10 @@ autoplay:play, autoplay:stop, autoplay:interaction
 
 **Slots:** default (slides), #prev, #next, #dots
 
+**Clicks post-drag:** se suprimen automáticamente en captura; el contenido
+puede usar `useKunCarousel()` (inyecta `{ api, didDrag, selectedIndex,
+isDragging, isSettled }`) para no cablear refs en grillas/cards.
+
 **Showcase:** `/examples/KunCarousel` es una única página con todos los demos
 juntos, uno debajo del otro (Default, Loop, RightToLeft, SlidesToScroll,
 DragFree, Align, VariableWidths, YAxis, SlidesPerView, Thumbnails,
