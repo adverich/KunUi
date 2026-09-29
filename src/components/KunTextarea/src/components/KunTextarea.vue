@@ -6,7 +6,7 @@
         v-if="label"
         :for="uid"
         class="absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10"
-        :class="[labelLeftClass, isActive || placeholder ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80']"
+        :class="[labelLeftClass, labelPositionClass]"
       >
         {{ label }}
       </label>
@@ -37,7 +37,7 @@
         ref="textareaRef"
         :id="uid"
         :value="internalValue"
-        :rows="autoGrow ? undefined : rows"
+        :rows="rows"
         :disabled="disabled"
         :readonly="readonly"
         :placeholder="placeholder"
@@ -49,7 +49,8 @@
         @mousedown="$emit('mousedown:control', $event)"
         class="bg-field-background"
         :class="[textareaClasses]"
-        style="width: 100%; box-sizing: border-box; overflow-y: hidden;"
+        style="width: 100%; box-sizing: border-box;"
+        :style="autoGrow ? 'overflow-y: hidden;' : 'overflow-y: auto;'"
       ></textarea>
 
       <!-- Clear -->
@@ -228,6 +229,13 @@ const handleBlur = () => {
 }
 
 const isActive = computed(() => isFocused.value || !!internalValue.value || props.dirty)
+const isSingleRow = computed(() => Number(props.rows) === 1)
+const labelPositionClass = computed(() => {
+  if (isActive.value || props.placeholder) return '-top-2.25 text-xs opacity-80'
+  // Con 1 fila se centra verticalmente como KunTextField; con más filas se ancla arriba
+  if (isSingleRow.value) return 'top-1/2 -translate-y-1/2 text-sm opacity-80'
+  return 'top-3 text-sm opacity-80'
+})
 const isLabelFloating = computed(() => isActive.value || !!props.placeholder)
 const slots = useSlots()
 const labelLeftClass = computed(() => {
@@ -261,11 +269,12 @@ const variantClass = computed(() => {
 })
 
 const densityClass = computed(() =>
-  props.density === 'compact' ? 'p-1' : props.density === 'comfortable' ? 'p-2' : 'p-3'
+  // Misma escala que KunTextField para que rows="1" iguale su alto (1 línea)
+  props.density === 'compact' ? 'px-2 py-1 text-sm min-h-[30px]' : props.density === 'comfortable' ? 'px-3 py-2 text-sm min-h-[38px]' : 'px-3 py-3 text-sm min-h-[46px]'
 )
 
 const textareaClasses = computed(() => [
-  'w-full resize-none p-2 transition-colors duration-150 text-ui',
+  'block w-full resize-none transition-colors duration-150 text-ui leading-normal',
   props.inputClass,
   {
     'rounded': !props.tile,

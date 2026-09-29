@@ -21,18 +21,9 @@
       <KunSwitch v-model="switchBtn" />
       <KunDatePicker :only-icon="true" />
     </KunCol>
-    <KunCol cols="8" class="h-full flex flex-col overflow-auto py-1">
-      <KunTable
-        class="text-white"
-        searchable
-        :items="products"
-        :headers="headers"
-        :filters="filters"
-        v-model:selected="selected"
-        :showSelect="true"
-        showExpand
-        :hide-selected="smAndDown ? true : false"
-      />
+    <KunCol cols="8" class="h-full flex overflow-auto py-1">
+      <KunTextField />
+      <KunTextarea rows="1" auto-grow />
     </KunCol>
   </KunRow>
 </template>
@@ -47,6 +38,8 @@ import KunRow from '../components/KunRow/src/components/KunRow.vue'
 import KunCol from '../components/KunCol/src/components/KunCol.vue'
 import KunDatePicker from '../components/KunDatePicker/src/components/KunDatePicker.vue'
 import KunColorPicker from '../components/KunColorPicker/src/components/KunColorPicker.vue'
+import KunTextField from '../components/KunTextField/src/components/KunTextField.vue'
+import KunTextarea from '../components/KunTextarea/src/components/KunTextarea.vue'
 
 const colorSelected = ref('#913131')
 

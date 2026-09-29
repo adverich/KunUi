@@ -124,19 +124,36 @@ export default function useTextarea(props, emit, textareaRef) {
             const textarea = textareaRef.value
             if (!textarea) return
 
-            textarea.style.height = 'auto'
-            textarea.style.overflowY = 'hidden'
-
-            const scrollHeight = textarea.scrollHeight
-            const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight) || 24
+            const computed = getComputedStyle(textarea)
+            const lineHeight = parseFloat(computed.lineHeight) || 20
+            const paddingTop = parseFloat(computed.paddingTop) || 0
+            const paddingBottom = parseFloat(computed.paddingBottom) || 0
+            const borderTop = parseFloat(computed.borderTopWidth) || 0
+            const borderBottom = parseFloat(computed.borderBottomWidth) || 0
+            const verticalChrome = paddingTop + paddingBottom + borderTop + borderBottom
+            const minRows = Math.max(Number(props.rows) || 1, 1)
+            const minHeight = minRows * lineHeight + verticalChrome
             const maxRows = Number(props.maxRows || 0)
 
+            textarea.style.height = 'auto'
+
+            // scrollHeight con height:auto ya incluye padding pero no border
+            const contentHeight = textarea.scrollHeight + borderTop + borderBottom
+            let nextHeight = Math.max(contentHeight, minHeight)
+
             if (props.maxRows && maxRows > 0) {
-                const maxHeight = maxRows * lineHeight
-                textarea.style.height = Math.min(scrollHeight, maxHeight) + 'px'
+                const maxHeight = maxRows * lineHeight + verticalChrome
+                if (nextHeight > maxHeight) {
+                    nextHeight = maxHeight
+                    textarea.style.overflowY = 'auto'
+                } else {
+                    textarea.style.overflowY = 'hidden'
+                }
             } else {
-                textarea.style.height = (scrollHeight - 16) + 'px'
+                textarea.style.overflowY = 'hidden'
             }
+
+            textarea.style.height = nextHeight + 'px'
 
             // Restaurar todos los scroll positions
             restoreAllScrollPositions(scrollState)
@@ -216,6 +233,20 @@ export default function useTextarea(props, emit, textareaRef) {
             if (props.autoGrow) adjustHeight()
         })
     })
+
+    // Si se desactiva autoGrow se libera la altura inline; si cambia rows/maxRows se recalcula
+    watch(
+        () => [props.autoGrow, props.rows, props.maxRows, props.density],
+        ([autoGrow]) => {
+            if (!textareaRef.value) return
+            if (!autoGrow) {
+                textareaRef.value.style.height = ''
+                textareaRef.value.style.overflowY = ''
+            } else {
+                adjustHeight()
+            }
+        }
+    )
 
     onBeforeUnmount(() => { })
 
