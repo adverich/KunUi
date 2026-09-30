@@ -4,6 +4,7 @@ import KunTextField from '../src/components/KunTextField.vue';
 
 <template>
   <div class="p-4">
-    <KunTextField />
+    <KunTextField label="Prueba" floatingLabelSize="text-2xl" dirty floatingLabelColor="text-black dark:text-white"
+    />
   </div>
 </template>

@@ -30,6 +30,8 @@ export default {
   floatingLabelTop: { type: String, default: '-top-2' },
   labelClass: { type: String, default: '' },
   placeholderColor: { type: String, default: 'placeholder-ui' },
+  inputTextSize: { type: String, default: null },
+  placeholderTextSize: { type: String, default: null },
   bgInput: { type: String, default: 'bg-field-background' },
   inputStyle: { type: String, default: '' },
   textCenter: { type: Boolean, default: false },

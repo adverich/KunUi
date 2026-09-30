@@ -33,7 +33,7 @@
           :readonly="readonly" :inputmode="inputmode" :minlength="minlength" :maxlength="maxlength"
           :pattern="pattern" :spellcheck="spellcheck"
           class="min-w-12 flex-1 bg-transparent focus:outline-none leading-normal" :aria-invalid="hasError ? 'true' : 'false'"
-          :class="[inputDensity, textColor, placeholderColor, rounded, textCenter ? 'text-center' : '', inputStyle]"
+          :class="[inputDensity, inputTextSizeClass, textColor, placeholderColor, placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           :aria-describedby="hasError ? `error-${uid}` : null" 
           @input="handleInput" @blur="handleBlur" @focus="focusInput" 
           @click.stop="emits('handleClick')" 
@@ -193,7 +193,19 @@ const inputType = computed(() => {
   return props.type;
 });
 
-const inputDensity = computed(() =>props.density === "compact" ? "px-2 py-1 text-sm min-h-[30px]" : props.density === "comfortable" ? "px-3 py-2 text-sm min-h-[38px]" : "px-3 py-3 text-sm min-h-[46px]");
+const inputDensity = computed(() =>props.density === "compact" ? "px-2 py-1 min-h-[30px]" : props.density === "comfortable" ? "px-3 py-2 min-h-[38px]" : "px-3 py-3 min-h-[46px]");
+
+// Tamaño del texto del valor (v-model). Default 'text-sm' para mantener el aspecto actual.
+const inputTextSizeClass = computed(() => props.inputTextSize || 'text-sm');
+
+// Tamaño del placeholder. Acepta 'text-lg' o 'placeholder:text-lg'.
+// Default null = hereda el tamaño del input.
+const placeholderTextSizeClass = computed(() => {
+  if (!props.placeholderTextSize) return '';
+  return props.placeholderTextSize.startsWith('placeholder:')
+    ? props.placeholderTextSize
+    : `placeholder:${props.placeholderTextSize}`;
+});
 
 const containerDensity = computed(() => props.density === "compact" ? "min-h-[32px]" : props.density === "comfortable" ? "min-h-[40px]" : "min-h-[48px]");
 </script>
