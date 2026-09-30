@@ -818,7 +818,7 @@ isDragging, isSettled }`) para no cablear refs en grillas/cards.
 **Showcase:** `/examples/KunCarousel` es una única página con todos los demos
 juntos, uno debajo del otro (Default, Loop, RightToLeft, SlidesToScroll,
 DragFree, Align, VariableWidths, YAxis, SlidesPerView, Thumbnails,
-Responsive, Autoplay, Flechas/Dots personalizados, Progress, LazyLoad),
+Hover Split, Responsive, Autoplay, Flechas/Dots personalizados, Progress, LazyLoad),
 cada uno con snippet de código. Los demos viven en
 `src/components/KunCarousel/examples/_demos/` (no ruteados) y `examples/`
 contiene solo `Default.vue`, que los apila a todos.

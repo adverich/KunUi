@@ -10,6 +10,7 @@ import DemoVariableWidths from './_demos/DemoVariableWidths.vue'
 import DemoVertical from './_demos/DemoVertical.vue'
 import DemoSlidesPerView from './_demos/DemoSlidesPerView.vue'
 import DemoThumbnails from './_demos/DemoThumbnails.vue'
+import DemoHoverSplit from './_demos/DemoHoverSplit.vue'
 import DemoBreakpoints from './_demos/DemoBreakpoints.vue'
 import DemoAutoplay from './_demos/DemoAutoplay.vue'
 import DemoClassNames from './_demos/DemoClassNames.vue'
@@ -30,6 +31,7 @@ const groups = [
       { id: 'demo-y-axis', label: 'Y Axis' },
       { id: 'demo-slides-per-view', label: 'Slides Per View' },
       { id: 'demo-thumbnails', label: 'Thumbnails' },
+      { id: 'demo-hover-split', label: 'Hover Split' },
       { id: 'demo-responsive', label: 'Responsive' },
     ],
   },
@@ -138,6 +140,34 @@ function goToSlide(i) {
     </button>
   </KunCarouselSlide>
 </KunCarousel>`
+
+const codeHoverSplit = `<script setup>
+const selected = ref(0)
+const steps = ref([/* { label, product, media… } */])
+
+function goTo(i) {
+  selected.value = i
+}
+<\/script>
+
+<div class="grid md:grid-cols-2">
+  <div>
+    <h2>Static title stays put</h2>
+    <KunCarousel v-model="selected" :draggable="false" :show-arrows="false" :show-dots="false" :duration="35">
+      <KunCarouselSlide v-for="s in steps" :key="s.id">…product…</KunCarouselSlide>
+    </KunCarousel>
+    <button
+      v-for="(s, i) in steps"
+      :key="s.id"
+      @mouseenter="goTo(i)"
+      @focus="goTo(i)"
+      @click="goTo(i)"
+    >{{ i + 1 }}</button>
+  </div>
+  <KunCarousel v-model="selected" :draggable="false" :show-arrows="false" :show-dots="false" :duration="35">
+    <KunCarouselSlide v-for="s in steps" :key="s.id">…media…</KunCarouselSlide>
+  </KunCarousel>
+</div>`
 
 const codeBreakpoints = `<KunCarousel
   align="center"
@@ -272,6 +302,10 @@ const visible = ref([])
 
     <DemoSection id="demo-thumbnails" title="Thumbnails" description="Tira de miniaturas con scroll libre (dragFree + keepSnaps: cada thumb es seleccionable y la tira descansa en el borde sin vacío), sincronizada en ambas direcciones vía API." :code="codeThumbnails">
       <DemoThumbnails />
+    </DemoSection>
+
+    <DemoSection id="demo-hover-split" title="Hover Split" description="Dos tracks sincronizados con el mismo v-model: título fijo, swatch y media se deslizan según el sentido del índice. Navegación por hover (y focus/click) sobre números 01–N." :code="codeHoverSplit">
+      <DemoHoverSplit />
     </DemoSection>
 
     <DemoSection id="demo-responsive" title="Responsive Breakpoints" description="Overrides por media query: en desktop avanza de a 2 slides. containScroll=false muestra los extremos completos." :code="codeBreakpoints">

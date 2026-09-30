@@ -1,19 +1,21 @@
 <template>
   <div class="w-full flex flex-col relative" ref="rootRef">
-    <!-- Label -->
-    <label v-if="label" :for="uid" :class="[labelColor, labelLeftClass,
-      'absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10 px-1',
-      isFloating ? '-top-2 text-xs opacity-80 translate-y-0' : 'top-1/2 -translate-y-1/2 text-sm opacity-60'
-    ]">
-      {{ label }}
-    </label>
-
     <div class="w-full flex flex-col justify-center relative">
-      <div class="flex flex-row items-center w-full border" :class="[bgInput, rounded, containerDensity,
+      <div class="flex flex-row items-center w-full border relative" :class="[bgInput, rounded, containerDensity,
         inputFocused ? 'border-ui-focus shadow-ui-focus' : borderColor,
         disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text', 
         hasError ? 'bg-ui-error-soft' : ''
       ]">
+        <!-- Label centrado contra el contenedor del input (no contra el wrapper con details) -->
+        <label v-if="label" :for="uid" :class="[labelColorClass, labelLeftClass, labelClass,
+          'absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10 px-1',
+          isFloating
+            ? [floatingLabelTop, floatingLabelSize, floatingLabelOpacity, 'translate-y-0']
+            : ['top-1/2 -translate-y-1/2', labelSize, labelOpacity]
+        ]">
+          {{ label }}
+        </label>
+
         <div v-if="prefix" class="ml-2 shrink-0">{{ prefix }}</div>
 
         <div v-if="hasPrependInner" :class="prependInnerClass"
@@ -160,14 +162,25 @@ const hasAppendInner = computed(() => !!slots['append-inner'] || !!props.appendI
 const hasPrefix = computed(() => !!props.prefix);
 
 // Desplaza el label cuando está dentro del campo para que no se solape con el icono interior o el prefijo.
-// Cuando flota (-top-2) siempre queda en left-2 sobre el borde.
+// `labelLeft` / `floatingLabelLeft` permiten forzar la posición; `null` mantiene el cálculo automático.
 const labelLeftClass = computed(() => {
-  if (isFloating.value) return 'left-2';
+  if (isFloating.value) return props.floatingLabelLeft || 'left-2';
+  if (props.labelLeft) return props.labelLeft;
   if (hasPrependInner.value && hasPrefix.value) return 'left-[76px]';
   if (hasPrependInner.value) return 'left-10';
   if (hasPrefix.value) return 'left-10';
   return 'left-2';
 });
+
+const labelColorClass = computed(() =>
+  isFloating.value ? (props.floatingLabelColor || props.labelColor) : props.labelColor
+);
+const labelSize = computed(() => props.labelSize);
+const floatingLabelSize = computed(() => props.floatingLabelSize);
+const labelOpacity = computed(() => props.labelOpacity);
+const floatingLabelOpacity = computed(() => props.floatingLabelOpacity);
+const floatingLabelTop = computed(() => props.floatingLabelTop);
+const labelClass = computed(() => props.labelClass);
 
 const showPass = ref(false);
 const passIcon = computed(() => showPass.value ? icons.eyeOffOutline : icons.eyeOutline);
