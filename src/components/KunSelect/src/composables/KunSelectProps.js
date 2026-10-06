@@ -70,8 +70,12 @@ export const KunSelectProps = {
   },
 
   // ***** STYLE ***** //
+  // NOTA: `height` está en desuso (el menú ocupa el espacio disponible).
+  // El límite lo controla `maxHeight`: undefined = todo el espacio
+  // disponible hasta el borde del viewport; con valor se aplica
+  // min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind.
   height: { default: 'h-[500px]' },
-  maxHeight: { default: undefined },
+  maxHeight: { type: [String, Number], default: undefined },
   density: { type: String, default: 'default' },
   zIndex: { type: String, default: 'z-250' },
   hideDetails: {

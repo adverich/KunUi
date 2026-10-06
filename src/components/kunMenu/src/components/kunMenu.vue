@@ -57,6 +57,8 @@ const {
   repositionMenu,
   startScrollTracking,
   stopScrollTracking,
+  startContentTracking,
+  stopContentTracking,
   contentEl,
   activatorEl,
   originClass,
@@ -88,6 +90,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   stopScrollTracking()
+  stopContentTracking()
   const el = contentEl.value
   if (el) {
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
@@ -102,10 +105,12 @@ watch(menuVisible, (visible) => {
   if (visible) {
     repositionMenu()
     startScrollTracking(parentEl.value)
+    startContentTracking()
     el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false });
     addEventListeners();
   } else {
     stopScrollTracking()
+    stopContentTracking()
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
     removeEventListeners();
   }

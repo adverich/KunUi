@@ -96,6 +96,17 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
             return;
         }
 
+        // Tope síncrono: el menú nace ya limitado al espacio disponible
+        // (evita el primer pintado sin cap mientras el rAF mide el contenido).
+        // Se corrige al lado definitivo dentro del rAF de abajo.
+        {
+            const viewportHeight = window.innerHeight;
+            const margin = 8;
+            const pxHideDetails = props.hideDetails ? 0 : 19;
+            const spaceBelowSync = viewportHeight - parentRect.bottom + pxHideDetails - margin;
+            smartMaxHeight.value = Math.max(0, Math.round(spaceBelowSync));
+        }
+
         requestAnimationFrame(() => {
             const menuRect = menuEl.getBoundingClientRect();
 
@@ -191,17 +202,127 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
         el.addEventListener('focus', handleFocus)
     }
 
+    // --- Resolución de maxHeight de usuario a CSS + px (para min() con el espacio) ---
+    // Acepta: Number (px), string numérico, unidades CSS, funciones CSS y
+    // clases Tailwind max-h-* (escala -> rem, arbitrarias max-h-[...] -> CSS interno).
+    const TAILWIND_SPACING_PX = {
+        'px': 1, '0': 0, '0.5': 2, '1': 4, '1.5': 6, '2': 8, '2.5': 10,
+        '3': 12, '3.5': 14, '4': 16, '5': 20, '6': 24, '7': 28, '8': 32,
+        '9': 36, '10': 40, '11': 44, '12': 48, '14': 56, '16': 64, '20': 80,
+        '24': 96, '28': 112, '32': 128, '36': 144, '40': 160, '44': 176,
+        '48': 192, '52': 208, '56': 224, '60': 240, '64': 256, '72': 288,
+        '80': 320, '96': 384,
+        'xs': 320, 'sm': 384, 'md': 448, 'lg': 512, 'xl': 576,
+        '2xl': 672, '3xl': 768, '4xl': 896, '5xl': 1024, '6xl': 1152, '7xl': 1280,
+    };
+
+    function normalizeUserMaxHeight(prop) {
+        if (prop === null || prop === undefined || prop === '') return undefined;
+        if (typeof prop === 'number' && Number.isFinite(prop)) return `${prop}px`;
+        if (typeof prop !== 'string') return undefined;
+        const v = prop.trim();
+        if (!v) return undefined;
+        // Clase Tailwind arbitraria: max-h-[320px] -> 320px
+        const arbitrary = v.match(/^max-h-\[(.+)\]$/);
+        if (arbitrary) return normalizeUserMaxHeight(arbitrary[1]);
+        // Escala Tailwind: max-h-64 -> 16rem
+        const scale = v.match(/^max-h-(.+)$/);
+        if (scale) {
+            const key = scale[1];
+            if (key in TAILWIND_SPACING_PX) {
+                const px = TAILWIND_SPACING_PX[key];
+                return `${px / 16}rem`;
+            }
+            if (key === 'full') return '100%';
+            if (key === 'screen' || key === 'svh' || key === 'lvh' || key === 'dvh') return '100vh';
+            if (key === 'min') return 'min-content';
+            if (key === 'max') return 'max-content';
+            if (key === 'fit') return 'fit-content';
+            return undefined;
+        }
+        // Numérico puro -> px
+        if (/^-?[\d.]+$/.test(v)) return `${v}px`;
+        // Tamaño CSS o función CSS -> tal cual
+        if (/^-?[\d.]+(px|rem|em|vh|vw|dvh|dvw|svh|svw|lvh|lvw|vmin|vmax|%|ch|ex|cap|ic|lh|rlh|vi|vb|cqw|cqh|cqi|cqb|cqmin|cqmax|cm|mm|in|pt|pc)$/.test(v)) return v;
+        if (/^(calc|min|max|clamp|var|env)\(.*\)$/.test(v)) return v;
+        return undefined;
+    }
+
+    function cssToPx(css) {
+        if (!css || typeof window === 'undefined') return null;
+        const px = css.match(/^(-?[\d.]+)px$/);
+        if (px) return parseFloat(px[1]);
+        const rem = css.match(/^(-?[\d.]+)r?em$/);
+        if (rem) return parseFloat(rem[1]) * 16;
+        const vh = css.match(/^(-?[\d.]+)(vh|dvh|svh|lvh)$/);
+        if (vh) return (parseFloat(vh[1]) / 100) * window.innerHeight;
+        const vw = css.match(/^(-?[\d.]+)(vw|dvw|svw|lvw)$/);
+        if (vw) return (parseFloat(vw[1]) / 100) * window.innerWidth;
+        const vmin = css.match(/^(-?[\d.]+)vmin$/);
+        if (vmin) return (parseFloat(vmin[1]) / 100) * Math.min(window.innerHeight, window.innerWidth);
+        const vmax = css.match(/^(-?[\d.]+)vmax$/);
+        if (vmax) return (parseFloat(vmax[1]) / 100) * Math.max(window.innerHeight, window.innerWidth);
+        return null;
+    }
+
+    const userMaxHeightCss = computed(() => normalizeUserMaxHeight(props.maxHeight));
+
     const computedMaxHeight = computed(() => {
-        if (props.maxHeight) return undefined
-        if (smartMaxHeight.value === null) return undefined
-        return `${smartMaxHeight.value}px`
+        const smart = smartMaxHeight.value;
+        const user = userMaxHeightCss.value;
+        // Sin límite de usuario: ocupa todo el espacio disponible.
+        if (smart === null && !user) return undefined;
+        if (smart === null) return user;
+        if (!user) return `${smart}px`;
+        // Con límite de usuario: min(usuario, espacio disponible).
+        const userPx = cssToPx(user);
+        if (userPx !== null) return `${Math.max(0, Math.round(Math.min(userPx, smart)))}px`;
+        return `min(${user}, ${smart}px)`;
     })
+
+    // Reposiciona si el contenido crece tarde (batches, fuentes, slots) y el
+    // menú queda fuera del viewport. Con rAF-throttle y sin bucles: cuando el
+    // max-height ya limita, el tamaño deja de cambiar y el observer se aquieta.
+    let _contentRo = null;
+    let _contentRaf = null;
+
+    function startContentTracking() {
+        stopContentTracking();
+        const menuEl = contentEl.value;
+        if (!(menuEl instanceof HTMLElement) || typeof ResizeObserver === 'undefined') return;
+        _contentRo = new ResizeObserver(() => {
+            if (_contentRaf) return;
+            _contentRaf = requestAnimationFrame(() => {
+                _contentRaf = null;
+                const el = contentEl.value;
+                if (!(el instanceof HTMLElement)) return;
+                const r = el.getBoundingClientRect();
+                if (r.bottom > window.innerHeight - 8 || r.top < 8) {
+                    repositionMenu();
+                }
+            });
+        });
+        _contentRo.observe(menuEl);
+    }
+
+    function stopContentTracking() {
+        if (_contentRaf) {
+            cancelAnimationFrame(_contentRaf);
+            _contentRaf = null;
+        }
+        if (_contentRo) {
+            _contentRo.disconnect();
+            _contentRo = null;
+        }
+    }
 
     return {
         initializeMenu,
         repositionMenu,
         startScrollTracking,
         stopScrollTracking,
+        startContentTracking,
+        stopContentTracking,
         contentEl,
         activatorEl,
         originClass,
