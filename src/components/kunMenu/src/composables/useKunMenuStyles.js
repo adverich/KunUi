@@ -52,7 +52,11 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
         if (!(el instanceof HTMLElement)) return;
         const scrollableAncestors = getScrollableAncestors(el);
 
-        const onScroll = () => {
+        const onScroll = (e) => {
+            // El scroll interno del propio menú no mueve al activador: ignorarlo
+            // evita recálculos (y parpadeo) al usar rueda o arrastrar el scrollbar.
+            const t = e?.target;
+            if (t instanceof HTMLElement && contentEl.value?.contains(t)) return;
             if (_rafId) return;
             _rafId = requestAnimationFrame(() => {
                 _rafId = null;
@@ -98,13 +102,17 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
 
         // Tope síncrono: el menú nace ya limitado al espacio disponible
         // (evita el primer pintado sin cap mientras el rAF mide el contenido).
-        // Se corrige al lado definitivo dentro del rAF de abajo.
+        // Respeta el lado actual: si el menú está colocado arriba hay que usar
+        // spaceAbove; forzar spaceBelow lo encogería y el rAF lo restauraría
+        // (= parpadeo en cada scroll). Primera apertura: 'bottom' por defecto.
         {
             const viewportHeight = window.innerHeight;
             const margin = 8;
             const pxHideDetails = props.hideDetails ? 0 : 19;
             const spaceBelowSync = viewportHeight - parentRect.bottom + pxHideDetails - margin;
-            smartMaxHeight.value = Math.max(0, Math.round(spaceBelowSync));
+            const spaceAboveSync = parentRect.top - margin;
+            const syncSpace = currentPlacement.value === 'top' ? spaceAboveSync : spaceBelowSync;
+            smartMaxHeight.value = Math.max(0, Math.round(syncSpace));
         }
 
         requestAnimationFrame(() => {
@@ -297,7 +305,9 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
                 const el = contentEl.value;
                 if (!(el instanceof HTMLElement)) return;
                 const r = el.getBoundingClientRect();
-                if (r.bottom > window.innerHeight - 8 || r.top < 8) {
+                // Holgura de 4px: el menú calza justo al margen de 8px y el
+                // redondeo de subpíxeles no debe disparar reposiciones fantasma.
+                if (r.bottom > window.innerHeight - 4 || r.top < 4) {
                     repositionMenu();
                 }
             });
