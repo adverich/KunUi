@@ -127,7 +127,11 @@ export function useKunMenuStyles(props, handleActivatorClick, handleHover, handl
             const viewportWidth = window.innerWidth;
             const margin = 8;
             const pxHideDetails = props.hideDetails ? 0 : 19;
-            const contentHeight = menuEl.offsetHeight;
+            // Altura REAL del contenido (sin cap): el menú ya viene limitado
+            // por max-height, así que offsetHeight siempre "entraría" abajo y
+            // nunca se detectaría que debe abrir hacia arriba. scrollHeight
+            // ignora el cap y permite decidir el lado con más espacio.
+            const contentHeight = Math.max(menuEl.scrollHeight, menuEl.offsetHeight);
 
             // When width='w-full' the menu gets the Tailwind class w-full (100vw on body teleport),
             // so offsetWidth is unreliable until the inline style is applied. Use parentRect.width instead.
