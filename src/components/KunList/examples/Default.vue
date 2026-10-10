@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 max-w-md">
-    <KunList v-model:selected-values="selected" selectable="multiple" nav>
+    <KunList v-model:selected-values="selected" :selectable="true" selection-mode="multiple" nav>
       <KunListItem value="1">Elemento 1</KunListItem>
       <KunListItem value="2">Elemento 2</KunListItem>
       <KunListItem value="3">Elemento 3</KunListItem>
@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import KunList from '../src/components/KunList.vue'
 import KunListItem from '../../KunListItem/src/components/KunListItem.vue'

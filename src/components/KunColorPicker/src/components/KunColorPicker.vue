@@ -53,7 +53,7 @@
           :value="hexColor"
           :disabled="disabled || isTransparent"
           aria-label="Color"
-          @input="updateHex($event.target.value)"
+          @input="updateHex(($event.target as HTMLInputElement).value)"
         >
         <input
           class="min-w-0 flex-1 rounded-lg border border-ui bg-field-background px-3 py-2 font-mono text-sm text-ui outline-none focus:border-ui-focus focus:ring-1 focus:ring-ui-focus"
@@ -61,8 +61,8 @@
           :placeholder="placeholder"
           :disabled="disabled || isTransparent"
           :aria-label="`Valor ${activeColorType} del color`"
-          @change="updateFromColorInput($event.target.value)"
-          @keyup.enter="updateFromColorInput($event.target.value)"
+          @change="updateFromColorInput(($event.target as HTMLInputElement).value)"
+          @keyup.enter="updateFromColorInput(($event.target as HTMLInputElement).value)"
         >
         <select
           v-if="colorType === 'all'"
@@ -77,7 +77,7 @@
       </div>
 
       <div class="mb-4 flex items-center gap-2 text-sm text-ui">
-        <input id="transparent-checkbox" class="cursor-pointer disabled:cursor-not-allowed" type="checkbox" :checked="isTransparent" :disabled="disabled || !allowTransparent" @change="toggleTransparency($event.target.checked)">
+        <input id="transparent-checkbox" class="cursor-pointer disabled:cursor-not-allowed" type="checkbox" :checked="isTransparent" :disabled="disabled || !allowTransparent" @change="toggleTransparency(($event.target as HTMLInputElement).checked)">
         <label for="transparent-checkbox" class="cursor-pointer select-none">Transparente</label>
       </div>
 
@@ -93,7 +93,7 @@
           :value="alphaPercent"
           :disabled="disabled || isTransparent"
           aria-label="Opacidad"
-          @input="updateAlpha($event.target.value)"
+          @input="updateAlpha(($event.target as HTMLInputElement).value)"
         >
       </div>
 
@@ -106,22 +106,24 @@
   </div>
 </template>
 
-<script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { kunColorPickerProps } from '../composables/kunColorPickerProps'
+<script setup lang="ts">
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
+import { kunColorPickerProps } from '../composables/kunColorPickerProps.js'
 
 const props = defineProps(kunColorPickerProps)
 const emit = defineEmits(['update:modelValue', 'change', 'reset', 'open', 'close'])
 
-const rootRef = ref(null)
-const panelRef = ref(null)
-const triggerRef = ref(null)
+export interface RgbaColor { r: number; g: number; b: number; a: number }
+
+const rootRef: Ref<HTMLElement | null> = ref(null)
+const panelRef: Ref<HTMLElement | null> = ref(null)
+const triggerRef: Ref<HTMLElement | null> = ref(null)
 const isOpen = ref(false)
-const initialColor = ref(props.modelValue || '#000000')
+const initialColor = ref((props.modelValue as string) || '#000000')
 const selectedColor = ref(normalizeColor(props.modelValue))
 const lastOpaqueColor = ref(colorToHex(selectedColor.value))
 const selectedFormat = ref(inferColorType(props.modelValue))
-const popoverStyle = ref({ visibility: 'hidden' })
+const popoverStyle: Ref<Record<string, string>> = ref({ visibility: 'hidden' })
 
 const resetColor = computed(() => normalizeColor(props.originalColor ?? initialColor.value))
 const parsedColor = computed(() => parseColor(selectedColor.value))
@@ -132,14 +134,14 @@ const alphaPercent = computed(() => Math.round(parsedColor.value.a * 100))
 const isTransparent = computed(() => parsedColor.value.a === 0)
 const displayValue = computed(() => formattedValue.value)
 
-watch(() => props.modelValue, value => {
+watch(() => props.modelValue, (value: unknown) => {
   const normalized = normalizeColor(value)
   if (normalized !== selectedColor.value) selectedColor.value = normalized
   if (parseColor(normalized).a > 0) lastOpaqueColor.value = colorToHex(normalized)
   if (props.colorType === 'all') selectedFormat.value = inferColorType(normalized)
 })
 
-watch(isOpen, async open => {
+watch(isOpen, async (open: boolean) => {
   if (open) {
     await nextTick()
     updatePopoverPosition()
@@ -149,19 +151,19 @@ watch(isOpen, async open => {
   }
 })
 
-function normalizeColor(value) {
+function normalizeColor(value: unknown): string {
   if (!value || String(value).toLowerCase() === 'transparent') return 'rgba(0, 0, 0, 0)'
   return String(value).trim()
 }
 
-function inferColorType(value) {
+function inferColorType(value: unknown): string {
   const normalized = normalizeColor(value).toLowerCase()
   if (normalized.startsWith('hsl')) return 'hsl'
   if (normalized.startsWith('rgb')) return 'rgb'
   return 'hex'
 }
 
-function parseColor(color) {
+function parseColor(color: unknown): RgbaColor {
   const value = normalizeColor(color)
   if (value.startsWith('#')) {
     const hex = value.slice(1)
@@ -183,15 +185,15 @@ function parseColor(color) {
   return { r: 0, g: 0, b: 0, a: 1 }
 }
 
-function clamp(value) { return Math.max(0, Math.min(255, Number(value) || 0)) }
-function rgbToHex({ r, g, b }) { return `#${[r, g, b].map(value => Math.round(value).toString(16).padStart(2, '0')).join('')}`.toUpperCase() }
-function colorToHex(color) { return rgbToHex(parseColor(color)) }
-function hslToRgb(h, s, l) {
+function clamp(value: unknown): number { return Math.max(0, Math.min(255, Number(value) || 0)) }
+function rgbToHex({ r, g, b }: { r: number; g: number; b: number }): string { return `#${[r, g, b].map(value => Math.round(value).toString(16).padStart(2, '0')).join('')}`.toUpperCase() }
+function colorToHex(color: unknown): string { return rgbToHex(parseColor(color)) }
+function hslToRgb(h: number, s: number, l: number): { r: number; g: number; b: number } {
   const hue = ((h % 360) + 360) % 360 / 360
   const saturation = Math.max(0, Math.min(100, s)) / 100
   const lightness = Math.max(0, Math.min(100, l)) / 100
   if (saturation === 0) return { r: Math.round(lightness * 255), g: Math.round(lightness * 255), b: Math.round(lightness * 255) }
-  const hueToRgb = (p, q, t) => {
+  const hueToRgb = (p: number, q: number, t: number): number => {
     let channel = t < 0 ? t + 1 : t > 1 ? t - 1 : t
     if (channel < 1 / 6) return p + (q - p) * 6 * channel
     if (channel < 1 / 2) return q
@@ -202,7 +204,7 @@ function hslToRgb(h, s, l) {
   const p = 2 * lightness - q
   return { r: Math.round(hueToRgb(p, q, hue + 1 / 3) * 255), g: Math.round(hueToRgb(p, q, hue) * 255), b: Math.round(hueToRgb(p, q, hue - 1 / 3) * 255) }
 }
-function rgbToHsl({ r, g, b }) {
+function rgbToHsl({ r, g, b }: { r: number; g: number; b: number }): { h: number; s: number; l: number } {
   const red = r / 255, green = g / 255, blue = b / 255
   const max = Math.max(red, green, blue), min = Math.min(red, green, blue)
   const lightness = (max + min) / 2
@@ -212,7 +214,7 @@ function rgbToHsl({ r, g, b }) {
   let hue = max === red ? (green - blue) / delta + (green < blue ? 6 : 0) : max === green ? (blue - red) / delta + 2 : (red - green) / delta + 4
   return { h: Math.round(hue * 60), s: Math.round(saturation * 100), l: Math.round(lightness * 100) }
 }
-function formatColor(color, type) {
+function formatColor(color: RgbaColor, type: unknown): string {
   const alpha = Number(color.a.toFixed(2))
   if (type === 'rgb') return alpha >= 1 ? `rgb(${color.r}, ${color.g}, ${color.b})` : `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`
   if (type === 'hsl') {
@@ -223,16 +225,16 @@ function formatColor(color, type) {
   return `${rgbToHex(color)}${Math.round(alpha * 255).toString(16).padStart(2, '0').toUpperCase()}`
 }
 
-function setColor(color) {
-  const parsed = typeof color === 'string' ? parseColor(color) : color
+function setColor(color: unknown): void {
+  const parsed = typeof color === 'string' ? parseColor(color) : (color as RgbaColor)
   selectedColor.value = `rgba(${parsed.r}, ${parsed.g}, ${parsed.b}, ${parsed.a})`
   if (parsed.a > 0) lastOpaqueColor.value = rgbToHex(parsed)
   const value = parsed.a === 0 ? 'transparent' : formatColor(parsed, activeColorType.value)
   emit('update:modelValue', value)
   emit('change', value)
 }
-function updateHex(hex) { setColor({ ...parseColor(hex), a: parsedColor.value.a || 1 }) }
-function updateFromColorInput(value) {
+function updateHex(hex: string): void { setColor({ ...parseColor(hex), a: parsedColor.value.a || 1 }) }
+function updateFromColorInput(value: string): void {
   const input = value.trim()
   const valid = activeColorType.value === 'hex'
     ? /^#?([\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(input)
@@ -241,8 +243,8 @@ function updateFromColorInput(value) {
       : /^hsla?\(/i.test(input)
   if (valid) setColor(input.startsWith('#') || activeColorType.value !== 'hex' ? input : `#${input}`)
 }
-function updateAlpha(value) { setColor({ ...parsedColor.value, a: Number(value) / 100 }) }
-function toggleTransparency(transparent) {
+function updateAlpha(value: string): void { setColor({ ...parsedColor.value, a: Number(value) / 100 }) }
+function toggleTransparency(transparent: boolean): void {
   if (transparent) setColor({ ...parsedColor.value, a: 0 })
   else setColor(lastOpaqueColor.value || '#000000')
 }
@@ -266,13 +268,13 @@ function updatePopoverPosition() {
   const panelWidth = panelRect.width
   const panelHeight = Math.min(panelRect.height, viewportHeight - viewportPadding * 2)
 
-  const candidates = [
+  const candidates: { side: string; left: number; top: number }[] = [
     { side: 'right', left: triggerRect.right + gap, top: triggerRect.top },
     { side: 'left', left: triggerRect.left - panelWidth - gap, top: triggerRect.top },
     { side: 'bottom', left: triggerRect.left, top: triggerRect.bottom + gap },
     { side: 'top', left: triggerRect.left, top: triggerRect.top - panelHeight - gap },
   ]
-  const fits = candidate => (
+  const fits = (candidate: { left: number; top: number }): boolean => (
     candidate.left >= viewportPadding &&
     candidate.top >= viewportPadding &&
     candidate.left + panelWidth <= viewportWidth - viewportPadding &&
@@ -294,9 +296,9 @@ function updatePopoverPosition() {
   }
 }
 
-function onClickOutside(event) {
-  const clickedTrigger = rootRef.value?.contains(event.target)
-  const clickedPopover = panelRef.value?.contains(event.target)
+function onClickOutside(event: MouseEvent): void {
+  const clickedTrigger = rootRef.value?.contains(event.target as Node)
+  const clickedPopover = panelRef.value?.contains(event.target as Node)
   if (isOpen.value && !clickedTrigger && !clickedPopover) isOpen.value = false
 }
 function onViewportChange() {
@@ -324,3 +326,4 @@ defineExpose({ reset, open: () => { isOpen.value = true }, close: () => { isOpen
   background-size: 8px 8px;
 }
 </style>
+

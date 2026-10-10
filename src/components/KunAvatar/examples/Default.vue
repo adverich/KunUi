@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunAvatar from '../src/components/KunAvatar.vue';
 </script>
 

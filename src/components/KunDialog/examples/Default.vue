@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunDialog from '../src/components/KunDialog.vue';
 </script>
 

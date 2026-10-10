@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunForm from '../src/components/KunForm.vue';
 </script>
 

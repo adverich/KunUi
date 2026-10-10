@@ -15,11 +15,11 @@
     </div>
   </template>
 
-<script setup>
+<script setup lang="ts">
 import { watch, computed } from "vue";
 import KunModalFooter from "./KunModalFooter.vue";
-import { useKunModalFooter } from "../composables/useKunModalFooter";
-import { kunMultipleModalFooterProps } from '../composables/kunMultipleModalFooterProps'
+import { useKunModalFooter, type ModalMessage } from "../composables/useKunModalFooter.js";
+import { kunMultipleModalFooterProps } from '../composables/kunMultipleModalFooterProps.js'
 
 const { useMessages, useAddMessage } = useKunModalFooter();
 
@@ -27,17 +27,17 @@ const props = defineProps(kunMultipleModalFooterProps)
 const emit = defineEmits(["update:messages", "removeMessage"]);
 
 // Observa cambios externos en los mensajes
-watch(() => props.messages, (newMessages) => {
-    newMessages.forEach(msg => {
+watch(() => props.messages, (newMessages: unknown) => {
+    ((newMessages as ModalMessage[]) || []).forEach((msg: ModalMessage) => {
         useAddMessage(msg.text, msg.id, msg.color, 5000,
-          (id) => {
+          (id: number | string) => {
             emitUpdatedMessages(id); // <-- callback para actualizar padre
           }
         );
     });
 }, { deep: true });
 
-function emitUpdatedMessages(id) {
+function emitUpdatedMessages(id: number | string): void {
     useMessages.value = useMessages.value.filter(msg => msg.id !== id);
     emit("update:messages", useMessages.value.map(msg => ({
         id: msg.id,
@@ -47,7 +47,7 @@ function emitUpdatedMessages(id) {
 }
 
 // Elimina un mensaje
-function removeMessage(id) {
+function removeMessage(id: number | string): void {
     const index = useMessages.value.findIndex((msg) => msg.id === id);
     if (index !== -1) {
         useMessages.value.splice(index, 1);
@@ -62,7 +62,7 @@ function removeMessage(id) {
 
 // Clases dinámicas para el contenedor
 const containerClasses = computed(() => {
-const positions = {
+const positions: Record<string, string> = {
     "bottom-left": "bottom-4 left-4",
     "bottom-right": "bottom-4 right-4",
     "bottom-center": "bottom-4 left-1/2 transform -translate-x-1/2",
@@ -75,7 +75,7 @@ const direction = props.stackDirection === "bottom-to-top" ? "flex-col-reverse" 
 
 return [
     "fixed z-[9999]", // Posicionamiento fijo y z-index alto
-    positions[props.position] || "bottom-4 right-4", // Posición predeterminada
+    positions[props.position as string] || "bottom-4 right-4", // Posición predeterminada
     "flex", // Contenedor flexbox
     direction, // Dirección del apilamiento
     "gap-3", // Espacio entre los mensajes

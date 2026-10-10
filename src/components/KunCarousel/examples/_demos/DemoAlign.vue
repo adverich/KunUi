@@ -1,9 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import KunCarousel from '../../src/components/KunCarousel.vue'
 import KunCarouselSlide from '../../../KunCarouselSlide/src/components/KunCarouselSlide.vue'
+import type { KunCarouselAlign } from '../../src/composables/kunCarouselProps.js'
 
-const align = ref('center')
+const align = ref<KunCarouselAlign>('center')
 
 const slides = ref([
   { id: 1, title: 'A', bg: 'bg-red-500' },
@@ -17,7 +18,7 @@ const slides = ref([
   <div class="space-y-3">
     <div class="flex gap-2">
       <button
-        v-for="a in ['start', 'center', 'end']"
+        v-for="a in (['start', 'center', 'end'] as const)"
         :key="a"
         type="button"
         :class="[

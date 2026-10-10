@@ -15,7 +15,7 @@
         :style="tooltipStyle"
         style="z-index: 9999;"
         role="tooltip"
-        aria-hidden="!isVisible"
+        :aria-hidden="!isVisible"
         @mouseenter="onTooltipEnter"
         @mouseleave="onTooltipLeave"
       >
@@ -25,10 +25,10 @@
   </teleport>
 </template>
 
-<script setup>
-import { ref, computed, onBeforeUnmount, nextTick, useId } from 'vue'
-import { kunTooltipProps } from '../composables/kunTooltipProps'
-import { useTooltipPosition } from '../composables/useTooltipPosition'
+<script setup lang="ts">
+import { ref, computed, onBeforeUnmount, nextTick, useId, type Ref } from 'vue'
+import { kunTooltipProps } from '../composables/kunTooltipProps.js'
+import { useTooltipPosition, type TooltipLocation, type TooltipDist } from '../composables/useTooltipPosition.js'
 
 const props = defineProps(kunTooltipProps)
 
@@ -36,32 +36,36 @@ const props = defineProps(kunTooltipProps)
 const tooltipId = props.id || `tooltip-${useId()}`
 
 const isVisible = ref(false)
-const activatorRef = ref(null)
-const tooltipRef = ref(null)
+const activatorRef: Ref<HTMLElement | null> = ref(null)
+const tooltipRef: Ref<HTMLElement | null> = ref(null)
 
 const { tooltipStyle, updatePosition } = useTooltipPosition(
   activatorRef,
   tooltipRef,
   isVisible,
   () => ({
-    location: props.location,
-    flip: props.flip,
-    dist: props.dist,
+    location: props.location as TooltipLocation,
+    flip: props.flip as boolean,
+    dist: props.dist as TooltipDist,
   }),
 )
 
 // Timers
-let openTimer = null
-let closeTimer = null
-let safetyTimer = null
+let openTimer: ReturnType<typeof setTimeout> | null = null
+let closeTimer: ReturnType<typeof setTimeout> | null = null
+let safetyTimer: ReturnType<typeof setTimeout> | null = null
 let pending = false
 
-function show() {
+function clearTimer(timer: ReturnType<typeof setTimeout> | null): void {
+  if (timer) clearTimeout(timer)
+}
+
+function show(): void {
   if (props.disabled || isVisible.value || pending) return
 
-  clearTimeout(openTimer)
-  clearTimeout(closeTimer)
-  clearTimeout(safetyTimer)
+  clearTimer(openTimer)
+  clearTimer(closeTimer)
+  clearTimer(safetyTimer)
 
   pending = true
   openTimer = setTimeout(async () => {
@@ -79,10 +83,10 @@ function show() {
   }, +props.delay)
 }
 
-function hide() {
-  clearTimeout(openTimer)
-  clearTimeout(closeTimer)
-  clearTimeout(safetyTimer)
+function hide(): void {
+  clearTimer(openTimer)
+  clearTimer(closeTimer)
+  clearTimer(safetyTimer)
 
   if (!isVisible.value && !pending) return
 
@@ -92,23 +96,23 @@ function hide() {
   }, +props.closeDelay)
 }
 
-function toggle() {
+function toggle(): void {
   isVisible.value ? hide() : show()
 }
 
-function onTooltipEnter() {
-  clearTimeout(closeTimer)
-  clearTimeout(safetyTimer)
+function onTooltipEnter(): void {
+  clearTimer(closeTimer)
+  clearTimer(safetyTimer)
 }
 
-function onTooltipLeave() {
+function onTooltipLeave(): void {
   hide()
 }
 
 // Props para activador
 const activatorProps = computed(() => {
   if (props.disabled) return {}
-  const listeners = {}
+  const listeners: Record<string, () => void> = {}
   if (props.openOn === 'hover') {
     listeners.onMouseenter = show
     listeners.onMouseleave = hide
@@ -126,9 +130,10 @@ const baseClass = 'fixed px-3 py-2 shadow'
 const mergedClass = computed(() => [baseClass, props.textColor, props.bgColor, props.textSize, props.rounded, props.class])
 
 onBeforeUnmount(() => {
-  clearTimeout(openTimer)
-  clearTimeout(closeTimer)
-  clearTimeout(safetyTimer)
+  clearTimer(openTimer)
+  clearTimer(closeTimer)
+  clearTimer(safetyTimer)
   isVisible.value = false
 })
 </script>
+

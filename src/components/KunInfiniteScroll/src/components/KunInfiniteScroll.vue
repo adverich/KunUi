@@ -1,16 +1,20 @@
-<script setup>
-import { ref, computed, watch, onMounted } from 'vue'
-import { useIntersectionObserver } from '../composables/useIntersectionObserver'
-import { useKunInfiniteScroll } from '../composables/useKunInfiniteScroll'
-import { kunInfiniteScrollProps } from '../composables/kunInfiniteScrollProps'
+<script setup lang="ts">
+import { ref, computed, watch, onMounted, type Ref } from 'vue'
+import { useIntersectionObserver } from '../composables/useIntersectionObserver.js'
+import { useKunInfiniteScroll } from '../composables/useKunInfiniteScroll.js'
+import { kunInfiniteScrollProps } from '../composables/kunInfiniteScrollProps.js'
 import KunVirtualScroller from '../../../KunVirtualScroller/src/components/KunVirtualScroller.vue'
 
 const props = defineProps(kunInfiniteScrollProps)
 
+defineSlots<{
+  default?: (props: { item?: unknown; index?: number; empty?: boolean; visibleItems?: unknown[] }) => any;
+}>()
+
 const emit = defineEmits(['update:items'])
 
-const sentinel = ref(null)
-const scrollContainer = ref(null)
+const sentinel: Ref<HTMLElement | null> = ref(null)
+const scrollContainer: Ref<HTMLElement | null> = ref(null)
 
 const {
   visibleItems,
@@ -31,8 +35,8 @@ const {
 // El sentinel debe paginar contra el scroller real (ej. el KunMenu con
 // overflow-y-auto), no contra el viewport: si el menú está limitado por
 // max-height, los batches se cargan al scrollear el menú.
-function findScrollRoot(el) {
-  let p = el?.parentElement;
+function findScrollRoot(el: HTMLElement | null): HTMLElement | null {
+  let p = el?.parentElement as HTMLElement | null | undefined;
   while (p) {
     const oy = window.getComputedStyle(p).overflowY;
     if (oy === 'auto' || oy === 'scroll' || oy === 'overlay') return p;
@@ -44,7 +48,7 @@ function findScrollRoot(el) {
 onMounted(() => {
   // Sin ancestro scrolleable (uso standalone): root null = viewport (comportamiento original).
   const root = findScrollRoot(sentinel.value) ?? null;
-  useIntersectionObserver(sentinel.value, ([entry]) => {
+  useIntersectionObserver(sentinel.value, ([entry]: IntersectionObserverEntry[]) => {
     if (!props.enabled) return;
     if (entry.isIntersecting) {
       // Verificamos si aún hay elementos que cargar
@@ -80,7 +84,7 @@ onMounted(() => {
   </div>
   <div v-else class="w-full" ref="scrollContainer">
       <template v-if="visibleItems.length">
-        <template v-for="(item, index) in visibleItems" :key="item.id ?? index">
+        <template v-for="(item, index) in visibleItems" :key="((item as any)?.id ?? index)">
           <slot :item="item" :index="index" :visible-items="visibleItems" />
         </template>
       </template>
@@ -97,3 +101,4 @@ onMounted(() => {
   overflow-y: auto;
 }
 </style>
+

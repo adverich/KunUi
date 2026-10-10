@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { computed, defineEmits } from 'vue'
-import { kunSwitchProps } from '../composables/kunSwitchProps'
+import { kunSwitchProps } from '../composables/kunSwitchProps.js'
 
 const props = defineProps(kunSwitchProps)
 
@@ -22,7 +22,14 @@ const vertical = computed(() =>
 )
 
 // Tamaños predefinidos
-const sizeClasses = {
+interface KunSwitchSize {
+  outer: string;
+  thumb: string;
+  icon: string;
+  translate: string;
+}
+
+const sizeClasses: Record<string, KunSwitchSize> = {
   xxs: {
     outer: 'w-6 h-3',
     thumb: 'w-3 h-3',
@@ -67,7 +74,7 @@ const sizeClasses = {
   },
 }
 
-const currentSize = computed(() => sizeClasses[props.size] || sizeClasses.md)
+const currentSize = computed<KunSwitchSize>(() => sizeClasses[props.size as string] || sizeClasses.md)
 </script>
 
 <template>
@@ -159,3 +166,4 @@ const currentSize = computed(() => sizeClasses[props.size] || sizeClasses.md)
     </div>
   </div>
 </template>
+

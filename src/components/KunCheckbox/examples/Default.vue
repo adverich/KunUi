@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunCheckbox from '../src/components/KunCheckbox.vue';
 </script>
 

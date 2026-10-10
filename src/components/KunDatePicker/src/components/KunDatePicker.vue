@@ -204,13 +204,13 @@
     </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch, provide, inject, h, useId, useSlots } from 'vue';
+<script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted, nextTick, watch, provide, inject, h, useId, useSlots, type Ref } from 'vue';
 import KunTextField from '../../../KunTextField/src/components/KunTextField.vue';
 import KunNumberField from '../../../KunNumberField/src/components/KunNumberField.vue';
-import { usePosition } from '../composables/usePosition';
+import { usePosition } from '../composables/usePosition.js';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
-import { kunDatePickerProps } from '../composables/kunDatePickerProps'
+import { kunDatePickerProps } from '../composables/kunDatePickerProps.js'
 
 import arrowUp from '@/icons/IconArrowUp.vue'
 import arrowDown from '@/icons/IconArrowDown.vue'
@@ -227,23 +227,31 @@ const emit = defineEmits(['update:modelValue', 'change', 'close', 'open']);
 
 // Global Click Manager
 const instanceId = props.id || `kun-datepicker-${useId()}`;
-const containerRef = ref(null);
-const triggerRef = ref(null);
-const popoverRef = ref(null);
+
+export interface DatePickerTrigger {
+    rootRef?: HTMLElement | null;
+    $el?: Element | null;
+}
+
+const containerRef: Ref<HTMLElement | null> = ref(null);
+const triggerRef: Ref<DatePickerTrigger | null> = ref(null);
+const popoverRef: Ref<HTMLElement | null> = ref(null);
 const isOpen = ref(false);
 const viewMode = ref('days');
 
-const tempValue = ref(null);
+export interface TimeValue { hours: number; minutes: number; seconds: number }
+
+const tempValue: Ref<Date | Date[] | null> = ref(null);
 const currentMonth = ref(new Date().getMonth());
 const currentYear = ref(new Date().getFullYear());
-const time = ref({ hours: 0, minutes: 0, seconds: 0 });
+const time: Ref<TimeValue> = ref({ hours: 0, minutes: 0, seconds: 0 });
 
 // Helpers
-function parseDateString(val) {
-    const d = new Date(val);
+function parseDateString(val: unknown): Date | null {
+    const d = new Date(val as string);
     if (!isNaN(d.getTime())) return d;
     if (effectiveMode.value === 'time') {
-       const [h, m, s] = val.split(':').map(Number);
+       const [h, m, s] = String(val).split(':').map(Number);
        const now = new Date();
        now.setHours(h || 0, m || 0, s || 0, 0);
        return now;
@@ -251,7 +259,7 @@ function parseDateString(val) {
     return null;
 }
 
-function formatDate(date, format) {
+function formatDate(date: Date, format: string): string {
     const year = date.getFullYear().toString();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -259,7 +267,7 @@ function formatDate(date, format) {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    const map = {
+    const map: Record<string, string> = {
         YYYY: year,
         yyyy: year,
         YY: year.slice(-2),
@@ -271,14 +279,14 @@ function formatDate(date, format) {
         mm: minutes,
         ss: seconds,
     };
-    return format.replace(/YYYY|yyyy|YY|yy|MM|DD|dd|HH|mm|ss/g, matched => map[matched]);
+    return format.replace(/YYYY|yyyy|YY|yy|MM|DD|dd|HH|mm|ss/g, (matched: string) => map[matched]);
 }
 
-function parseFromFormat(val, format) {
+function parseFromFormat(val: unknown, format: unknown): Date | null {
     if (!val || !format) return null;
 
-    const formatParts = format.match(/[a-zA-Z]+/g);
-    const valueParts = val.match(/\d+/g);
+    const formatParts = String(format).match(/[a-zA-Z]+/g);
+    const valueParts = String(val).match(/\d+/g);
 
     if (!formatParts || !valueParts || formatParts.length !== valueParts.length) return null;
 
@@ -289,7 +297,7 @@ function parseFromFormat(val, format) {
     let minutes = 0;
     let seconds = 0;
 
-    formatParts.forEach((part, i) => {
+    formatParts.forEach((part: string, i: number) => {
         const v = parseInt(valueParts[i], 10);
         if (isNaN(v)) return;
 
@@ -313,7 +321,7 @@ function parseFromFormat(val, format) {
     return d;
 }
 
-function parseSmart(val) {
+function parseSmart(val: unknown): Date | null {
     if (!val) return null;
     if (val instanceof Date) return val;
     if (typeof val === 'string') {
@@ -355,24 +363,27 @@ const shouldShowTime = computed(() => {
     return effectiveMode.value === 'datetime' || effectiveMode.value === 'time' || props.enableTime;
 });
 
-const shouldEnableSeconds = computed(() => props.enableSeconds || (getConfigFormat('value') && getConfigFormat('value').includes('ss')));
+const shouldEnableSeconds = computed(() => {
+    const valueFmt = getConfigFormat('value');
+    return props.enableSeconds || (!!valueFmt && valueFmt.includes('ss'));
+});
 
 // Defaults & Init
-watch(() => props.modelValue, (val) => {
+watch(() => props.modelValue, (val: unknown) => {
     initFromValue(val);
 }, { immediate: true });
 
-function initFromValue(val) {
+function initFromValue(val: unknown): void {
     if (val) {
         if (props.range && Array.isArray(val) && val.length > 0) {
-             const parsedRange = val.map(v => parseSmart(v)).filter(v => v);
-             
+             const parsedRange = (val as unknown[]).map(v => parseSmart(v)).filter((v): v is Date => v !== null);
+
              if (parsedRange.length === 2 && parsedRange[0] > parsedRange[1]) {
                  parsedRange.reverse();
              }
-             
+
              tempValue.value = parsedRange.length > 0 ? parsedRange : null;
-             
+
              const first = parsedRange[0];
              if (first) {
                  currentMonth.value = first.getMonth();
@@ -418,7 +429,7 @@ function initDefaults() {
     }
 }
 
-function extractTime(date) {
+function extractTime(date: Date): void {
     time.value = {
         hours: date.getHours(),
         minutes: date.getMinutes(),
@@ -458,7 +469,7 @@ const weekDays = computed(() => {
     return days;
 });
 
-function getConfigFormat(type) {
+function getConfigFormat(type: string): string | null {
     if (props.formats && props.formats[type]) return props.formats[type];
     // fallback to legacy
     if (type === 'value') return props.valueFormat || props.format;
@@ -471,10 +482,10 @@ const displayInputValue = computed(() => {
     if (!props.modelValue) return '';
     
     // Formatting for Display
-    const dateOpts = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    const timeOpts = { hour: '2-digit', minute: '2-digit', second: shouldEnableSeconds.value ? '2-digit' : undefined };
-    
-    const manualFormat = (d) => {
+    const dateOpts: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    const timeOpts: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', second: shouldEnableSeconds.value ? '2-digit' : undefined };
+
+    const manualFormat = (d: Date): string => {
         const fmt = getConfigFormat('display');
         if (fmt) return formatDate(d, fmt);
         
@@ -486,7 +497,7 @@ const displayInputValue = computed(() => {
         return str;
     };
 
-    const parseAndFormat = (val) => {
+    const parseAndFormat = (val: unknown): string => {
         const d = parseSmart(val);
         if (d) return manualFormat(d);
         return String(val);
@@ -576,15 +587,20 @@ function closePopover() {
     emit('close');
 }
 
-function handleOtherOpen(e) {
-    if (e.detail.id !== instanceId && isOpen.value) closePopover();
+function handleOtherOpen(e: Event): void {
+  const id = (e as CustomEvent).detail?.id;
+  if (id !== instanceId && isOpen.value) closePopover();
 }
 
-function clickOutside(e) {
+function clickOutside(e: MouseEvent): void {
     if (!isOpen.value) return;
-    const target = e.target;
-    if (popoverRef.value && popoverRef.value.contains(target)) return;
-    if (triggerRef.value && ((triggerRef.value.rootRef && triggerRef.value.rootRef.contains(target)) || (triggerRef.value.$el && triggerRef.value.$el.contains(target)))) return;
+    const target = e.target as Node | null;
+    if (popoverRef.value?.contains(target)) return;
+    const trigger = triggerRef.value as DatePickerTrigger | null;
+    const triggerRoot = trigger?.rootRef ?? null;
+    const triggerEl = trigger?.$el ?? null;
+    if (triggerRoot?.contains(target)) return;
+    if (triggerEl instanceof Element && triggerEl.contains(target)) return;
     closePopover();
 }
 
@@ -598,7 +614,7 @@ onUnmounted(() => {
 });
 
 // Date Manipulation
-function changeMonth(delta) {
+function changeMonth(delta: number): void {
     let newMonth = currentMonth.value + delta;
     if (newMonth > 11) { newMonth = 0; currentYear.value++; } 
     else if (newMonth < 0) { newMonth = 11; currentYear.value--; }
@@ -606,16 +622,16 @@ function changeMonth(delta) {
 }
 
 function toggleViewMode() { viewMode.value = viewMode.value === 'days' ? 'years' : 'days'; }
-function selectYear(year) { 
-    currentYear.value = year; 
-    viewMode.value = 'months'; 
+function selectYear(year: number): void {
+    currentYear.value = year;
+    viewMode.value = 'months';
 }
-function selectMonth(monthIndex) {
+function selectMonth(monthIndex: number): void {
     currentMonth.value = monthIndex;
     viewMode.value = 'days';
 }
 
-function mergeTime(date) {
+function mergeTime(date: Date): Date {
     const d = new Date(date);
     if (shouldShowTime.value) {
         d.setHours(time.value.hours || 0, time.value.minutes || 0, time.value.seconds || 0, 0);
@@ -627,20 +643,24 @@ function mergeTime(date) {
     return d;
 }
 
-function adjustTime(unit, delta) {
-    if (unit === 'hours') {
+function adjustTime(unit: string, delta: number): void {
+    type TimeUnit = keyof TimeValue;
+    const key = unit as TimeUnit;
+    if (key === 'hours') {
         let newH = (time.value.hours + delta) % 24;
         if (newH < 0) newH += 24;
         time.value.hours = newH;
     } else {
-        let newV = (time.value[unit] + delta) % 60;
+        let newV = (time.value[key] + delta) % 60;
         if (newV < 0) newV += 60;
-        time.value[unit] = newV;
+        time.value[key] = newV;
     }
     updateTime();
 }
 
-function selectDay(dateObj) {
+export interface CalendarDay { day: number; date: Date; isCurrentMonth: boolean }
+
+function selectDay(dateObj: CalendarDay): void {
     const selectedDate = mergeTime(dateObj.date);
 
     if (props.range) {
@@ -684,7 +704,7 @@ function getValueToEmit() {
     const outputFmt = props.outputFormat;
 
     // Determine format based on outputFormat prop
-    let fmt = outputFmt;
+    let fmt: string | null | undefined = outputFmt;
 
     // If outputFormat is not specified, fall back to valueFormat/config
     if (!fmt) {
@@ -696,7 +716,7 @@ function getValueToEmit() {
          fmt = shouldEnableSeconds.value ? 'HH:mm:ss' : 'HH:mm';
     }
 
-    const formatter = (d) => {
+    const formatter = (d: Date): string | Date => {
         // Explicit outputFormat handling - valores predefinidos
         if (outputFmt) {
             if (outputFmt === 'date') {
@@ -720,7 +740,7 @@ function getValueToEmit() {
     return formatter(val);
 }
 
-function formatDateWithTimezone(date, format) {
+function formatDateWithTimezone(date: unknown, format: string): string {
     if (!date) return '';
     if (!(date instanceof Date) || isNaN(date.getTime())) return '';
     
@@ -762,8 +782,8 @@ function formatDateWithTimezone(date, format) {
                     hour12: false
                 });
                 const parts = formatter.formatToParts(date);
-                const partMap = {};
-                parts.forEach(p => { partMap[p.type] = p.value; });
+                const partMap: Record<string, string> = {};
+                parts.forEach((p: Intl.DateTimeFormatPart) => { partMap[p.type] = p.value; });
                 
                 return format
                     .replace(/YYYY/g, partMap.year || '')
@@ -786,8 +806,8 @@ function formatDateWithTimezone(date, format) {
                     hour12: false
                 });
                 const parts = formatter.formatToParts(date);
-                const partMap = {};
-                parts.forEach(p => { partMap[p.type] = p.value; });
+                const partMap: Record<string, string> = {};
+                parts.forEach((p: Intl.DateTimeFormatPart) => { partMap[p.type] = p.value; });
                 
                 return format
                     .replace(/HH/g, partMap.hour || '00')
@@ -816,15 +836,15 @@ function applySelection() {
     closePopover();
 }
 
-function dayClasses(dayObj) {
+function dayClasses(dayObj: CalendarDay): string {
     const { date, isCurrentMonth } = dayObj;
     const now = new Date();
     const isToday = isSameDay(date, now);
     let isSelected = false;
     let inRange = false;
-    
+
     // Compare logic
-    const same = (a, b) => (a instanceof Date) && isSameDay(a, b);
+    const same = (a: unknown, b: Date): boolean => (a instanceof Date) && isSameDay(a, b);
     
     // We check tempValue for visual feedback
     const val = tempValue.value;
@@ -849,7 +869,7 @@ function dayClasses(dayObj) {
     return `${base} ${text} ${hover} ${todayBorder}`;
 }
 
-function isSameDay(d1, d2) {
+function isSameDay(d1: Date, d2: Date): boolean {
     return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
 }
 </script>
@@ -861,3 +881,4 @@ function isSameDay(d1, d2) {
 .scale-95 { transform: scale(0.95); }
 .scale-100 { transform: scale(1); }
 </style>
+

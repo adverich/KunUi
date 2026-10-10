@@ -161,7 +161,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /**
  * KunTable.vue
  * 
@@ -173,7 +173,7 @@
  * - Expansión de filas
  * - Adaptable a móvil (vista de tarjetas)
  */
-import { computed, onMounted, ref, toRefs, watch, nextTick } from 'vue';
+import { computed, onMounted, ref, toRefs, watch, nextTick, type Ref } from 'vue';
 import { isMobile, mdAndUp } from '@/utils/_platform';
 
 // Componentes UI internos y externos
@@ -188,13 +188,14 @@ import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunTableFilter from './KunTableFilter.vue';
 
 // Composables para lógica separada
-import useExpand from '../composables/useExpand';
-import useOptions from '../composables/useOptions';
-import useSelect from '../composables/useSelect';
-import useFilter from '../composables/useFilter';
-import { resolveRowKeyValue } from '../composables/useRowKey';
+import useExpand from '../composables/useExpand.js';
+import useOptions from '../composables/useOptions.js';
+import useSelect from '../composables/useSelect.js';
+import useFilter from '../composables/useFilter.js';
+import { resolveRowKeyValue, type TableItem } from '../composables/useRowKey.js';
 
-import kunTableProps from '../composables/KunTableProps';
+import type { KunTableHeader } from '@/utils/tableFormatters.js';
+import kunTableProps from '../composables/KunTableProps.js';
 
 // Eventos emitidos por la tabla
 const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy', 'update:search', 'focusOnSearch']);
@@ -202,7 +203,7 @@ const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy'
 // Props definidos en un archivo separado para reutilización
 const props = defineProps(kunTableProps());
 const propsRefs = toRefs(props);
-const selectedItems = defineModel('selectedItems', { type: Array, default: () => [] })
+const selectedItems = defineModel<TableItem[]>('selectedItems', { default: () => [] })
 
 // Destructuring de props reactivos para uso en template
 const {
@@ -242,7 +243,7 @@ const resolvedHeaders = computed(() => {
     ) {
       const resolvedFn = props.functionMap?.[header.columnFunction];
       if (typeof resolvedFn === 'function') {
-        newHeader.columnFunction = resolvedFn;
+        newHeader.columnFunction = resolvedFn as (item: TableItem, header: KunTableHeader) => unknown;
       } else {
         // console.warn(`[KunTable] No se encontró la función "${header.columnFunction}" en functionMap`);
         newHeader.columnFunction = () => ''; // fallback para evitar errores
@@ -267,11 +268,11 @@ watch(searchQuery, (val) => {
 // Lógica de paginación y ordenamiento
 const { options, paginatedItems, updateSort } = useOptions(propsRefs, emits, filteredItems, resolvedHeaders);
 
-const getRowKeyValue = (item, index = -1) => resolveRowKeyValue(item, rowKey.value, index);
-const getRowRenderKey = (item, index = -1) => getRowKeyValue(item, index) ?? `kun-table-row-${index}`;
-const getActionLoading = (item, index = -1) => {
+const getRowKeyValue = (item: TableItem, index = -1): unknown => resolveRowKeyValue(item, rowKey.value as string | ((item: TableItem, index: number) => unknown), index);
+const getRowRenderKey = (item: TableItem, index = -1): string => String(getRowKeyValue(item, index) ?? `kun-table-row-${index}`);
+const getActionLoading = (item: TableItem, index = -1): boolean => {
   const key = getRowKeyValue(item, index);
-  return key === null ? false : props.actionLoadingMap?.[key] || false;
+  return key === null ? false : (props.actionLoadingMap?.[key as string] as boolean) || false;
 };
 
 // Lógica de selección de filas
@@ -315,7 +316,7 @@ const mergedTableClass = [baseTableClass, tableClass.value];
 
 // --- Control de UI para Búsqueda (móvil/desktop) ---
 onMounted(() => showIconSearch());
-const searchRef = ref(null);
+const searchRef: Ref<HTMLInputElement | null> = ref(null);
 const showSearch = ref(true);
 const showSearchBtn = ref(false);
 
@@ -327,7 +328,7 @@ function focusOnSearch(){
   if(!isMobile.value) return;
   hideIconSearch();
   nextTick(() => {
-    searchRef.value.focus();
+    searchRef.value?.focus();
   })
 }
 
@@ -348,3 +349,4 @@ function hideIconSearch(){
 }
 const searchClass = ref("w-full border max-w-sm");
 </script>
+

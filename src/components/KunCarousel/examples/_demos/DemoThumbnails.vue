@@ -1,10 +1,12 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, type Ref } from 'vue'
 import KunCarousel from '../../src/components/KunCarousel.vue'
 import KunCarouselSlide from '../../../KunCarouselSlide/src/components/KunCarouselSlide.vue'
 
-const mainRef = ref(null)
-const thumbsRef = ref(null)
+type CarouselInstance = InstanceType<typeof KunCarousel>;
+
+const mainRef: Ref<CarouselInstance | null> = ref(null)
+const thumbsRef: Ref<CarouselInstance | null> = ref(null)
 const selected = ref(0)
 
 const slides = ref([
@@ -18,12 +20,12 @@ const slides = ref([
   { id: 8, title: 'Ciudad', bg: 'bg-purple-600' },
 ])
 
-function goToSlide(i) {
+function goToSlide(i: number): void {
   mainRef.value?.goTo(i)
   thumbsRef.value?.goTo(i)
 }
 
-function onMainSelect(_, i) {
+function onMainSelect(_: unknown, i: number): void {
   // la tira de miniaturas acompaña al carousel principal
   thumbsRef.value?.goTo(i)
 }

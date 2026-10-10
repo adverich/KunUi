@@ -4,9 +4,9 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { kunCardSubtitleProps } from '../composables/kunCardSubtitleProps'
+import { kunCardSubtitleProps } from '../composables/kunCardSubtitleProps.js'
 
 const props = defineProps(kunCardSubtitleProps)
 
@@ -18,3 +18,4 @@ const computedClass = computed(() => {
     ].filter(Boolean)
 })
 </script>
+

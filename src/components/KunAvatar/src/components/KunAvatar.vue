@@ -8,16 +8,16 @@
   </component>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, useAttrs } from "vue";
-import { kunAvatarProps } from '../composables/kunAvatarProps'
+import { kunAvatarProps } from '../composables/kunAvatarProps.js'
 
 const props = defineProps(kunAvatarProps);
 const attrs = useAttrs();
 
 defineEmits(["click", "hover", "contextmenu", "focus"]);
 
-const sizes = {
+const sizes: Record<string, string> = {
   "x-small": "w-6 h-6 text-xs",
   small: "w-8 h-8 text-sm",
   default: "w-12 h-12 text-base",
@@ -32,7 +32,7 @@ const hasBackgroundClass = computed(() => {
 
 const computedClasses = computed(() => [
   "relative flex items-center justify-center overflow-hidden cursor-pointer transition-all",
-  sizes[props.size] || sizes.default,
+  sizes[String(props.size)] || sizes.default,
   props.rounded ? "rounded-full" : props.tile ? "rounded-none" : "rounded",
   props.border ? `border border-${props.border}` : "",
   props.color ? `bg-${props.color}` : hasBackgroundClass.value ? "" : "bg-ui-surface-subtle",

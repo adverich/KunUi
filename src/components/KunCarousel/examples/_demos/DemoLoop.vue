@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import KunCarousel from '../../src/components/KunCarousel.vue'
 import KunCarouselSlide from '../../../KunCarouselSlide/src/components/KunCarouselSlide.vue'

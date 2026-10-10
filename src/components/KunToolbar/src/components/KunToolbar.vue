@@ -66,10 +66,10 @@
   </component>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, useSlots } from 'vue'
 import KunToolbarTitle from './KunToolbarTitle.vue'
-import { kunToolbarProps } from '../composables/kunToolbarProps'
+import { kunToolbarProps } from '../composables/kunToolbarProps.js'
 
 const props = defineProps(kunToolbarProps)
 
@@ -103,7 +103,7 @@ const roundedClass = computed(() => {
   return ''
 })
 
-const mergedClass = computed(() => 
+const mergedClass = computed(() => [
     props.bgColor ? props.bgColor : 'bg-transparent',
     props.floating ? 'inline-flex' : '',
     props.flat ? '' : `shadow-md`,
@@ -112,5 +112,6 @@ const mergedClass = computed(() =>
     props.bordered ? props.borderColor : 'border-b border-ui',
     heightClass.value,
     elevationClass.value
-)
+])
 </script>
+

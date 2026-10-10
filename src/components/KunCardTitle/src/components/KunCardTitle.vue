@@ -28,9 +28,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { kunCardTitleProps } from '../composables/kunCardTitleProps'
+import { kunCardTitleProps } from '../composables/kunCardTitleProps.js'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 const props = defineProps(kunCardTitleProps)
@@ -65,3 +65,4 @@ const subtitleClass = 'text-xs opacity-75 mt-1';
   @apply flex flex-col flex-grow whitespace-normal break-words;
 }
 </style>
+

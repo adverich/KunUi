@@ -11,11 +11,11 @@
       <div 
         v-show="menuVisible" 
         ref="contentEl" 
-        role="menu" 
-        tabindex="-1"
+        role="menu"
+        :tabindex="-1"
         class="relative shadow-xl rounded-b overflow-y-auto focus:outline-none border border-ui"
-        :class="[props.class, originClass, width, minWidth, maxWidth, minHeight, height, maxHeight, zIndex, bgColor]"
-        :style="{ ...menuPositionStyle, maxHeight: computedMaxHeight }" 
+        :class="[(props.class as string), originClass, (width as string), (minWidth as string), (maxWidth as string), (minHeight as string), (height as string), (maxHeight as string), (zIndex as string), bgColor]"
+        :style="contentStyle" 
         @keydown.escape.stop="handleEscape"
       >
         <slot />
@@ -28,19 +28,21 @@
   </span>
 </template>
 
-<script setup>
-import { onMounted, onUnmounted, watch, nextTick, onBeforeUnmount, computed } from 'vue'
-import { useKunMenu } from '../composables/useKunMenu'
-import { kunMenuProps } from '../composables/kunMenuProps'
-import { useKunMenuStyles } from '../composables/useKunMenuStyles'
-import { useKunMenuComposable } from '../composables/useKunMenuComposable'
+<script setup lang="ts">
+import { onMounted, onUnmounted, watch, nextTick, onBeforeUnmount, computed, type Ref, type CSSProperties } from 'vue'
+import { useKunMenu } from '../composables/useKunMenu.js'
+import { kunMenuProps } from '../composables/kunMenuProps.js'
+import { useKunMenuStyles } from '../composables/useKunMenuStyles.js'
+import { useKunMenuComposable } from '../composables/useKunMenuComposable.js'
 
 const props = defineProps(kunMenuProps)
 const emits = defineEmits(['update:modelValue', 'click:outside', 'handleEscape'])
 
-const parentEl = computed(() => {
-  const p = props.parentRef
-  return p?.$el ?? p?.value ?? p ?? null
+const parentEl: Ref<HTMLElement | null> = computed(() => {
+  const p = props.parentRef as { $el?: HTMLElement; value?: HTMLElement } | HTMLElement | null | undefined
+  if (!p) return null
+  if (p instanceof HTMLElement) return p
+  return p.$el ?? p.value ?? null
 })
 
 const {
@@ -71,22 +73,26 @@ const { addEventListeners, removeEventListeners } = onClickOutside(
   contentEl,
   () => {
     const activator = parentEl.value || activatorEl.value;
-    const lastEvent = window.__lastClickEvent;
+    const lastEvent = (window as unknown as { __lastClickEvent?: Event }).__lastClickEvent;
 
-    if (activator?.contains?.(lastEvent?.target)) return;
+    if ((activator as HTMLElement | null)?.contains?.(lastEvent?.target as Node | null)) return;
 
     hideMenu()
     emits('click:outside')
   },
-  props.parentRef ? [{ value: parentEl.value }] : []
+  props.parentRef ? [{ value: parentEl.value } as Ref<HTMLElement | null>] : []
 )
 
 onMounted(() => {
   nextTick(() => {
     initializeMenu()
-    window.addEventListener('resize', repositionMenu)
+    window.addEventListener('resize', handleMenuResize)
   })
 })
+
+function handleMenuResize(): void {
+  repositionMenu()
+}
 
 onUnmounted(() => {
   stopScrollTracking()
@@ -95,7 +101,7 @@ onUnmounted(() => {
   if (el) {
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
   }
-  window.removeEventListener('resize', repositionMenu)
+  window.removeEventListener('resize', handleMenuResize)
 })
 
 watch(menuVisible, (visible) => {
@@ -116,7 +122,7 @@ watch(menuVisible, (visible) => {
   }
 })
 
-function preventBodyScrollWhenAtEdge(e) {
+function preventBodyScrollWhenAtEdge(e: WheelEvent): void {
   const el = contentEl.value
   if (!el) return
 
@@ -158,4 +164,10 @@ const enterFromClass = computed(() => {
 const enterToClass = computed(() => 'opacity-100 scale-100 translate-x-0 translate-y-0');
 const leaveFromClass = enterToClass;
 const leaveToClass = enterFromClass;
+
+const contentStyle: Ref<CSSProperties> = computed(() => ({
+  ...(menuPositionStyle.value as Record<string, string>),
+  maxHeight: computedMaxHeight.value,
+}));
 </script>
+

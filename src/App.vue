@@ -70,7 +70,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import KunAppbar from './components/KunAppbar/src/components/KunAppbar.vue'
 import KunSwitch from './components/KunSwitch/src/components/KunSwitch.vue'
@@ -84,7 +84,7 @@ const dragAndDropExamples = computed(() =>
   exampleNav.filter((e) => e.component === 'KunDragAndDrop')
 )
 
-function setTheme(theme) {
+function setTheme(theme: string): void {
   const html = document.documentElement
   if (theme === 'light') {
     html.classList.remove('dark')

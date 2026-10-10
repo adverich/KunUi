@@ -34,6 +34,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunTooltip from '../src/components/KunTooltip.vue'
 </script>

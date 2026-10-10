@@ -129,25 +129,24 @@
   </div>
 </template>
 
-<script setup>
-import { useAttrs, computed, ref, useId, useSlots } from 'vue'
-import { kunTextareaProps } from '../composables/kunTextareaProps'
-import useTextarea from '../composables/useKunTextareaComposable'
-import { renderIconSlot } from '@/utils/renderIcon'
-import { debounce } from '@/utils/utils';
+<script setup lang="ts">
+import { useAttrs, computed, ref, useId, useSlots, type Ref } from 'vue'
+import { kunTextareaProps } from '../composables/kunTextareaProps.js'
+import useTextarea from '../composables/useKunTextareaComposable.js'
+import { renderIconSlot } from '@/utils/renderIcon.js'
+import { debounce } from '@/utils/utils.js';
 
 const props = defineProps({ ...kunTextareaProps })
 const emits = defineEmits(['update:modelValue', 'click:clear', 'click:control', 'update:focused', 'mousedown:control'])
 const attrs = useAttrs()
 
-const textareaRef = ref(null)
+const textareaRef: Ref<HTMLTextAreaElement | null> = ref(null)
 const uid = props.id || `textarea-${useId()}`
 
 const {
   isFocused,
   internalValue,
   updateModel,
-  handleClear,
   validate,
   reset,
   resetValidation,
@@ -158,13 +157,24 @@ const {
   isLocalChange,
 } = useTextarea(props, emits, textareaRef)
 
-// Función para guardar/restaurar la posición del cursor
-const saveCursor = () => {
-  const el = textareaRef.value
-  return el ? { start: el.selectionStart, end: el.selectionEnd } : null
+// Iconos laterales: re-emiten como click de control (antes no hacían nada)
+function handleIconClick(e: MouseEvent, position: string): void {
+  emits('click:control', e, position)
 }
 
-const restoreCursor = (pos) => {
+function handleClear(): void {
+  updateModel('')
+  emits('click:clear')
+}
+
+// Función para guardar/restaurar la posición del cursor
+interface CursorPos { start: number; end: number }
+const saveCursor = (): CursorPos | null => {
+  const el = textareaRef.value
+  return el ? { start: el.selectionStart ?? 0, end: el.selectionEnd ?? 0 } : null
+}
+
+const restoreCursor = (pos: CursorPos | null): void => {
   const el = textareaRef.value
   if (el && pos !== null) {
     el.setSelectionRange(pos.start, pos.end)
@@ -172,9 +182,10 @@ const restoreCursor = (pos) => {
 }
 
 // Funciones para guardar/restaurar scroll de contenedores padres
-const saveScrollPositions = () => {
-  const positions = []
-  let el = textareaRef.value?.parentElement
+interface ScrollPos { el: Element | Window; scrollTop: number }
+const saveScrollPositions = (): ScrollPos[] => {
+  const positions: ScrollPos[] = []
+  let el = textareaRef.value?.parentElement as Element | null | undefined
   while (el) {
     if (el.scrollHeight > el.clientHeight) {
       positions.push({ el, scrollTop: el.scrollTop })
@@ -185,23 +196,24 @@ const saveScrollPositions = () => {
   return positions
 }
 
-const restoreScrollPositions = (positions) => {
-  positions.forEach(({ el, scrollTop }) => {
+const restoreScrollPositions = (positions: ScrollPos[]): void => {
+  positions.forEach(({ el, scrollTop }: ScrollPos) => {
     if (el === window) {
-      el.scrollTo(0, scrollTop)
+      (el as Window).scrollTo(0, scrollTop)
     } else {
-      el.scrollTop = scrollTop
+      (el as Element).scrollTop = scrollTop
     }
   })
 }
 
-const handleInput = (e) => {
-  const value = e.target.value
-  const cursorPos = { start: e.target.selectionStart, end: e.target.selectionEnd }
+const handleInput = (e: Event): void => {
+  const target = e.target as HTMLTextAreaElement
+  const value = target.value
+  const cursorPos = { start: target.selectionStart ?? 0, end: target.selectionEnd ?? 0 }
   const scrollState = saveScrollPositions()
-  
+
   isLocalChange.value = true
-  
+
   // Ajustar altura preservando scroll y cursor
   if (props.autoGrow) {
     requestAnimationFrame(() => {
@@ -210,13 +222,13 @@ const handleInput = (e) => {
       restoreScrollPositions(scrollState)
     })
   }
-  
+
   debouncedUpdateModel(value)
 }
 
-const debouncedUpdateModel = debounce((val) => {
+const debouncedUpdateModel = debounce((val: unknown) => {
   updateModel(val)
-}, props.debounceTime)
+}, Number(props.debounceTime ?? 300))
 
 const handleFocus = () => {
   isFocused.value = true
@@ -279,10 +291,12 @@ const textareaClasses = computed(() => [
   {
     'rounded': !props.tile,
     'rounded-none': props.tile,
-    [`rounded-${props.rounded}`]: typeof props.rounded === 'string' || typeof props.rounded === 'number',
+    ...(typeof props.rounded === 'string' || typeof props.rounded === 'number'
+      ? { [`rounded-${props.rounded}`]: true }
+      : {}),
     'shadow-md': props.variant === 'solo' && !props.flat,
     'shadow-none': props.flat,
-    [props.bgColor]: props.bgColor,
+    ...(props.bgColor ? { [props.bgColor as string]: true } : {}),
     'text-ui-disabled bg-surface': props.disabled,
     'focus:outline-none focus:ring-1': !props.disabled,
     [`${props.focusRingColor}`]: props.focusRingColor && !props.disabled && !hasError.value,
@@ -329,3 +343,4 @@ defineExpose({
   rootRef: textareaRef,
 })
 </script>
+

@@ -20,14 +20,14 @@
   </span>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { kunDragAndDropHandleProps } from '../composables/kunDragAndDropHandleProps'
+import { kunDragAndDropHandleProps } from '../composables/kunDragAndDropHandleProps.js'
 
 const props = defineProps(kunDragAndDropHandleProps)
 
 const sizeClass = computed(() => {
-  const map = {
+  const map: Record<string, string> = {
     xxs: 'text-[10px] min-h-4 min-w-4',
     xs: 'text-xs min-h-5 min-w-5',
     sm: 'text-sm min-h-6 min-w-6',
@@ -36,6 +36,7 @@ const sizeClass = computed(() => {
     xl: 'text-xl min-h-10 min-w-10',
     xxl: 'text-2xl min-h-12 min-w-12',
   }
-  return map[props.size] || map.xs
+  return map[props.size as string] || map.xs
 })
 </script>
+

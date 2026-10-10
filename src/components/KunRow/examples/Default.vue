@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunRow from '../src/components/KunRow.vue';
 </script>
 

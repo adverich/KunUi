@@ -48,11 +48,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
-import { kunAlertProps } from '../composables/kunAlertProps'
+import { kunAlertProps } from '../composables/kunAlertProps.js'
 
 const props = defineProps(kunAlertProps)
 
@@ -89,7 +89,8 @@ const onSelfClick = () => {
   if (!props.persistent && !props.fullscreen) onClose()
 }
 
-const handleEscape = (e) => {
+const handleEscape = (e: KeyboardEvent): void => {
   if (!props.persistent && props.fullscreen) onClose()
 }
 </script>
+

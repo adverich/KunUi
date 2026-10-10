@@ -1,15 +1,15 @@
 <template>
-  <div :class="['kun-carousel relative w-full', props.wrapperClass]">
+  <div :class="['kun-carousel relative w-full', (props.wrapperClass as string)]">
     <!-- Viewport -->
     <div
       ref="viewportRef"
-      tabindex="0"
+      :tabindex="0"
       :class="[
         'kun-carousel__viewport overflow-hidden outline-none select-none',
         isVertical ? '' : 'w-full',
         axis === 'x' ? 'kun-carousel__viewport--x' : 'kun-carousel__viewport--y',
         isDragging ? 'cursor-grabbing' : 'cursor-grab',
-        props.viewportClass,
+        (props.viewportClass as string),
       ]"
       :style="viewportStyle"
       role="region"
@@ -22,7 +22,7 @@
         :class="[
           'kun-carousel__container flex will-change-transform',
           isVertical ? 'flex-col' : 'flex-row',
-          props.containerClass,
+          (props.containerClass as string),
         ]"
         :style="containerStyle"
       >
@@ -42,7 +42,7 @@
             'flex items-center justify-center w-9 h-9 rounded-full',
             'bg-surface-dark/80 text-ui border border-surface shadow-md cursor-pointer',
             'transition hover:bg-surface disabled:opacity-30 disabled:cursor-not-allowed',
-            props.arrowClass,
+            (props.arrowClass as string),
           ]"
           :aria-label="prevLabel"
           @click="handlePrev"
@@ -87,7 +87,7 @@
             'flex items-center justify-center w-9 h-9 rounded-full',
             'bg-surface-dark/80 text-ui border border-surface shadow-md cursor-pointer',
             'transition hover:bg-surface disabled:opacity-30 disabled:cursor-not-allowed',
-            props.arrowClass,
+            (props.arrowClass as string),
           ]"
           :aria-label="nextLabel"
           @click="handleNext"
@@ -143,7 +143,7 @@
             'flex items-center justify-center w-8 h-8 rounded-full',
             'bg-surface-dark text-ui border border-surface cursor-pointer',
             'transition hover:bg-surface disabled:opacity-30 disabled:cursor-not-allowed',
-            props.arrowClass,
+            (props.arrowClass as string),
           ]"
           :aria-label="prevLabel"
           @click="handlePrev"
@@ -172,7 +172,7 @@
         :selected-index="selectedIndex"
         :go-to="handleGoTo"
       >
-        <div :class="['flex items-center gap-2', props.dotsClass]" role="tablist" aria-label="Slides">
+        <div :class="['flex items-center gap-2', (props.dotsClass as string)]" role="tablist" aria-label="Slides">
           <button
             v-for="(_, i) in snaps"
             :key="i"
@@ -206,7 +206,7 @@
             'flex items-center justify-center w-8 h-8 rounded-full',
             'bg-surface-dark text-ui border border-surface cursor-pointer',
             'transition hover:bg-surface disabled:opacity-30 disabled:cursor-not-allowed',
-            props.arrowClass,
+            (props.arrowClass as string),
           ]"
           :aria-label="nextLabel"
           @click="handleNext"
@@ -231,11 +231,11 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, provide } from 'vue'
-import { kunCarouselProps } from '../composables/kunCarouselProps'
-import { useKunCarouselEngine } from '../composables/useKunCarouselEngine'
-import { KUN_CAROUSEL_KEY } from '../composables/kunCarouselContext'
+<script setup lang="ts">
+import { ref, computed, provide, type Ref } from 'vue'
+import { kunCarouselProps } from '../composables/kunCarouselProps.js'
+import { useKunCarouselEngine } from '../composables/useKunCarouselEngine.js'
+import { KUN_CAROUSEL_KEY } from '../composables/kunCarouselContext.js'
 
 const props = defineProps({
   ...kunCarouselProps,
@@ -262,8 +262,8 @@ const emit = defineEmits([
   'autoplay:interaction',
 ])
 
-const viewportRef = ref(null)
-const containerRef = ref(null)
+const viewportRef: Ref<HTMLElement | null> = ref(null)
+const containerRef: Ref<HTMLElement | null> = ref(null)
 
 const {
   api,
@@ -280,7 +280,7 @@ const {
   autoplayPlaying,
   effectiveOptions,
   reInit,
-} = useKunCarouselEngine({ props, emit, viewportRef, containerRef })
+} = useKunCarouselEngine({ props, emit: emit as (...args: any[]) => void, viewportRef, containerRef })
 
 // Contexto para el contenido (slides, grillas, cards): evita cablear
 // refs a mano. Incluye el flag de drag para lógica de clicks.
@@ -295,8 +295,8 @@ provide(KUN_CAROUSEL_KEY, {
 const isVertical = computed(() => effectiveOptions.value.axis === 'y')
 const isRtl = computed(() => !isVertical.value && effectiveOptions.value.direction === 'rtl')
 
-const viewportStyle = computed(() => ({
-  ...(isVertical.value ? { height: props.height } : {}),
+const viewportStyle = computed((): Record<string, string> => ({
+  ...(isVertical.value ? { height: props.height as string } : {}),
   // direction CSS real: sin esto el flex sigue siendo LTR y la matemática
   // RTL (offsets desde el inicio de línea = borde derecho) no coincide
   direction: isRtl.value ? 'rtl' : 'ltr',
@@ -322,7 +322,7 @@ function handleNext() {
   api.goToNext()
 }
 
-function handleGoTo(index) {
+function handleGoTo(index: number): void {
   userInteraction()
   api.goTo(index)
 }
@@ -398,3 +398,4 @@ defineExpose({
   user-select: none;
 }
 </style>
+

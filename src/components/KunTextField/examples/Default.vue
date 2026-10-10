@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunTextField from '../src/components/KunTextField.vue';
 </script>
 

@@ -4,11 +4,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, inject, unref } from 'vue'
 
-const normalizeSpan = (value, fallback) => {
-  const parsedValue = Number.parseInt(value, 10)
+const normalizeSpan = (value: unknown, fallback: number): number => {
+  const parsedValue = Number.parseInt(String(value), 10)
 
   if (!Number.isInteger(parsedValue) || parsedValue <= 0) {
     return fallback

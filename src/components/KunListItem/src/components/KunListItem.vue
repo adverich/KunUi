@@ -1,7 +1,7 @@
 <template>
   <RouterLink
     v-if="isLink"
-    :to="to"
+    :to="(to as any)"
     :replace="replace"
     :custom="true"
     v-slot="{ href, navigate, isActive: linkActive }"
@@ -16,8 +16,8 @@
       :aria-disabled="disabled"
       tabindex="-1"
       :class="mergedItemClass" 
-      @click="e => handleClick(e, navigate)"
-      @keydown.enter.prevent="e => handleClick(e, navigate)"
+      @click="(e: MouseEvent) => handleClick(e, navigate)"
+      @keydown.enter.prevent="(e: KeyboardEvent) => handleClick(e, navigate)"
       v-bind="$attrs"
     >
       <!-- CONTENIDO -->
@@ -132,11 +132,16 @@
   </component>
 </template>
 
-<script setup>
-import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs, useId } from 'vue'
+<script setup lang="ts">
+import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs, useId, type Ref, type ComponentPublicInstance } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
 import { RouterLink } from 'vue-router'
-import { kunListItemProps } from '../composables/kunListItemProps'
+import { kunListItemProps } from '../composables/kunListItemProps.js'
+
+interface KunListItemContext {
+  toggleItem?: (value: unknown) => void;
+  isSelected?: (value: unknown) => boolean;
+}
 
 const attrs = useAttrs();
 const contentClass = computed(() => attrs.class)
@@ -149,39 +154,39 @@ const props = defineProps(kunListItemProps)
 
 const emits = defineEmits(['click'])
 
-const liRef = ref(null)
-const registerRef = inject('registerListItemRef', null)
-const listContext = inject('kunListContext', null)
+const liRef: Ref<HTMLElement | ComponentPublicInstance | null> = ref(null)
+const registerRef = inject<((el: HTMLElement | null) => void) | null>('registerListItemRef', null)
+const listContext = inject<KunListItemContext | null>('kunListContext', null)
 
 const generatedId = useId()
 const computedId = computed(() => props.id || `kun-list-item-${generatedId}`)
 
 onMounted(() => {
-  if (registerRef && liRef.value) registerRef(liRef.value)
+  if (registerRef && liRef.value) registerRef(liRef.value as unknown as HTMLElement)
 })
 onBeforeUnmount(() => {
   if (registerRef) registerRef(null)
 })
 
-const isComponent = val => typeof val === 'object' || typeof val === 'function';
+const isComponent = (val: unknown): boolean => typeof val === 'object' || typeof val === 'function';
 const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar));
 const hasAppend = computed(() => !!(props.appendIcon || props.appendAvatar));
 const isItemSelected = computed(() => listContext?.isSelected?.(props.value) ?? false);
 const isActive = computed(() => props.active);
 const isLink = computed(() => !!props.to);
 
-function handleClick(e, navigateFn = null) {
+function handleClick(e: MouseEvent | KeyboardEvent, navigateFn: ((e?: MouseEvent) => unknown) | null = null): void {
   if (props.disabled) return
   emits('click', e)
 
   // Nueva pestaña si Ctrl/Cmd está presionado y el ítem es un enlace
   if ((e.ctrlKey || e.metaKey) && props.to) {
-    const route = typeof props.to === 'string' ? props.to : props.to.path
+    const route = typeof props.to === 'string' ? props.to : (props.to as Record<string, string>).path
     window.open(route, '_blank')
     return
   }
 
-  const el = liRef.value?.$el ?? liRef.value
+  const el = (liRef.value as ComponentPublicInstance)?.$el ?? liRef.value as HTMLElement | undefined
   if (el?.dispatchEvent) {
     el.dispatchEvent(new CustomEvent('select', { detail: props.value, bubbles: true }))
   }
@@ -193,7 +198,7 @@ if (listContext && props.selectable && props.value !== null) {
     }
   }
 
-  if (navigateFn) navigateFn(e)
+  if (navigateFn) navigateFn(e as MouseEvent)
 }
 
 const baseItemClass = 'w-full flex transition duration-150 ease-in-out'
@@ -242,3 +247,4 @@ const mergedItemClass = computed(() => {
   ]
 })
 </script>
+

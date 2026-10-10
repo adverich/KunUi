@@ -1,14 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { computed, provide } from 'vue'
-import { kunTabWindowProps } from '../composables/kunTabWindowProps'
+import { kunTabWindowProps, type KunTabWindowItem } from '../composables/kunTabWindowProps.js'
 
 const props = defineProps(kunTabWindowProps)
 
 const emit = defineEmits(['update:modelValue'])
 
-const isSelected = (itemValue) => {
+const isSelected = (itemValue: unknown): boolean => {
   if (props.multiple && Array.isArray(props.modelValue)) {
-    return props.modelValue.includes(itemValue)
+    return (props.modelValue as unknown[]).includes(itemValue)
   }
   return props.modelValue === itemValue
 }
@@ -16,7 +16,7 @@ const isSelected = (itemValue) => {
 // Proveer para posible uso en tabs anidadas
 provide('kun-tab-window', {
   modelValue: computed(() => props.modelValue),
-  select: (val) => emit('update:modelValue', val),
+  select: (val: unknown) => emit('update:modelValue', val),
 })
 
 </script>
@@ -27,7 +27,7 @@ provide('kun-tab-window', {
     <template v-if="items.length">
       <template v-for="item in items" :key="item.value">
         <transition
-          :name="transition"
+          :name="(transition as string)"
           mode="out-in"
           appear
         >
@@ -46,7 +46,7 @@ provide('kun-tab-window', {
 
     <!-- Renderizado por slots directamente si no hay items -->
     <template v-else>
-      <transition :name="transition" mode="out-in" appear>
+      <transition :name="(transition as string)" mode="out-in" appear>
         <div v-show="show" class="w-full h-full">
           <slot />
         </div>
@@ -63,3 +63,4 @@ provide('kun-tab-window', {
   opacity: 0;
 }
 </style>
+

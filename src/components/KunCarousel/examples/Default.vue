@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import DemoSection from './_demos/DemoSection.vue'
 import DemoDefault from './_demos/DemoDefault.vue'
 import DemoLoop from './_demos/DemoLoop.vue'
@@ -73,7 +73,7 @@ const codeDragFree = `<KunCarousel drag-free align="start" slide-size="65%">
   ...
 </KunCarousel>`
 
-const codeAlign = `<script setup>
+const codeAlign = `<script setup lang="ts">
 const align = ref('center') // 'start' | 'center' | 'end'
 <\/script>
 
@@ -95,7 +95,7 @@ const codeSlidesPerView = `<KunCarousel align="start" slide-size="25%" slides-to
   ...
 </KunCarousel>  <!-- 8 slides → 2 grupos de 4 (una vista por avance) -->`
 
-const codeThumbnails = `<script setup>
+const codeThumbnails = `<script setup lang="ts">
 const mainRef = ref(null)
 const thumbsRef = ref(null)
 const selected = ref(0)
@@ -141,7 +141,7 @@ function goToSlide(i) {
   </KunCarouselSlide>
 </KunCarousel>`
 
-const codeHoverSplit = `<script setup>
+const codeHoverSplit = `<script setup lang="ts">
 const selected = ref(0)
 const steps = ref([/* { label, product, media… } */])
 
@@ -212,7 +212,7 @@ const codeClassNames = `<KunCarousel :show-arrows="false" :show-dots="false" arr
   </template>
 </KunCarousel>`
 
-const codeProgress = `<script setup>
+const codeProgress = `<script setup lang="ts">
 const progress = ref(0)
 <\/script>
 
@@ -222,7 +222,7 @@ const progress = ref(0)
   ... <!-- slides al 100%: el último snap coincide con el final -->
 </KunCarousel>`
 
-const codeLazyLoad = `<script setup>
+const codeLazyLoad = `<script setup lang="ts">
 const visible = ref([])
 <\/script>
 

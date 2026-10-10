@@ -24,6 +24,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunListImg from '../src/components/KunListImg.vue'
 </script>

@@ -10,43 +10,49 @@
   </form>
 </template>
 
-<script setup>
-import { ref, provide, watch, computed } from 'vue';
-import { kunFormProps } from '../composables/kunFormProps'
+<script setup lang="ts">
+import { ref, provide, watch, computed, type Ref } from 'vue';
+import { kunFormProps } from '../composables/kunFormProps.js'
 
 const props = defineProps(kunFormProps)
 
 const emit = defineEmits(['update:modelValue', 'submit']);
 
 // Estado interno
-const fields = ref([]);
+export interface KunFormField {
+  validate?: () => boolean | Promise<boolean>;
+  reset?: () => void;
+  resetValidation?: () => void;
+}
+
+const fields: Ref<KunFormField[]> = ref([]);
 const isValid = ref(true);
 const isDirty = ref(false);
-const formEl = ref(null);
+const formEl: Ref<HTMLFormElement | null> = ref(null);
 
 // Computed para exponer estado
 const valid = computed(() => isValid.value);
 
 // Registrar / eliminar campos
-function registerField(field) {
+function registerField(field: KunFormField): void {
   if (!fields.value.includes(field)) {
     fields.value.push(field);
   }
 }
-function unregisterField(field) {
-  fields.value = fields.value.filter(f => f !== field);
+function unregisterField(field: KunFormField): void {
+  fields.value = fields.value.filter((f: KunFormField) => f !== field);
 }
 
 // Validación completa
 async function validate() {
   const results = await Promise.all(
-    fields.value.map(async (field) => {
+    fields.value.map(async (field: KunFormField) => {
       return typeof field.validate === 'function'
         ? await field.validate()
         : true;
     })
   );
-  isValid.value = results.every(r => r === true);
+  isValid.value = results.every((r: boolean) => r === true);
   emit('update:modelValue', isValid.value);
   return { valid: isValid.value };
 }
@@ -69,7 +75,7 @@ function resetValidation() {
 }
 
 // Submit handler
-async function handleSubmit(e) {
+async function handleSubmit(e: SubmitEvent): Promise<void> {
   if (props.validateOn === 'submit') {
     const { valid } = await validate();
     if (valid) {
@@ -109,3 +115,4 @@ watch(isValid, (v) => {
   emit('update:modelValue', v);
 });
 </script>
+

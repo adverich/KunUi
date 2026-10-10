@@ -12,9 +12,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
-import { kunBadgeProps } from '../composables/kunBadgeProps'
+import { kunBadgeProps } from '../composables/kunBadgeProps.js'
 
 const props = defineProps(kunBadgeProps);
 
@@ -31,7 +31,7 @@ const computedClass = computed(() => [
 ].filter(Boolean))
 
 const positionClass = computed(() => {
-  const map = {
+  const map: Record<string, string> = {
     top: 'top-0',
     center: 'top-1/2',
     bottom: 'bottom-0',
@@ -41,7 +41,7 @@ const positionClass = computed(() => {
     'center-y': 'top-1/2',
   };
 
-  const [vertical, horizontal] = props.position.split(' ');
+  const [vertical, horizontal] = (props.position as string).split(' ');
 
   return [
     map[vertical] || '',

@@ -5,8 +5,9 @@
   </div>
 </template>
 
-<script setup>
-import { kunAppbarTitleProps } from '../composables/kunAppbarTitleProps'
+<script setup lang="ts">
+import { kunAppbarTitleProps } from '../composables/kunAppbarTitleProps.js'
 
 const props = defineProps(kunAppbarTitleProps)
 </script>
+

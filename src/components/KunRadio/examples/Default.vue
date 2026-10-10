@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunRadio from '../src/components/KunRadio.vue';
 </script>
 

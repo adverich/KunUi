@@ -28,20 +28,20 @@
   </component>
 </template>
 
-<script setup>
-import { ref, onMounted, inject, computed } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, inject, computed, type Ref } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
-import { kunTabProps } from '../composables/kunTabProps'
+import { kunTabProps } from '../composables/kunTabProps.js'
 
 const props = defineProps(kunTabProps)
 
 const emit = defineEmits(['update:modelValue'])
 
-const groupValue = inject('modelValue')
-const updateValue = inject('updateModelValue')
-const registerTab = inject('registerTab')
+const groupValue = inject<Ref<unknown> | null>('modelValue', null)
+const updateValue = inject<((value: unknown) => void) | null>('updateModelValue', null)
+const registerTab = inject<((el: HTMLElement | null) => void) | null>('registerTab', null)
 
-const tabRef = ref(null)
+const tabRef: Ref<HTMLElement | null> = ref(null)
 
 const isSelected = computed(() => {
   if (Array.isArray(groupValue?.value)) {
@@ -61,3 +61,4 @@ const onClick = () => {
   }
 }
 </script>
+

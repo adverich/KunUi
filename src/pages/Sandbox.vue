@@ -28,7 +28,7 @@
   </KunRow>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { smAndDown } from '@/utils/_platform'
 import KunSwitch from '../components/KunSwitch/src/components/KunSwitch.vue'
@@ -52,7 +52,7 @@ const selectedColumns = ref([])
 const selected = ref([])
 const switchBtn = ref(false)
 
-function getTotalAmount(item) {
+function getTotalAmount(item: Record<string, unknown>): number {
   return Number(item.stock) * Number(item.price_base)
 }
 
@@ -139,11 +139,11 @@ function generateFakeProductsFull(count = 100) {
   const list = []
   const now = new Date()
 
-  function randomDate(start, end) {
+  function randomDate(start: Date, end: Date): string {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toISOString()
   }
 
-  function getRandomItem(array) {
+  function getRandomItem(array: unknown[]): unknown {
     return array[Math.floor(Math.random() * array.length)]
   }
 
@@ -157,10 +157,10 @@ function generateFakeProductsFull(count = 100) {
     const stockValue = (30 + (i % 50)).toFixed(2)
     const name = `Producto Prueba ${i}`
     const fullName = `RASSIT - ${name} 1 UN`
-    const product_brand = getRandomItem(productBrands.value)
-    const product_category = getRandomItem(productCategories.value)
-    const product_family = getRandomItem(productFamilies.value)
-    const product_mkup = getRandomItem(productMkups.value)
+    const product_brand = getRandomItem(productBrands.value) as { id: unknown };
+    const product_category = getRandomItem(productCategories.value) as { id: unknown };
+    const product_family = getRandomItem(productFamilies.value) as { id: unknown };
+    const product_mkup = getRandomItem(productMkups.value) as { id: unknown };
     const cuit = 20324501364
 
     list.push({

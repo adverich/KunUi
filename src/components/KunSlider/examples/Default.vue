@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunSlider from '../src/components/KunSlider.vue';
 </script>
 

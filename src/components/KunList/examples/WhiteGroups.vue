@@ -1,5 +1,5 @@
 <template>
-    <KunList selectable="multiple">
+    <KunList :selectable="true" selection-mode="multiple">
       <KunListGroup title="Usuarios">
         <template #activator>
           <span class="flex items-center gap-2">
@@ -22,7 +22,7 @@
     </KunList>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunList from '../src/components/KunList.vue'
 import KunListGroup from '../../KunListGroup/src/components/KunListGroup.vue'
 import KunListItem from '../../KunListItem/src/components/KunListItem.vue'

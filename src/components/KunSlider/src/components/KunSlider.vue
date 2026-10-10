@@ -98,8 +98,8 @@
               :thumbColor="thumbColor"
               :min="min"
               :max="max"
-              @pointerdown="e => onPointerDown(e, i)"
-              @update="(val) => { const next = [...thumbs]; next[i] = val; emit('update:modelValue', props.range ? next : next[0]) }"
+              @pointerdown="(e: PointerEvent) => onPointerDown(e, i)"
+              @update="(val: number) => { const next = [...thumbs]; next[i] = val; emit('update:modelValue', props.range ? next : next[0]) }"
             />
           </slot>
         </template>
@@ -115,17 +115,17 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
-import { KunSliderProps } from '../composables/KunSliderProps'
-import { useSlider } from '../composables/useSlider'
-import { useSliderInteractions } from '../composables/useSliderInteractions'
+<script setup lang="ts">
+import { ref, computed, type Ref } from 'vue'
+import { KunSliderProps } from '../composables/KunSliderProps.js'
+import { useSlider } from '../composables/useSlider.js'
+import { useSliderInteractions } from '../composables/useSliderInteractions.js'
 import KunThumb from './KunThumb.vue'
 
 const emit = defineEmits(['update:modelValue', 'input', 'change'])
 const props = defineProps(KunSliderProps);
 
-const trackRef = ref(null)
+const trackRef: Ref<HTMLElement | null> = ref(null)
 
 const {
   val,
@@ -150,3 +150,4 @@ body {
   user-select: none;
 }
 </style>
+

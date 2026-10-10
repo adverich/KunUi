@@ -10,8 +10,8 @@
   </span>
 </template>
 
-<script setup>
-import { kunListItemTitleProps } from '../composables/kunListItemTitleProps'
+<script setup lang="ts">
+import { kunListItemTitleProps } from '../composables/kunListItemTitleProps.js'
 
 const props = defineProps(kunListItemTitleProps)
 </script>

@@ -34,10 +34,10 @@
   </Transition>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
-import { useAppbarHeight } from '@/utils/useLayout'
-import { kunDrawerProps } from '../composables/kunDrawerProps'
+<script setup lang="ts">
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch, type Ref } from 'vue'
+import { useAppbarHeight } from '@/utils/useLayout.js'
+import { kunDrawerProps } from '../composables/kunDrawerProps.js'
 
 /* Emits */
 const emits = defineEmits([
@@ -47,7 +47,7 @@ const emits = defineEmits([
   'swipe-move',
   'swipe-end'
 ])
-function emitModel(val) {
+function emitModel(val: boolean): void {
   emits('update:model-value', val)
   emits('update:modelValue', val)
 }
@@ -56,7 +56,7 @@ const props = defineProps(kunDrawerProps)
 
 /* Layout */
 const appbarHeight = useAppbarHeight()
-const drawerEl = ref(null)
+const drawerEl: Ref<HTMLElement | null> = ref(null)
 const drawerWidth = ref(256)
 let drawerWidthCached = 256
 
@@ -170,18 +170,20 @@ const drawerStyle = computed(() => {
 })
 
 /* Helpers */
-function getClientX(e) {
-  if (e?.touches?.length) return e.touches[0].clientX
-  if (e?.changedTouches?.length) return e.changedTouches[0].clientX
-  return e.clientX
+type DragEvent = TouchEvent | MouseEvent | PointerEvent;
+function getClientX(e: DragEvent): number {
+  const t = e as TouchEvent;
+  if (t?.touches?.length) return t.touches[0].clientX
+  if (t?.changedTouches?.length) return t.changedTouches[0].clientX
+  return (e as MouseEvent).clientX
 }
-function isInteractiveTarget(el) {
+function isInteractiveTarget(el: unknown): boolean {
   const selector = 'input,textarea,select,button,a,[role="button"],[data-no-drag]'
-  return !!el && el.closest?.(selector)
+  return !!el && !!(el as Element).closest?.(selector)
 }
 
 /* Drag core */
-function beginDrag(x) {
+function beginDrag(x: number): void {
   isDragging.value = true
   startX.value = x
   currentX.value = x
@@ -192,8 +194,8 @@ function beginDrag(x) {
   emits('swipe-start', { x, width: drawerWidth.value })
 }
 
-let dragRAF = null
-function updateDrag(x) {
+let dragRAF: number | null = null
+function updateDrag(x: number): void {
   if (dragRAF) cancelAnimationFrame(dragRAF)
   dragRAF = requestAnimationFrame(() => {
     const now = performance.now()
@@ -229,7 +231,7 @@ function endDrag() {
 }
 
 /* Local touch listeners */
-function onTouchStart(e) {
+function onTouchStart(e: TouchEvent): void {
   if (!props.swipeable || isInteractiveTarget(e.target)) return
   const x = getClientX(e)
   nextTick(() => {
@@ -250,7 +252,7 @@ function onTouchStart(e) {
   })
 }
 
-function onTouchMove(e) {
+function onTouchMove(e: TouchEvent): void {
   if (isDragging.value) {
     e.preventDefault() // evita scroll mientras arrastras
     updateDrag(getClientX(e))
@@ -261,14 +263,14 @@ function onTouchEnd() {
 }
 
 /* Global pointer listeners */
-function onPointerDownGlobal(e) {
+function onPointerDownGlobal(e: PointerEvent): void {
   if (!props.swipeable || props.permanent || props.modelValue || isInteractiveTarget(e.target)) return
   const x = getClientX(e)
   const fromEdge = isStart.value ? x <= props.swipeEdgeSize : x >= window.innerWidth - props.swipeEdgeSize
   if (!fromEdge) return
   beginDrag(x)
 }
-function onPointerMoveGlobal(e) {
+function onPointerMoveGlobal(e: PointerEvent): void {
   if (isDragging.value) updateDrag(getClientX(e))
 }
 function onPointerUpGlobal() {
@@ -299,3 +301,4 @@ onBeforeUnmount(() => {
 })
 watch(() => props.modelValue, () => { isDragging.value = false })
 </script>
+

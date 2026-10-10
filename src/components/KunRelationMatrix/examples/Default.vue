@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunRelationMatrix from '../src/components/KunRelationMatrix.vue';
 </script>
 

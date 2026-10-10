@@ -3,7 +3,7 @@ import path from "path";
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import kunUiAutoExportsPlugin from './src/plugins/vite-plugin-kun-exports.js';
+import dts from 'vite-plugin-dts'
 import fs from 'fs';
 
 /**
@@ -37,14 +37,20 @@ function copyDocsPlugin() {
 export default defineConfig({
   plugins: [
     vue(),
-    kunUiAutoExportsPlugin(),
     tailwindcss(),
     vueDevTools(),
+    dts({
+      entryRoot: 'src',
+      outDir: 'dist',
+      tsconfigPath: './tsconfig.json',
+      include: ['src'],
+      copyDtsFiles: true,
+    }),
     copyDocsPlugin(),
   ],
   build: {
     lib: {
-      entry: path.resolve(import.meta.dirname, 'src/index.js'),
+      entry: path.resolve(import.meta.dirname, 'src/index.ts'),
       name: 'KunUI',
       formats: ['es'],
       fileName: (format) => `kun-ui.${format}.js`,

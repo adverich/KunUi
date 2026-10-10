@@ -8,7 +8,7 @@
             </div>
             <KunRow>
                 <KunCol cols="4" v-for="filter in filters" class="px-2">
-                    <KunAutocomplete multiple v-model="selectedFilters[filter.value]" :items="filter.items" z-index="z-250" 
+                    <KunAutocomplete multiple v-model="selectedFilters[filter.value]" :items="filter.items ?? []" z-index="z-250" 
                         :item-value="filter['item-value'] ?? 'id'" :item-title="filter.title ?? filter.text" :item-text="filter.text" :label="filter.label ?? ''"
                         :text-no-items="filter.textNoItem ?? `No hay ${filter.name ?? 'elementos' } disponibles`"
                         :placeholder-text="filter.placeholderText ?? 'Seleccionar'"
@@ -28,14 +28,14 @@
     </KunDialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /**
  * KunTableFilter.vue
  * 
  * Diálogo modal para configuración avanzada de filtros por columna.
  * Muestra un formulario con todos los filtros disponibles definidos en 'filters' prop.
  */
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch, type Ref } from 'vue';
 import KunDialog from '../../../KunDialog/src/components/KunDialog.vue';
 import KunRow from '../../../KunRow/src/components/KunRow.vue';
 import KunCol from '../../../KunCol/src/components/KunCol.vue';
@@ -43,7 +43,7 @@ import KunAutocomplete from '../../../KunAutocomplete/src/components/KunAutocomp
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
 import IconClose from '../../../../icons/IconClose.vue';
-import { kunTableFilterProps } from '../composables/kunTableFilterProps'
+import { kunTableFilterProps, type TableFilterDefinition } from '../composables/kunTableFilterProps.js'
 
 const props = defineProps(kunTableFilterProps)
 const emits = defineEmits(['update:modelValue', 'applyFilters', 'clearFilters']);
@@ -55,11 +55,11 @@ const filterDialog = computed({
 });
 
 // Estado local de filtros seleccionados antes de aplicar
-const selectedFilters = ref({});
+const selectedFilters: Ref<Record<string, unknown>> = ref({});
 
 // Al montar, cargas los filtros que ya estaban activos
 onMounted(() => {
-    selectedFilters.value = { ...props.filters.reduce((acc, filter) => {
+    selectedFilters.value = { ...(props.filters || []).reduce((acc: Record<string, unknown>, filter: TableFilterDefinition) => {
         const key = filter.value;
         const currentVal = props.activeFilters?.[key];
         if (currentVal !== undefined) acc[key] = currentVal;
@@ -90,3 +90,4 @@ watch(selectedFilters, (val) => {
   }
 }, { deep: true });
 </script>
+

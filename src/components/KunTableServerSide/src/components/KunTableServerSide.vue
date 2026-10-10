@@ -170,8 +170,8 @@
         :items-per-page="options.itemsPerPage"
         :current-page="options.page"
         :total-pages="pagination.lastPage"
-        :from="pagination.from"
-        :to="pagination.to"
+        :from="pagination.from ?? undefined"
+        :to="pagination.to ?? undefined"
         :page-options="pageOptions"
         @update:itemsPerPage="options.itemsPerPage = $event"
         @update:page="options.page = $event"
@@ -190,8 +190,8 @@
   </div>
 </template>
 
-<script setup>
-import { computed, nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue';
+<script setup lang="ts">
+import { computed, nextTick, onMounted, reactive, ref, toRefs, watch, type Ref } from 'vue';
 import { isMobile } from '@/utils/_platform';
 import { debounce } from '@/utils/utils.js';
 
@@ -206,9 +206,10 @@ import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunTableFilter from '../../../KunTable/src/components/KunTableFilter.vue';
 import KunLoaderCircular from '../../../KunLoaderCircular/src/components/KunLoaderCircular.vue';
 
-import useExpand from '../../../KunTable/src/composables/useExpand';
-import { resolveRowKeyValue } from '../../../KunTable/src/composables/useRowKey';
-import kunTableServerSideProps from '../composables/KunTableServerSideProps';
+import useExpand from '../../../KunTable/src/composables/useExpand.js';
+import { resolveRowKeyValue, type TableItem } from '../../../KunTable/src/composables/useRowKey.js';
+import type { KunTableHeader } from '@/utils/tableFormatters.js';
+import kunTableServerSideProps from '../composables/KunTableServerSideProps.js';
 
 const emits = defineEmits([
   'update:page',
@@ -221,7 +222,7 @@ const emits = defineEmits([
 
 const props = defineProps(kunTableServerSideProps());
 const propsRefs = toRefs(props);
-const selectedItems = defineModel('selectedItems', { type: Array, default: () => [] });
+const selectedItems = defineModel<TableItem[]>('selectedItems', { default: () => [] })
 
 const {
   headers,
@@ -239,15 +240,27 @@ const {
   hideSelected
 } = propsRefs;
 
-const normalizeSortBy = (rawSortBy) => {
+const normalizeSortBy = (rawSortBy: unknown): { key: string; order: string }[] => {
   if (typeof rawSortBy === 'string') return [{ key: rawSortBy, order: 'asc' }];
-  if (Array.isArray(rawSortBy)) return rawSortBy.map(s => typeof s === 'string' ? { key: s, order: 'asc' } : s);
+  if (Array.isArray(rawSortBy)) return (rawSortBy as (string | { key: string; order: string })[]).map((s: string | { key: string; order: string }) => typeof s === 'string' ? { key: s, order: 'asc' } : s);
   return [];
 };
 
+interface PaginatedResult {
+  data?: TableItem[];
+  current_page?: number;
+  last_page?: number;
+  per_page?: number;
+  total?: number;
+  from?: number | null;
+  to?: number | null;
+  [key: string]: unknown;
+}
+
 const unwrapResult = computed(() => {
-  if (props.result?.result && typeof props.result.result === 'object') return props.result.result;
-  return props.result ?? {};
+  const nested = (props.result as Record<string, unknown> | undefined)?.result;
+  if (nested && typeof nested === 'object') return nested as PaginatedResult;
+  return (props.result ?? {}) as PaginatedResult;
 });
 
 const rows = computed(() => Array.isArray(unwrapResult.value?.data) ? unwrapResult.value.data : []);
@@ -275,7 +288,7 @@ const appliedFilters = reactive({
   byColumn: {},
 });
 
-const syncFromExternal = (fn) => {
+const syncFromExternal = (fn: () => void): void => {
   isSyncingFromExternal.value = true;
   try {
     fn();
@@ -325,25 +338,25 @@ watch(pagination, (val) => {
 }, { deep: true });
 
 const resolvedHeaders = computed(() => {
-  return props.headers.map(header => {
+  return (props.headers as KunTableHeader[]).map((header: KunTableHeader) => {
     const newHeader = { ...header };
 
     if (header.columnType === 'function' && typeof header.columnFunction === 'string') {
-      const resolvedFn = props.functionMap?.[header.columnFunction];
-      newHeader.columnFunction = typeof resolvedFn === 'function' ? resolvedFn : () => '';
+      const resolvedFn = (props.functionMap as Record<string, unknown> | undefined)?.[header.columnFunction];
+      newHeader.columnFunction = (typeof resolvedFn === 'function' ? resolvedFn : () => '') as (item: TableItem, header: KunTableHeader) => unknown;
     }
 
     return newHeader;
   });
 });
 
-const getRowKeyValue = (item, index = -1) => resolveRowKeyValue(item, rowKey.value, index);
-const getRowRenderKey = (item, index = -1) => getRowKeyValue(item, index) ?? `kun-table-server-row-${index}`;
-const getActionLoading = (item, index = -1) => {
+const getRowKeyValue = (item: TableItem, index = -1): unknown => resolveRowKeyValue(item, rowKey.value as string | ((item: TableItem, index: number) => unknown), index);
+const getRowRenderKey = (item: TableItem, index = -1): string => String(getRowKeyValue(item, index) ?? `kun-table-server-row-${index}`);
+const getActionLoading = (item: TableItem, index = -1): boolean => {
   const key = getRowKeyValue(item, index);
-  return key === null ? false : props.actionLoadingMap?.[key] || false;
+  return key === null ? false : ((props.actionLoadingMap as Record<string, unknown> | undefined)?.[key as string] as boolean) || false;
 };
-const isSameItem = (leftItem, rightItem, leftIndex = -1, rightIndex = -1) => {
+const isSameItem = (leftItem: TableItem, rightItem: TableItem, leftIndex = -1, rightIndex = -1): boolean => {
   const leftKey = getRowKeyValue(leftItem, leftIndex);
   const rightKey = getRowKeyValue(rightItem, rightIndex);
 
@@ -354,13 +367,13 @@ const isSameItem = (leftItem, rightItem, leftIndex = -1, rightIndex = -1) => {
   return leftItem === rightItem;
 };
 
-const isSelected = (item) => selectedItems.value.some((selectedItem, index) => isSameItem(selectedItem, item, index));
+const isSelected = (item: TableItem): boolean => selectedItems.value.some((selectedItem: TableItem, index: number) => isSameItem(selectedItem, item, index));
 
-const clearSelection = () => {
+const clearSelection = (): void => {
   selectedItems.value = [];
 };
 
-const toggleSelect = (item) => {
+const toggleSelect = (item: TableItem): void => {
   if (isSelected(item)) {
     selectedItems.value = selectedItems.value.filter((selectedItem, index) => !isSameItem(selectedItem, item, index));
     return;
@@ -380,8 +393,8 @@ const toggleSelectAll = () => {
 };
 
 watch(rows, () => {
-  selectedItems.value = selectedItems.value.filter((item, selectedIndex) => {
-    return rows.value.some((row, rowIndex) => isSameItem(item, row, selectedIndex, rowIndex));
+  selectedItems.value = selectedItems.value.filter((item: TableItem, selectedIndex: number) => {
+    return rows.value.some((row: TableItem, rowIndex: number) => isSameItem(item, row, selectedIndex, rowIndex));
   });
 }, { deep: true });
 
@@ -407,8 +420,8 @@ const emitQueryChange = () => {
   emits('update:query', toQueryPayload());
 };
 
-const debouncedSearchEmit = debounce((value) => {
-  appliedFilters.search = value ?? '';
+const debouncedSearchEmit = debounce((value: unknown) => {
+  appliedFilters.search = String(value ?? '');
   if (options.page !== 1) {
     options.page = 1;
     return;
@@ -449,7 +462,7 @@ watch(() => options.sortBy, (newVal, oldVal) => {
   }
 }, { deep: true });
 
-const applyColumnFilters = (columnFilters) => {
+const applyColumnFilters = (columnFilters: Record<string, unknown>): void => {
   appliedFilters.byColumn = { ...columnFilters };
   if (options.page !== 1) {
     options.page = 1;
@@ -467,7 +480,7 @@ const clearFilters = () => {
   emitQueryChange();
 };
 
-const updateSort = ({ key, order }) => {
+const updateSort = ({ key, order }: { key: string; order: string }): void => {
   if (props.loading) return;
   const existing = options.sortBy.find(s => s.key === key);
   if (existing) {
@@ -499,7 +512,7 @@ const baseTableClass = 'table-auto w-full h-fit text-sm text-left';
 const mergedTableClass = [baseTableClass, tableClass.value];
 
 onMounted(() => showIconSearch());
-const searchRef = ref(null);
+const searchRef: Ref<HTMLInputElement | null> = ref(null);
 const showSearch = ref(true);
 const showSearchBtn = ref(false);
 const searchClass = ref('w-full border max-w-sm');
@@ -532,3 +545,4 @@ function hideIconSearch() {
   emits('focusOnSearch', true);
 }
 </script>
+

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunModalFooter from '../src/components/KunModalFooter.vue';
 </script>
 

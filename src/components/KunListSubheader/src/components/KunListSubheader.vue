@@ -13,8 +13,8 @@
   </li>
 </template>
 
-<script setup>
-import { kunListSubheaderProps } from '../composables/kunListSubheaderProps'
+<script setup lang="ts">
+import { kunListSubheaderProps } from '../composables/kunListSubheaderProps.js'
 
 const props = defineProps(kunListSubheaderProps)
 </script>

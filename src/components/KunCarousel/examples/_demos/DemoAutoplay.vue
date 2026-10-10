@@ -1,9 +1,9 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, type Ref } from 'vue'
 import KunCarousel from '../../src/components/KunCarousel.vue'
 import KunCarouselSlide from '../../../KunCarouselSlide/src/components/KunCarouselSlide.vue'
 
-const carouselRef = ref(null)
+const carouselRef: Ref<InstanceType<typeof KunCarousel> | null> = ref(null)
 
 const slides = ref([
   { id: 1, title: 'Promo 1', bg: 'bg-red-500' },
@@ -11,7 +11,7 @@ const slides = ref([
   { id: 3, title: 'Promo 3', bg: 'bg-green-500' },
 ])
 
-function toggle() {
+function toggle(): void {
   if (!carouselRef.value) return
   if (carouselRef.value.autoplayPlaying) carouselRef.value.stop()
   else carouselRef.value.play()

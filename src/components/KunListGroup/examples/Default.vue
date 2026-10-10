@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunListGroup from '../src/components/KunListGroup.vue'
 import KunListItem from '../../KunListItem/src/components/KunListItem.vue'
 </script>

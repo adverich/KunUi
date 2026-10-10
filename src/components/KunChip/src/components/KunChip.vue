@@ -42,10 +42,10 @@
   </component>
 </template>
 
-<script setup>
-import { defineEmits, computed, useAttrs } from 'vue'
-import { kunChipProps } from '../composables/kunChipProps'
-import { useChip } from '../composables/useChip'
+<script setup lang="ts">
+import { computed, useAttrs } from 'vue'
+import { kunChipProps } from '../composables/kunChipProps.js'
+import { useChip } from '../composables/useChip.js'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 const props = defineProps(kunChipProps)

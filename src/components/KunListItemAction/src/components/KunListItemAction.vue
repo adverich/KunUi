@@ -11,8 +11,8 @@
   </span>
 </template>
 
-<script setup>
-import { kunListItemActionProps } from '../composables/kunListItemActionProps'
+<script setup lang="ts">
+import { kunListItemActionProps } from '../composables/kunListItemActionProps.js'
 
 const props = defineProps(kunListItemActionProps)
 </script>

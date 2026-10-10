@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunContainer from '../src/components/KunContainer.vue';
 </script>
 

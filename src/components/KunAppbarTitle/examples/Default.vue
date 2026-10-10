@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunAppbarTitle from '../src/components/KunAppbarTitle.vue';
 </script>
 

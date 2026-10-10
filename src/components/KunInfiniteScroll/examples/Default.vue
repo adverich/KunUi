@@ -29,22 +29,22 @@
       <template #default="{ item, index }">
         <div
           class="border-b border-gray-200 py-2 px-4"
-          :style="{ height: index % 2 === 0 ? '40px' : '60px' }"
+          :style="{ height: (index as number) % 2 === 0 ? '40px' : '60px' }"
         >
-          <strong>#{{ index }}</strong> — {{ item.label }}
+          <strong>#{{ index }}</strong> — {{ (item as any).label }}
         </div>
       </template>
     </KunInfiniteScroll>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, type Ref } from 'vue'
 import KunInfiniteScroll from '../src/components/KunInfiniteScroll.vue'
 
 const search = ref('')
 const useVirtual = ref(true)
-const scrollTarget = ref(null)
+const scrollTarget: Ref<number | null> = ref(null)
 const visibleItems = ref([])
 
 const allItems = ref(
@@ -54,7 +54,7 @@ const allItems = ref(
   }))
 )
 
-function scrollTo(index) {
+function scrollTo(index: number): void {
   scrollTarget.value = index
   // Se reinicia automáticamente si el prop es reactivo (puede resetear a null si hace falta repetir)
 }

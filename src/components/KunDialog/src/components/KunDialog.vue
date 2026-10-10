@@ -42,11 +42,11 @@
   </Teleport>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
 import KunDialogOverlay from './KunDialogOverlay.vue'
 import KunDialogContent from './KunDialogContent.vue'
-import { kunDialogProps } from '../composables/kunDialogProps'
+import { kunDialogProps } from '../composables/kunDialogProps.js'
 
 const props = defineProps(kunDialogProps)
 
@@ -87,7 +87,7 @@ onBeforeUnmount(() => {
 
 
 // Manejador de eventos de teclado
-function handleKeydown(event) {
+function handleKeydown(event: KeyboardEvent): void {
   event.stopPropagation();
   if (event.key === "Escape") {
     if (!props.persistent) {
@@ -106,3 +106,4 @@ onUnmounted(() => {
   window.removeEventListener("keydown", handleKeydown);
 });
 </script>
+

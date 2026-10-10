@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunSwitch from '../src/components/KunSwitch.vue';
 </script>
 

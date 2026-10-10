@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunSpacer from '../src/components/KunSpacer.vue';
 </script>
 

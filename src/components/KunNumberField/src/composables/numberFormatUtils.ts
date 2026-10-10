@@ -1,0 +1,71 @@
+// numberFormatUtils.ts
+import { resolveConfigValue } from '../../../../config/kunConfig.js';
+
+export function clamp(value: number, min: unknown, max: unknown): number {
+    return Math.min(Math.max(value, Number(min)), Number(max));
+}
+
+export interface FormatOptions {
+    precision: number;
+    locale?: string | null;
+    useGrouping?: boolean;
+}
+
+export function format(value: number | string, { precision, locale = null, useGrouping = true }: FormatOptions): string {
+    // Resolver locale: prop > global > default
+    const resolvedLocale = resolveConfigValue(locale, 'locale', 'es-AR');
+
+    // Asegurarnos que value es un número
+    const numValue = typeof value === 'number' ? value : parseFloat(value);
+
+    // Manejo especial para precisión 0 (enteros)
+    if (precision === 0) {
+        return new Intl.NumberFormat(resolvedLocale, {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+            useGrouping: useGrouping
+        }).format(Math.round(numValue));
+    }
+
+    // Para precisión > 0, forzar exactamente esa cantidad de decimales
+    const fixedValue = numValue.toFixed(precision);
+    return new Intl.NumberFormat(resolvedLocale, {
+        minimumFractionDigits: precision,
+        maximumFractionDigits: precision,
+        useGrouping: useGrouping
+    }).format(parseFloat(fixedValue));
+}
+
+export function toRawNumberString(value: number | string, precision: number): string {
+    const numValue = typeof value === 'number' ? value : parseFloat(value);
+
+    if (precision === 0) {
+        return Math.round(numValue).toString();
+    }
+
+    // Forzar exactamente la precisión especificada
+    const fixed = numValue.toFixed(precision);
+    return fixed.replace('.', '').replace(',', '');
+}
+
+export function fromRawString(raw: string, precision: number): number {
+    if (!raw || raw.length === 0) return 0;
+
+    if (precision === 0) {
+        return parseInt(raw, 10) || 0;
+    }
+
+    const padded = raw.padStart(precision + 1, '0');
+    const intPart = padded.slice(0, -precision);
+    const decimalPart = padded.slice(-precision);
+
+    const numStr = `${intPart}.${decimalPart}`;
+    return parseFloat(numStr);
+}
+
+export function parse(val: unknown, separator: string): number {
+    if (typeof val === 'string') {
+        val = val.replace(new RegExp(`\\${separator}`, 'g'), '.');
+    }
+    return parseFloat(val as string);
+}

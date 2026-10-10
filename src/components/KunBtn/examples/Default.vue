@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunBtn from '../src/components/KunBtn.vue';
 </script>
 

@@ -38,16 +38,16 @@
   </div>
 </template>
 
-<script setup>
-import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick, useId } from 'vue'
+<script setup lang="ts">
+import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick, useId, type Ref } from 'vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
-import { kunListGroupProps } from '../composables/kunListGroupProps'
+import { kunListGroupProps } from '../composables/kunListGroupProps.js'
 
 const props = defineProps(kunListGroupProps)
 
 const emit = defineEmits(['update:modelValue'])
 
-const contentRef = ref(null)
+const contentRef: Ref<HTMLElement | null> = ref(null)
 const height = ref(0)
 
 const generatedId = useId()
@@ -58,10 +58,10 @@ const toggle = () => {
 }
 
 // Handle height transitions manually using ResizeObserver
-let observerCleanup
-const updateHeight = () => {
+let observerCleanup: (() => void) | undefined
+const updateHeight = (): void => {
   if (!contentRef.value) return
-  const el = contentRef.value
+  const el: HTMLElement = contentRef.value
   el.style.height = 'auto'
   const fullHeight = `${el.scrollHeight}px`
   el.style.height = '0px' // reset before transition
@@ -75,9 +75,9 @@ watch(() => props.modelValue, async (val) => {
   else if (contentRef.value) contentRef.value.style.height = '0px'
 })
 
-let resizeObserver = null
+let resizeObserver: ResizeObserver | null = null
 
-function observeResize(el, callback) {
+function observeResize(el: Element | null, callback: () => void): void {
   if (!el || typeof ResizeObserver === 'undefined') return
 
   resizeObserver = new ResizeObserver(() => {
@@ -105,3 +105,4 @@ onBeforeUnmount(() => {
   unobserveResize()
 })
 </script>
+

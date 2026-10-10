@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunListItem from '../src/components/KunListItem.vue'
 import KunListItemText from '../../KunListItemText/src/components/KunListItemText.vue'
 import KunListItemSubtitle from '../../KunListItemSubtitle/src/components/KunListItemSubtitle.vue'

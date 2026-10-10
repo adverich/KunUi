@@ -61,7 +61,7 @@
   </thead>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /**
  * KunTableHeaders.vue
  * 
@@ -71,12 +71,13 @@
  * - Selección de "todas las filas"
  * - Expansión/Colapso global (si aplica)
  */
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, type Ref } from 'vue';
 import arrowUp from '@/icons/IconArrowUp.vue'
 import arrowDown from '@/icons/IconArrowDown.vue'
 import arrowDownUp from '@/icons/IconArrowDownUp.vue'
 import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue"
-import { kunTableHeadersProps } from '../composables/kunTableHeadersProps'
+import { kunTableHeadersProps } from '../composables/kunTableHeadersProps.js'
+import type { KunTableHeader } from '@/utils/tableFormatters.js'
 
 const props = defineProps(kunTableHeadersProps)
 
@@ -88,15 +89,15 @@ function toggleSelectAll() {
 }
 
 // Maneja lógica de cambio de orden (asc -> desc -> asc)
-function toggleSort(header) {
+function toggleSort(header: KunTableHeader): void {
   if (props.disabled || !header.sortable) return;
 
-  let current = null;
+  let current: { key: string; order: string } | null | undefined = null;
 
   if (Array.isArray(props.sortBy)) {
-    current = props.sortBy.find(s => s.key === header.value);
+    current = (props.sortBy as { key: string; order: string }[]).find((s: { key: string; order: string }) => s.key === header.value);
   } else if (typeof props.sortBy === 'string') {
-    current = props.sortBy === header.value ? { key: header.value, order: 'asc' } : null;
+    current = props.sortBy === header.value ? { key: header.value as string, order: 'asc' } : null;
   }
 
   // Alternar orden: si es asc pasa a desc, sino a asc
@@ -105,9 +106,9 @@ function toggleSort(header) {
 }
 
 // Helper para saber el orden actual de una columna
-function getSortOrder(header) {
+function getSortOrder(header: KunTableHeader): string | undefined {
   if (Array.isArray(props.sortBy)) {
-    return props.sortBy.find(s => s.key === header.value)?.order;
+    return (props.sortBy as { key: string; order: string }[]).find((s: { key: string; order: string }) => s.key === header.value)?.order;
   }
   if (typeof props.sortBy === 'string' && props.sortBy === header.value) {
     return 'asc';
@@ -116,7 +117,7 @@ function getSortOrder(header) {
 }
 
 // Retorna el ícono correcto según estado de orden
-const getSortIcon = (header) => {
+const getSortIcon = (header: KunTableHeader) => {
   const order = getSortOrder(header);
   if (!order) return arrowDownUp;
   return order === 'asc' ? arrowUp : arrowDown;
@@ -133,7 +134,7 @@ const baseThClass = 'px-3 py-2 text-xs font-medium text-ui-muted uppercase track
 const mergedThClass = [baseThClass, props.thClass];
 
 // --- Control de Checkbox Indeterminado ---
-const checkboxRef = ref(null);
+const checkboxRef: Ref<HTMLInputElement | null> = ref(null);
 const updateIndeterminate = () => {
   if (checkboxRef.value) {
     // Ajusta la propiedad visual 'indeterminate' del input nativo si es necesario
@@ -146,3 +147,4 @@ watch(() => props.someSelected, updateIndeterminate);
 watch(() => props.allSelected, updateIndeterminate);
 
 </script>
+

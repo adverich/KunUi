@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunTable from '../src/components/KunTable.vue';
 </script>
 

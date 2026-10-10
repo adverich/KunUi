@@ -1,9 +1,9 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, type Ref } from 'vue'
 import KunCarousel from '../../src/components/KunCarousel.vue'
 import KunCarouselSlide from '../../../KunCarouselSlide/src/components/KunCarouselSlide.vue'
 
-const visible = ref([])
+const visible: Ref<number[]> = ref([])
 
 const slides = ref(Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,

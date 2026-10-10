@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunDatePicker from '../src/components/KunDatePicker.vue';
 </script>
 

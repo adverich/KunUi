@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunChip from '../src/components/KunChip.vue';
 </script>
 

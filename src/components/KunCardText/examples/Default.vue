@@ -12,6 +12,6 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunCardText from '../src/components/KunCardText.vue'
 </script>

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunMenu from '../src/components/KunMenu.vue';
 </script>
 

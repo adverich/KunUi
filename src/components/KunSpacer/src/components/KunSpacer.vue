@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { defineOptions } from 'vue'
 defineOptions({ name: 'KunSpacer' })
 </script>

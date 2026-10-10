@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunIcon from '../src/components/KunIcon.vue';
 </script>
 

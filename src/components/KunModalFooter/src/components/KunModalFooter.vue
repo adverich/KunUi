@@ -34,15 +34,15 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
-import { kunModalFooterProps } from '../composables/kunModalFooterProps'
+import { kunModalFooterProps } from '../composables/kunModalFooterProps.js'
 
 const props = defineProps(kunModalFooterProps)
 const emit = defineEmits(["update:modelValue", "removeMessage"]);
 
-function closeMessage() {
-    emit("removeMessage", props.message.id);
+function closeMessage(): void {
+    emit("removeMessage", props.id ?? (props.message as unknown as { id?: number })?.id);
     emit("update:modelValue", false);
 }
 
@@ -58,7 +58,7 @@ const heightClass = computed(() => {
 
 // Clase para el color
 const colorClass = computed(() => {
-    const colors = {
+    const colors: Record<string, string> = {
         blue: "bg-primary",
         green: "bg-success",
         red: "bg-error",
@@ -66,6 +66,7 @@ const colorClass = computed(() => {
         gray: "bg-ui-hover",
         orange: "bg-warning",
     };
-    return colors[props.color] || "bg-primary";
+    return colors[props.color as string] || "bg-primary";
 });
 </script>
+

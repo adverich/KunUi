@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunListItemText from '../src/components/KunListItemText.vue';
 </script>
 

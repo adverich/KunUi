@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunDivider from '../src/components/KunDivider.vue';
 </script>
 

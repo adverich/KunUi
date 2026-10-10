@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunDrawer from '../src/components/KunDrawer.vue';
 </script>
 

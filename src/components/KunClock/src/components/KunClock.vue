@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import { kunClockProps } from '../composables/kunClockProps'
+import { kunClockProps } from '../composables/kunClockProps.js'
 
 const props = defineProps(kunClockProps);
 
 const currentTime = ref('');
-let intervalId = null;
+let intervalId: ReturnType<typeof setInterval> | null = null;
 
 const updateTime = () => {
   const now = new Date();
@@ -47,3 +47,4 @@ onUnmounted(() => {
   pointer-events: none; /* Allows clicking through it */
 }
 </style>
+

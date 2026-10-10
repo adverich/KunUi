@@ -9,6 +9,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunListItem from '../src/components/KunListItem.vue'
 </script>

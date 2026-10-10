@@ -1,14 +1,19 @@
-<script setup>
-import { computed, inject, useId } from 'vue'
+<script setup lang="ts">
+import { computed, inject, useId, type Ref } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 import { icons } from "@/icons"
-import { kunRadioProps } from '../composables/kunRadioProps'
+import { kunRadioProps } from '../composables/kunRadioProps.js'
 
 const props = defineProps(kunRadioProps)
 
 const emits = defineEmits(['update:modelValue', 'focus', 'blur'])
 
-const radioGroup = inject('kun-radio-group', null)
+interface KunRadioGroupContext {
+  modelValue?: Ref<unknown>;
+  update?: (value: unknown) => void;
+}
+
+const radioGroup = inject<KunRadioGroupContext | null>('kun-radio-group', null)
 
 const isSelected = computed(() => {
   const val = radioGroup?.modelValue?.value ?? props.modelValue
@@ -34,7 +39,7 @@ function handleChange() {
   if (props.readonly || props.disabled) return
   const val = props.value ?? props.trueValue
   if (radioGroup) {
-    radioGroup.update(val)
+    radioGroup.update?.(val)
   } else {
     emits('update:modelValue', val)
   }
@@ -85,3 +90,4 @@ function handleChange() {
     </slot>
   </div>
 </template>
+

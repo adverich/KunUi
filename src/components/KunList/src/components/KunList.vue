@@ -5,7 +5,7 @@
     class="w-full kun-list"
     tabindex="-1"
     @keydown="onKeydown"
-    @select="e => emit('click:select', e.detail)"
+    @select="e => emit('click:select', (e as CustomEvent).detail)"
     :class="[
       bgList,
       borderColor,
@@ -22,23 +22,23 @@
   </ul>
 </template>
 
-<script setup>
-import { ref, provide, computed, onUpdated } from 'vue'
-import { kunListProps } from '../composables/kunListProps'
+<script setup lang="ts">
+import { ref, provide, computed, onUpdated, type Ref } from 'vue'
+import { kunListProps } from '../composables/kunListProps.js'
 
 const props = defineProps(kunListProps)
 
 const emit = defineEmits(['keyDown', 'click:select', 'update:selected'])
 
-const ulRef = ref(null)
-const itemRefs = ref([])
+const ulRef: Ref<HTMLUListElement | null> = ref(null)
+const itemRefs: Ref<HTMLElement[]> = ref([])
 
 const selectedItems = defineModel('selected', {
   type: [Array, String, Number, Object, null],
   default: () => [],
 })
 
-provide('registerListItemRef', el => {
+provide('registerListItemRef', (el: HTMLElement | null) => {
   if (el) {
     // Agregar solo si está conectado y no existe ya
     if (el.isConnected && !itemRefs.value.includes(el)) {
@@ -57,14 +57,15 @@ provide('registerListItemRef', el => {
 
 const isMultiple = computed(() => props.selectable && props.selectionMode === 'multiple')
 
-function toggleItem(value) {
+function toggleItem(value: unknown): void {
   if (!props.selectable || value == null) return
 
   if (isMultiple.value) {
-  const exists = selectedItems.value.includes(value)
+  const selectedArray = selectedItems.value as unknown[]
+  const exists = selectedArray.includes(value)
   selectedItems.value = exists
-    ? selectedItems.value.filter(v => v !== value)
-    : [...selectedItems.value, value]
+    ? selectedArray.filter((v: unknown) => v !== value)
+    : [...selectedArray, value]
   } else {
     selectedItems.value = value
   }
@@ -74,7 +75,7 @@ onUpdated(() => {
   itemRefs.value = itemRefs.value.filter(r => r && r.isConnected)
 })
 
-function isSelected(value) {
+function isSelected(value: unknown): boolean {
   if (!props.selectable || value == null) return false
   return isMultiple.value
   ? selectedItems.value?.includes?.(value)
@@ -87,12 +88,13 @@ provide('kunListContext', {
   isSelected
 })
 
-function onKeydown(e) {
+function onKeydown(e: KeyboardEvent): void {
   emit('keyDown', e);
 
+  const target = e.target as HTMLElement | null;
   if (
-    ['INPUT','TEXTAREA'].includes(e.target.tagName) ||
-    e.target.isContentEditable
+    ['INPUT','TEXTAREA'].includes(target?.tagName ?? '') ||
+    target?.isContentEditable
   ) {
     return;
   }
@@ -103,7 +105,7 @@ function onKeydown(e) {
   if (!items.length || !['ArrowUp', 'ArrowDown', 'Enter'].includes(key)) return
 
   if (key === 'Enter') {
-    const item = document.activeElement
+    const item = document.activeElement as HTMLElement | null
     if (item?.getAttribute('role') === 'menuitem') item.click()
     return
   }
@@ -127,7 +129,7 @@ function onKeydown(e) {
   }
 }
 
-function focusWithKey(key = 'ArrowDown') {
+function focusWithKey(key = 'ArrowDown'): void {
   const items = itemRefs.value.filter(Boolean)
   if (!items.length) return;
   
@@ -138,3 +140,4 @@ function focusWithKey(key = 'ArrowDown') {
 
 defineExpose({ focusWithKey, focus: () => ulRef.value?.focus?.() })
 </script>
+

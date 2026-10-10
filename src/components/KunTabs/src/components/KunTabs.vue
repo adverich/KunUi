@@ -50,18 +50,18 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, provide } from 'vue'
+<script setup lang="ts">
+import { ref, computed, provide, type Ref } from 'vue'
 import KunBtn from '@/components/KunBtn/src/components/KunBtn.vue'
-import { useTabsGroup } from '../composables/useTabsGroup'
-import { kunTabsProps } from '../composables/kunTabsProps'
+import { useTabsGroup } from '../composables/useTabsGroup.js'
+import { kunTabsProps } from '../composables/kunTabsProps.js'
 
 const props = defineProps(kunTabsProps)
 
 const emit = defineEmits(['update:modelValue'])
 
-const tabsWrapper = ref(null)
-const tabsContainer = ref(null)
+const tabsWrapper: Ref<HTMLElement | null> = ref(null)
+const tabsContainer: Ref<HTMLElement | null> = ref(null)
 
 const {
   activeIndex,
@@ -74,12 +74,13 @@ const {
   select,
 } = useTabsGroup({
   modelValue: props.modelValue,
+  getModelValue: () => props.modelValue,
   emit,
   tabsWrapper,
   tabsContainer,
-  multiple: props.multiple,
-  mandatory: props.mandatory,
-  centerActive: props.centerActive,
+  multiple: props.multiple as boolean,
+  mandatory: props.mandatory as boolean,
+  centerActive: props.centerActive as boolean,
 })
 
 const heightPx = computed(() => (props.height ? `${props.height}px` : undefined))

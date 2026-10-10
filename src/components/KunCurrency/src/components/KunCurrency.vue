@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useKunConfig, resolveConfigValue } from '../../../../config/kunConfig.js';
-import { kunCurrencyProps } from '../composables/kunCurrencyProps'
+import { kunCurrencyProps } from '../composables/kunCurrencyProps.js'
 
 const globalConfig = useKunConfig();
 
@@ -26,40 +26,41 @@ const resolvedPrefix = computed(() =>
 
 const emits = defineEmits(['update:modelValue'])
 
-function updateModelValue(value){
-    inputValue.value = value;
+function updateModelValue(value: unknown): void {
+    inputValue.value = value as never;
     emits('update:modelValue', value)
 }
 
 const inputValue = ref(props.modelValue);
 
-let hide = null;
-let txt = null;
+let hide: HTMLElement | null = null;
+let txt: HTMLInputElement | null = null;
 
 onMounted(() =>{
     hide = document.getElementById('hide');
-    txt = document.getElementById('txt');
+    txt = document.getElementById('txt') as HTMLInputElement | null;
 
-    txt.addEventListener("input", resize);
+    txt?.addEventListener("input", resize);
     resize();
 })
 
-function resize() {
+function resize(): void {
+  if (!hide || !txt) return;
   hide.textContent = txt.value;
   txt.style.width = 6 + hide.offsetWidth + "px";
 }
 
-const focusInput = (event) => {
-  const input = event.target.querySelector('input');
+const focusInput = (event: MouseEvent): void => {
+  const input = (event.target as HTMLElement).querySelector('input');
   if (input) {
     input.focus();
   }
 };
 
-const inputField = ref(null);
+const inputField = ref<HTMLInputElement | null>(null);
 
-const handleNumericInput = (event) => {
-  const input = event.target;
+const handleNumericInput = (event: Event): void => {
+  const input = event.target as HTMLInputElement;
   const value = input.value;
   input.value = value.replace(/\D/g, '');
   updateModelValue(input.value);
@@ -76,8 +77,8 @@ const handleBlur = () => {
     updateInputPlaceholder(props.placeholder);
 }
 
-const updateInputPlaceholder = (value) => {
-    document.getElementById('txt').setAttribute('placeholder', value);
+const updateInputPlaceholder = (value: string): void => {
+    document.getElementById('txt')?.setAttribute('placeholder', value);
 }
 </script>
 

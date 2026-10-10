@@ -3,7 +3,7 @@
         <h3>Ejemplo básico de KunCardActions</h3>
 
         <KunCardActions justify="justify-between" align="items-center" class="bg-gray-100 rounded-lg">
-            <KunBtn text="Cancelar" variant="outline" color="text-red-600" />
+            <KunBtn text="Cancelar" variant="outlined" color="text-red-600" />
             <KunBtn text="Guardar" color="bg-blue-600 text-white" />
         </KunCardActions>
 
@@ -17,7 +17,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunCardActions from '../src/components/KunCardActions.vue'
 import KunBtn from '../../KunBtn/src/components/KunBtn.vue'
 </script>

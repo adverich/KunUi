@@ -14,9 +14,9 @@
         :dragging="isItemDragging(item, index)"
       >
         <KunDragAndDropItem
-          :item="item"
+          :item="(item as any)"
           :index="index"
-          :item-key="resolveKey(item, index)"
+          :item-key="(resolveKey(item, index) as string)"
           :disabled="isItemDisabled(item)"
           class="rounded-lg border border-surface bg-surface-light px-3 py-2"
         >
@@ -41,9 +41,9 @@
   </component>
 </template>
 
-<script setup>
-import { computed, provide, ref, watch } from 'vue'
-import { kunDragAndDropProps } from '../composables/kunDragAndDropProps'
+<script setup lang="ts">
+import { computed, provide, ref, watch, type Ref } from 'vue'
+import { kunDragAndDropProps } from '../composables/kunDragAndDropProps.js'
 import { KUN_DRAG_AND_DROP_KEY } from '../composables/kunDragAndDropContext.js'
 import {
   useKunDragAndDrop,
@@ -63,19 +63,19 @@ const emit = defineEmits([
   'transfer',
 ])
 
-const parentEl = ref(null)
+const parentEl: Ref<HTMLElement | null> = ref(null)
 
-function setParentRef(el) {
-  parentEl.value = el || null
+function setParentRef(el: unknown): void {
+  parentEl.value = (el as HTMLElement | null) || null
 }
 
-const sourceItems = computed(() => {
-  if (props.modelValue !== undefined) return props.modelValue || []
-  if (props.items !== undefined) return props.items || []
+const sourceItems = computed((): unknown[] => {
+  if (props.modelValue !== undefined) return (props.modelValue as unknown[]) || []
+  if (props.items !== undefined) return (props.items as unknown[]) || []
   return []
 })
 
-const internalItems = ref([...sourceItems.value])
+const internalItems: Ref<unknown[]> = ref([...sourceItems.value])
 
 watch(
   sourceItems,
@@ -87,7 +87,7 @@ watch(
 
 const dragHandleSelector = computed(() => props.dragHandle || null)
 
-function emitUpdates(list) {
+function emitUpdates(list: unknown[]): void {
   emit('update:modelValue', list)
   emit('update:items', list)
 }
@@ -108,17 +108,17 @@ function buildConfig() {
     autoScroll: props.autoScroll,
     scrollSensitivity: props.scrollSensitivity,
     scrollSpeed: props.scrollSpeed,
-    onDragstart: (payload) => emit('drag-start', payload),
-    onDragend: (payload) => emit('drag-end', payload),
-    onSort: (payload) => {
+    onDragstart: (payload: Record<string, unknown>) => emit('drag-start', payload),
+    onDragend: (payload: Record<string, unknown>) => emit('drag-end', payload),
+    onSort: (payload: Record<string, unknown>) => {
       emit('sort', payload)
-      emitUpdates(payload.items)
+      emitUpdates(payload.items as unknown[])
     },
-    onTransfer: (payload) => {
+    onTransfer: (payload: Record<string, unknown>) => {
       emit('transfer', payload)
-      emitUpdates(payload.targetItems)
+      emitUpdates(payload.targetItems as unknown[])
     },
-    onValuesChange: (list, changeMeta) => {
+    onValuesChange: (list: unknown[], changeMeta: Record<string, unknown>) => {
       if (changeMeta?.reason === 'transfer-out') {
         emitUpdates(list)
       }
@@ -161,31 +161,32 @@ const layoutClass = computed(() => {
   return props.listClass
 })
 
-function resolveKey(item, index) {
-  return resolveItemKey(item, props.itemKey, index)
+function resolveKey(item: unknown, index: number): unknown {
+  return resolveItemKey(item, props.itemKey as string | ((item: unknown, index: number) => unknown), index)
 }
 
-function isItemDragging(item, index) {
+function isItemDragging(item: unknown, index: number): boolean {
   const key = activeDragRef.value?.itemKey
   return key != null && String(key) === String(resolveKey(item, index))
 }
 
-function isItemDisabled(item) {
+function isItemDisabled(item: unknown): boolean {
   if (props.disabled) return true
-  if (typeof props.itemDraggable === 'function') return !props.itemDraggable(item)
+  if (typeof props.itemDraggable === 'function') return !(props.itemDraggable as (item: unknown) => boolean)(item)
   return false
 }
 
-function displayLabel(item) {
+function displayLabel(item: unknown): unknown {
   if (item == null) return ''
   if (typeof item === 'string' || typeof item === 'number') return String(item)
-  return item.title ?? item.name ?? item.label ?? resolveKey(item, 0)
+  const rec = item as Record<string, unknown>;
+  return rec.title ?? rec.name ?? rec.label ?? resolveKey(item, 0)
 }
 
 const sharedDraggingKey = computed(() => activeDragRef.value?.itemKey ?? null)
 
 provide(KUN_DRAG_AND_DROP_KEY, {
-  resolveKey: (item, index) => resolveKey(item, index),
+  resolveKey: (item: unknown, index: number) => resolveKey(item, index),
   draggingKey: sharedDraggingKey,
   armedKey: meta.armedKey,
   hasDragHandle: meta.hasDragHandle,
@@ -215,3 +216,4 @@ provide(KUN_DRAG_AND_DROP_KEY, {
   user-select: none;
 }
 </style>
+

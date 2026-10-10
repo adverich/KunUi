@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import KunDragAndDrop from '../src/components/KunDragAndDrop.vue'
 import KunDragAndDropItem from '../../KunDragAndDropItem/src/components/KunDragAndDropItem.vue'
@@ -20,13 +20,13 @@ const modules = ref([
     <KunDragAndDrop v-model="modules" layout="grid">
       <template #item="{ item, index }">
         <KunDragAndDropItem
-          :item="item"
+          :item="(item as any)"
           :index="index"
-          :item-key="item.id"
+          :item-key="(item as any).id"
           class="rounded-xl border border-surface bg-surface-light p-4 text-center shadow-sm"
         >
           <div class="text-xs opacity-50 mb-1">#{{ index + 1 }}</div>
-          <div class="font-medium truncate">{{ item.title }}</div>
+          <div class="font-medium truncate">{{ (item as any).title }}</div>
         </KunDragAndDropItem>
       </template>
     </KunDragAndDrop>

@@ -11,8 +11,8 @@
   </span>
 </template>
 
-<script setup>
-import { kunListItemSubtitleProps } from '../composables/kunListItemSubtitleProps'
+<script setup lang="ts">
+import { kunListItemSubtitleProps } from '../composables/kunListItemSubtitleProps.js'
 
 const props = defineProps(kunListItemSubtitleProps)
 </script>

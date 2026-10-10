@@ -1,12 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import { computed, provide, toRefs } from 'vue'
-import { kunRadioGroupProps } from '../composables/kunRadioGroupProps'
+import { kunRadioGroupProps } from '../composables/kunRadioGroupProps.js'
 
 const props = defineProps(kunRadioGroupProps)
 
 const emit = defineEmits(['update:modelValue'])
 
-const update = (val) => {
+const update = (val: unknown): void => {
   if (!props.readonly && !props.disabled) {
     emit('update:modelValue', val)
   }
@@ -33,3 +33,4 @@ provide('kun-radio-group', {
     </div>
   </div>
 </template>
+

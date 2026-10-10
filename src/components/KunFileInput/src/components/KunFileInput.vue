@@ -91,11 +91,11 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, watch, useSlots } from 'vue'
-import { icons } from '@/icons'
+<script setup lang="ts">
+import { ref, computed, watch, useSlots, type Ref, type ComputedRef } from 'vue'
+import { icons } from '@/icons/index.js'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
-import { kunFileInputProps } from '../composables/kunFileInputProps'
+import { kunFileInputProps } from '../composables/kunFileInputProps.js'
 
 defineOptions({ inheritAttrs: false })
 
@@ -109,21 +109,21 @@ const emit = defineEmits([
   'change',
 ])
 
-const inputRef = ref(null)
+const inputRef: Ref<HTMLInputElement | null> = ref(null)
 const isFocused = ref(false)
-const internalValue = ref([])
-const validationErrors = ref([])
+const internalValue: Ref<File[]> = ref([])
+const validationErrors: Ref<string[]> = ref([])
 
 watch(
   () => props.modelValue,
-  (val) => {
-    internalValue.value = Array.isArray(val) ? val : val ? [val] : []
+  (val: unknown) => {
+    internalValue.value = Array.isArray(val) ? (val as File[]) : val ? [val as File] : []
   },
   { immediate: true }
 )
 
-function onFileChange(e) {
-  const files = e.target.files
+function onFileChange(e: Event): void {
+  const files = (e.target as HTMLInputElement).files
   if (!files) return
   const fileArray = Array.from(files)
   internalValue.value = props.multiple ? fileArray : [fileArray[0]]
@@ -149,7 +149,7 @@ function onBlur() {
   emit('update:focused', false)
 }
 
-const fileNames = computed(() => internalValue.value.map(f => f.name))
+const fileNames: ComputedRef<string[]> = computed(() => internalValue.value.map((f: File) => f.name))
 const isLabelActive = computed(() => props.dirty || isFocused.value || fileNames.value.length > 0)
 const slots = useSlots()
 const hasLeadingIcon = computed(() => !!(props.prependIcon || props.prependInnerIcon || slots.prepend || slots['prepend-inner']))
@@ -158,7 +158,7 @@ const labelLeftClass = computed(() => {
   if (hasLeadingIcon.value) return 'left-10'
   return 'left-2'
 })
-const totalBytes = computed(() => internalValue.value.reduce((acc, f) => acc + f.size, 0))
+const totalBytes = computed(() => internalValue.value.reduce((acc: number, f: File) => acc + f.size, 0))
 const totalBytesReadable = computed(() => {
   const size = totalBytes.value
   const base = props.showSize === 1024 ? 1024 : 1000
@@ -172,10 +172,12 @@ const totalBytesReadable = computed(() => {
   return `${s.toFixed(1)} ${units[i]}`
 })
 
-async function validate(silent = false) {
-  const errors = []
-  for (const rule of props.rules) {
-    const result = typeof rule === 'function' ? rule(props.multiple ? internalValue.value : internalValue.value[0]) : true
+async function validate(silent = false): Promise<string[]> {
+  const errors: string[] = []
+  for (const rule of (props.rules as unknown[]) || []) {
+    const result = typeof rule === 'function'
+      ? (rule as (v: unknown) => unknown)(props.multiple ? internalValue.value : internalValue.value[0])
+      : true
     if (typeof result === 'string') errors.push(result)
     else if (result === false) errors.push('Valor inválido')
   }
@@ -200,3 +202,4 @@ defineExpose({
   errorMessages: validationErrors,
 })
 </script>
+

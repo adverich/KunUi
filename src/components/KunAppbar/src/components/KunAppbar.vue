@@ -1,9 +1,9 @@
 <template>
   <transition
-    :enter-active-class="transitionMap[transition].enterActive"
-    :enter-from-class="transitionMap[transition].enterFrom"
-    :leave-active-class="transitionMap[transition].leaveActive"
-    :leave-to-class="transitionMap[transition].leaveTo"
+    :enter-active-class="transitionClasses.enterActive"
+    :enter-from-class="transitionClasses.enterFrom"
+    :leave-active-class="transitionClasses.leaveActive"
+    :leave-to-class="transitionClasses.leaveTo"
   >
     <header
       v-show="isVisible"
@@ -78,19 +78,19 @@
   </transition>
 </template>
 
-<script setup>
-import { computed, ref, onMounted, onUpdated, nextTick, onBeforeUnmount, defineExpose } from 'vue';
+<script setup lang="ts">
+import { computed, ref, onMounted, onUpdated, nextTick, onBeforeUnmount, type Ref } from 'vue';
 import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
 import IconMenuRounded from '../../../../icons/IconMenuRounded.vue';
-import { setAppbarHeight } from '@/utils/useLayout';
-import { kunAppbarProps } from '../composables/kunAppbarProps'
+import { setAppbarHeight } from '@/utils/useLayout.js';
+import { kunAppbarProps } from '../composables/kunAppbarProps.js'
 
 const props = defineProps(kunAppbarProps)
 defineOptions({ inheritAttrs: false });
 
-const el = ref(null);
+const el: Ref<HTMLElement | null> = ref(null);
 const isVisible = ref(true);
 const responsiveCollapsed = ref(false);
 
@@ -172,7 +172,14 @@ const mergedClass = computed(() => [
   props.animationClass
 ]);
 
-const transitionMap = {
+interface KunAppbarTransition {
+  enterActive: string;
+  enterFrom: string;
+  leaveActive: string;
+  leaveTo: string;
+}
+
+const transitionMap: Record<string, KunAppbarTransition> = {
   'fade-slide': {
     enterActive: 'transition-all duration-300 ease-out',
     enterFrom: 'opacity-0 -translate-y-full',
@@ -192,4 +199,8 @@ const transitionMap = {
     leaveTo: 'scale-95 opacity-0'
   }
 };
+
+const transitionClasses = computed<KunAppbarTransition>(() =>
+  transitionMap[props.transition as string] ?? transitionMap['fade-slide']
+);
 </script>

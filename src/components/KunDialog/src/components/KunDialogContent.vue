@@ -4,9 +4,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { kunDialogContentProps } from '../composables/kunDialogContentProps'
+import { kunDialogContentProps } from '../composables/kunDialogContentProps.js'
 
 const props = defineProps(kunDialogContentProps)
 
@@ -31,3 +31,4 @@ const mergedClass = computed(() => [
   props.maxHeight
 ])
 </script>
+

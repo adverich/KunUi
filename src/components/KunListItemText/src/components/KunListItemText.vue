@@ -10,8 +10,8 @@
   </span>
 </template>
 
-<script setup>
-import { kunListItemTextProps } from '../composables/kunListItemTextProps'
+<script setup lang="ts">
+import { kunListItemTextProps } from '../composables/kunListItemTextProps.js'
 
 const props = defineProps(kunListItemTextProps)
 </script>

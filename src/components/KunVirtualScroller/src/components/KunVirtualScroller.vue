@@ -1,10 +1,14 @@
-<script setup>
-import { ref, watch, computed, onMounted, nextTick } from 'vue'
-import { kunVirtualScrollerProps } from '../composables/kunVirtualScrollerProps'
+<script setup lang="ts">
+import { ref, watch, computed, onMounted, nextTick, type Ref } from 'vue'
+import { kunVirtualScrollerProps } from '../composables/kunVirtualScrollerProps.js'
 
 const props = defineProps(kunVirtualScrollerProps)
 
-const containerRef = ref(null)
+defineSlots<{
+  default?: (props: { item?: unknown; index?: number }) => any;
+}>()
+
+const containerRef: Ref<HTMLElement | null> = ref(null)
 const scrollTop = ref(0)
 const containerHeight = ref(0)
 
@@ -58,7 +62,7 @@ watch(
 
 onMounted(() => {
   updateContainerHeight()
-  if (typeof ResizeObserver !== 'undefined') {
+  if (typeof ResizeObserver !== 'undefined' && containerRef.value) {
     const resizeObserver = new ResizeObserver(updateContainerHeight)
     resizeObserver.observe(containerRef.value)
   }
@@ -81,7 +85,7 @@ onMounted(() => {
       >
         <div
           v-for="(item, i) in visibleItems"
-          :key="item?.id ?? startIndex + i"
+          :key="((item as any)?.id ?? startIndex + i)"
         >
           <slot :item="item" :index="startIndex + i" />
         </div>
@@ -89,3 +93,4 @@ onMounted(() => {
     </div>
   </div>
 </template>
+

@@ -3,14 +3,14 @@
     <KunVirtualScroller :items="items" item-height="auto" :buffer="5">
       <template #default="{ item, index }">
         <div class="p-4 border-b bg-white">
-          <strong>#{{ index }}</strong>: {{ item.name }}
+          <strong>#{{ index }}</strong>: {{ (item as any).name }}
         </div>
       </template>
     </KunVirtualScroller>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunVirtualScroller from '../src/components/KunVirtualScroller.vue'
 
 const items = Array.from({ length: 1000 }, (_, i) => ({

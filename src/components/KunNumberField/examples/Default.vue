@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunNumberField from '../src/components/KunNumberField.vue';
 </script>
 

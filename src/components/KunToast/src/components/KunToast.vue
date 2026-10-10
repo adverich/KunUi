@@ -112,9 +112,10 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
-import { kunToastProps } from '../composables/kunToastProps'
+import { kunToastProps } from '../composables/kunToastProps.js'
+import type { ToastAction } from '../composables/useToast.js'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import IconClose from '../../../../icons/IconClose.vue'
 import IconCheck from '../../../../icons/IconCheck.vue'
@@ -124,7 +125,7 @@ const props = defineProps(kunToastProps)
 const emit = defineEmits(['close', 'pause', 'resume'])
 
 // Iconos por defecto según color
-const defaultIcons = {
+const defaultIcons: Record<string, unknown> = {
   success: IconCheck,
   error: IconClose,
   warning: IconAsterisk,
@@ -135,7 +136,7 @@ const defaultIcons = {
 
 const resolvedIcon = computed(() => {
   if (props.icon) return props.icon
-  return defaultIcons[props.color] || null
+  return defaultIcons[props.color as string] || null
 })
 
 const resolvedCloseIcon = computed(() => {
@@ -144,8 +145,8 @@ const resolvedCloseIcon = computed(() => {
 })
 
 // Helpers
-const isVNode = (val) => {
-  return val && typeof val === 'object' && val.type !== undefined
+const isVNode = (val: unknown): boolean => {
+  return !!val && typeof val === 'object' && (val as Record<string, unknown>).type !== undefined
 }
 
 const hasTitle = computed(() => !!props.title)
@@ -165,7 +166,7 @@ const uiClasses = computed(() => ({
 }))
 
 const colorClasses = computed(() => {
-  const colorMap = {
+  const colorMap: Record<string, { root: string; icon: string }> = {
     primary: {
       root: 'border-l-4 border-primary',
       icon: 'text-primary'
@@ -191,7 +192,7 @@ const colorClasses = computed(() => {
       icon: 'text-ui-muted'
     }
   }
-  return colorMap[props.color] || colorMap.primary
+  return colorMap[props.color as string] || colorMap.primary
 })
 
 const orientationClass = computed(() => {
@@ -224,7 +225,7 @@ const progressContainerClass = 'h-1 w-full bg-ui-surface-subtle rounded-b'
 const progressBarClass = 'h-full rounded-b transition-all duration-100 ease-linear'
 const progressColorClass = computed(() => {
   if (props.progressColor) return props.progressColor
-  const colorMap = {
+  const colorMap: Record<string, string> = {
     primary: 'bg-primary',
     success: 'bg-success',
     error: 'bg-error',
@@ -232,25 +233,25 @@ const progressColorClass = computed(() => {
     info: 'bg-primary',
     neutral: 'bg-ui-hover'
   }
-  return colorMap[props.color] || colorMap.primary
+  return colorMap[props.color as string] || colorMap.primary
 })
 
 // Animación de progreso
-let progressInterval = null
+let progressInterval: ReturnType<typeof setInterval> | null = null
 const progressWidth = ref(100)
 
 onMounted(() => {
-  if (props.duration > 0 && props.progress) {
+  if ((props.duration as number) > 0 && props.progress) {
     const step = 50
-    const decrement = (step / props.duration) * 100
+    const decrement = (step / (props.duration as number)) * 100
     progressWidth.value = 100
-    
+
     progressInterval = setInterval(() => {
       if (!props.isPaused) {
         progressWidth.value -= decrement
         if (progressWidth.value <= 0) {
           progressWidth.value = 0
-          clearInterval(progressInterval)
+          if (progressInterval) clearInterval(progressInterval)
         }
       }
     }, step)
@@ -273,7 +274,7 @@ const onMouseLeave = () => {
 }
 
 // Acciones
-const onActionClick = (action, event) => {
+const onActionClick = (action: ToastAction, event: MouseEvent): void => {
   if (action.onClick) {
     action.onClick(event)
   }
@@ -291,3 +292,4 @@ const onClose = () => {
 <style scoped>
 /* Animación de entrada/salida se maneja desde KunToaster con TransitionGroup */
 </style>
+

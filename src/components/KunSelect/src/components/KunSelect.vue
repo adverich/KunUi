@@ -13,7 +13,7 @@
       autocomplete="off"
       class="kun-select-field"
       :rounded="menuModel ? 'rounded-t' : 'rounded'"
-      :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
+      :placeholder="props.multiple && isArray(modelValue) && (modelValue as unknown[]).length ? '' : placeholder"
       :error="!!internalError"
       :error-messages="internalError"
       @handleClick="toggleMenu"
@@ -27,7 +27,7 @@
           class="flex min-w-0 max-w-full flex-nowrap items-center gap-1 overflow-hidden"
           @click="!disabled && !readonly && toggleMenu()"
         >
-          <template v-for="(item, idx) in modelValue" :key="typeof item === 'object' && item !== null ? (item.id ?? item.name ?? idx) : (item ?? idx)">
+          <template v-for="(item, idx) in (modelValue as unknown[])" :key="typeof item === 'object' && item !== null ? ((item as any).id ?? (item as any).name ?? idx) : ((item as string) ?? idx)">
             <KunChip v-show="idx < visibleCount" :data-chip="idx" size="small" variant="pill" class="shrink-0">
               <div class="flex items-center">
                 {{ getArrayText(item) }}
@@ -63,7 +63,7 @@
       </template>
 
       <KunMenu transition="fade" @click:outside="closeMenu" v-model="menuModel" activator="parent" :z-index="zIndex"
-        :parent-ref="parentRef" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor"
+        :parent-ref="(parentRef as any)" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor"
         :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
       >
         <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b bg-select-background">
@@ -77,7 +77,7 @@
               v-for="(item, index) in items"
               :key="`kun-select-${index + 1}`"
               :id="`kun-item-${index + 1}`"
-              :value="item"
+              :value="(item as any)"
               :disabled="checkDisabled(item)"
               :bg-items="bgItemListColor"
               :hover-bg="hoverItemListColor"
@@ -106,9 +106,9 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
-import { icons } from '@/icons';
+<script setup lang="ts">
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick, type Ref } from 'vue';
+import { icons } from '@/icons/index.js';
 import { isNotEmpty, isArray } from '../../../../utils/utils.js';
 
 import KunList from '../../../KunList/src/components/KunList.vue';
@@ -117,32 +117,38 @@ import KunListItemTitle from '../../../KunListItemTitle/src/components/KunListIt
 import KunListItemSubtitle from '../../../KunListItemSubtitle/src/components/KunListItemSubtitle.vue';
 import KunMenu from '../../../KunMenu/src/components/KunMenu.vue';
 
-import { useSelect } from '../composables/useSelect';
-import { KunSelectProps } from '../composables/KunSelectProps';
+import { useSelect, type SelectEmitEvent } from '../composables/useSelect.js';
+import { KunSelectProps } from '../composables/KunSelectProps.js';
 import KunTextField from '../../../KunTextField/src/components/KunTextField.vue';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunChip from '../../../KunChip/src/components/KunChip.vue';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
 
-const modelValue = defineModel({ default: null });
-const items = defineModel('items', { default: [], type: Array });
+// any intencional: los tipos de Vue exigen default no-null para T=unknown;
+// el modelo acepta cualquier cosa (objeto, array, primitivo, null).
+const modelValue = defineModel<any>({ default: null });
+const items = defineModel<unknown[]>('items', { default: (() => []) as () => unknown[] });
 
 const props = defineProps(KunSelectProps);
-const emits = defineEmits(['update:modelValue', 'selectedItem', 'createItem', 'validation', 'keyDown', 'cleared']);
+const emits = defineEmits<{
+  (event: SelectEmitEvent, value?: unknown): void;
+  (event: 'validation', value: boolean): void;
+  (event: 'keyDown', value: unknown): void;
+}>();
 
-const { textFieldRef, listRef, menuModel, displayText, removeItem, clearSelection, closeMenu, openMenu, toggleMenu,
+const { textFieldRef, listRef, menuModel, displayText, removeItem, clearSelection, closeMenu, openMenu, toggleMenu, focusListWithKey,
   getSelectedItem, textArr, getArrayText, checkIfValueExist, extractValueKey,
   createItem, checkDisabled, itemToString, placeholder,
 } = useSelect(props, emits, modelValue, items);
 
 const hasValue = computed(() => {
-  const v = modelValue.value;
+  const v: unknown = modelValue.value;
   if (v === null || v === undefined || v === '') return false;
-  if (isArray(v)) return v.length > 0;
+  if (isArray(v)) return (v as unknown[]).length > 0;
   return true;
 });
 
-function isItemSelected(item) {
+function isItemSelected(item: unknown): boolean {
   try {
     if (props.multiple) return checkIfValueExist(item);
     const mv = modelValue.value;
@@ -154,14 +160,14 @@ function isItemSelected(item) {
 }
 
 // Truncado de chips: muestra los que entran y el resto como "+N ...". Nunca scroll horizontal.
-const chipsWrapRef = ref(null);
+const chipsWrapRef: Ref<HTMLElement | null> = ref(null);
 const visibleCount = ref(9999);
-const totalSelected = computed(() => (isArray(modelValue.value) ? modelValue.value.length : 0));
+const totalSelected = computed(() => (isArray(modelValue.value) ? (modelValue.value as unknown[]).length : 0));
 const hiddenCount = computed(() => Math.max(0, totalSelected.value - visibleCount.value));
 const hiddenNames = computed(() => {
   if (!hiddenCount.value) return '';
   try {
-    return modelValue.value.slice(visibleCount.value).map((v) => getArrayText(v)).join(', ');
+    return (modelValue.value as unknown[]).slice(visibleCount.value).map((v: unknown) => getArrayText(v)).join(', ');
   } catch {
     return '';
   }
@@ -195,9 +201,9 @@ async function updateOverflow() {
 
 watch(() => modelValue.value, () => updateOverflow(), { deep: true });
 
-let ro = null;
+let ro: ResizeObserver | null = null;
 onMounted(() => {
-  if (props.focusOnRender) textFieldRef.value.focus();
+  if (props.focusOnRender) textFieldRef.value?.focus?.();
   updateOverflow();
   ro = new ResizeObserver(() => updateOverflow());
   if (parentRef.value) ro.observe(parentRef.value);
@@ -208,17 +214,17 @@ onBeforeUnmount(() => {
   ro?.disconnect();
 });
 
-const parentRef = ref(null);
+const parentRef: Ref<HTMLElement | null> = ref(null);
 
 // Estado interno del error
 const internalError = ref('');
 
 // Método de validación
-const validate = (value) => {
-  for (const rule of props.rules) {
-    const result = rule(value ?? modelValue.value);
+const validate = (value: unknown): boolean => {
+  for (const rule of (props.rules as ((v: unknown) => unknown)[] | undefined) || []) {
+    const result = (rule as (v: unknown) => unknown)(value ?? modelValue.value);
     if (result !== true) {
-      internalError.value = result;
+      internalError.value = result as string;
       emits('validation', false);
       return false;
     }
@@ -239,12 +245,12 @@ watch(() => props.disabled, () => {
   closeMenu();
 });
 
-function handleEscape() {
+function handleEscape(): void {
   menuModel.value = false;
-  textFieldRef.value.inputField?.focus();
+  textFieldRef.value?.inputField?.focus();
 }
 
-function textKeyDown(e) {
+function textKeyDown(e: KeyboardEvent): void {
   if (props.disabled || props.readonly) return;
 
   const key = e.key;
@@ -258,7 +264,7 @@ function textKeyDown(e) {
   if (['ArrowUp', 'ArrowDown'].includes(key)) {
     e.preventDefault();
     if (!menuModel.value) openMenu();
-    listRef.value?.focusWithKey?.(key);
+    focusListWithKey(key);
     return;
   }
 
@@ -276,14 +282,14 @@ function txtFocused() {
   validate(modelValue.value);
 }
 
-function handleKeyList(event) {
+function handleKeyList(event: KeyboardEvent): void {
   if (event.key === 'Escape') {
     handleEscape();
   }
 }
 
 defineExpose({
-  focus: () => !(props.disabled || props.readonly) && nextTick(() => textFieldRef.value?.focus()),
+  focus: () => !(props.disabled || props.readonly) && nextTick(() => textFieldRef.value?.focus?.()),
   validate,
 });
 </script>
@@ -295,3 +301,4 @@ defineExpose({
   user-select: none;
 }
 </style>
+

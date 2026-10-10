@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /**
  * KunTableFooter.vue
  * 
@@ -9,8 +9,8 @@
  * - Selector directo de página (dropdown estilo lista).
  * - Mostrar contadores (Ej: 1-10 de 100).
  */
-import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue'
-import { kunTableFooterProps } from '../composables/kunTableFooterProps'
+import { onMounted, onBeforeUnmount, computed, ref, watch, type Ref } from 'vue'
+import { kunTableFooterProps } from '../composables/kunTableFooterProps.js'
 
 const props = defineProps(kunTableFooterProps)
 
@@ -45,8 +45,8 @@ const next = () => {
 }
 
 // Control de apertura de dropdowns
-const detailsRef = ref(null);
-const ippDetailsRef = ref(null);
+const detailsRef: Ref<HTMLDetailsElement | null> = ref(null);
+const ippDetailsRef: Ref<HTMLDetailsElement | null> = ref(null);
 
 // Genera el array de páginas a mostrar en el selector (con elipsis inteligente)
 // Ej: 1, 2, ..., 5, 6, 7, ..., 100
@@ -71,14 +71,14 @@ const pagesToShow = computed(() => {
   return arr
 })
 
-function goToPage(n) {
+function goToPage(n: number | string): void {
   const page = Math.min(Math.max(1, Number(n)), totalPages.value || 1)
   emit('update:page', page)
   if (detailsRef.value) detailsRef.value.open = false
 }
 
 // Al cambiar items por página, volvemos a la 1ra
-function onItemsPerPageSelect(v) {
+function onItemsPerPageSelect(v: number | string): void {
   emit('update:itemsPerPage', v)
   emit('update:page', 1) 
   ippDetailsRef.value?.removeAttribute("open")
@@ -86,14 +86,14 @@ function onItemsPerPageSelect(v) {
 
 // --- CIerre de Popups al hacer click afuera (Simulación de menú contextual) ---
 
-function handleClickOutsideIpp(e) {
-  if (ippDetailsRef.value && !ippDetailsRef.value.contains(e.target)) {
+function handleClickOutsideIpp(e: MouseEvent): void {
+  if (ippDetailsRef.value && !ippDetailsRef.value.contains(e.target as Node)) {
     ippDetailsRef.value.removeAttribute("open")
   }
 }
 
-function handleClickOutside(e) {
-  if (detailsRef.value && !detailsRef.value.contains(e.target)) {
+function handleClickOutside(e: MouseEvent): void {
+  if (detailsRef.value && !detailsRef.value.contains(e.target as Node)) {
     detailsRef.value.removeAttribute("open");
   }
 }
@@ -141,10 +141,10 @@ watch(() => totalPages.value, (newVal, oldVal) => {
           <div class="flex flex-col gap-1">
             <button
               v-for="opt in pageOptions"
-              :key="opt"
+              :key="String(opt)"
               class="text-center px-2 py-1 rounded hover:bg-ui-hover w-full cursor-pointer"
               :class="{'font-semibold bg-ui-hover': opt === Number(itemsPerPage)}"
-              @click="onItemsPerPageSelect(opt)"
+              @click="onItemsPerPageSelect(opt as number | string)"
             >
               {{ opt }} items
             </button>
@@ -208,3 +208,4 @@ watch(() => totalPages.value, (newVal, oldVal) => {
 summary { list-style: none; }
 summary::-webkit-details-marker { display: none; }
 </style>
+

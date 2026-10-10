@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunFileInput from '../src/components/KunFileInput.vue';
 </script>
 

@@ -19,15 +19,15 @@
   </span>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
-import { kunIconProps } from '../composables/kunIconProps'
+import { kunIconProps } from '../composables/kunIconProps.js'
 
 const props = defineProps(kunIconProps);
 
 const emit = defineEmits(['click']);
 
-function handleClick(event) {
+function handleClick(event: MouseEvent): void {
   if (!props.disabled) emit('click', event);
 }
 
@@ -51,12 +51,12 @@ const isComponent = computed(() =>
 );
 
 const normalizedSize = computed(() => {
-  const rawSize = Array.isArray(props.icon) ? props.icon[1] : props.size;
+  const rawSize: unknown = Array.isArray(props.icon) ? props.icon[1] : props.size;
   if (!rawSize) return 'text-base';
-  if (typeof rawSize === 'number' || /^\d+$/.test(rawSize)) {
-    return `text-[${rawSize}px]`;
+  if (typeof rawSize === 'number' || /^\d+$/.test(String(rawSize))) {
+    return `text-[${String(rawSize)}px]`;
   }
-  return rawSize;
+  return rawSize as string;
 });
 
 const cursorClass = computed(() => {

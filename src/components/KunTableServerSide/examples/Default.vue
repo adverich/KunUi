@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, ref } from 'vue';
 import KunTableServerSide from '../src/components/KunTableServerSide.vue';
 
@@ -31,7 +31,7 @@ const result = ref({
   to: 2,
 });
 
-function handleQuery(nextQuery) {
+function handleQuery(nextQuery: Record<string, any>): void {
   console.log('Query server-side:', nextQuery);
   loading.value = true;
   window.setTimeout(() => {

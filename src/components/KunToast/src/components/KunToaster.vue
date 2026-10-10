@@ -16,7 +16,22 @@
           class="transition-all"
         >
           <KunToast
-            v-bind="toast"
+            :toast-id="toast.id"
+            :title="toast.title"
+            :description="toast.description"
+            :icon="(toast.icon as string)"
+            :color="toast.color"
+            :orientation="toast.orientation"
+            :duration="toast.duration"
+            :progress="toast.progress"
+            :progress-color="(toast.progressColor as string)"
+            :closable="toast.closable"
+            :close-icon="(toast.closeIcon as string)"
+            :actions="toast.actions"
+            :type="toast.type"
+            :is-paused="toast.isPaused"
+            :is-pulsing="toast.isPulsing"
+            :ui="(toast.ui as Record<string, string>)"
             @close="onToastClose(toast.id)"
             @pause="onToastPause(toast.id)"
             @resume="onToastResume(toast.id)"
@@ -43,10 +58,10 @@
   </Teleport>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onBeforeUnmount, watch } from 'vue'
-import { kunToasterProps } from '../composables/kunToasterProps'
-import { useToast, provideKunToast, createKunToast } from '../composables/useToast'
+import { kunToasterProps } from '../composables/kunToasterProps.js'
+import { useToast, provideKunToast, createKunToast } from '../composables/useToast.js'
 import KunToast from './KunToast.vue'
 
 const props = defineProps(kunToasterProps)
@@ -68,7 +83,7 @@ const displayedToasts = computed(() => {
 
 // Clase de posición
 const positionClass = computed(() => {
-  const positionMap = {
+  const positionMap: Record<string, string> = {
     'top-left': 'top-0 left-0 items-start',
     'top-center': 'top-0 left-1/2 -translate-x-1/2 items-start',
     'top-right': 'top-0 right-0 items-start',
@@ -76,7 +91,7 @@ const positionClass = computed(() => {
     'bottom-center': 'bottom-0 left-1/2 -translate-x-1/2 items-end',
     'bottom-right': 'bottom-0 right-0 items-end'
   }
-  return positionMap[props.position] || positionMap['bottom-right']
+  return positionMap[props.position as string] || positionMap['bottom-right']
 })
 
 // Transición
@@ -89,15 +104,15 @@ const transitionName = computed(() => {
 })
 
 // Handlers
-const onToastClose = (id) => {
+const onToastClose = (id: string | number): void => {
   toastSystem.remove(id)
 }
 
-const onToastPause = (id) => {
+const onToastPause = (id: string | number): void => {
   toastSystem.pause(id)
 }
 
-const onToastResume = (id) => {
+const onToastResume = (id: string | number): void => {
   toastSystem.resume(id)
 }
 
@@ -167,3 +182,4 @@ defineExpose({
   transition: transform 0.3s ease;
 }
 </style>
+

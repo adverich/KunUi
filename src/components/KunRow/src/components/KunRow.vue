@@ -4,13 +4,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, provide } from 'vue'
 
 const DEFAULT_COLS = 12
 
-const normalizeCols = (value) => {
-  const parsedValue = Number.parseInt(value, 10)
+const normalizeCols = (value: unknown): number => {
+  const parsedValue = Number.parseInt(String(value), 10)
 
   if (!Number.isInteger(parsedValue) || parsedValue <= 0) {
     return DEFAULT_COLS
@@ -48,7 +48,7 @@ const resolvedCols = computed(() => normalizeCols(props.cols))
 provide('rowCols', resolvedCols)
 
 const rowClasses = computed(() => {
-  const classes = []
+  const classes: (string | undefined)[] = []
 
   if (!props.noGutters) {
     classes.push(props.dense ? '' : 'gap-4')
@@ -56,22 +56,22 @@ const rowClasses = computed(() => {
 
   // opcional, si querés alinear contenido vertical/horizontal
   if (props.align) {
-    classes.push({
+    classes.push(({
       start: 'items-start',
       center: 'items-center',
       end: 'items-end',
       stretch: 'items-stretch',
-    }[props.align])
+    } as Record<string, string>)[props.align as string])
   }
 
   if (props.justify) {
-    classes.push({
+    classes.push(({
       start: 'justify-start',
       center: 'justify-center',
       end: 'justify-end',
       'space-between': 'justify-between',
       'space-around': 'justify-around',
-    }[props.justify])
+    } as Record<string, string>)[props.justify as string])
   }
 
   return classes
@@ -84,3 +84,4 @@ const rowStyles = computed(() => {
   }
 })
 </script>
+

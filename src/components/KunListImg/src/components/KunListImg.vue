@@ -15,8 +15,8 @@
   </div>
 </template>
 
-<script setup>
-import { kunListImgProps } from '../composables/kunListImgProps'
+<script setup lang="ts">
+import { kunListImgProps } from '../composables/kunListImgProps.js'
 
 const props = defineProps(kunListImgProps)
 </script>

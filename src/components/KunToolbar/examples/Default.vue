@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunToolbar from '../src/components/KunToolbar.vue';
 </script>
 

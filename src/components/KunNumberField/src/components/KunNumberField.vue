@@ -1,26 +1,27 @@
 <template>
   <div class="w-full flex flex-col relative h-fit" ref="rootRef">
-    <!-- Label -->
-    <label
-      v-if="label"
-      :for="uid"
-      :class="[labelColor,
-        'absolute left-2 transition-all duration-200 ease-in-out pointer-events-none select-none z-10',
-        '-top-2.25 text-xs opacity-80'
-      ]"
-    >
-      {{ label }}
-    </label>
-
     <div class="w-full flex flex-col justify-center relative">
       <div
         class="flex items-center w-full h-full border"
-        :class="[bgInput, rounded,
+        :class="[bgInput, rounded, containerDensity,
           focus ? 'border-ui-focus shadow-ui-focus' : borderColor,
           disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
           error ? 'bg-ui-error-soft' : ''
         ]"
       >
+        <!-- Label flotante (centrado en reposo, arriba en foco/valor) -->
+        <label
+          v-if="label"
+          :for="uid"
+          :class="[labelColorClass, labelLeftClass, labelClass,
+            'absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10 px-1',
+            isFloating
+              ? [floatingLabelTop, floatingLabelSize, floatingLabelOpacity, 'translate-y-0']
+              : ['top-1/2 -translate-y-1/2', labelSize, labelOpacity]
+          ]"
+        >
+          {{ label }}
+        </label>
 
         <!-- Control - (SPLIT start) -->
         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
@@ -45,15 +46,23 @@
           </template>
         </div>
 
+        <!-- Prepend-inner -->
+        <div v-if="hasPrependInner" :class="prependInnerClass"
+          class="flex items-center justify-center shrink-0 min-w-[32px] px-1">
+          <slot name="prepend-inner">
+            <KunIcon v-if="prependInnerIcon" :icon="prependInnerIcon" :disabled="disabled" />
+          </slot>
+        </div>
+
         <!-- Input -->
         <input
           v-bind="$attrs"
           :id="uid"
           :name="name"
           ref="numberInput"
-          type="text"
+          :type="type"
           :value="inputValue"
-          :placeholder="placeholder"
+          :placeholder="(placeholder as string)"
           :readonly="readonly"
           :disabled="disabled"
           :required="required"
@@ -64,13 +73,14 @@
           :step="step"
           class="w-full h-full bg-transparent rounded focus:outline-none"
           :aria-invalid="error ? 'true' : 'false'"
-          :class="[inputDensity, textColor, placeholderColor, textCenter ? 'text-center' : '']"
+          :class="[inputDensity, inputTextSizeClass, inputWeightClass, textColor, placeholderColor, placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           @blur="handleBlur"
           @focus="handleFocus"
           @input="handleInput"
-          @keydown="validateKey($event), emits('keyDown', $event)"
+          @click.stop="emits('handleClick')"
+          @keydown="handleKeyDown"
           @keyup="emits('keyUp', $event)"
-          inputmode="decimal"
+          :inputmode="(inputmode as any)"
           pattern="[0-9]+([\.,][0-9]+)?"
         />
 
@@ -124,6 +134,13 @@
           </div>
         </template>
 
+        <!-- Append-inner -->
+        <div v-if="hasAppendInner" :class="appendInnerClass" class="flex items-center justify-center shrink-0 min-w-[32px] px-1">
+          <slot name="append-inner">
+            <KunIcon v-if="appendInnerIcon" :icon="appendInnerIcon" :disabled="disabled" />
+          </slot>
+        </div>
+
         <!-- Append icon -->
         <div v-if="appendIcon || appendIconSlot" class="flex items-center justify-center h-full pr-1">
           <template v-if="appendIcon">
@@ -159,15 +176,20 @@
         <div v-else-if="hint && (persistentHint || focus)" class="text-xs text-center">
           {{ hint }}
         </div>
+
+        <!-- Counter -->
+        <div v-if="counter && maxlength" class="text-xs text-right">
+          {{ inputValue?.length || 0 }} / {{ maxlength }}
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useId, computed, nextTick, useSlots } from 'vue';
-import { KunNumberFieldProps } from '../composables/KunNumberFieldProps';
-import { useKunNumberField } from '../composables/useKunNumberFieldComposable';
+import { KunNumberFieldProps } from '../composables/KunNumberFieldProps.js';
+import { useKunNumberField } from '../composables/useKunNumberFieldComposable.js';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import IconClose from '../../../../icons/IconClose.vue';
@@ -180,13 +202,29 @@ const emits = defineEmits([
   'blur',
   'handleClick',
   'keyDown',
-  'keyUp'
+  'keyUp',
+  'enter'
 ]);
 
 const uid = props.id || `number-input-${useId()}`;
 const slots = useSlots();
 const prependIconSlot = !!slots['prepend-icon'];
 const appendIconSlot = !!slots['append-icon'];
+const hasPrependInner = computed(() => !!slots['prepend-inner'] || !!props.prependInnerIcon);
+const hasAppendInner = computed(() => !!slots['append-inner'] || !!props.appendInnerIcon);
+const hasPrefix = computed(() => !!props.prefix);
+
+// Manejo de keydown con soporte especial para Enter (igual que KunTextField).
+// validateKey mantiene el enmascarado en modo bank; Enter emite evento dedicado.
+const handleKeyDown = (event: KeyboardEvent): void => {
+  validateKey(event);
+  emits('keyDown', event);
+
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    emits('enter', event);
+  }
+};
 
 const {
   inputValue,
@@ -222,11 +260,59 @@ defineExpose({
 });
 
 const inputDensity = computed(() =>
-  props.density === "compact" ? "p-1" :
-  props.density === "comfortable" ? "p-2" :
-  "p-3"
+  props.density === "compact" ? "p-1 min-h-[30px]" :
+  props.density === "comfortable" ? "p-2 min-h-[38px]" :
+  "p-3 min-h-[46px]"
 );
 
-const nativeMin = computed(() => Number.isFinite(Number(props.min)) ? props.min : null);
-const nativeMax = computed(() => Number.isFinite(Number(props.max)) ? props.max : null);
+// Tamaño del texto del valor. Default null = hereda (igual que KunTextField: 'text-sm').
+const inputTextSizeClass = computed(() => props.inputTextSize || 'text-sm');
+
+// Peso del texto del valor. Default null = hereda.
+const inputWeightClass = computed(() => props.inputWeight || '');
+
+// Tamaño del placeholder. Acepta 'text-lg' o 'placeholder:text-lg'.
+// Default null = hereda el tamaño del input.
+const placeholderTextSizeClass = computed(() => {
+  if (!props.placeholderTextSize) return '';
+  return props.placeholderTextSize.startsWith('placeholder:')
+    ? props.placeholderTextSize
+    : `placeholder:${props.placeholderTextSize}`;
+});
+
+// Estado flotante del label (igual que KunTextField).
+const isActive = computed(() => (focus.value || String(inputValue.value ?? '') !== '' || props.dirty));
+const isFloating = computed(() => isActive.value || !!props.placeholder);
+
+// Desplaza el label cuando está dentro del campo para que no se solape con el icono interior o el prefijo.
+// `labelLeft` / `floatingLabelLeft` permiten forzar la posición; `null` mantiene el cálculo automático.
+const labelLeftClass = computed(() => {
+  if (isFloating.value) return props.floatingLabelLeft || 'left-2';
+  if (props.labelLeft) return props.labelLeft;
+  if (hasPrependInner.value && hasPrefix.value) return 'left-[76px]';
+  if (hasPrependInner.value) return 'left-10';
+  if (hasPrefix.value) return 'left-10';
+  return 'left-2';
+});
+
+const labelColorClass = computed(() =>
+  isFloating.value ? (props.floatingLabelColor || props.labelColor) : props.labelColor
+);
+const labelSize = computed(() => props.labelSize);
+const floatingLabelSize = computed(() => props.floatingLabelSize);
+const labelOpacity = computed(() => props.labelOpacity);
+const floatingLabelOpacity = computed(() => props.floatingLabelOpacity);
+const floatingLabelTop = computed(() => props.floatingLabelTop);
+const labelClass = computed(() => props.labelClass);
+
+// Misma escala que KunTextField: altura mínima del contenedor por densidad
+const containerDensity = computed(() =>
+  props.density === "compact" ? "min-h-[32px]" :
+  props.density === "comfortable" ? "min-h-[40px]" :
+  "min-h-[48px]"
+);
+
+const nativeMin = computed(() => Number.isFinite(Number(props.min)) ? props.min as string | number : undefined);
+const nativeMax = computed(() => Number.isFinite(Number(props.max)) ? props.max as string | number : undefined);
 </script>
+

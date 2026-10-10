@@ -1,6 +1,6 @@
 <template>
   <tbody :class="mergedTbodyClass">
-    <template v-for="(item, index) in items" :key="itemKey(item, index)">
+    <template v-for="(item, index) in items" :key="(itemKey?.(item, index) as string | number)">
       <KunTableRow
         :item="item"
         :index="index"
@@ -37,7 +37,7 @@
   </tbody>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /**
  * KunTableRows.vue
  * 
@@ -48,7 +48,7 @@
  */
 import { computed } from 'vue';
 import KunTableRow from './KunTableRow.vue';
-import { kunTableRowsProps } from '../composables/kunTableRowsProps'
+import { kunTableRowsProps } from '../composables/kunTableRowsProps.js'
 
 const props = defineProps(kunTableRowsProps)
 
@@ -67,3 +67,4 @@ const fullColspan = computed(() => {
   return total;
 });
 </script>
+

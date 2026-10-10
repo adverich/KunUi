@@ -5,6 +5,7 @@
   "description": "Una librería de componentes Vue.js con Tailwind CSS",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "AGENTS.md",
@@ -14,16 +15,24 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:types": "vue-tsc -p tsconfig.json --emitDeclarationOnly --outDir dist",
+    "typecheck": "vue-tsc -p tsconfig.json --noEmit",
+    "generate:barrel": "node scripts/generate-barrel.ts",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.6.5",
     "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/tsconfig": "^0.9.1",
     "autoprefixer": "^10.5.4",
     "prettier": "^3.9.6",
+    "typescript": "^5.8.3",
     "vite": "^8.2.2",
+    "vite-plugin-dts": "^5.1.2",
     "vite-plugin-vue-devtools": "^8.2.1",
-    "vue-router": "^5.2.0"
+    "vue-router": "^5.2.0",
+    "vue-tsc": "^3.3.12"
   },
   "peerDependencies": {
     "tailwindcss": "^4.1.8",
@@ -43,6 +52,7 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     },

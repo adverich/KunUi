@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunListItemTitle from '../src/components/KunListItemTitle.vue';
 </script>
 

@@ -1,6 +1,14 @@
 <template>
   <div class="w-full flex flex-col relative" ref="rootRef">
     <div class="w-full flex flex-col justify-center relative">
+      <div class="w-full flex flex-row items-center">
+        <!-- Prepend externo (fuera del borde) -->
+        <div v-if="prependIcon || $slots.prepend" class="flex items-center justify-center shrink-0 mr-2">
+          <slot name="prepend">
+            <KunIcon v-if="prependIcon" :icon="prependIcon" :disabled="disabled" />
+          </slot>
+        </div>
+
       <div class="flex flex-row items-center w-full border relative" :class="[bgInput, rounded, containerDensity,
         inputFocused ? 'border-ui-focus shadow-ui-focus' : borderColor,
         disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text', 
@@ -28,13 +36,13 @@
         <slot name="prepend-input-content" />
 
         <!-- Input -->
-        <input ref="inputField" v-bind="$attrs" :type="inputType" :value="inputValue" :id="uid" :name="name"
-          :placeholder="placeholder" :autocomplete="autocomplete" :required="required" :disabled="disabled"
-          :readonly="readonly" :inputmode="inputmode" :minlength="minlength" :maxlength="maxlength"
-          :pattern="pattern" :spellcheck="spellcheck"
+        <input ref="inputField" v-bind="$attrs" :type="(inputType as string)" :value="inputValue" :id="uid" :name="(name as string)"
+          :placeholder="(placeholder as string)" :autocomplete="autocomplete" :required="required" :disabled="disabled"
+          :readonly="readonly" :inputmode="(inputmode as any)" :minlength="(minlength as number)" :maxlength="(maxlength as number)"
+          :pattern="(pattern as string)" :spellcheck="(spellcheck as any)"
           class="min-w-12 flex-1 bg-transparent focus:outline-none leading-normal" :aria-invalid="hasError ? 'true' : 'false'"
-          :class="[inputDensity, inputTextSizeClass, textColor, placeholderColor, placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
-          :aria-describedby="hasError ? `error-${uid}` : null" 
+          :class="[inputDensity, inputTextSizeClass, inputWeightClass, textColor, placeholderColor, placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
+          :aria-describedby="hasError ? `error-${uid}` : undefined" 
           @input="handleInput" @blur="handleBlur" @focus="focusInput" 
           @click.stop="emits('handleClick')" 
           @keydown="handleKeyDown" @keyup="emits('keyUp', $event)" 
@@ -58,6 +66,14 @@
         <div v-if="suffix" class="mr-2 shrink-0">{{ suffix }}</div>
       </div>
 
+      <!-- Append externo (fuera del borde) -->
+      <div v-if="appendIcon || $slots.append" class="flex items-center justify-center shrink-0 ml-2">
+        <slot name="append">
+          <KunIcon v-if="appendIcon" :icon="appendIcon" :disabled="disabled" />
+        </slot>
+      </div>
+      </div>
+
       <div v-if="!hideDetails" class="h-[1.25rem]">
         <!-- Error -->
         <div v-if="hasError" :id="`error-${uid}`" class="text-ui-error text-sm text-center">
@@ -78,11 +94,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useId, useSlots, computed, ref, nextTick } from 'vue';
 import { icons } from '@/icons'
-import inputProps from '../composables/KunTextFieldProps';
-import useKunTextField from '../composables/useKunTextFieldComposable';
+import inputProps from '../composables/KunTextFieldProps.js';
+import useKunTextField from '../composables/useKunTextFieldComposable.js';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 defineOptions({
@@ -97,7 +113,8 @@ const emits = defineEmits([
   'handleClick',
   'keyDown',
   'keyUp',
-  'enter'
+  'enter',
+  'input'
 ]);
 
 const {
@@ -117,7 +134,7 @@ const {
 } = useKunTextField(props, emits);
 
 // Manejo de keydown con soporte especial para Enter
-const handleKeyDown = (event) => {
+const handleKeyDown = (event: KeyboardEvent): void => {
   // Emitir evento keyDown para el padre
   emits('keyDown', event);
   
@@ -198,6 +215,9 @@ const inputDensity = computed(() =>props.density === "compact" ? "px-2 py-1 min-
 // Tamaño del texto del valor (v-model). Default 'text-sm' para mantener el aspecto actual.
 const inputTextSizeClass = computed(() => props.inputTextSize || 'text-sm');
 
+// Peso del texto del valor. Default null = hereda.
+const inputWeightClass = computed(() => props.inputWeight || '');
+
 // Tamaño del placeholder. Acepta 'text-lg' o 'placeholder:text-lg'.
 // Default null = hereda el tamaño del input.
 const placeholderTextSizeClass = computed(() => {
@@ -209,3 +229,4 @@ const placeholderTextSizeClass = computed(() => {
 
 const containerDensity = computed(() => props.density === "compact" ? "min-h-[32px]" : props.density === "comfortable" ? "min-h-[40px]" : "min-h-[48px]");
 </script>
+

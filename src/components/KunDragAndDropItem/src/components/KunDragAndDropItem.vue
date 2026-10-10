@@ -21,14 +21,26 @@
   </component>
 </template>
 
-<script setup>
-import { computed, inject } from 'vue'
-import { kunDragAndDropItemProps } from '../composables/kunDragAndDropItemProps'
+<script setup lang="ts">
+import { computed, inject, type Ref, type ComputedRef } from 'vue'
+import { kunDragAndDropItemProps } from '../composables/kunDragAndDropItemProps.js'
 import { KUN_DRAG_AND_DROP_KEY } from '../../../KunDragAndDrop/src/composables/kunDragAndDropContext.js'
 
 const props = defineProps(kunDragAndDropItemProps)
 
-const ctx = inject(KUN_DRAG_AND_DROP_KEY, null)
+interface DragItemContext {
+  resolveKey?: (item: unknown, index: number) => unknown;
+  draggingKey?: Ref<unknown> | ComputedRef<unknown>;
+  armedKey?: Ref<unknown>;
+  hasDragHandle?: Ref<boolean> | ComputedRef<boolean>;
+  draggingClass?: Ref<string> | ComputedRef<string>;
+  dropZoneClass?: Ref<string> | ComputedRef<string>;
+  disabled?: Ref<boolean> | ComputedRef<boolean>;
+  sortable?: Ref<boolean> | ComputedRef<boolean>;
+  itemDraggable?: ((item: unknown) => boolean) | null;
+}
+
+const ctx = inject<DragItemContext | null>(KUN_DRAG_AND_DROP_KEY, null)
 
 const resolvedKey = computed(() => {
   if (props.itemKey != null) return String(props.itemKey)
@@ -65,3 +77,4 @@ const htmlDraggable = computed(() => {
   return true
 })
 </script>
+

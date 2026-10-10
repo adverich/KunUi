@@ -6,8 +6,9 @@
   </component>
 </template>
 
-<script setup>
-import { kunToolbarTitleProps } from '../composables/kunToolbarTitleProps'
+<script setup lang="ts">
+import { kunToolbarTitleProps } from '../composables/kunToolbarTitleProps.js'
 
 const props = defineProps(kunToolbarTitleProps)
 </script>
+

@@ -4,9 +4,9 @@
     </component>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { kunCardTextProps } from '../composables/kunCardTextProps'
+import { kunCardTextProps } from '../composables/kunCardTextProps.js'
 
 const props = defineProps(kunCardTextProps)
 
@@ -18,3 +18,4 @@ const computedClass = computed(() => {
     ].filter(Boolean)
 })
 </script>
+

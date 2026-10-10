@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunListItem from '../src/components/KunListItem.vue'
 import KunListItemText from '../../KunListItemText/src/components/KunListItemText.vue'
 import KunListItemAvatar from '../../KunListItemAvatar/src/components/KunListItemAvatar.vue'

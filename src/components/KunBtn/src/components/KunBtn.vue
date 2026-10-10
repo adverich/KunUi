@@ -53,12 +53,12 @@
   </component>
 </template>
 
-<script setup>
-import { computed, ref, useAttrs, useSlots, h } from 'vue'
+<script setup lang="ts">
+import { computed, ref, useAttrs, useSlots, h, type Ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import KunLoaderCircular from '@/components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
-import { kunBtnProps } from '../composables/kunBtnProps'
+import { kunBtnProps } from '../composables/kunBtnProps.js'
 
 const slots = useSlots()
 const attrs = useAttrs()
@@ -76,7 +76,7 @@ const componentTag = computed(() => {
   return 'button'
 })
 
-const renderIcon = (icon) => {
+const renderIcon = (icon: unknown) => {
   if (!icon || icon === false) return null;
   if (icon === true && !props.icon) return null;
 
@@ -108,7 +108,7 @@ const componentAttrs = computed(() => {
   }
 })
 
-const buttonSize = (size) => {
+const buttonSize = (size: unknown) => {
   switch (size) {
     case 'xxs': return 'px-1 py-1 text-xs'
     case 'xs': return 'px-2 py-2 text-xs'
@@ -153,11 +153,13 @@ const variantClasses = computed(() => {
 const hasText = computed(() => !!props.text)
 
 const hasCustomWidth = computed(() => {
-  return attrs.class?.includes('w-') || attrs.class?.includes('min-w-') || attrs.class?.includes('max-w-');
+  const cls = attrs.class as string | undefined;
+  return cls?.includes('w-') || cls?.includes('min-w-') || cls?.includes('max-w-');
 })
 
 const hasCustomHeight = computed(() => {
-  return attrs.class?.includes('h-') || attrs.class?.includes('min-h-') || attrs.class?.includes('max-h-');
+  const cls = attrs.class as string | undefined;
+  return cls?.includes('h-') || cls?.includes('min-h-') || cls?.includes('max-h-');
 })
 
 const isIconOnly = computed(() => {
@@ -176,7 +178,7 @@ const computedClass = computed(() => {
     'relative'
   ];
 
-  if (attrs.class) base.push(attrs.class);
+  if (attrs.class) base.push(attrs.class as string);
 
   if (isIconOnly.value) {
     base.push('aspect-square justify-center items-center');
@@ -215,7 +217,7 @@ const computedClass = computed(() => {
   return base.filter(Boolean);
 });
 
-const rootEl = ref(null);
+const rootEl: Ref<HTMLElement | null> = ref(null);
 defineExpose({
   focus: () => rootEl.value?.focus?.()
 });

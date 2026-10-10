@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunTextarea from '../src/components/KunTextarea.vue';
 </script>
 

@@ -5,8 +5,8 @@
   />
 </template>
 
-<script setup>
-import { kunDialogOverlayProps } from '../composables/kunDialogOverlayProps'
+<script setup lang="ts">
+import { kunDialogOverlayProps } from '../composables/kunDialogOverlayProps.js'
 
 const props = defineProps(kunDialogOverlayProps)
 
@@ -16,3 +16,4 @@ const onClick = () => {
   if (!props.persistent) emit('click')
 }
 </script>
+

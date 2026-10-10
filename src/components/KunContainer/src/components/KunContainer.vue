@@ -4,19 +4,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 
-const props = defineProps({
-  fluid: {
-    type: Boolean,
-    default: false
-  }
-})
+const props = defineProps<{
+  fluid?: boolean;
+  class?: string | string[] | Record<string, unknown>;
+}>()
 
 // Determinar las clases condicionales
 const containerClasses = computed(() => {
-  const baseClasses = ['w-full', 'mx-auto', 'px-4', 'sm:px-6', 'lg:px-8']
+  const baseClasses: string[] = ['w-full', 'mx-auto', 'px-4', 'sm:px-6', 'lg:px-8']
 
   if (!props.fluid) {
     // Si no es fluid, aplicamos anchos máximos responsivos

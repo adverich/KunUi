@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunAlert from '../src/components/KunAlert.vue';
 </script>
 

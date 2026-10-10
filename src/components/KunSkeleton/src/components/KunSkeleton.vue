@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
-import { kunSkeletonProps } from '../composables/kunSkeletonProps'
+import { kunSkeletonProps } from '../composables/kunSkeletonProps.js'
 
 const props = defineProps(kunSkeletonProps)
 

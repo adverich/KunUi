@@ -1,7 +1,7 @@
 <template>
   <RouterLink
     v-if="isLink"
-    :to="to"
+    :to="(to as any)"
     :replace="replace"
     :exact="exact"
     custom
@@ -110,10 +110,10 @@
   </component>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { kunCardProps } from '../composables/kunCardProps'
+import { kunCardProps } from '../composables/kunCardProps.js'
 
 import KunCardItem from '../../../KunCardItem/src/components/KunCardItem.vue'
 import KunCardTitle from '../../../KunCardTitle/src/components/KunCardTitle.vue'
@@ -127,8 +127,8 @@ const props = defineProps(kunCardProps)
 const isLink = computed(() => !!(props.to || props.href))
 const tag = computed(() => props.tag || 'div')
 
-function handleClick(e, navigate) {
-  if (e.ctrlKey || e.metaKey || e.button === 1) return
+function handleClick(e: MouseEvent | KeyboardEvent, navigate?: () => void): void {
+  if (e instanceof MouseEvent && (e.ctrlKey || e.metaKey || e.button === 1)) return
   e.preventDefault()
   navigate?.()
 }

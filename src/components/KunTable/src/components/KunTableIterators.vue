@@ -1,14 +1,14 @@
 <template>
   <div class="h-full w-full flex flex-col bg-ui-surface">
-    <template v-for="(item, index) in items" :key="itemKey(item, index)">
+    <template v-for="(item, index) in items" :key="(itemKey?.(item, index) as string | number)">
       <KunTableIterator
         :item="item"
         :index="index"
         :headers="headers"
         :show-expand="showExpand"
         :show-select="showSelect"
-        :is-expanded="isExpanded(item)"
-        :is-selected="isSelected(item)"
+        :is-expanded="isExpanded?.(item)"
+        :is-selected="isSelected?.(item)"
         :has-actions="hasActions"
         :loading="getActionLoading(item, index)"
         @toggle-expand="emits('toggle-expand', item)"
@@ -22,7 +22,7 @@
         </template>
       </KunTableIterator>
 
-      <div v-if="isExpanded(item)" class="px-4 pb-2">
+      <div v-if="isExpanded?.(item)" class="px-4 pb-2">
         <slot name="expand" :item="item" :index="index">
           <div class="text-center text-sm opacity-70">No hay contenido expandido.</div>
         </slot>
@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /**
  * KunTableIterators.vue
  * 
@@ -40,9 +40,10 @@
  * Itera sobre los items y renderiza KunTableIterator (tarjeta individual).
  */
 import KunTableIterator from './KunTableIterator.vue';
-import { kunTableIteratorsProps } from '../composables/kunTableIteratorsProps'
+import { kunTableIteratorsProps } from '../composables/kunTableIteratorsProps.js'
 
 const props = defineProps(kunTableIteratorsProps)
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 </script>
+

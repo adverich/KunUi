@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import KunCarousel from '../../src/components/KunCarousel.vue'
 import KunCarouselSlide from '../../../KunCarouselSlide/src/components/KunCarouselSlide.vue'
@@ -54,12 +54,12 @@ const steps = ref([
   },
 ])
 
-function goTo(i) {
+function goTo(i: number): void {
   if (i === selected.value) return
   selected.value = i
 }
 
-function stepNumber(i) {
+function stepNumber(i: number): string {
   return String(i + 1).padStart(2, '0')
 }
 </script>

@@ -4,9 +4,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { kunCardActionsProps } from '../composables/kunCardActionsProps'
+import { kunCardActionsProps } from '../composables/kunCardActionsProps.js'
 
 const props = defineProps(kunCardActionsProps)
 
@@ -18,3 +18,4 @@ const computedClass = computed(() => [
   props.dense ? 'py-1 px-2' : 'py-3 px-4'
 ].filter(Boolean))
 </script>
+

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import KunDragAndDrop from '../src/components/KunDragAndDrop.vue'
 import KunDragAndDropItem from '../../KunDragAndDropItem/src/components/KunDragAndDropItem.vue'
@@ -10,7 +10,7 @@ const items = ref([
   { id: 3, title: '⋮⋮ es el agarre' },
 ])
 
-function onAction(title) {
+function onAction(title: string): void {
   console.log('action', title)
 }
 </script>
@@ -24,19 +24,19 @@ function onAction(title) {
     <KunDragAndDrop v-model="items" drag-handle="[data-kun-dnd-handle]">
       <template #item="{ item, index }">
         <KunDragAndDropItem
-          :item="item"
+          :item="(item as any)"
           :index="index"
-          :item-key="item.id"
+          :item-key="(item as any).id"
           class="rounded-lg border border-surface bg-surface-light px-3 py-2"
         >
           <div class="flex items-center gap-2">
             <KunDragAndDropHandle />
-            <span class="flex-1 truncate">{{ item.title }}</span>
+            <span class="flex-1 truncate">{{ (item as any).title }}</span>
             <button
               type="button"
               class="text-xs px-2 py-1 rounded bg-button"
               data-no-drag
-              @click="onAction(item.title)"
+              @click="onAction((item as any).title)"
             >
               Acción
             </button>

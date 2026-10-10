@@ -26,8 +26,15 @@ pnpm run build
 |---------|-------------|
 | `pnpm install` | Instala todas las dependencias |
 | `pnpm run dev` | Inicia el servidor de desarrollo (Vite) |
-| `pnpm run build` | Compila la librería para producción |
+| `pnpm run build` | Compila la librería para producción (JS + `.d.ts`) |
+| `pnpm run typecheck` | Chequeo de tipos con `vue-tsc --noEmit` (debe estar en cero) |
 | `pnpm run preview` | Vista previa del build |
+
+> **TypeScript:** todo `src/` es TS (`allowJs/checkJs: false`). Los SFC usan
+> `<script setup lang="ts">`, los composables son `.ts` con interfaces
+> exportadas, y el build genera `dist/**/*.d.ts` (`"types": "dist/index.d.ts"`).
+> Los imports internos conservan el sufijo `.js` (`'../composables/x.js'` → resuelve
+> a `x.ts` con `moduleResolution: bundler`); no los cambies a `.ts`.
 
 ---
 
@@ -108,15 +115,78 @@ Campo de texto con validación y decoradores.
 | density | String | 'default' | Densidad: 'default', 'comfortable', 'compact' |
 | prefix | String | '' | Prefijo |
 | suffix | String | '' | Sufijo |
-| prependIcon | String | - | Ícono al inicio |
-| appendIcon | String | - | Ícono al final |
+| prependIcon | String | - | Ícono externo al inicio (fuera del borde) |
+| appendIcon | String | - | Ícono externo al final (fuera del borde) |
+| prependInnerIcon | String/Object/Function/Array | - | Ícono interno al inicio |
+| appendInnerIcon | String/Object/Function/Array | - | Ícono interno al final |
+| prependInnerClass | String | - | Clase del contenedor del ícono interno inicial |
+| appendInnerClass | String | - | Clase del contenedor del ícono interno final |
+| inputTextSize | String | null | Tamaño del texto del valor (default 'text-sm') |
+| inputWeight | String | null | Peso del texto del valor (hereda si null) |
+| inputStyle | String | '' | Clase libre para el input |
 | maxlength | Number/String | null | Longitud máxima |
 | counter | Boolean | false | Muestra contador |
 | debounce | Number | 300 | Debounce en ms |
 
-**Eventos:** update:modelValue, focus, blur, enter
+**Slots:** prepend (externo), prepend-inner, prepend-input-content, default, append-inner, append (externo). Nombre de slot = nombre del prop sin "Icon" (prependIcon -> #prepend).
+
+**Eventos:** update:modelValue, focus, blur, input, handleClick, keyDown, keyUp, enter
 
 **Métodos expuestos:** validate(), reset(), resetValidation(), focus()
+
+---
+
+### KunNumberField
+
+Campo numérico con formato localizado y modos de entrada (`natural` libre / `bank` estricto tipo homebanking). Paridad total con KunTextField: mismo sistema de 4 iconos, label flotante, densidades y eventos (más `input` crudo).
+
+```vue
+<KunNumberField v-model="monto" label="Monto" :precision="2" />
+<KunNumberField v-model="cuenta" format-mode="bank" :precision="0" />
+```
+
+| Prop | Tipo | Default | Descripción |
+|------|------|---------|-------------|
+| modelValue | Number/String | null | Valor numérico |
+| type | String | 'text' | Tipo del input nativo (se bindea tal cual) |
+| label | String | '' | Etiqueta flotante (mismo sistema que KunTextField) |
+| labelColor / floatingLabelColor | String | 'text-ui' / null | Color del label en reposo / flotando |
+| labelSize / floatingLabelSize | String | 'text-sm' / 'text-xs' | Tamaño del label en reposo / flotando |
+| labelOpacity / floatingLabelOpacity | String | 'opacity-60' / 'opacity-80' | Opacidad del label |
+| labelLeft / floatingLabelLeft | String | null / 'left-2' | Offset izquierdo (null = automático según iconos) |
+| floatingLabelTop | String | '-top-2' | Posición superior flotando |
+| labelClass | String | '' | Clase libre para el label |
+| placeholder | String/Number | '' | Placeholder |
+| disabled | Boolean | false | Deshabilita el campo |
+| readonly | Boolean | false | Solo lectura |
+| error / errorMessages | Boolean / String/Array | false / - | Estado y mensajes de error |
+| rules | Array | [] | Funciones de validación |
+| clearable | Boolean | false | Muestra botón de limpiar |
+| hint / persistentHint / hideDetails | String / Boolean / Boolean | '' / false / false | Ayuda y detalles |
+| validateOnBlur | Boolean | false | Valida solo al perder foco |
+| density | String | 'default' | Densidad: 'default', 'comfortable', 'compact' (misma escala que KunTextField) |
+| prefix / suffix | String | '' | Texto fijo al inicio / final |
+| prependIcon / appendIcon | String | - | Ícono externo (fuera del borde) |
+| prependInnerIcon / appendInnerIcon | String/Object/Function/Array | - | Ícono interno |
+| prependInnerClass / appendInnerClass | String | - | Clase del contenedor del ícono interno |
+| inputTextSize / inputWeight / inputStyle | String | null / null / '' | Tamaño, peso y clase libre del valor |
+| placeholderColor / placeholderTextSize | String | 'placeholder-ui' / null | Color y tamaño del placeholder |
+| textColor / textCenter | String / Boolean | 'text-ui' / false | Color y centrado del valor |
+| bgInput / rounded / borderColor | String | 'bg-field-background' / 'rounded' / 'border-ui' | Fondo, redondeo y borde |
+| inputmode | String | 'decimal' | Atributo inputmode nativo |
+| maxlength / counter | Number/String / Boolean | null / false | Longitud máxima y contador |
+| debounce | Number | 300 | Debounce en ms |
+| min / max / step | Number/String | -Infinity / Infinity / 1 | Límites y paso (clamp + flechas) |
+| precision | Number/String | 2 | Decimales |
+| locale / separator / useGrouping | String / String / Boolean | null / ',' / true | Formato localizado |
+| formatMode | String | 'natural' | 'natural' (entrada libre) o 'bank' (estricto, cursor controlado) |
+| noArrows | Boolean | false | Oculta botones ▲▼ |
+| controlVariant | String | 'default' | Controles: 'default', 'stacked', 'split' |
+| id / name / autocomplete / required | String | null / null / 'off' / false | Atributos nativos |
+
+**Slots:** prepend-icon (legacy, dentro del borde), prepend-inner, default, append-inner, append-icon (legacy). Los slots `prepend`/`append` externos aún no existen en NF (solo en TF).
+
+**Eventos:** update:modelValue, focus, input, blur, handleClick, keyDown, keyUp, enter
 
 ---
 
@@ -999,14 +1069,14 @@ kun-ui/
 │   │       │   └── components/
 │   │       │       └── KunBtn.vue
 │   │       └── src/composables/
-│   │           └── kunBtnProps.js
+│   │           └── kunBtnProps.ts
 │   ├── config/           # Configuración global (kunConfig)
 │   ├── directives/       # Directivas personalizadas
 │   ├── icons/            # Íconos SVG
 │   ├── plugins/          # Plugins de Vite
 │   ├── styles/           # Estilos globales
 │   ├── utils/            # Utilidades y helpers
-│   └── index.js          # Punto de entrada
+│   └── index.ts          # Punto de entrada
 ├── dist/                 # Build output (generado)
 ├── AGENTS.md             # Esta documentación
 ├── README.md             # README para usuarios
@@ -1023,7 +1093,7 @@ kun-ui/
 2. Edita el archivo `.vue` en `src/components/[NombreComponente]/src/components/`
 3. Si necesitas cambiar props, edita el composable en `src/components/[NombreComponente]/src/composables/`
 4. Ejecuta `pnpm run dev` para ver los cambios en tiempo real
-5. Ejecuta `pnpm run build` para generar el build de producción
+5. Ejecuta `pnpm run typecheck` (debe quedar en cero) y `pnpm run build` para generar el build de producción
 
 ### Agregar un nuevo componente
 
@@ -1035,7 +1105,12 @@ kun-ui/
    │   ├── components/
    │   │   └── KunNuevoComponente.vue
    │   └── composables/
-   │       └── kunNuevoComponenteProps.js
+   │       └── kunNuevoComponenteProps.ts
    ```
-3. El plugin `kunUiAutoExportsPlugin` registrará automáticamente el componente
-4. Documenta el componente en este archivo (AGENTS.md)
+3. Si alguna prop acepta un conjunto cerrado de valores, tipala como unión
+   literal (`type: String as PropType<'a' | 'b'>` + export del tipo) en vez de
+   `String` pelado: es lo que habilita el autocompletado de valores en el IDE.
+4. Ejecuta `pnpm run generate:barrel`: regenera `src/components/index.ts`
+   (re-exports + `GlobalComponents` para `app.use()`) a partir de las carpetas
+   con `<dir>/src/components/<dir>.vue`.
+5. Documenta el componente en este archivo (AGENTS.md)

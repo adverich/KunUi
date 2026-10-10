@@ -9,19 +9,16 @@
   ]" :style="lengthStyle" v-bind="$attrs"/>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 
-const props = defineProps({
-  vertical: Boolean,
-  inset: Boolean,
-  dashed: Boolean,
-  length: [String, Number],
-  color: {
-    type: String,
-    default: ''
-  }
-})
+const props = defineProps<{
+  vertical?: boolean;
+  inset?: boolean;
+  dashed?: boolean;
+  length?: string | number;
+  color?: string;
+}>()
 
 const lengthStyle = computed(() => {
   const len = props.length != null

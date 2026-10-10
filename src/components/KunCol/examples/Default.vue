@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunCol from '../src/components/KunCol.vue';
 </script>
 

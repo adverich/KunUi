@@ -83,21 +83,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
-import { getValue, formatValue } from '@/utils/tableFormatters';
-import { kunTableIteratorProps } from '../composables/kunTableIteratorProps'
+import { getValue, formatValue, type KunTableHeader } from '@/utils/tableFormatters.js';
+import { kunTableIteratorProps } from '../composables/kunTableIteratorProps.js'
+import type { TableItem } from '../composables/useRowKey.js'
 
 const props = defineProps(kunTableIteratorProps)
 
 const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 
-function resolveTdClass(item, index) {
+function resolveTdClass(item: TableItem | undefined, index: number | undefined): string {
   const result = typeof props.rowClassCondition === 'function'
-    ? props.rowClassCondition({ item, index })
+    ? (props.rowClassCondition as (args: { item: TableItem | undefined; index: number | undefined }) => unknown)({ item, index })
     : props.rowClassCondition;
 
-  return result?.trim() || '';
+  return (result as string)?.trim() || '';
 }
 
 const defaultContainerClass = 'p-4 shadow-sm';
@@ -114,3 +115,4 @@ const mergedContainerClass = computed(() => [
 ]);
 
 </script>
+

@@ -3,7 +3,7 @@
     <KunTextField v-model="search" v-bind="textFieldProps" :label="label" :disabled="disabled" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
       autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
       @blur="textFieldBlur" @keyDown="textKeyDown" @keyDown.enter.prevent="handleEnter"
-      :placeholder="props.multiple && isArray(modelValue) && modelValue.length ? '' : placeholder"
+      :placeholder="props.multiple && isArray(modelValue) && (modelValue as unknown[]).length ? '' : placeholder"
       :error="!!internalError" :error-messages="internalError"
     >
       <template #prepend-input-content>
@@ -13,7 +13,7 @@
           class="flex min-w-0 max-w-full flex-nowrap items-center gap-1 overflow-hidden"
           @click="!disabled && toggleMenu()"
         >
-          <template v-for="(item, idx) in modelValue" :key="typeof item === 'object' && item !== null ? (item.id ?? item.name ?? idx) : (item ?? idx)">
+          <template v-for="(item, idx) in (modelValue as unknown[])" :key="typeof item === 'object' && item !== null ? ((item as any).id ?? (item as any).name ?? idx) : ((item as string) ?? idx)">
             <KunChip v-show="idx < visibleCount" :data-chip="idx" size="small" variant="pill" class="shrink-0">
               <div class="flex items-center">
                 {{ getArrayText(item) }}
@@ -48,7 +48,7 @@
       </template>
 
       <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :z-index="zIndex"
-        :parent-ref="parentRef" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor" 
+        :parent-ref="(parentRef as any)" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor"
         :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
       >
         <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b bg-select-background">
@@ -58,15 +58,15 @@
         </div>
         <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false">
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
-            :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="{ item, index, empty }">
-            <template v-if="!empty && (item !== undefined && item !== null)">
-              <KunListItem :value="item" :key="`kun-list-${index + 1}`" :id="`kun-item-${index + 1}`" :disabled="checkDisabled(item)" 
+            :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="sp">
+            <template v-if="!(sp as any).empty && ((sp as any).item !== undefined && (sp as any).item !== null)">
+              <KunListItem :value="(sp as any).item" :key="`kun-list-${(sp as any).index + 1}`" :id="`kun-item-${(sp as any).index + 1}`" :disabled="checkDisabled((sp as any).item)"
               :bg-items="bgItemListColor" :hover-bg="hoverItemListColor" :activeClass="selectedItemListColor"
-              :density="density" :selectable="true" :active="isItemSelected(item)" rounded="none">
+              :density="density" :selectable="true" :active="isItemSelected((sp as any).item)" rounded="none">
                 <KunListItemTitle class="text-wrap">
-                  {{ itemToString(item, itemTitle ?? textArr, 'hasDefault') }} 
+                  {{ itemToString((sp as any).item, itemTitle ?? textArr, 'hasDefault') }}
                 </KunListItemTitle>
-                <KunListItemSubtitle :text="itemSubtitle ? itemToString(item, itemSubtitle) : ''" />
+                <KunListItemSubtitle :text="itemSubtitle ? itemToString((sp as any).item, itemSubtitle) : ''" />
               </KunListItem>
             </template>
             <template v-else>
@@ -83,8 +83,8 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
+<script setup lang="ts">
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick, type Ref } from 'vue';
 import { icons } from '@/icons'
 import { isNotEmpty, isArray } from '../../../../utils/utils.js'
 
@@ -96,25 +96,32 @@ import KunListItemTitle from '../../../KunListItemTitle/src/components/KunListIt
 import KunListItemSubtitle from '../../../KunListItemSubtitle/src/components/KunListItemSubtitle.vue';
 import KunMenu from '../../../KunMenu/src/components/KunMenu.vue';
 
-import { useAutocomplete } from '../composables/useAutocomplete';
-import { KunAutocompleteProps } from '../composables/KunAutocompleteProps';
+import { useAutocomplete, type AutocompleteEmitEvent } from '../composables/useAutocomplete.js';
+import { KunAutocompleteProps } from '../composables/KunAutocompleteProps.js';
 import KunTextField from '../../../KunTextField/src/components/KunTextField.vue'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunChip from '../../../KunChip/src/components/KunChip.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
-const modelValue = defineModel({ default: null });
-const items = defineModel('items', { default: [], type: Array, required: true });
+// any intencional: los tipos de Vue exigen default no-null para T=unknown;
+// el modelo acepta cualquier cosa (objeto, array, primitivo, null).
+const modelValue = defineModel<any>({ default: null });
+const items = defineModel<unknown[]>('items', { default: (() => []) as () => unknown[], required: true });
 
 const props = defineProps(KunAutocompleteProps);
-const emits = defineEmits(["update:modelValue", "selectedItem", "createItem", "validation", "search", "keyDown", "keyDownEnter", "notFound", "cleared"]);
+const emits = defineEmits<{
+  (event: AutocompleteEmitEvent, value?: unknown): void;
+  (event: 'validation', value: boolean): void;
+  (event: 'search', value: unknown): void;
+  (event: 'keyDown' | 'keyDownEnter' | 'notFound', value: unknown): void;
+}>();
 
-const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, closeMenu, toggleMenu, onMenuKeydown,
+const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clearSelection, lightReset, openMenu, closeMenu, toggleMenu, onMenuKeydown, focusListWithKey,
   getSelectedItem, textArr, getArrayText, isAlphanumeric, checkIfValueExist, extractValueKey,
-  createItem, checkDisabled, itemToString, placeholder, 
+  createItem, checkDisabled, itemToString, placeholder,
 } = useAutocomplete(props, emits, modelValue, items);
 
-function isItemSelected(item) {
+function isItemSelected(item: unknown): boolean {
   try {
     if (props.multiple) return checkIfValueExist(item);
     const mv = modelValue.value;
@@ -126,14 +133,14 @@ function isItemSelected(item) {
 }
 
 // Truncado de chips: muestra los que entran y el resto como "+N ...". Nunca scroll horizontal.
-const chipsWrapRef = ref(null);
+const chipsWrapRef: Ref<HTMLElement | null> = ref(null);
 const visibleCount = ref(9999);
-const totalSelected = computed(() => (isArray(modelValue.value) ? modelValue.value.length : 0));
+const totalSelected = computed(() => (isArray(modelValue.value) ? (modelValue.value as unknown[]).length : 0));
 const hiddenCount = computed(() => Math.max(0, totalSelected.value - visibleCount.value));
 const hiddenNames = computed(() => {
   if (!hiddenCount.value) return '';
   try {
-    return modelValue.value.slice(visibleCount.value).map((v) => getArrayText(v)).join(', ');
+    return (modelValue.value as unknown[]).slice(visibleCount.value).map((v: unknown) => getArrayText(v)).join(', ');
   } catch {
     return '';
   }
@@ -174,9 +181,9 @@ async function updateOverflow() {
 
 watch(() => modelValue.value, () => updateOverflow(), { deep: true });
 
-let ro = null;
+let ro: ResizeObserver | null = null;
 onMounted(() => {
-  if (props.focusOnRender) textFieldRef.value.focus();
+  if (props.focusOnRender) textFieldRef.value?.focus?.();
   updateOverflow();
   ro = new ResizeObserver(() => updateOverflow());
   if (parentRef.value) ro.observe(parentRef.value);
@@ -187,17 +194,17 @@ onBeforeUnmount(() => {
   ro?.disconnect();
 });
 
-const parentRef = ref(null);
+const parentRef: Ref<HTMLElement | null> = ref(null);
 
 // Estado interno del error
 const internalError = ref('');
 
 // Método de validación
-const validate = (value) => {
-  for (const rule of props.rules) {
-    const result = rule(value);
+const validate = (value: unknown): boolean => {
+  for (const rule of (props.rules as ((v: unknown) => unknown)[] | undefined) || []) {
+    const result = (rule as (v: unknown) => unknown)(value);
     if (result !== true) {
-      internalError.value = result;
+      internalError.value = result as string;
       emits('validation', false);
       return false;
     }
@@ -220,12 +227,12 @@ watch(() => props.disabled, (disabled) => {
   }
 })
 
-function handleEscape() {
+function handleEscape(): void {
   menuModel.value = false;
-  textFieldRef.value.inputField?.focus();
+  textFieldRef.value?.inputField?.focus();
 }
 
-function textKeyDown(e) {
+function textKeyDown(e: KeyboardEvent): void {
   if (props.disabled) return;
 
   const key = e.key
@@ -243,12 +250,12 @@ function textKeyDown(e) {
   if (['ArrowUp', 'ArrowDown'].includes(key)) {
     e.preventDefault();
     if (!menuModel.value) openMenu();
-    
-    listRef.value?.focusWithKey?.(key);
+
+    focusListWithKey(key);
   }
 }
 
-function txtUpdated(event) {
+function txtUpdated(event?: unknown): void {
   emits('search', search);
 }
 
@@ -258,7 +265,7 @@ function txtFocused() {
 }
 
 
-function handleKeyList(event) {
+function handleKeyList(event: KeyboardEvent): void {
   onMenuKeydown(event);
 }
 
@@ -266,17 +273,17 @@ function textFieldBlur() {
   // SE MANTIENE LA FUNCINOALIDAD TEMPORALMENTE POR SI SE NECESITA, SINO SERA ELIMINADO
 }
 
-function handleEnter(e) {
+function handleEnter(e: KeyboardEvent): void {
   if (props.disabled) return;
 
   if (!search.value) return;
 
-  let found = null;
+  let found: unknown = null;
 
   // Caso 1: returnObject = true
   if (props.returnObject) {
-    found = items.value.find(item =>
-      Object.values(item).some(val =>
+    found = items.value.find((item: unknown) =>
+      Object.values(item as Record<string, unknown>).some((val: unknown) =>
         String(val).toLowerCase() === String(search.value).toLowerCase()
       )
     );
@@ -284,16 +291,16 @@ function handleEnter(e) {
 
   // Caso 2: returnObject = false y hay itemValue
   else if (props.itemValue) {
-    found = items.value.find(item =>
-      String(item[props.itemValue]).toLowerCase() === String(search.value).toLowerCase()
+    found = items.value.find((item: unknown) =>
+      String((item as Record<string, unknown>)[props.itemValue as string]).toLowerCase() === String(search.value).toLowerCase()
     );
   }
 
   // Caso 3: item es primitivo u objeto sin itemValue
   else {
-    found = items.value.find(item =>
+    found = items.value.find((item: unknown) =>
       (typeof item === "object"
-        ? Object.values(item).some(val => String(val).toLowerCase() === String(search.value).toLowerCase())
+        ? Object.values(item as Record<string, unknown>).some((val: unknown) => String(val).toLowerCase() === String(search.value).toLowerCase())
         : String(item).toLowerCase() === String(search.value).toLowerCase()
       )
     );
@@ -319,6 +326,7 @@ function handleEnter(e) {
 }
 
 defineExpose({
-  focus: () => !props.disabled && nextTick(() => textFieldRef.value?.focus())
+  focus: () => !props.disabled && nextTick(() => textFieldRef.value?.focus?.())
 });
 </script>
+

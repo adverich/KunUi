@@ -24,9 +24,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
-import { kunLoaderCircularProps } from '../composables/kunLoaderCircularProps'
+import { kunLoaderCircularProps } from '../composables/kunLoaderCircularProps.js'
 
 const props = defineProps(kunLoaderCircularProps);
 

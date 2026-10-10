@@ -10,8 +10,8 @@
   </div>
 </template>
 
-<script setup>
-import { kunListItemAvatarProps } from '../composables/kunListItemAvatarProps'
+<script setup lang="ts">
+import { kunListItemAvatarProps } from '../composables/kunListItemAvatarProps.js'
 
 const props = defineProps(kunListItemAvatarProps)
 
@@ -27,3 +27,4 @@ const sizeClass = {
   @apply inline-flex items-center justify-center shrink-0;
 }
 </style>
+

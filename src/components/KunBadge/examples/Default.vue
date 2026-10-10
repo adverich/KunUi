@@ -4,7 +4,7 @@
     </KunBadge>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunBadge from '../src/components/KunBadge.vue';
 import KunBtn from '../../KunBtn/src/components/KunBtn.vue';
 </script>

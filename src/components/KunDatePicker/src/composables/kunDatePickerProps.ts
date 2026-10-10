@@ -1,0 +1,38 @@
+import type { PropType } from 'vue';
+
+export const kunDatePickerProps = {
+  modelValue: { type: [Date, Array, String] as PropType<Date | unknown[] | string | null>, default: null },
+  id: { type: String, default: null },
+  range: { type: Boolean, default: false },
+  label: { type: String, default: '' },
+  placeholder: { type: String, default: '' },
+  onlyIcon: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  errorMessage: { type: String, default: '' },
+  autoApply: { type: Boolean, default: true },
+  mode: { type: String, default: 'date' },
+  enableTime: { type: Boolean, default: false },
+  enableSeconds: { type: Boolean, default: false },
+  startDate: { type: [Date, String], default: null },
+  startTime: { type: [String, Object], default: null },
+  minDate: { type: Date, default: null },
+  maxDate: { type: Date, default: null },
+  locale: { type: String, default: 'es-ES' },
+  timezone: { type: String, default: null }, // e.g., 'America/Argentina/Buenos_Aires'
+  valueFormat: { type: String, default: null },
+  format: { type: String, default: null },
+  displayFormat: { type: String, default: null },
+  formats: { type: Object, default: () => null },
+  outputFormat: { type: String, default: null }, // 'date' | 'datetime' | 'time' | 'iso'
+  width: { type: [String, Number], default: null },
+  calendarWidth: { type: [String, Number], default: 320 },
+  fullWidth: { type: Boolean, default: false },
+  align: { type: String, default: 'left' },
+  daySize: { type: String, default: '2rem' },
+  fontSize: { type: String, default: '0.875rem' },
+  maxHeight: { type: String, default: '400px' },
+  inputClass: { default: '' },
+  dialogClass: { default: '' },
+  inputProps: { type: Object, default: () => ({}) },
+  timeFieldProps: { type: Object, default: () => ({}) },
+}

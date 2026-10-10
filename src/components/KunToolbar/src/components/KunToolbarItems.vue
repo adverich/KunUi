@@ -8,9 +8,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { kunToolbarItemsProps } from '../composables/kunToolbarItemsProps'
+import { kunToolbarItemsProps } from '../composables/kunToolbarItemsProps.js'
 
 const props = defineProps(kunToolbarItemsProps)
 
@@ -37,3 +37,4 @@ const variantClass = computed(() => {
   }
 })
 </script>
+

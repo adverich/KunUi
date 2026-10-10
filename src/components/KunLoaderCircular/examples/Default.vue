@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunLoaderCircular from '../src/components/KunLoaderCircular.vue';
 </script>
 

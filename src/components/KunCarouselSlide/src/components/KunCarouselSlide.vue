@@ -10,9 +10,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { kunCarouselSlideProps } from '../composables/kunCarouselSlideProps'
+import { kunCarouselSlideProps } from '../composables/kunCarouselSlideProps.js'
 
 const props = defineProps(kunCarouselSlideProps)
 
@@ -24,3 +24,4 @@ const slideStyle = computed(() => (props.size ? { flexBasis: props.size } : {}))
   flex-shrink: 0;
 }
 </style>
+

@@ -12,6 +12,6 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KunCardSubtitle from '../src/components/KunCardSubtitle.vue'
 </script>

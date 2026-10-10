@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import KunTabs from '../src/components/KunTabs.vue';
 </script>
 

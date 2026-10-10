@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
-import { useCheckboxModel } from '../composables/useCheckboxModel'
-import { useValidation } from '../composables/useValidation'
-import { kunCheckboxProps } from '../composables/kunCheckboxProps'
+import { useCheckboxModel } from '../composables/useCheckboxModel.js'
+import { useValidation } from '../composables/useValidation.js'
+import { kunCheckboxProps } from '../composables/kunCheckboxProps.js'
 import { vRipple } from '@/directives/ripple.js'
 import { icons } from '@/icons'
 
@@ -136,3 +136,4 @@ const iconSizeClass = computed(() => ({
     </div>
   </div>
 </template>
+

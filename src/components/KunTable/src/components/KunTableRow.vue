@@ -33,7 +33,7 @@
       :key="header.value"
       :class="[
         mergedTdClass,
-        header.align === 'right' ? 'text-right' : header.align === 'left' ? 'text-left' : 'text-center',
+        header.headerAlign === 'right' ? 'text-right' : header.headerAlign === 'left' ? 'text-left' : 'text-center',
       ]"
     >
       <template v-if="customSlots?.[`item.${header.value}`]">
@@ -65,7 +65,7 @@
   </tr>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /**
  * KunTableRow.vue
  * 
@@ -78,11 +78,12 @@
  */
 import { computed } from 'vue';
 import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue";
-import { getValue, formatValue } from '@/utils/tableFormatters';
-import { kunTableRowProps } from '../composables/kunTableRowProps';
+import { getValue, formatValue } from '@/utils/tableFormatters.js';
+import { kunTableRowProps } from '../composables/kunTableRowProps.js';
 import KunBtn from '@/components/KunBtn/src/components/KunBtn.vue';
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
-import { icons } from '@/icons'
+import { icons } from '@/icons/index.js'
+import type { TableItem } from '../composables/useRowKey.js';
 
 const props = defineProps(kunTableRowProps)
 
@@ -94,12 +95,12 @@ const baseTdClass = 'px-1 py-2 whitespace-normal word-break text-sm text-ui';
 const mergedTdClass = computed(() => props.tdClass || baseTdClass);
 
 // Resuelve clases condicionales dinámicas (ej: filas rojas si stock < 0)
-function resolveTdClass(item, index) {
+function resolveTdClass(item: TableItem | undefined, index: number | undefined): string {
   const result = typeof props.rowClassCondition === 'function'
-    ? props.rowClassCondition({ item, index })
+    ? (props.rowClassCondition as (args: { item: TableItem | undefined; index: number | undefined }) => unknown)({ item, index })
     : props.rowClassCondition;
 
-  return result?.trim() || '';
+  return (result as string)?.trim() || '';
 }
 
 const baseRowClass = 'hover:bg-ui-selection-hover border-t border-ui';
@@ -116,3 +117,4 @@ const mergedTableClass = computed(() => [
   conditionalRowClass.value || trClass.value
 ]);
 </script>
+
