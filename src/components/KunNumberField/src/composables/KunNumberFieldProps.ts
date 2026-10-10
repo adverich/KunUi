@@ -4,7 +4,8 @@ export type KunNumberFieldDensity = 'default' | 'comfortable' | 'compact';
 
 export const KunNumberFieldProps = {
   // Core
-  modelValue: { type: [Number, String], default: null },
+  // null es parte del ciclo de vida (onClear emite null)
+  modelValue: { type: [Number, String] as PropType<number | string | null>, default: null },
   type: { type: String, default: 'text' },
   placeholder: { type: [String, Number], default: '' },
   label: { type: String, default: '' },
@@ -76,7 +77,7 @@ export const KunNumberFieldProps = {
   min: { type: [Number, String], default: -Infinity },
   max: { type: [Number, String], default: Infinity },
   step: { type: [Number, String], default: 1 },
-  locale: { type: String, default: null },
+  locale: { type: String as PropType<string | null>, default: null },
   separator: { type: String, default: ',' },
   useGrouping: { type: Boolean, default: true },
   precision: { type: [Number, String], default: 2 },

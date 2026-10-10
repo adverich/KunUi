@@ -180,8 +180,14 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         isActive.value = true;
         if (!numberInput.value) return;
 
-        const num = Number(props.modelValue);
         const precision = Number(props.precision);
+
+        // Fuente de verdad: lo que se está mostrando. Si hay texto visible se
+        // edita sobre él (cubre uso sin v-model, donde props.modelValue nunca
+        // se actualiza y Number(null) daría 0 → borrado fantasma).
+        // Solo si está vacío se recurre al modelValue externo.
+        const shown = (inputValue.value ?? '').toString().trim();
+        const num = shown ? parseFormattedToNumber(shown) : Number(props.modelValue);
 
         if (isNaN(num)) {
             inputValue.value = '';
@@ -189,7 +195,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
             return;
         }
 
-        // 🔹 NUEVO: si es cero exacto → limpiar el input
+        // Si es cero exacto → limpiar el input
         if (num === 0) {
             inputValue.value = '';
             const focusEl = numberInput.value;

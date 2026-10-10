@@ -54,13 +54,17 @@
           </slot>
         </div>
 
-        <!-- Input -->
+        <!-- Input: type siempre "text" (hardcodeado a propósito).
+             El formateo custom (separadores, agrupamiento, máscara bank) genera
+             texto inválido para un number nativo: el navegador lo sanearía a
+             vacío y mostraría spinners. La prop `type` se declara solo para
+             capturarla y que no caiga al input vía $attrs. -->
         <input
           v-bind="$attrs"
           :id="uid"
           :name="name"
           ref="numberInput"
-          :type="type"
+          type="text"
           :value="inputValue"
           :placeholder="(placeholder as string)"
           :readonly="readonly"

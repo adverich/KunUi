@@ -148,7 +148,7 @@ Campo numérico con formato localizado y modos de entrada (`natural` libre / `ba
 | Prop | Tipo | Default | Descripción |
 |------|------|---------|-------------|
 | modelValue | Number/String | null | Valor numérico |
-| type | String | 'text' | Tipo del input nativo (se bindea tal cual) |
+| type | String | 'text' | Declarada pero sin efecto: el input es siempre `text` (el formateo custom es incompatible con `number` nativo: lo sanearía a vacío y mostraría spinners) |
 | label | String | '' | Etiqueta flotante (mismo sistema que KunTextField) |
 | labelColor / floatingLabelColor | String | 'text-ui' / null | Color del label en reposo / flotando |
 | labelSize / floatingLabelSize | String | 'text-sm' / 'text-xs' | Tamaño del label en reposo / flotando |
