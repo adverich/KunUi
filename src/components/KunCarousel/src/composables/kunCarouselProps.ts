@@ -21,6 +21,7 @@ export const kunCarouselProps = {
   // ------------------------------------------------------------------
   // v-model: snap seleccionado (índice dentro de snapList())
   // ------------------------------------------------------------------
+  /** Índice del snap seleccionado (v-model). */
   modelValue: {
     type: Number,
     default: undefined,

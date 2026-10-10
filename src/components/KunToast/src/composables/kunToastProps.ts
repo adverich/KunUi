@@ -6,60 +6,62 @@ export type KunToastOrientation = 'vertical' | 'horizontal';
 export type KunToastType = 'foreground' | 'background';
 
 export const kunToastProps = {
-  // Identificador único del toast
+  /** Id único (lo genera KunToaster si se omite). */
   toastId: { type: [String, Number], default: null },
 
-  // Contenido
+  /** Título (string o VNode). */
   title: { type: [String, Object, Function], default: '' },
+  /** Descripción (string o VNode). */
   description: { type: [String, Object, Function], default: '' },
 
-  // Ícono
+  /** Ícono principal (null = según `color`). */
   icon: { type: [String, Object, Function], default: null },
 
-  // Color/variante
+  /** Variante de color. */
   color: {
     type: String as PropType<KunToastColor>,
     default: 'primary',
     validator: (v: unknown) => ['primary', 'success', 'error', 'warning', 'info', 'neutral'].includes(v as string)
   },
 
-  // Orientación del layout
+  /** Layout: acciones abajo ('vertical') o al costado ('horizontal'). */
   orientation: {
     type: String as PropType<KunToastOrientation>,
     default: 'vertical',
     validator: (v: unknown) => ['vertical', 'horizontal'].includes(v as string)
   },
 
-  // Duración en ms (0 = sin auto-dismiss)
+  /** Duración en ms (0 = sin auto-dismiss, null = global del Toaster). */
   duration: { type: Number, default: null },
 
-  // Mostrar barra de progreso
+  /** Barra de progreso del timeout. */
   progress: { type: Boolean, default: true },
 
-  // Color de la barra de progreso (override)
+  /** Color de la barra de progreso (null = según `color`). */
   progressColor: { type: String, default: null },
 
-  // Mostrar botón de cierre
+  /** Botón de cierre. */
   closable: { type: Boolean, default: true },
 
-  // Ícono del botón de cierre (override)
+  /** Ícono del botón de cierre (null = default). */
   closeIcon: { type: [String, Object, Function], default: null },
 
-  // Acciones (botones)
+  /** Botones de acción `{ label, icon, variant, onClick, closeOnClick }`. */
   actions: { type: Array as PropType<ToastAction[]>, default: () => [] as ToastAction[] },
 
-  // Tipo para accesibilidad (foreground/background)
+  /** `foreground` (assertive) o `background` (polite) para lectores de pantalla. */
   type: {
     type: String as PropType<KunToastType>,
     default: 'foreground',
     validator: (v: unknown) => ['foreground', 'background'].includes(v as string)
   },
 
-  // Estado gestionado por KunToaster (pausa global y pulse al actualizar)
+  /** Estado interno: pausa el auto-dismiss (gestionado por KunToaster). No pasar manualmente. */
   isPaused: { type: Boolean, default: false },
+  /** Estado interno: aplica `animate-pulse` al aparecer/actualizar (gestionado por useToast). No pasar manualmente. */
   isPulsing: { type: Boolean, default: false },
 
-  // Clases personalizables por slot
+  /** Clases por slot: root, wrapper, title, description, icon, actions, progress, close. */
   ui: {
     type: Object as PropType<Record<string, string>>,
     default: () => ({
