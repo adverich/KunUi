@@ -1,6 +1,8 @@
+import type { PropType } from 'vue';
+
 export const kunCheckboxProps = {
-  /** Valor del checkbox (v-model). En modo `multiple` es el array de seleccionados. */
-  modelValue: [Boolean, Array, String, Number, Object],
+  /** Valor del checkbox (v-model). En modo `multiple` es el array de seleccionados. Acepta `null` (sin valor). */
+  modelValue: { type: [Boolean, Array, String, Number, Object] as PropType<boolean | unknown[] | string | number | Record<string, unknown> | null> },
   /** Valor que representa el estado activo. */
   trueValue: { type: null, default: true },
   /** Valor que representa el estado inactivo. */

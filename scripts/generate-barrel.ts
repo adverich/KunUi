@@ -50,8 +50,29 @@ function buildBarrel(names: string[]): string {
   for (const name of names) {
     lines.push(`export { default as ${name} } from './${name}/src/components/${name}.vue';`);
   }
+  lines.push(
+    '',
+    '// Tipos públicos de props (uniones literales, interfaces). Type-only: no',
+    '// afecta el bundle. Permite `import type { KunBtnVariant } from ...`.',
+  );
+  for (const name of names) {
+    for (const f of propsFilesFor(name)) {
+      const base = f.replace(/\.ts$/, '');
+      lines.push(`export type * from './${name}/src/composables/${base}.js';`);
+    }
+  }
   lines.push('');
   return lines.join('\n');
+}
+
+/** Archivos *Props.ts del componente (misma regla que generate-docs.ts). */
+function propsFilesFor(dir: string): string[] {
+  const compDir = path.join(componentsDir, dir, 'src', 'composables');
+  if (!fs.existsSync(compDir)) return [];
+  return fs
+    .readdirSync(compDir)
+    .filter((f) => f.endsWith('Props.ts'))
+    .sort((a, b) => a.localeCompare(b));
 }
 
 function buildGlobalComponentsBlock(names: string[]): string {

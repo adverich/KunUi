@@ -1,6 +1,8 @@
+import type { PropType } from 'vue';
+
 export const kunRadioProps = {
-  /** Valor seleccionado del grupo (v-model del KunRadioGroup). */
-  modelValue: [String, Number, Boolean, Object],
+  /** Valor seleccionado del grupo (v-model del KunRadioGroup). Acepta `null` (nada seleccionado). */
+  modelValue: { type: [String, Number, Boolean, Object] as PropType<string | number | boolean | Record<string, unknown> | null> },
   /** Etiqueta al lado del radio. */
   label: String,
   /** Color cuando está seleccionado. */

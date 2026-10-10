@@ -1,12 +1,14 @@
 # KunCheckbox
 
-Componente de UI KunCheckbox.
+> Single/multiple checkbox with validation.
+>
+> Casilla de verificación simple o múltiple con validación.
 
-## Uso
+## Uso · Usage
 
 ```vue
 <script setup>
-import KunCheckbox from '@/components/KunCheckbox/KunCheckbox.vue';
+import { KunCheckbox } from 'adverich-kun-ui'
 </script>
 
 <template>
@@ -14,52 +16,74 @@ import KunCheckbox from '@/components/KunCheckbox/KunCheckbox.vue';
 </template>
 ```
 
+> Con `app.use(KunUI)` el componente queda registrado globalmente y no hace falta importarlo. · With `app.use(KunUI)` the component is globally registered, no import needed.
+
 ## Props
 
-| Nombre | Tipo | Valor por defecto | Descripción |
+| Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| trueValue | Object | - |  |
-| falseValue | Object | - |  |
-| value | null | - |  |
-| indeterminate | Boolean | - |  |
-| multiple | Boolean | - |  |
-| disabled | Boolean | - |  |
-| readonly | Boolean | - |  |
-| error | Boolean | - |  |
-| label | String | - |  |
-| hint | String | - |  |
-| persistentHint | Boolean | - |  |
-| rules | Array | - |  |
-| validateOn | String | - |  |
-| ripple | Object | - |  |
-| density | Object | - |  |
-| direction | Object | - |  |
-| color | String | - |  |
-| baseColor | String | - |  |
-| trueIcon | Object | - |  |
-| falseIcon | Object | - |  |
-| indeterminateIcon | Object | - |  |
-| prependIcon | Object | - |  |
-| appendIcon | Object | - |  |
-| name | String | - |  |
-| id | String | - |  |
-| glow | Boolean | - |  |
-| centerAffix | Object | - |  |
-| valueComparator | Function | - |  |
-| validationValue | null | - |  |
-| focused | Boolean | - |  |
-| maxErrors | Object | - |  |
-| size | Object | - |  |
+| `modelValue` | `boolean \| unknown[] \| string \| number \| Record<string, unknown> \| null` | `-` | Valor del checkbox (v-model). En modo `multiple` es el array de seleccionados. Acepta `null` (sin valor). |
+| `trueValue` | `any` | `true` | Valor que representa el estado activo. |
+| `falseValue` | `any` | `false` | Valor que representa el estado inactivo. |
+| `value` | `any` | `-` | Valor de esta opción (para grupos con `multiple`). |
+| `indeterminate` | `Boolean` | `-` | Estado indeterminado (guion medio). |
+| `multiple` | `Boolean` | `-` | Permite selección múltiple (usa `value` por opción). |
+| `disabled` | `Boolean` | `-` | Deshabilita el checkbox. |
+| `readonly` | `Boolean` | `-` | Solo lectura (no cambia el valor). |
+| `error` | `Boolean` | `-` | Estado de error visual. |
+| `label` | `String` | `-` | Etiqueta al lado del checkbox. |
+| `hint` | `String` | `-` | Texto de ayuda bajo el campo. |
+| `persistentHint` | `Boolean` | `-` | Muestra el hint siempre (no solo al enfocar). |
+| `errorMessages` | `String \| Array` | `-` | Mensajes de error externos. |
+| `rules` | `Array` | `-` | Reglas de validación: `(valor) => true \| string`. |
+| `validateOn` | `String` | `-` | Cuándo validar: 'input' valida al escribir. |
+| `ripple` | `Boolean \| Object` | `true` | Efecto ripple al hacer click. |
+| `density` | `String` | `'default'` | Densidad del padding. |
+| `direction` | `String` | `'horizontal'` | Dirección del layout (label al lado o debajo). |
+| `color` | `String` | `-` | Color cuando está activo. |
+| `iconColor` | `String \| Boolean` | `-` | Color del ícono. |
+| `baseColor` | `String` | `-` | Color base cuando está inactivo. |
+| `trueIcon` | `any` | `-` | Ícono personalizado para el estado activo. |
+| `falseIcon` | `any` | `-` | Ícono personalizado para el estado inactivo. |
+| `indeterminateIcon` | `any` | `-` | Ícono personalizado para el estado indeterminado. |
+| `prependIcon` | `any` | `-` | Ícono externo al inicio. |
+| `appendIcon` | `any` | `-` | Ícono externo al final. |
+| `name` | `String` | `-` | Nombre del input nativo (agrupa radios/checkboxes). |
+| `id` | `String` | `-` | Id del input nativo. |
+| `glow` | `Boolean` | `-` | Resplandor decorativo. |
+| `hideDetails` | `Boolean \| String` | `-` | Oculta el área de detalles (errores/hint). Acepta 'auto'. |
+| `centerAffix` | `Boolean` | `true` | Centra el afijo verticalmente. |
+| `valueComparator` | `Function` | `-` | Comparador custom para igualdad de valores: `(a, b) => boolean`. |
+| `validationValue` | `any` | `-` | Valor usado para validar (por defecto el modelValue). |
+| `focused` | `Boolean` | `-` | Estado de foco controlado. |
+| `maxErrors` | `String \| Number` | `1` | Cantidad máxima de errores visibles. |
+| `width` | `String \| Number` | `-` | Ancho del campo. |
+| `minWidth` | `String \| Number` | `-` | Ancho mínimo del campo. |
+| `maxWidth` | `String \| Number` | `-` | Ancho máximo del campo. |
+| `size` | `String` | `'md'` | Tamaño: 'sm' \| 'md' \| 'lg'. |
 
-
-## Eventos
+## Eventos · Events
 
 - `update:modelValue`
 - `update:focused`
 - `click:append`
 - `click:prepend`
 
+## Slots
 
-## Dependencias
+- `#prepend`
+- `#input`
+- `#label`
+- `#append`
+- `#details`
+- `#message`
 
-- src/icons
+## Métodos expuestos · Exposed
+
+- `validate()`
+
+---
+
+_Generado por · Generated by `scripts/generate-docs.ts`. No editar a mano · Do not edit by hand._
+
+Machine-readable: `registry.json` → `KunCheckbox`.

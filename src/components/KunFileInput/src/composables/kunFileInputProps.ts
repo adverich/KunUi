@@ -1,6 +1,8 @@
+import type { PropType } from 'vue';
+
 export const kunFileInputProps = {
-  /** Archivo(s) seleccionado(s) (v-model): File único o array con `multiple`. */
-  modelValue: [File, Array],
+  /** Archivo(s) seleccionado(s) (v-model): File único o array con `multiple`. `null` = sin selección (lo emite `clearable` en modo simple). */
+  modelValue: { type: [File, Array] as PropType<File | File[] | null> },
   /** Permite seleccionar varios archivos. */
   multiple: Boolean,
   /** Muestra botón para limpiar la selección. */

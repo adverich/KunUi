@@ -1,6 +1,8 @@
+import type { PropType } from 'vue';
+
 export const kunRadioGroupProps = {
-  /** Valor seleccionado (v-model). */
-  modelValue: [String, Number, Boolean, Object],
+  /** Valor seleccionado (v-model). Acepta `null` (nada seleccionado). */
+  modelValue: { type: [String, Number, Boolean, Object] as PropType<string | number | boolean | Record<string, unknown> | null> },
   /** Color de la opción seleccionada. */
   color: String,
   /** Color base de las no seleccionadas. */

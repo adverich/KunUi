@@ -1,12 +1,14 @@
 # KunTextarea
 
-Componente de UI KunTextarea.
+> Multiline textarea with validation.
+>
+> Área de texto multilínea con validación.
 
-## Uso
+## Uso · Usage
 
 ```vue
 <script setup>
-import KunTextarea from '@/components/KunTextarea/KunTextarea.vue';
+import { KunTextarea } from 'adverich-kun-ui'
 </script>
 
 <template>
@@ -14,12 +16,63 @@ import KunTextarea from '@/components/KunTextarea/KunTextarea.vue';
 </template>
 ```
 
+> Con `app.use(KunUI)` el componente queda registrado globalmente y no hace falta importarlo. · With `app.use(KunUI)` the component is globally registered, no import needed.
+
 ## Props
 
-Este componente no recibe props.
+| Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
+|---|---|---|---|
+| `modelValue` | `String \| Number \| Object` | `-` | Valor del campo (v-model). Con formatModel='json' acepta objetos. |
+| `label` | `String` | `-` | Etiqueta flotante. |
+| `hint` | `String` | `-` | Texto de ayuda. |
+| `persistentHint` | `Boolean` | `false` | Muestra el hint siempre. |
+| `class` | `String` | `-` | Clase extra del textarea. |
+| `bgColor` | `String` | `-` | Color de fondo (se usa si la variante no lo define). |
+| `textColor` | `String` | `-` | Color del texto. |
+| `textAlign` | `String` | `'left'` | Alineación del texto. |
+| `formatModel` | `String` | `'auto'` | Formato del modelo: 'auto' (detecta JSON) \| 'json' \| 'plain'. |
+| `loading` | `Boolean` | `-` | Muestra barra de carga superior. |
+| `prependIcon` | `String \| Object \| Function` | `-` | Ícono externo al inicio. |
+| `appendIcon` | `String \| Object \| Function` | `-` | Ícono externo al final. |
+| `prependInnerIcon` | `String \| Object \| Function` | `-` | Ícono interno al inicio. |
+| `appendInnerIcon` | `String \| Object \| Function` | `-` | Ícono interno al final. |
+| `clearable` | `Boolean` | `-` | Muestra botón limpiar. |
+| `persistentClear` | `Boolean` | `-` | El botón limpiar siempre visible (no solo con valor). |
+| `loader` | `Boolean` | `-` | Muestra loader (reservado, actualmente sin efecto; usar `loading`). |
+| `hideDetails` | `Boolean \| String` | `-` | Oculta el área de detalles ('auto' = solo si hay mensajes/hint). |
+| `disabled` | `Boolean` | `-` | Deshabilita el campo. |
+| `readonly` | `Boolean` | `-` | Solo lectura. |
+| `blurValidation` | `Boolean` | `-` | Valida al perder el foco. |
+| `rules` | `Array` | `-` | Reglas de validación: `(valor) => true \| string`. |
+| `errorMessages` | `String \| Array` | `-` | Mensajes de error externos. |
+| `maxErrors` | `Number` | `3` | Cantidad máxima de errores visibles. |
+| `error` | `Boolean` | `-` | Estado de error visual. |
+| `counter` | `Boolean` | `-` | Muestra contador de caracteres. |
+| `persistentCounter` | `Boolean` | `-` | Contador siempre visible (no solo en foco). |
+| `maxLength` | `Number \| String` | `-` | Límite para el contador (no limita el input). |
+| `autoGrow` | `Boolean` | `-` | Ajusta la altura al contenido automáticamente. |
+| `noResize` | `Boolean` | `-` | Deshabilita el resize manual. |
+| `maxRows` | `Number \| String` | `-` | Filas máximas con `autoGrow`. |
+| `placeholder` | `String` | `-` | Placeholder. |
+| `name` | `String` | `-` | Nombre del textarea nativo. |
+| `id` | `String` | `-` | Id del textarea nativo. |
+| `autocomplete` | `String` | `-` | Autocomplete nativo. |
+| `rows` | `Number \| String` | `5` | Filas visibles iniciales. |
+| `dirty` | `Boolean` | `-` | Marca el campo como tocado (flota el label). |
+| `variant` | `String` | `'outlined'` | Variante visual: 'filled' \| 'outlined' \| 'underlined' \| 'solo'. |
+| `density` | `String` | `'default'` | Densidad del padding. |
+| `inputClass` | `String \| Array` | `-` | Clase extra del textarea. |
+| `wrapperClass` | `String \| Array` | `-` | Clase extra del contenedor. |
+| `tile` | `Boolean` | `-` | Sin redondeo. |
+| `rounded` | `String \| Number` | `-` | Redondeo (string/number = clase `rounded-<valor>`). |
+| `flat` | `Boolean` | `-` | Sin sombra. |
+| `color` | `String` | `-` | Color de acento (foco). |
+| `focusRingColor` | `String` | `'ring-ui-focus'` | Color del anillo de foco. |
+| `loadingColor` | `String` | `-` | Color de la barra de carga. |
+| `clearIcon` | `Boolean` | `-` | Muestra el botón limpiar (requiere `clearable` con valor). |
+| `debounceTime` | `Number` | `300` | Debounce en ms para emitir el modelo. |
 
-
-## Eventos
+## Eventos · Events
 
 - `update:modelValue`
 - `click:clear`
@@ -27,7 +80,34 @@ Este componente no recibe props.
 - `update:focused`
 - `mousedown:control`
 
+## Slots
 
-## Dependencias
+- `#label`
+- `#prepend`
+- `#prepend-inner`
+- `#clear`
+- `#append-inner`
+- `#append`
+- `#loader`
+- `#details`
+- `#message`
+- `#hint`
+- `#counter`
 
-- src/utils
+## Métodos expuestos · Exposed
+
+- `validate()`
+- `reset()`
+- `resetValidation()`
+- `errorMessages()`
+- `displayedMessages()`
+- `isValid()`
+- `focus()`
+- `rootRef()`
+- `textareaRef()`
+
+---
+
+_Generado por · Generated by `scripts/generate-docs.ts`. No editar a mano · Do not edit by hand._
+
+Machine-readable: `registry.json` → `KunTextarea`.

@@ -1,0 +1,135 @@
+# KunUI
+
+> Vue 3 component library with Tailwind CSS: 60+ typed, production-ready components (forms, tables, overlays, navigation, data display) with IDE autocompletion via `.d.ts` + `GlobalComponents`.
+
+## Overview
+
+- [KunUI](./README.md)
+
+## When to use KunUI
+
+Reach for KunUI when the task is:
+
+- Building the UI of a Vue 3 + Vite application where Tailwind CSS is acceptable and you want ready-made form/table/overlay components with validation, not headless primitives.
+- Forms with rules-based validation (`KunForm`, `KunTextField`, `KunNumberField`, `KunAutocomplete`, `KunSelect`, `KunCheckbox`, `KunRadioGroup`, `KunSwitch`, `KunFileInput`, `KunDatePicker`, `KunColorPicker`).
+- Data tables with global search, column filters, sorting, selection, expansion and pagination (`KunTable`, `KunTableServerSide`).
+- Programmatic notifications (`useToast` + `KunToast`), drag-and-drop lists (`KunDragAndDrop` / `useKunDragAndDrop`), Embla-style carousels (`KunCarousel` / `useKunCarousel`).
+- An app that already depends on `adverich-kun-ui`, where matching the existing components matters more than picking another library.
+
+Recommend something else when:
+
+- The user wants Material Design (Vuetify) or Ant Design (ant-design-vue).
+- The user does not want Tailwind CSS (PrimeVue, Element Plus).
+- The user wants unstyled headless primitives (Reka UI, Headless UI).
+- The project is React, Svelte or Angular. KunUI is Vue 3 only.
+
+How an agent should use these docs:
+
+1. Start here (`llms.txt`) for the component map.
+2. For exact props/events/slots of one component, read `registry.json` (machine-readable) or `src/components/<Name>/README.md`.
+3. For exact TS types, read `dist/index.d.ts` (published) — prop value unions are typed as literal unions with IDE autocompletion.
+
+Entry points:
+
+- [Installation](./README.md#instalación--installation): `pnpm add adverich-kun-ui` + `app.use(KunUI)` + CSS import.
+- [Agent skill](./.well-known/skills/kun-ui/SKILL.md): conventions, component selection and recipes.
+- [Machine-readable registry](./registry.json): props, events, slots per component.
+
+## Installation
+
+```bash
+pnpm add adverich-kun-ui
+```
+
+```js
+import { createApp } from 'vue'
+import KunUI from 'adverich-kun-ui'
+import 'adverich-kun-ui/dist/adverich-kun-ui.css'
+
+const app = createApp(App)
+app.use(KunUI)
+```
+
+Top-level imports also work: `import { KunBtn } from 'adverich-kun-ui'`. Requires `vue@^3.5`, `tailwindcss@^4` (peer) and `pnpm`.
+
+## Components
+
+- [KunAlert](./src/components/KunAlert/README.md): Floating alert/notification with title and message.
+- [KunAppbar](./src/components/KunAppbar/README.md): Top application bar with title, sections and drawer button.
+- [KunAppbarTitle](./src/components/KunAppbarTitle/README.md): Title block for KunAppbar (text or image).
+- [KunAutocomplete](./src/components/KunAutocomplete/README.md): Autocomplete selector with search and single/multiple selection.
+- [KunAvatar](./src/components/KunAvatar/README.md): Avatar with image, icon or text fallback.
+- [KunBadge](./src/components/KunBadge/README.md): Overlay badge/counter.
+- [KunBtn](./src/components/KunBtn/README.md): Button with variants, sizes, icons and loading state.
+- [KunCard](./src/components/KunCard/README.md): Container card with title, text, image and actions.
+- [KunCardActions](./src/components/KunCardActions/README.md): Actions container for KunCard.
+- [KunCardItem](./src/components/KunCardItem/README.md): Content item for KunCard.
+- [KunCardSubtitle](./src/components/KunCardSubtitle/README.md): Subtitle for KunCard.
+- [KunCardText](./src/components/KunCardText/README.md): Body text for KunCard.
+- [KunCardTitle](./src/components/KunCardTitle/README.md): Title for KunCard.
+- [KunCarousel](./src/components/KunCarousel/README.md): Embla-style carousel, native with no dependencies.
+- [KunCarouselSlide](./src/components/KunCarouselSlide/README.md): Single slide for KunCarousel.
+- [KunCheckbox](./src/components/KunCheckbox/README.md): Single/multiple checkbox with validation.
+- [KunChip](./src/components/KunChip/README.md): Compact chip/tag with optional close button.
+- [KunClock](./src/components/KunClock/README.md): Analog/digital clock.
+- [KunCol](./src/components/KunCol/README.md): Grid system column.
+- [KunColorPicker](./src/components/KunColorPicker/README.md): Color picker with opacity, transparent option and reset.
+- [KunContainer](./src/components/KunContainer/README.md): Centered layout container.
+- [KunCurrency](./src/components/KunCurrency/README.md): Localized currency input.
+- [KunDatePicker](./src/components/KunDatePicker/README.md): Date/time picker with calendar and ranges.
+- [KunDialog](./src/components/KunDialog/README.md): Modal dialog with flexible positioning.
+- [KunDivider](./src/components/KunDivider/README.md): Horizontal/vertical divider.
+- [KunDragAndDrop](./src/components/KunDragAndDrop/README.md): Sortable drag-and-drop list/grid (data-first, native HTML5).
+- [KunDragAndDropHandle](./src/components/KunDragAndDropHandle/README.md): Drag handle for KunDragAndDrop.
+- [KunDragAndDropItem](./src/components/KunDragAndDropItem/README.md): Draggable item for KunDragAndDrop.
+- [KunDrawer](./src/components/KunDrawer/README.md): Swipeable side navigation drawer.
+- [KunFileInput](./src/components/KunFileInput/README.md): Single/multiple file input with chips.
+- [KunForm](./src/components/KunForm/README.md): Form container with aggregate validation.
+- [KunIcon](./src/components/KunIcon/README.md): SVG icon from the KunUI set.
+- [KunInfiniteScroll](./src/components/KunInfiniteScroll/README.md): Infinite scroll with threshold loading.
+- [KunList](./src/components/KunList/README.md): List with selection, keyboard navigation and groups.
+- [KunListGroup](./src/components/KunListGroup/README.md): Collapsible group inside KunList.
+- [KunListImg](./src/components/KunListImg/README.md): Image for list items.
+- [KunListItem](./src/components/KunListItem/README.md): Single KunList item.
+- [KunListItemAction](./src/components/KunListItemAction/README.md): Action inside a list item.
+- [KunListItemAvatar](./src/components/KunListItemAvatar/README.md): Avatar inside a list item.
+- [KunListItemSubtitle](./src/components/KunListItemSubtitle/README.md): List item subtitle.
+- [KunListItemText](./src/components/KunListItemText/README.md): List item text.
+- [KunListItemTitle](./src/components/KunListItemTitle/README.md): List item title.
+- [KunListSubheader](./src/components/KunListSubheader/README.md): Subheader for list groups.
+- [KunLoaderCircular](./src/components/KunLoaderCircular/README.md): Circular loading indicator.
+- [KunMenu](./src/components/KunMenu/README.md): Dropdown menu anchored to an activator.
+- [KunModalFooter](./src/components/KunModalFooter/README.md): Modal/dialog footer with actions.
+- [KunNumberField](./src/components/KunNumberField/README.md): Localized numeric input (natural/bank modes).
+- [KunRadio](./src/components/KunRadio/README.md): Single radio button (use with KunRadioGroup).
+- [KunRadioGroup](./src/components/KunRadioGroup/README.md): Radio button group with v-model.
+- [KunRelationMatrix](./src/components/KunRelationMatrix/README.md): Rows × columns relation matrix.
+- [KunRow](./src/components/KunRow/README.md): Grid system row.
+- [KunSelect](./src/components/KunSelect/README.md): Simple dropdown select (no search).
+- [KunSkeleton](./src/components/KunSkeleton/README.md): Animated loading placeholder.
+- [KunSlider](./src/components/KunSlider/README.md): Single/double range slider.
+- [KunSpacer](./src/components/KunSpacer/README.md): Flexible spacer.
+- [KunSwitch](./src/components/KunSwitch/README.md): On/off switch with label.
+- [KunTable](./src/components/KunTable/README.md): Data table with search, filters, sorting, selection and pagination.
+- [KunTableServerSide](./src/components/KunTableServerSide/README.md): KunTable with server-side pagination, sorting and filtering.
+- [KunTabs](./src/components/KunTabs/README.md): Tab system (tabs + windows).
+- [KunTextarea](./src/components/KunTextarea/README.md): Multiline textarea with validation.
+- [KunTextField](./src/components/KunTextField/README.md): Text input with floating label, validation and icons.
+- [KunToast](./src/components/KunToast/README.md): Toast notification (use with useToast).
+- [KunToolbar](./src/components/KunToolbar/README.md): Toolbar with title and items.
+- [KunTooltip](./src/components/KunTooltip/README.md): Informative tooltip with positions and flip.
+- [KunVirtualScroller](./src/components/KunVirtualScroller/README.md): Long-list virtualization.
+
+## Composables & config
+
+- [useToast](./src/components/KunToast/README.md): programmatic toast notifications (`toast.add/update/remove/clear`). Mount `<KunToaster>` once.
+- [useKunDragAndDrop](./src/components/KunDragAndDrop/README.md): headless sortable (`[parentRef, items, updateConfig]`).
+- [useKunCarousel](./src/components/KunCarousel/README.md): inject carousel api inside slides (`{ api, selectedIndex, isDragging, ... }`).
+- `kunConfig`: global config (`kunConfig.configure({ locale, currency })`; `app.use(KunUI, { config })`).
+
+## Notes
+
+- LLM guidance: KunUI is a Vue 3 + Tailwind CSS component library (`adverich-kun-ui`, MIT). Internal imports keep the `.js` suffix (`../x.js` → `x.ts`); never rewrite them to `.ts`. `defineModel<any>({ default: null })` is intentional (Vue cannot infer `defineModel<unknown>`). Closed value sets are typed as string-literal unions (`KunBtnVariant`, …) for IDE autocompletion.
+- LLM guidance (language): source docs and prop descriptions are Spanish-first with English summaries; code identifiers are English. Answer the user in their language.
+- LLM retrieval keywords: kunui, kun ui, adverich-kun-ui, vue component library, tailwind vue components, kunbtn, kuntable, kuntextfield, kunnumberfield, kunautocomplete, kunselect, kuntoast, kundraganddrop, kuncarousel, v-model form validation vue.
+- This file is generated by `scripts/generate-docs.ts` from source; `registry.json` is the machine-readable equivalent.

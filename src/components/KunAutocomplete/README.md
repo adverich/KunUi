@@ -1,12 +1,14 @@
 # KunAutocomplete
 
-Componente de UI KunAutocomplete.
+> Autocomplete selector with search and single/multiple selection.
+>
+> Selector con autocompletado, búsqueda y selección simple/múltiple.
 
-## Uso
+## Uso · Usage
 
 ```vue
 <script setup>
-import KunAutocomplete from '@/components/KunAutocomplete/KunAutocomplete.vue';
+import { KunAutocomplete } from 'adverich-kun-ui'
 </script>
 
 <template>
@@ -14,25 +16,65 @@ import KunAutocomplete from '@/components/KunAutocomplete/KunAutocomplete.vue';
 </template>
 ```
 
+> Con `app.use(KunUI)` el componente queda registrado globalmente y no hace falta importarlo. · With `app.use(KunUI)` the component is globally registered, no import needed.
+
 ## Props
 
-Este componente no recibe props.
+| Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
+|---|---|---|---|
+| `label` | `String` | `-` | Etiqueta del campo de búsqueda. |
+| `itemValue` | `String` | `null` | Campo del ítem usado como valor (null = primer valor del objeto). |
+| `itemTitle` | `String \| Array` | `null` | Campo(s) a mostrar (string, array o ruta `a.b`). |
+| `itemText` | `String \| Array` | `null` | Alias de `itemTitle`. |
+| `itemSubtitle` | `String \| Array` | `null` | Campo(s) del subtítulo. |
+| `returnObject` | `Boolean` | `false` | Emite el objeto completo en vez del valor. |
+| `searchableKeys` | `Array` | `[]` | Campos donde buscar (vacío = todos). Soporta rutas `a.b.c`. |
+| `focusOnRender` | `Boolean` | `false` | Foco automático al montar. |
+| `focusOnSelect` | `Boolean` | `false` | Foco al campo tras seleccionar. |
+| `clearable` | `Boolean` | `false` | Muestra botón limpiar. |
+| `clearOnSelect` | `Boolean` | `false` | Limpia la selección al elegir (multiple). |
+| `clearSearchOnSelect` | `Boolean` | `true` | Limpia la búsqueda al elegir. |
+| `clearOnNotFound` | `Boolean` | `true` | Limpia y cierra si no hay coincidencias al confirmar. |
+| `closeOnSelect` | `Boolean` | `true` | Cierra el menú al seleccionar (single). |
+| `menuOrigin` | `KunMenuOrigin` | `"bottom left"` | Origen del menú (se reenvía a KunMenu). |
+| `startEmtpy` | `Boolean` | `false` | Reservado para abrir con el menú abierto. Actualmente sin efecto. |
+| `placeholderText` | `String` | `"Seleccionar"` | Placeholder del campo de búsqueda. |
+| `textNoItems` | `String` | `"No hay elementos"` | Texto cuando no hay ítems. |
+| `hasCreateItem` | `Boolean` | `false` | Muestra botón para crear un ítem (emite `createItem`). |
+| `btnCreateClass` | `String` | `"w-full"` | Clase del botón crear. |
+| `btnCreateBg` | `String` | `"bg-success"` | Color del botón crear. |
+| `btnCreateText` | `String` | `"Crear item"` | Texto del botón crear. |
+| `multiple` | `Boolean` | `false` | Selección múltiple (chips). |
+| `required` | `Boolean` | `false` | Marca el campo como requerido (asterisco). |
+| `disabled` | `Boolean` | `false` | Deshabilita el campo y sus acciones. |
+| `height` | `any` | `"h-[500px]"` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
+| `maxHeight` | `String \| Number` | `-` | Altura máxima del menú. |
+| `density` | `KunTextFieldDensity` | `"default"` | Densidad del campo (se reenvía al KunTextField). |
+| `zIndex` | `String` | `"z-250"` | Z-index del menú. |
+| `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |
+| `hasIcons` | `Boolean` | `true` | Muestra iconos de estado (limpiar/desplegar). |
+| `textFieldProps` | `Object` | `() => ({})` | Props visuales y atributos que se reenvían al KunTextField interno. |
+| `iconColor` | `String` | `'text-ui-primary'` | Color del ícono desplegar. |
+| `requiredIconColor` | `String` | `'text-ui-primary'` | Color del asterisco de requerido. |
+| `emptyTextClass` | `String` | `'text-ui-muted'` | Clase del texto "sin elementos". |
+| `bgMenuColor` | `String` | `"bg-menu"` | Color de fondo del menú. |
+| `bgItemListColor` | `String` | `"bg-transparent"` | Color de fondo de cada opción. |
+| `selectedItemListColor` | `String` | `"bg-ui-selection text-ui-selection"` | Clase de la opción seleccionada. |
+| `hoverItemListColor` | `String` | `"hover:bg-ui-selection-hover"` | Clase hover de cada opción. |
+| `attach` | `Boolean` | `false` | Reservado (no se reenvía al KunMenu interno). Actualmente sin efecto. |
+| `rules` | `Array` | `() => []` | Reglas de validación: `(valor) => true \| string`. |
 
+## Modelos · Models
 
-## Eventos
+- `v-model` (`any`, defecto · default: `null`)
+- `v-model:items` (`unknown[]`, defecto · default: `(() => []) as () => unknown[]`)
 
-- `update:modelValue`
-- `selectedItem`
-- `createItem`
-- `validation`
-- `search`
-- `keyDown`
-- `keyDownEnter`
-- `notFound`
-- `cleared`
+## Métodos expuestos · Exposed
 
+- `focus()`
 
-## Dependencias
+---
 
-- src/utils
-- src/icons
+_Generado por · Generated by `scripts/generate-docs.ts`. No editar a mano · Do not edit by hand._
+
+Machine-readable: `registry.json` → `KunAutocomplete`.

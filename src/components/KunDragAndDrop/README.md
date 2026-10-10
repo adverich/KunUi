@@ -1,59 +1,95 @@
 # KunDragAndDrop
 
-Data-first drag and drop alineado a [FormKit Drag and Drop](https://drag-and-drop.formkit.com):
-`performSort` por índice del target, validación anti-loop (`currentTarget` + threshold), handles con armado en `pointerdown` (FormKit #139).
+> Sortable drag-and-drop list/grid (data-first, native HTML5).
+>
+> Lista/grid reordenable por arrastre (data-first, HTML5 nativo).
 
-## Uso declarativo
+## Uso · Usage
 
 ```vue
 <script setup>
-import { ref } from 'vue'
 import { KunDragAndDrop } from 'adverich-kun-ui'
-
-const items = ref([
-  { id: 1, title: 'Uno' },
-  { id: 2, title: 'Dos' },
-])
 </script>
 
 <template>
-  <KunDragAndDrop v-model="items" />
+  <KunDragAndDrop />
 </template>
 ```
 
-## Uso headless
-
-```js
-import { useKunDragAndDrop } from 'adverich-kun-ui'
-
-const [parent, items, updateConfig] = useKunDragAndDrop(
-  [{ id: 1, title: 'A' }, { id: 2, title: 'B' }],
-  { group: 'board' }
-)
-```
-
-Renderizá `items` como hijos inmediatos de `parent` y marcá cada ítem con `data-kun-dnd-item` + `data-kun-dnd-key` (o usá `KunDragAndDropItem`).
+> Con `app.use(KunUI)` el componente queda registrado globalmente y no hace falta importarlo. · With `app.use(KunUI)` the component is globally registered, no import needed.
 
 ## Props
 
-| Prop | Tipo | Default | Descripción |
-|------|------|---------|-------------|
-| modelValue / items | Array | - | Lista ordenada |
-| itemKey | String/Function | `'id'` | Clave estable |
-| group | String | null | Transfer entre parents con el mismo group |
-| sortable | Boolean | true | Permite reordenar |
-| disabled | Boolean | false | Desactiva DnD |
-| dragHandle | String | null | Selector CSS del handle (null = ítem completo) |
-| itemDraggable | Function | null | `(item) => boolean` |
-| layout | `'list'` \| `'grid'` | `'list'` | Solo CSS |
-| draggingClass | String | `'opacity-50'` | Clase mientras se arrastra |
-| tag | String | `'div'` | Tag del contenedor |
+| Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
+|---|---|---|---|
+| `modelValue` | `unknown[]` | `-` | Lista ordenada (v-model). Es la fuente de verdad del orden. |
+| `items` | `unknown[]` | `-` | Alias de `modelValue` (v-model:items). |
+| `itemKey` | `DragAndDropItemKey` | `'id'` | Clave estable por ítem: campo o función `(item, index) => key`. |
+| `group` | `String` | `null` | Grupo para transferir ítems entre listas con el mismo nombre. |
+| `sortable` | `Boolean` | `true` | Permite reordenar dentro de la lista. |
+| `disabled` | `Boolean` | `false` | Desactiva todo el drag and drop. |
+| `dragHandle` | `String` | `null` | Selector CSS del handle (null = toda la tarjeta arrastra). |
+| `itemDraggable` | `((item: unknown, index: number) => boolean) \| null` | `null` | `(item) => boolean`: decide qué ítems se pueden arrastrar. |
+| `layout` | `KunDragAndDropLayout` | `'list'` | Layout visual: 'list' \| 'grid' (solo CSS, el orden lo manda el array).<br/>Valores · Values: `list` `grid` |
+| `draggingClass` | `String` | `''` | Clase extra del ítem mientras se arrastra. |
+| `dropZoneClass` | `String` | `'kun-dnd-drop-zone'` | Clase del placeholder de destino. |
+| `threshold` | `{ horizontal: number; vertical: number }` | `() => ({ horizontal: 0, vertical: 0 })` | Umbral de movimiento para confirmar el sort ({ horizontal, vertical } px). |
+| `orientation` | `KunDragAndDropOrientation \| null` | `null` | Orientación del cálculo de inserción (null = según `layout`). |
+| `tag` | `String` | `'div'` | Tag del contenedor. |
+| `wrapperClass` | `String` | `''` | Clase extra del contenedor. |
+| `gridClass` | `String` | `'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3'` | Clases del layout en modo grid. |
+| `listClass` | `String` | `'flex flex-col gap-2'` | Clases del layout en modo lista. |
+| `autoScroll` | `Boolean` | `true` | Auto-scroll al acercar el puntero a los bordes del contenedor con scroll. |
+| `scrollSensitivity` | `Number` | `50` | Distancia (px) al borde para iniciar el auto-scroll. |
+| `scrollSpeed` | `Number` | `12` | Velocidad del auto-scroll por frame. |
 
-## Eventos
+## Eventos · Events
 
-`update:modelValue`, `update:items`, `drag-start`, `drag-end`, `sort`, `transfer`
+- `update:modelValue`
+- `update:items`
+- `drag-start`
+- `drag-end`
+- `sort`
+- `transfer`
 
-## Subcomponentes
+## Slots
 
-- `KunDragAndDropItem` — wrapper de ítem
-- `KunDragAndDropHandle` — agarre (`data-kun-dnd-handle`)
+- `#item`
+- `#handle`
+- `#default`
+- `#empty`
+
+## Notas · Notes
+
+## Modelo data-first (inspirado en FormKit Drag and Drop)
+
+El array es la fuente de verdad. HTML5 nativo, sin dependencias.
+
+```vue
+<KunDragAndDrop v-model="todo" group="kanban" />
+<KunDragAndDrop v-model="done" group="kanban" />
+```
+
+## Scroll durante drag
+
+HTML5 DnD bloquea la rueda del mouse. Con `autoScroll` (default), acercar
+el puntero al borde del ancestro `overflow: auto|scroll` más cercano
+desplaza la vista. No depende de la rueda.
+
+## Contrato del composable headless
+
+```js
+const [parentRef, items, updateConfig] = useKunDragAndDrop(
+  [{ id: 1, title: 'A' }],
+  { group: 'board', dragHandle: '[data-kun-dnd-handle]' }
+)
+```
+
+1 valor del array = 1 hijo inmediato del parent, con `data-kun-dnd-item` y
+`data-kun-dnd-key` (o `KunDragAndDropItem`).
+
+---
+
+_Generado por · Generated by `scripts/generate-docs.ts`. No editar a mano · Do not edit by hand._
+
+Machine-readable: `registry.json` → `KunDragAndDrop`.
