@@ -27,7 +27,7 @@
         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
           <button
             type="button"
-            class="p-3 text-lg border-r border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80"
+            :class="[controlPadding, 'text-lg border-r border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
             @click="onDecrement"
             :disabled="disabled || readonly"
           >−</button>
@@ -62,7 +62,7 @@
         <input
           v-bind="$attrs"
           :id="uid"
-          :name="name"
+          :name="name ?? undefined"
           ref="numberInput"
           type="text"
           :value="inputValue"
@@ -70,7 +70,7 @@
           :readonly="readonly"
           :disabled="disabled"
           :required="required"
-          :maxlength="maxlength"
+          :maxlength="maxlength ?? undefined"
           :autocomplete="autocomplete"
           :min="nativeMin"
           :max="nativeMax"
@@ -106,14 +106,14 @@
           <div v-if="controlVariant === 'default'" class="flex items-center h-full">
             <button
               type="button"
-              class="flex items-center border-l border-ui p-3 justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80"
+              :class="[controlPadding, 'flex items-center border-l border-ui justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
               @click="onIncrement"
               :disabled="disabled || readonly"
             >▲</button>
 
             <button
               type="button"
-              class="flex items-center border-l border-ui p-3 justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80"
+              :class="[controlPadding, 'flex items-center border-l border-ui justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
               @click="onDecrement"
               :disabled="disabled || readonly"
             >▼</button>
@@ -121,14 +121,14 @@
 
           <!-- Controls: STACKED -->
           <div v-if="controlVariant === 'stacked'" class="flex flex-col items-center justify-center border-l border-ui">
-            <div class="border-b border-ui pb-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onIncrement">
+            <div :class="[controlPx, 'border-b border-ui pb-1 flex hover:opacity-80 cursor-pointer']" @click="onIncrement">
               <button
                 type="button"
                 class="text-xs text-ui disabled:opacity-50 cursor-pointer"
                 :disabled="disabled || readonly"
               >▲</button>
             </div>
-            <div class="border-t border-ui pt-1 px-3 flex hover:opacity-80 cursor-pointer" @click="onDecrement">
+            <div :class="[controlPx, 'border-t border-ui pt-1 flex hover:opacity-80 cursor-pointer']" @click="onDecrement">
               <button
                 type="button"
                 class="text-xs text-ui disabled:opacity-50 cursor-pointer"
@@ -159,7 +159,7 @@
         <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
           <button
             type="button"
-            class="p-3 text-lg border-l border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80"
+            :class="[controlPadding, 'text-lg border-l border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
             @click="onIncrement"
             :disabled="disabled || readonly"
           >+</button>
@@ -191,14 +191,15 @@
 </template>
 
 <script setup lang="ts">
-import { useId, computed, nextTick, useSlots } from 'vue';
-import { KunNumberFieldProps } from '../composables/KunNumberFieldProps.js';
+import { useId, computed, nextTick, useSlots, withDefaults } from 'vue';
+import type { KunNumberFieldProps } from '../composables/KunNumberFieldProps.js';
+import { kunNumberFieldDefaults } from '../composables/KunNumberFieldProps.js';
 import { useKunNumberField } from '../composables/useKunNumberFieldComposable.js';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import IconClose from '../../../../icons/IconClose.vue';
 
-const props = defineProps(KunNumberFieldProps);
+const props = withDefaults(defineProps<KunNumberFieldProps>(), kunNumberFieldDefaults);
 const emits = defineEmits([
   'update:modelValue',
   'focus',
@@ -314,6 +315,20 @@ const containerDensity = computed(() =>
   props.density === "compact" ? "min-h-[32px]" :
   props.density === "comfortable" ? "min-h-[40px]" :
   "min-h-[48px]"
+);
+
+// Padding de los botones de incremento/decremento por densidad.
+// Sin esto, el `p-3`/`px-3` fijo de los botones impone la altura del
+// contenedor flex y `density` solo cambiaría el padding del input.
+const controlPadding = computed(() =>
+  props.density === "compact" ? "p-1" :
+  props.density === "comfortable" ? "p-2" :
+  "p-3"
+);
+const controlPx = computed(() =>
+  props.density === "compact" ? "px-1" :
+  props.density === "comfortable" ? "px-2" :
+  "px-3"
 );
 
 const nativeMin = computed(() => Number.isFinite(Number(props.min)) ? props.min as string | number : undefined);

@@ -91,9 +91,9 @@ function logEvent(name: string, detail: unknown): void {
 </script>
 
 <template>
-  <div class="p-4 grid gap-6 lg:grid-cols-[1fr_320px]">
-    <!-- Vista previa + v-model -->
-    <div class="space-y-3 min-w-0">
+  <div class="p-4 grid gap-6 lg:grid-cols-2 lg:items-start">
+    <!-- Vista previa + v-model (fija: siempre visible al scrollear opciones) -->
+    <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunNumberField</h2>
 
       <KunNumberField
@@ -141,62 +141,62 @@ function logEvent(name: string, detail: unknown): void {
       </div>
     </div>
 
-    <!-- Panel de configuración -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 h-fit lg:sticky lg:top-4">
+    <!-- Panel de configuración (scroll propio: no arrastra el field) -->
+    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
       <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
 
-      <KunTextField v-model="label" label="Label" density="compact" />
-      <KunTextField v-model="placeholder" label="Placeholder" density="compact" />
-      <KunTextField v-model="prefix" label="Prefix" density="compact" />
-      <KunTextField v-model="suffix" label="Suffix" density="compact" />
+      <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
+        <KunTextField v-model="label" label="Label" density="compact" />
+        <KunTextField v-model="placeholder" label="Placeholder" density="compact" />
+        <KunTextField v-model="prefix" label="Prefix" density="compact" />
+        <KunTextField v-model="suffix" label="Suffix" density="compact" />
 
-      <KunSelect
-        v-model="precision"
-        v-model:items="precisionOptions"
-        label="Precision"
-        item-value="id"
-        item-title="name"
-        density="compact"
-      />
-      <KunSelect
-        v-model="formatMode"
-        v-model:items="formatModeOptions"
-        label="Format mode"
-        item-value="id"
-        item-title="name"
-        density="compact"
-      />
-      <KunSelect
-        v-model="density"
-        v-model:items="densityOptions"
-        label="Density"
-        item-value="id"
-        item-title="name"
-        density="compact"
-      />
-      <KunSelect
-        v-model="locale"
-        v-model:items="localeOptions"
-        label="Locale"
-        item-value="id"
-        item-title="name"
-        density="compact"
-      />
-      <KunSelect
-        v-model="controlVariant"
-        v-model:items="controlVariantOptions"
-        label="Control variant"
-        item-value="id"
-        item-title="name"
-        density="compact"
-        :disabled="noArrows"
-      />
+        <KunSelect
+          v-model="precision"
+          v-model:items="precisionOptions"
+          label="Precision"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="formatMode"
+          v-model:items="formatModeOptions"
+          label="Format mode"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="density"
+          v-model:items="densityOptions"
+          label="Density"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="locale"
+          v-model:items="localeOptions"
+          label="Locale"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="controlVariant"
+          v-model:items="controlVariantOptions"
+          label="Control variant"
+          item-value="id"
+          item-title="name"
+          density="compact"
+          :disabled="noArrows"
+        />
+        <KunTextField v-model="stepRaw" label="Step" density="compact" inputmode="decimal" />
 
-      <KunTextField v-model="minRaw" label="Min (vacío = sin límite)" density="compact" inputmode="decimal" />
-      <KunTextField v-model="maxRaw" label="Max (vacío = sin límite)" density="compact" inputmode="decimal" />
-      <KunTextField v-model="stepRaw" label="Step" density="compact" inputmode="decimal" />
+        <KunTextField v-model="minRaw" label="Min (vacío = sin límite)" density="compact" inputmode="decimal" />
+        <KunTextField v-model="maxRaw" label="Max (vacío = sin límite)" density="compact" inputmode="decimal" />
 
-      <div class="grid grid-cols-2 gap-x-3 gap-y-2 pt-1">
         <KunSwitch v-model="useGrouping" label="Grouping" />
         <KunSwitch v-model="textCenter" label="Centrado" />
         <KunSwitch v-model="clearable" label="Clearable" />

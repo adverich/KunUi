@@ -324,6 +324,142 @@ function parsePropsFile(filePath: string, source: string): PropInfo[] {
   return props.map((p) => ({ ...p, source: filePath }));
 }
 
+/**
+ * Parseo de *Props.ts estilo interface (piloto `withDefaults`).
+ * Formato esperado:
+ *   export interface KunXProps { /** doc *\/ name?: Type; ... }
+ *   export const kunXDefaults = { name: default, ... } satisfies ...
+ * Extrae tipo + TSDoc del interface, default del objeto `*Defaults`
+ * y valores literales desde la unión (`'a' | 'b'`) en lugar del `validator`.
+ */
+function parseInterfacePropsFile(filePath: string, source: string): PropInfo[] {
+  const ifaceMatch = source.match(/export\s+interface\s+\w*Props\s*\{/);
+  if (!ifaceMatch || ifaceMatch.index === undefined) return [];
+  const openIdx = source.indexOf('{', ifaceMatch.index);
+  const ifaceBlock = balancedBlock(source, openIdx);
+  const inner = ifaceBlock.slice(1, -1);
+
+  // Comentario TSDoc previo por propiedad dentro del interface.
+  const commentByName = new Map<string, string>();
+  const pending: string[] = [];
+  for (const rawLine of inner.split('\n')) {
+    const line = rawLine.trim();
+    if (line.startsWith('/**')) {
+      pending.push(line);
+      if (line.includes('*/')) {
+        pending.push('__CLOSE__');
+      }
+      continue;
+    }
+    if (pending.length && !pending.includes('__CLOSE__')) {
+      pending.push(line);
+      if (line.includes('*/')) pending.push('__CLOSE__');
+      continue;
+    }
+    if (pending.includes('__CLOSE__')) {
+      const m = line.match(/^([A-Za-z_$][\w$]*)\s*\??:/);
+      const raw = pending.filter((l) => l !== '__CLOSE__').join('\n');
+      if (m && m[1] && raw) commentByName.set(m[1] as string, cleanComment(raw));
+      pending.length = 0;
+      if (line.startsWith('/**')) {
+        pending.push(line);
+        if (line.includes('*/')) pending.push('__CLOSE__');
+      }
+    }
+  }
+
+  // Defaults del objeto `*Defaults = { ... }`.
+  const defaultsByName = new Map<string, string>();
+  const defMatch = source.match(/export\s+const\s+\w*Defaults\s*=\s*\{/);
+  if (defMatch && defMatch.index !== undefined) {
+    const defOpen = source.indexOf('{', defMatch.index);
+    const defBlock = balancedBlock(source, defOpen);
+    const defInner = defBlock.slice(1, -1);
+    // Entradas top-level `name: valor,` respetando profundidad/strings.
+    let depth = 0;
+    let inStr: string | null = null;
+    let cur = '';
+    const entries: string[] = [];
+    for (let i = 0; i < defInner.length; i++) {
+      const ch = defInner[i];
+      if (inStr) {
+        cur += ch;
+        if (ch === '\\') {
+          cur += defInner[i + 1] ?? '';
+          i++;
+          continue;
+        }
+        if (ch === inStr) inStr = null;
+        continue;
+      }
+      if (ch === "'" || ch === '"' || ch === '`') {
+        inStr = ch;
+        cur += ch;
+        continue;
+      }
+      if (ch === '(' || ch === '[' || ch === '{') depth++;
+      if (ch === ')' || ch === ']' || ch === '}') depth--;
+      if (ch === ',' && depth === 0) {
+        entries.push(cur);
+        cur = '';
+        continue;
+      }
+      cur += ch;
+    }
+    if (cur.trim()) entries.push(cur);
+    for (const e of entries) {
+      const m = e.trim().match(/^([A-Za-z_$][\w$]*)\s*:\s*([\s\S]+)$/);
+      if (!m || !m[1]) continue;
+      let raw = (m[2] as string).trim();
+      // Limpia casts `as X` (ej. `'default' as KunNumberFieldDensity` → `'default'`).
+      raw = raw.split(/\s+as\s+/)[0] as string;
+      raw = raw.trim();
+      if (!raw || raw === 'undefined') continue;
+      if (raw.length > 80) raw = `${raw.slice(0, 77)}...`;
+      defaultsByName.set(m[1] as string, raw);
+    }
+  }
+
+  // Alias `export type X = 'a' | 'b'` del mismo archivo, para expandir
+  // `values` cuando el tipo de la prop referencia el alias en vez de
+  // literales inline (ej. `density?: KunNumberFieldDensity`).
+  const aliasValues = new Map<string, string[]>();
+  const aliasRe = /export\s+type\s+([A-Za-z_$][\w$]*)\s*=\s*([^;]+);/g;
+  let am: RegExpExecArray | null;
+  while ((am = aliasRe.exec(source)) !== null) {
+    const lit = (am[2] as string).match(/'[^']*'|"[^"]*"/g);
+    if (lit) aliasValues.set(am[1] as string, [...new Set(lit.map((s) => s.slice(1, -1)))]);
+  }
+
+  const props: PropInfo[] = [];
+  for (const rawLine of inner.split('\n')) {
+    const line = rawLine.trim().replace(/;$/, '');
+    const m = line.match(/^([A-Za-z_$][\w$]*)\s*\??:\s*([\s\S]+)$/);
+    if (!m || !m[1] || !m[2]) continue;
+    const name = m[1] as string;
+    const type = (m[2] as string).trim();
+    if (['type', 'default', 'validator'].includes(name)) continue;
+    const lit = type.match(/'[^']*'|"[^"]*"/g);
+    let values = lit ? [...new Set(lit.map((s) => s.slice(1, -1)))] : [];
+    if (!values.length) {
+      // Expande alias referenciados (ej. `KunNumberFieldDensity`).
+      for (const [alias, vals] of aliasValues) {
+        if (new RegExp(`\\b${alias}\\b`).test(type)) values.push(...vals);
+      }
+      values = [...new Set(values)];
+    }
+    props.push({
+      name,
+      type,
+      default: defaultsByName.get(name) ?? '-',
+      values,
+      description: commentByName.get(name) ?? '',
+      source: filePath,
+    });
+  }
+  return props;
+}
+
 /** Offset en caracteres del inicio de la línea `n`. */
 function offsetOfLine(src: string, n: number): number {
   let idx = 0;
@@ -578,7 +714,13 @@ function main(): void {
     const props: PropInfo[] = [];
     for (const f of propsFilesFor(name)) {
       const fp = path.join(componentsDir, name, 'src', 'composables', f);
-      props.push(...parsePropsFile(fp, fs.readFileSync(fp, 'utf-8').replace(/\r\n/g, '\n')));
+      const src = fs.readFileSync(fp, 'utf-8').replace(/\r\n/g, '\n');
+      // Estilo interface (piloto withDefaults) vs objeto runtime clásico.
+      if (/export\s+interface\s+\w*Props\s*\{/.test(src)) {
+        props.push(...parseInterfacePropsFile(fp, src));
+      } else {
+        props.push(...parsePropsFile(fp, src));
+      }
     }
     if (!props.length) props.push(...parseInlineProps(vueSrc));
 

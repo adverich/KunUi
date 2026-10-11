@@ -1,150 +1,210 @@
-import type { PropType } from 'vue';
-
 export type KunNumberFieldDensity = 'default' | 'comfortable' | 'compact';
+export type KunNumberFieldControlVariant = 'default' | 'stacked' | 'split';
+export type KunNumberFieldFormatMode = 'natural' | 'bank';
+export type KunNumberFieldInputmode =
+  | 'none'
+  | 'text'
+  | 'decimal'
+  | 'numeric'
+  | 'tel'
+  | 'search'
+  | 'email'
+  | 'url';
 
-export const KunNumberFieldProps = {
-  // Core
+export interface KunNumberFieldProps {
   /** Valor numérico (v-model). `null` = vacío (también lo emite `onClear`). */
-  modelValue: { type: [Number, String] as PropType<number | string | null>, default: null },
+  modelValue?: number | string | null;
   /** Declarada pero sin efecto: el input es siempre `text` (el formateo custom es incompatible con `number` nativo). */
-  type: { type: String, default: 'text' },
+  type?: string;
   /** Placeholder. Si existe, el label flota siempre. */
-  placeholder: { type: [String, Number], default: '' },
+  placeholder?: string | number;
   /** Etiqueta flotante (mismo sistema que KunTextField). */
-  label: { type: String, default: '' },
+  label?: string;
   /** Color del label en reposo. */
-  labelColor: { type: String, default: 'text-ui' },
+  labelColor?: string;
   /** Color del label flotando (null = usa `labelColor`). */
-  floatingLabelColor: { type: String, default: null },
+  floatingLabelColor?: string | null;
   /** Tamaño del label en reposo. */
-  labelSize: { type: String, default: 'text-sm' },
+  labelSize?: string;
   /** Tamaño del label flotando. */
-  floatingLabelSize: { type: String, default: 'text-xs' },
+  floatingLabelSize?: string;
   /** Opacidad del label en reposo. */
-  labelOpacity: { type: String, default: 'opacity-60' },
+  labelOpacity?: string;
   /** Opacidad del label flotando. */
-  floatingLabelOpacity: { type: String, default: 'opacity-80' },
+  floatingLabelOpacity?: string;
   /** Offset izquierdo en reposo (null = automático según iconos). */
-  labelLeft: { type: String, default: null },
+  labelLeft?: string | null;
   /** Offset izquierdo flotando. */
-  floatingLabelLeft: { type: String, default: 'left-2' },
+  floatingLabelLeft?: string;
   /** Posición superior flotando. */
-  floatingLabelTop: { type: String, default: '-top-2' },
+  floatingLabelTop?: string;
   /** Clase libre para el label. */
-  labelClass: { type: String, default: '' },
+  labelClass?: string;
   /** Marca el campo como tocado (flota el label). */
-  dirty: { type: Boolean, default: false },
+  dirty?: boolean;
 
-  // Decoradores
   /** Texto fijo al inicio. */
-  prefix: { type: String, default: '' },
+  prefix?: string;
   /** Texto fijo al final. */
-  suffix: { type: String, default: '' },
+  suffix?: string;
   /** Ícono externo al inicio (fuera del borde). Legacy: ver `prependInnerIcon`. */
-  prependIcon: String,
+  prependIcon?: string;
   /** Ícono externo al final (fuera del borde). Legacy: ver `appendInnerIcon`. */
-  appendIcon: String,
+  appendIcon?: string;
   /** Ícono interno al inicio. */
-  prependInnerIcon: { type: [String, Object, Function, Array], default: null },
+  prependInnerIcon?: string | Record<string, any> | Function | unknown[] | null;
   /** Ícono interno al final. */
-  appendInnerIcon: { type: [String, Object, Function, Array], default: null },
+  appendInnerIcon?: string | Record<string, any> | Function | unknown[] | null;
   /** Clase del contenedor del ícono interno inicial. */
-  prependInnerClass: String,
+  prependInnerClass?: string;
   /** Clase del contenedor del ícono interno final. */
-  appendInnerClass: String,
+  appendInnerClass?: string;
 
-  // Estilo y diseño
   /** Redondeo del contenedor. */
-  rounded: { type: String, default: 'rounded' },
+  rounded?: string;
   /** Color del borde. */
-  borderColor: { type: String, default: 'border-ui' },
+  borderColor?: string;
   /** Color del texto del valor. */
-  textColor: { type: String, default: 'text-ui' },
+  textColor?: string;
   /** Tamaño del texto del valor (null = 'text-sm'). */
-  inputTextSize: { type: String, default: null },
+  inputTextSize?: string | null;
   /** Peso del texto del valor (null = hereda). */
-  inputWeight: { type: String, default: null },
+  inputWeight?: string | null;
   /** Color del placeholder. */
-  placeholderColor: { type: String, default: 'placeholder-ui' },
+  placeholderColor?: string;
   /** Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). */
-  placeholderTextSize: { type: String, default: null },
+  placeholderTextSize?: string | null;
   /** Clase libre para el input. */
-  inputStyle: { type: String, default: '' },
+  inputStyle?: string;
   /** Color de fondo del contenedor. */
-  bgInput: { type: String, default: 'bg-field-background' },
+  bgInput?: string;
   /** Centra el texto del valor. */
-  textCenter: { type: Boolean, default: false },
+  textCenter?: boolean;
   /** Variante de botones de incremento: 'default' | 'stacked' | 'split'. */
-  controlVariant: { type: String, default: 'default' },
+  controlVariant?: KunNumberFieldControlVariant;
   /** Oculta los botones ▲▼ (quedan `onIncrement`/`onDecrement` por slot). */
-  noArrows: { type: Boolean, default: false },
+  noArrows?: boolean;
   /** Densidad del padding y alturas (misma escala que KunTextField). */
-  density: {
-    type: String as PropType<KunNumberFieldDensity>,
-    default: 'default',
-    validator: (v: unknown) => ['default', 'comfortable', 'compact'].includes(v as string),
-  },
+  density?: KunNumberFieldDensity;
 
-  // Estado
   /** Estado de error visual. */
-  error: { type: Boolean, default: false },
+  error?: boolean;
   /** Mensajes de error externos. */
-  errorMessages: [String, Array],
+  errorMessages?: string | string[];
   /** Reglas de validación: `(valor) => true | string`. */
-  rules: { type: Array, default: () => [] },
-  // Atributos HTML nativos
+  rules?: Array<(value: any) => boolean | string>;
+
   /** Id del input nativo. */
-  id: { type: String, default: null },
+  id?: string | null;
   /** Nombre del input nativo. */
-  name: { type: String, default: null },
+  name?: string | null;
   /** Autocomplete nativo. */
-  autocomplete: { type: String, default: 'off' },
+  autocomplete?: string;
   /** Teclado virtual en móvil ('decimal' muestra teclado numérico). */
-  inputmode: { type: String, default: 'decimal' },
+  inputmode?: KunNumberFieldInputmode;
   /** Requerido (nativo + validación). */
-  required: { type: Boolean, default: false },
+  required?: boolean;
   /** Deshabilita el campo. */
-  disabled: { type: Boolean, default: false },
+  disabled?: boolean;
   /** Solo lectura. */
-  readonly: { type: Boolean, default: false },
+  readonly?: boolean;
   /** Muestra botón limpiar. */
-  clearable: { type: Boolean, default: false },
+  clearable?: boolean;
   /** Longitud máxima nativa (activa el counter). */
-  maxlength: { type: [Number, String], default: null },
+  maxlength?: number | string | null;
   /** Muestra contador (requiere `maxlength`). */
-  counter: { type: Boolean, default: false },
+  counter?: boolean;
   /** Debounce en ms para emitir el modelo. */
-  debounce: { type: Number, default: 300 },
+  debounce?: number;
 
-  // Ayuda y detalles
   /** Texto de ayuda. */
-  hint: { type: String, default: '' },
+  hint?: string;
   /** Muestra el hint siempre. */
-  persistentHint: { type: Boolean, default: false },
+  persistentHint?: boolean;
   /** Oculta el área de detalles. */
-  hideDetails: { type: Boolean, default: false },
+  hideDetails?: boolean;
   /** Valida solo al perder el foco. */
-  validateOnBlur: { type: Boolean, default: false },
+  validateOnBlur?: boolean;
 
-  // Reglas numéricas
   /** Valor mínimo (clamp + flechas). Acepta -Infinity. */
-  min: { type: [Number, String], default: -Infinity },
+  min?: number | string;
   /** Valor máximo (clamp + flechas). Acepta Infinity. */
-  max: { type: [Number, String], default: Infinity },
+  max?: number | string;
   /** Paso de incremento/decremento. */
-  step: { type: [Number, String], default: 1 },
+  step?: number | string;
   /** Locale de formato (null = global, default 'es-AR'). */
-  locale: { type: String as PropType<string | null>, default: null },
-  /** Separador decimal de entrada. */
-  separator: { type: String, default: ',' },
+  locale?: string | null;
+  /** Separador decimal de entrada (típico ',' o '.'). */
+  separator?: string;
   /** Agrupa miles al mostrar. */
-  useGrouping: { type: Boolean, default: true },
+  useGrouping?: boolean;
   /** Decimales de formato y edición. */
-  precision: { type: [Number, String], default: 2 },
-
+  precision?: number | string;
   /** Modo de entrada: 'natural' (libre) | 'bank' (estricto, cursor controlado). */
-  formatMode: {
-    type: String,
-    default: 'natural', // 'bank' | 'natural'
-  },
+  formatMode?: KunNumberFieldFormatMode;
+}
+
+/**
+ * Defaults runtime para `withDefaults(defineProps<KunNumberFieldProps>(), ...)`.
+ * Sin `validator`: los conjuntos cerrados se validan por unión literal TS
+ * (autocompletado + error en editor) en lugar de warn runtime.
+ */
+export const kunNumberFieldDefaults = {
+  modelValue: null,
+  type: 'text',
+  placeholder: '',
+  label: '',
+  labelColor: 'text-ui',
+  floatingLabelColor: null,
+  labelSize: 'text-sm',
+  floatingLabelSize: 'text-xs',
+  labelOpacity: 'opacity-60',
+  floatingLabelOpacity: 'opacity-80',
+  labelLeft: null,
+  floatingLabelLeft: 'left-2',
+  floatingLabelTop: '-top-2',
+  labelClass: '',
+  dirty: false,
+  prefix: '',
+  suffix: '',
+  prependInnerIcon: null,
+  appendInnerIcon: null,
+  rounded: 'rounded',
+  borderColor: 'border-ui',
+  textColor: 'text-ui',
+  inputTextSize: null,
+  inputWeight: null,
+  placeholderColor: 'placeholder-ui',
+  placeholderTextSize: null,
+  inputStyle: '',
+  bgInput: 'bg-field-background',
+  textCenter: false,
+  controlVariant: 'default' as KunNumberFieldControlVariant,
+  noArrows: false,
+  density: 'default' as KunNumberFieldDensity,
+  error: false,
+  rules: () => [],
+  id: null,
+  name: null,
+  autocomplete: 'off',
+  inputmode: 'decimal' as KunNumberFieldInputmode,
+  required: false,
+  disabled: false,
+  readonly: false,
+  clearable: false,
+  maxlength: null,
+  counter: false,
+  debounce: 300,
+  hint: '',
+  persistentHint: false,
+  hideDetails: false,
+  validateOnBlur: false,
+  min: -Infinity,
+  max: Infinity,
+  step: 1,
+  locale: null,
+  separator: ',',
+  useGrouping: true,
+  precision: 2,
+  formatMode: 'natural' as KunNumberFieldFormatMode,
 };
