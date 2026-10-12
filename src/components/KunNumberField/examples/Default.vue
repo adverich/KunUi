@@ -109,6 +109,7 @@ const placeholderColor = ref('placeholder-ui')
 const placeholderTextSize = ref('')
 const inputStyle = ref('')
 const bgInput = ref('bg-field-background')
+const controlClass = ref('')
 
 // ------------------------------------------------------------------
 // Estado y ayuda
@@ -204,6 +205,7 @@ function logEvent(name: string, detail: unknown): void {
         :placeholder-text-size="placeholderTextSize || null"
         :input-style="inputStyle"
         :bg-input="bgInput"
+        :control-class="controlClass || undefined"
         :error="error"
         :error-messages="errorMessage"
         :hint="hint"
@@ -347,6 +349,7 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="debounceRaw" label="Debounce (ms)" density="compact" inputmode="decimal" />
 
         <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Densidad y controles</p>
+        <KunTextField v-model="controlClass" label="Control class (ej. px-4)" density="compact" />
         <KunSwitch v-model="useGrouping" label="Grouping" />
         <KunSwitch v-model="textCenter" label="Centrado" />
         <KunSwitch v-model="clearable" label="Clearable" />

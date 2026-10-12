@@ -85,25 +85,59 @@ kun-ui/
 
 ---
 
+## Examples / Playground (contrato obligatorio)
+
+Todo componente debe exponer un playground funcional en
+`src/components/KunX/examples/Default.vue` (auto-ruteado a
+`/examples/KunX`). Es el harness de verificación visual y funcional;
+mantenerlo es parte del cambio, no un extra opcional.
+
+- **Al crear un componente:** scaffoldear `examples/Default.vue` con
+  `v-model` operativo, todos los `props` configurables bindeados y
+  controles del playground implementados con la propia librería
+  (`KunTextField` para `String`, `KunSelect` para uniones literales,
+  `KunSwitch` para `Boolean`). Debe permitir ejercer cada variante,
+  densidad, estado (`disabled`/`readonly`/`error`) y slot documentado.
+- **Al modificar un componente:** auditar su `examples/Default.vue`
+  antes de cerrar el cambio:
+  1. Cada prop nueva/modificada/eliminada en `*Props.ts` debe tener su
+     `ref`/`computed`, su binding (`:nueva-prop`) y su control visible
+     en el panel de configuración. Sin bindings huérfanos ni props sin
+     control.
+  2. Verificar tipos del example (`ref<Tipo>` alineado a la unión
+     literal del prop, `null` donde el `v-model` lo admite) e imports
+     internos con sufijo `.js`.
+  3. Validar con `pnpm run dev` en `/examples/<Nombre>` que el cambio
+     es ejercitable visualmente.
+- Un example desactualizado (prop sin binding/control o binding a prop
+  inexistente) se considera cambio incompleto y bloquea `typecheck`/
+  `build` en revisión.
+
+---
+
 ## Flujo de trabajo
 
 ### Modificar un componente
 
 1. Edita el `.vue` y/o su `*Props.ts` (TSDoc obligatorio por prop).
 2. Si el cambio afecta comportamiento no trivial, documenta en su `NOTES.md`.
-3. `pnpm run dev` → verifica en `/examples/<Nombre>`.
-4. `pnpm run typecheck` (cero) + `pnpm run build`.
-5. Si agregaste props/eventos/slots: `pnpm run generate:docs`.
+3. Sincroniza `examples/Default.vue` según el contrato de Examples /
+   Playground (nueva prop → `ref` + binding + control).
+4. `pnpm run dev` → verifica en `/examples/<Nombre>`.
+5. `pnpm run typecheck` (cero) + `pnpm run build`.
+6. Si agregaste props/eventos/slots: `pnpm run generate:docs`.
 
 ### Agregar un componente
 
 1. Carpeta `src/components/KunNuevo/` con `src/components/KunNuevo.vue`,
    `src/composables/kunNuevoProps.ts` y `examples/Default.vue`.
 2. Uniones literales para valores cerrados (ver reglas TS).
-3. `pnpm run generate:barrel` (65→66 componentes, `GlobalComponents`).
-4. `pnpm run generate:docs` + blurbs ES/EN en `BLURBS` de
+3. Implementa `examples/Default.vue` según el contrato de Examples /
+   Playground (cobertura total de props/variantes/slots).
+4. `pnpm run generate:barrel` (65→66 componentes, `GlobalComponents`).
+5. `pnpm run generate:docs` + blurbs ES/EN en `BLURBS` de
    `scripts/generate-docs.ts`.
-5. NO documentes el componente aquí: su README se genera solo.
+6. NO documentes el componente aquí: su README se genera solo.
 
 ---
 

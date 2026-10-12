@@ -56,6 +56,7 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `textCenter` | `Boolean` | `false` | Centra el texto del valor. |
 | `controlVariant` | `KunNumberFieldControlVariant` | `'default'` | Variante de botones de incremento: 'default' \| 'stacked' \| 'split'.<br/>Valores · Values: `default` `stacked` `split` |
 | `noArrows` | `Boolean` | `false` | Oculta los botones ▲▼ (quedan `onIncrement`/`onDecrement` por slot). |
+| `controlClass` | `String` | `''` | Clase libre para los botones de incremento/decremento (ej. `px-4` para más padding horizontal). Se combina con el padding por `density`. |
 | `density` | `KunNumberFieldDensity` | `'default'` | Densidad del padding y alturas (misma escala que KunTextField).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `error` | `Boolean` | `false` | Estado de error visual. |
 | `errorMessages` | `String \| Array` | `-` | Mensajes de error externos. |
@@ -126,6 +127,26 @@ spinners). No la cambies ni la bindees a `number`.
 Mismo sistema de 4 iconos (`prepend`/`append` externos + `prepend-inner` /
 `append-inner`), label flotante, densidades y eventos (más `input` crudo).
 Los slots `prepend`/`append` externos aún no existen en NF (solo en TF).
+
+## Controles split centrados + `controlClass`
+
+La variante `control-variant="split"` usa wrappers `flex self-stretch`
+con botones `flex items-center justify-center` para que `−`/`+` queden
+centrados verticalmente incluso con `rounded-full`.
+
+La prop `controlClass` (default `''`) se combina después del padding por
+`density` en todas las variantes (`default`/`stacked`/`split`).
+Ej. pill con más aire horizontal:
+
+```vue
+<KunNumberField
+  v-model="cantidad"
+  control-variant="split"
+  rounded="rounded-full"
+  control-class="px-4"
+  text-center
+/>
+```
 
 ---
 

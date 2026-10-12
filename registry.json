@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.656",
+  "version": "0.1.657",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -6262,6 +6262,14 @@
           "default": "false",
           "values": [],
           "description": "Oculta los botones ▲▼ (quedan `onIncrement`/`onDecrement` por slot).",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
+        },
+        {
+          "name": "controlClass",
+          "type": "String",
+          "default": "''",
+          "values": [],
+          "description": "Clase libre para los botones de incremento/decremento (ej. `px-4` para más padding horizontal). Se combina con el padding por `density`.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
         },
         {

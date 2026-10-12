@@ -24,10 +24,10 @@
         </label>
 
         <!-- Control - (SPLIT start) -->
-        <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
+        <div v-if="!noArrows && controlVariant === 'split'" class="flex self-stretch shrink-0 items-stretch">
           <button
             type="button"
-            :class="[controlPadding, 'text-lg border-r border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
+            :class="[controlPadding, controlClass, 'flex items-center justify-center text-lg border-r border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
             @click="onDecrement"
             :disabled="disabled || readonly"
           >−</button>
@@ -106,14 +106,14 @@
           <div v-if="controlVariant === 'default'" class="flex items-center h-full">
             <button
               type="button"
-              :class="[controlPadding, 'flex items-center border-l border-ui justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
+              :class="[controlPadding, controlClass, 'flex items-center border-l border-ui justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
               @click="onIncrement"
               :disabled="disabled || readonly"
             >▲</button>
 
             <button
               type="button"
-              :class="[controlPadding, 'flex items-center border-l border-ui justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
+              :class="[controlPadding, controlClass, 'flex items-center border-l border-ui justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
               @click="onDecrement"
               :disabled="disabled || readonly"
             >▼</button>
@@ -121,14 +121,14 @@
 
           <!-- Controls: STACKED -->
           <div v-if="controlVariant === 'stacked'" class="flex flex-col items-center justify-center border-l border-ui">
-            <div :class="[controlPx, 'border-b border-ui pb-1 flex hover:opacity-80 cursor-pointer']" @click="onIncrement">
+            <div :class="[controlPx, controlClass, 'border-b border-ui pb-1 flex hover:opacity-80 cursor-pointer']" @click="onIncrement">
               <button
                 type="button"
                 class="text-xs text-ui disabled:opacity-50 cursor-pointer"
                 :disabled="disabled || readonly"
               >▲</button>
             </div>
-            <div :class="[controlPx, 'border-t border-ui pt-1 flex hover:opacity-80 cursor-pointer']" @click="onDecrement">
+            <div :class="[controlPx, controlClass, 'border-t border-ui pt-1 flex hover:opacity-80 cursor-pointer']" @click="onDecrement">
               <button
                 type="button"
                 class="text-xs text-ui disabled:opacity-50 cursor-pointer"
@@ -156,10 +156,10 @@
         </div>
 
         <!-- Control + (SPLIT end) -->
-        <div v-if="!noArrows && controlVariant === 'split'" class="h-full">
+        <div v-if="!noArrows && controlVariant === 'split'" class="flex self-stretch shrink-0 items-stretch">
           <button
             type="button"
-            :class="[controlPadding, 'text-lg border-l border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
+            :class="[controlPadding, controlClass, 'flex items-center justify-center text-lg border-l border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
             @click="onIncrement"
             :disabled="disabled || readonly"
           >+</button>
@@ -328,6 +328,9 @@ const controlPadding = computed(() =>
   props.density === "comfortable" ? "p-2" :
   "p-3"
 );
+// Clase libre para los botones (ej. `px-4` para más aire horizontal en pill).
+// Se combina después del padding por densidad para permitir override.
+const controlClass = computed(() => props.controlClass || '');
 const controlPx = computed(() =>
   props.density === "compact" ? "px-1" :
   props.density === "comfortable" ? "px-2" :
