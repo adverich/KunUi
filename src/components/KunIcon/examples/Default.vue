@@ -102,6 +102,7 @@ function logEvent(name: string, detail: unknown): void {
         <span class="flex items-center gap-2"><KunIcon :icon="svgSample" size="text-xl" /> SVG inline</span>
         <span class="flex items-center gap-2"><KunIcon :icon="IconStar" size="text-xl" /> Componente</span>
         <span class="flex items-center gap-2"><KunIcon size="text-xl">★</KunIcon> Slot</span>
+        <span class="flex items-center gap-2"><KunIcon icon="$alias-inexistente" size="text-xl" /> Alias roto → warn + placeholder</span>
       </div>
 
       <div class="rounded-lg bg-surface p-3 text-sm">

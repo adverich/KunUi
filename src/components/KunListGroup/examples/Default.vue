@@ -11,8 +11,8 @@ import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 const open = ref(false)
 const idRaw = ref('')
 const title = ref('Equipo')
-const expandIcon = ref('$mdi-chevron-up')
-const collapseIcon = ref('$mdi-chevron-down')
+const expandIcon = ref('$menuUpOutline')
+const collapseIcon = ref('$menuDownOutline')
 const disabled = ref(false)
 </script>
 

@@ -41,8 +41,17 @@ const resolvedIcon = computed(() => {
   if (Array.isArray(props.icon)) return props.icon[0];
   if (typeof props.icon === 'string' && props.icon.startsWith('$')) {
     const key = props.icon.slice(1);
-    // Aliases del consumidor primero; si no, el set bundleado (`$star`, ...).
-    return props.aliases[key] || (bundledIcons as Record<string, unknown>)[key] || '';
+    // Aliases del consumidor primero; si no, el set bundleado (`$star`, `$menuUpOutline`, ...).
+    const resolved = props.aliases[key] || (bundledIcons as Record<string, unknown>)[key];
+    if (resolved) return resolved;
+    // Fallback digno: warn en dev + placeholder visible en vez de span vacío.
+    if (import.meta.env?.DEV) {
+      console.warn(
+        `[KunIcon] alias no resuelto: "$${key}". Claves disponibles:`,
+        Object.keys(bundledIcons).sort(),
+      );
+    }
+    return (bundledIcons as Record<string, unknown>)['info'] || '';
   }
   return props.icon;
 });

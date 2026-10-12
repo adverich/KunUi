@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.658",
+  "version": "0.1.659",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -4883,17 +4883,17 @@
         {
           "name": "expandIcon",
           "type": "String",
-          "default": "'$mdi-chevron-up'",
+          "default": "'$menuUpOutline'",
           "values": [],
-          "description": "Ícono cuando está expandido.",
+          "description": "Ícono cuando está expandido. Acepta alias `$` del set bundleado, clase CSS o SVG.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListGroup\\src\\composables\\kunListGroupProps.ts"
         },
         {
           "name": "collapseIcon",
           "type": "String",
-          "default": "'$mdi-chevron-down'",
+          "default": "'$menuDownOutline'",
           "values": [],
-          "description": "Ícono cuando está colapsado.",
+          "description": "Ícono cuando está colapsado. Acepta alias `$` del set bundleado, clase CSS o SVG.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListGroup\\src\\composables\\kunListGroupProps.ts"
         },
         {
