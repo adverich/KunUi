@@ -15,6 +15,8 @@ export type KunTextFieldEmit = (event: 'update:modelValue' | 'blur' | 'focus' | 
 
 export interface KunFormFieldApi {
     validate: () => Promise<boolean>;
+    reset?: () => void;
+    resetValidation?: () => void;
 }
 
 export default function useKunTextField(props: KunTextFieldPropsLike, emits: KunTextFieldEmit) {
@@ -109,9 +111,13 @@ export default function useKunTextField(props: KunTextFieldPropsLike, emits: Kun
         validationError.value = ''
     }
 
-    if (registerField) registerField({ validate })
+    // Misma referencia para registrar/desregistrar (si no, el `filter(f !== field)`
+    // de `KunForm` nunca encuentra el campo) e incluye `reset`/`resetValidation`
+    // para que `KunForm.reset()` llegue a los text fields.
+    const fieldApi: KunFormFieldApi = { validate, reset, resetValidation }
+    if (registerField) registerField(fieldApi)
     onUnmounted(() => {
-        if (unregisterField) unregisterField({ validate })
+        if (unregisterField) unregisterField(fieldApi)
     })
 
     return {

@@ -100,9 +100,11 @@ import { KunNumberField } from 'adverich-kun-ui'
 
 ## Slots
 
+- `#prepend`
 - `#prepend-icon`
 - `#prepend-inner`
 - `#append-inner`
+- `#append`
 - `#append-icon`
 
 ## Métodos expuestos · Exposed

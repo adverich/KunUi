@@ -47,8 +47,9 @@ const props = defineProps({
   }
 })
 
-provide('noGutters', props.noGutters)
-provide('dense', props.dense)
+// Reactivos: `KunCol` debe enterarse si cambian en caliente.
+provide('noGutters', computed(() => props.noGutters))
+provide('dense', computed(() => props.dense))
 const resolvedCols = computed(() => normalizeCols(props.cols))
 provide('rowCols', resolvedCols)
 

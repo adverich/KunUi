@@ -27,14 +27,14 @@ import { KunToast } from 'adverich-kun-ui'
 | `toastId` | `string \| number \| null` | `null` | Id único (lo genera KunToaster si se omite; `useToast().add()` acepta `id` o `toastId`). |
 | `title` | `String \| Object \| Function` | `''` | Título (string o VNode). |
 | `description` | `String \| Object \| Function` | `''` | Descripción (string o VNode). |
-| `icon` | `string \| Record<string, any> \| Function \| null` | `null` | Ícono principal (null = según `color`). |
+| `icon` | `string \| Record<string, any> \| Function \| unknown[] \| boolean \| null` | `null` | Ícono principal (null = según `color`). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`. |
 | `color` | `KunToastColor` | `'primary'` | Variante de color.<br/>Valores · Values: `primary` `success` `error` `warning` `info` `neutral` |
 | `orientation` | `KunToastOrientation` | `'vertical'` | Layout: acciones abajo ('vertical') o al costado ('horizontal').<br/>Valores · Values: `vertical` `horizontal` |
 | `duration` | `number \| null` | `null` | Duración en ms (0 = sin auto-dismiss, null = global del Toaster). |
 | `progress` | `Boolean` | `true` | Barra de progreso del timeout. |
 | `progressColor` | `string \| null` | `null` | Color de la barra de progreso (null = según `color`). |
 | `closable` | `Boolean` | `true` | Botón de cierre. |
-| `closeIcon` | `string \| Record<string, any> \| Function \| null` | `null` | Ícono del botón de cierre (null = default). |
+| `closeIcon` | `string \| Record<string, any> \| Function \| unknown[] \| boolean \| null` | `null` | Ícono del botón de cierre (null = default). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`. |
 | `actions` | `ToastAction[]` | `() => [] as ToastAction[]` | Botones de acción `{ label, icon, variant, onClick, closeOnClick }`. |
 | `isPaused` | `Boolean` | `false` | Estado interno: pausa el auto-dismiss (gestionado por KunToaster). No pasar manualmente. |
 | `isPulsing` | `Boolean` | `false` | Estado interno: aplica `animate-pulse` al aparecer/actualizar (gestionado por useToast). No pasar manualmente. |

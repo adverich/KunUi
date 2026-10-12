@@ -83,7 +83,13 @@ const props = defineProps({
   otherAttrs: Object,
 });
 
-const isComponent = (val: unknown): boolean => typeof val === 'object' || typeof val === 'function';
+/**
+ * Paridad con `KunIcon:isComponent`: solo SFC/objeto con `render`/`setup` o función.
+ * Un objeto plano o `null` no es componente (evita `<component :is>` roto).
+ */
+const isComponent = (val: unknown): boolean =>
+  typeof val === 'function' ||
+  (!!val && typeof val === 'object' && ('render' in (val as Record<string, unknown>) || 'setup' in (val as Record<string, unknown>)));
 const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar));
 const hasAppend = computed(() => !!(props.appendIcon || props.appendAvatar));
 </script>

@@ -36,13 +36,13 @@
         <!-- Prefix -->
         <div v-if="prefix" class="mx-2">{{ prefix }}</div>
 
-        <!-- Prepend -->
+        <!-- Prepend (`#prepend`, alias legacy `#prepend-icon`) -->
         <div v-if="prependIcon || prependIconSlot" class="flex items-center justify-center h-full pl-2">
           <template v-if="prependIcon">
             <KunIcon :icon="prependIcon" />
           </template>
           <template v-else>
-            <slot name="prepend-icon" />
+            <slot name="prepend"><slot name="prepend-icon" /></slot>
           </template>
         </div>
 
@@ -145,13 +145,13 @@
           </slot>
         </div>
 
-        <!-- Append icon -->
+        <!-- Append (`#append`, alias legacy `#append-icon`) -->
         <div v-if="appendIcon || appendIconSlot" class="flex items-center justify-center h-full pr-1">
           <template v-if="appendIcon">
             <KunIcon :icon="appendIcon" />
           </template>
           <template v-else>
-            <slot name="append-icon" />
+            <slot name="append"><slot name="append-icon" /></slot>
           </template>
         </div>
 
@@ -215,8 +215,8 @@ const emits = defineEmits([
 
 const uid = props.id || `number-input-${useId()}`;
 const slots = useSlots();
-const prependIconSlot = !!slots['prepend-icon'];
-const appendIconSlot = !!slots['append-icon'];
+const prependIconSlot = !!slots['prepend-icon'] || !!slots['prepend'];
+const appendIconSlot = !!slots['append-icon'] || !!slots['append'];
 const hasPrependInner = computed(() => !!slots['prepend-inner'] || !!props.prependInnerIcon);
 const hasAppendInner = computed(() => !!slots['append-inner'] || !!props.appendInnerIcon);
 const hasPrefix = computed(() => !!props.prefix);

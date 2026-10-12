@@ -32,7 +32,7 @@ import { KunList } from 'adverich-kun-ui'
 
 ## Modelos · Models
 
-- `v-model:selected` (`unknown`, defecto · default: `() => []`)
+- `v-model:selected` (`unknown[] | string | number | object | null`, defecto · default: `() => []`)
 
 ## Eventos · Events
 

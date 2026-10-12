@@ -5,14 +5,14 @@ export type KunIconInput = string | Record<string, any> | Function | unknown[] |
 export const kunIconProps = {
   /** Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente o `[icono, tamaño]`. */
   icon: {
-    type: [String, Object, Function] as PropType<KunIconInput>,
+    type: [String, Object, Function, Array] as PropType<KunIconInput>,
     required: false as const,
     default: undefined,
   },
-  /** Aliases `$nombre` → icono/clase. Pisan el set bundleado (`$star`, ...). */
+  /** Aliases `$nombre` → icono/clase/componente. Pisan el set bundleado (`$star`, ...). */
   aliases: {
-    type: Object as PropType<Record<string, string>>,
-    default: (): Record<string, string> => ({}),
+    type: Object as PropType<Record<string, unknown>>,
+    default: (): Record<string, unknown> => ({}),
   },
   /** Tamaño (clase de texto o número → px). */
   size: {

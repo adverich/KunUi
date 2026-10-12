@@ -35,7 +35,7 @@
       @click.stop.prevent="handleClose"
     >
       <slot name="close">
-        <KunIcon icon="$mdi-close" />
+        <KunIcon icon="$close" />
       </slot>
     </button>
   </component>

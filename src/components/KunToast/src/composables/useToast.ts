@@ -19,14 +19,14 @@ export interface ToastConfig {
     toastId?: string | number;
     title?: string;
     description?: string;
-    icon?: unknown;
+    icon?: string | Record<string, unknown> | Function | unknown[] | boolean | null;
     color?: KunToastColor;
     orientation?: KunToastOrientation;
     duration?: number;
     progress?: boolean;
     progressColor?: string | null;
     closable?: boolean;
-    closeIcon?: unknown;
+    closeIcon?: string | Record<string, unknown> | Function | unknown[] | boolean | null;
     actions?: ToastAction[];
     type?: KunToastType;
     ui?: Record<string, unknown>;

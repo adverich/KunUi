@@ -6,6 +6,7 @@ export const KunAutocompleteProps = {
   /** Etiqueta del campo de búsqueda. */
   label: {
     type: String,
+    default: '',
   },
   /** Campo del ítem usado como valor (null = primer valor del objeto). */
   itemValue: {
@@ -102,15 +103,20 @@ export const KunAutocompleteProps = {
     type: Boolean,
     default: false,
   },
+  /** Solo lectura (no cambia el valor). */
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
 
   // ***** STYLE ***** //
   // NOTA: `height` está en desuso (el menú ocupa el espacio disponible).
   // El límite lo controla `maxHeight`: undefined = todo el espacio
   // disponible hasta el borde del viewport; con valor se aplica
   // min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind.
-  height: { default: "h-[500px]" },
+  height: { type: [String, Number] as PropType<string | number | null>, default: "h-[500px]" },
   /** Altura máxima del menú. */
-  maxHeight: { type: [String, Number], default: undefined },
+  maxHeight: { type: [String, Number] as PropType<string | number | null | undefined>, default: undefined },
   /** Densidad del campo (se reenvía al KunTextField). */
   density: { type: String as PropType<KunTextFieldDensity>, default: "default" },
   /** Z-index del menú. */

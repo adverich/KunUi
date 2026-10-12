@@ -199,7 +199,7 @@ import type { KunTableHeader } from '@/utils/tableFormatters.js';
 import kunTableProps from '../composables/KunTableProps.js';
 
 // Eventos emitidos por la tabla
-const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy', 'update:search', 'focusOnSearch']);
+const emits = defineEmits(['update:page', 'update:itemsPerPage', 'update:sortBy', 'update:search', 'update:selectedItems', 'focusOnSearch']);
 
 // Props definidos en un archivo separado para reutilización
 const props = defineProps(kunTableProps());
@@ -273,7 +273,9 @@ const getRowKeyValue = (item: TableItem, index = -1): unknown => resolveRowKeyVa
 const getRowRenderKey = (item: TableItem, index = -1): string => String(getRowKeyValue(item, index) ?? `kun-table-row-${index}`);
 const getActionLoading = (item: TableItem, index = -1): boolean => {
   const key = getRowKeyValue(item, index);
-  return key === null ? false : (props.actionLoadingMap?.[key as string] as boolean) || false;
+  if (key === null || key === undefined) return false;
+  // La clave puede ser numérica u objeto: normalizar a string para indexar el mapa.
+  return (props.actionLoadingMap?.[String(key)] as boolean) || false;
 };
 
 // Lógica de selección de filas

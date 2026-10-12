@@ -194,7 +194,8 @@ provide(KUN_DRAG_AND_DROP_KEY, {
   dropZoneClass: computed(() => props.dropZoneClass),
   disabled: computed(() => props.disabled),
   sortable: computed(() => props.sortable),
-  itemDraggable: props.itemDraggable,
+  // Forwarder (no snapshot): si el padre cambia el callback, el ítem ve el nuevo.
+  itemDraggable: (item: unknown, index: number) => props.itemDraggable?.(item, index) ?? true,
 })
 </script>
 

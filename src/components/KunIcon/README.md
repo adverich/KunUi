@@ -23,7 +23,7 @@ import { KunIcon } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `icon` | `KunIconInput` | `-` | Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente o `[icono, tamaño]`. |
-| `aliases` | `Record<string, string>` | `(): Record<string` | Aliases `$nombre` → icono/clase. Pisan el set bundleado (`$star`, ...). |
+| `aliases` | `Record<string, unknown>` | `(): Record<string` | Aliases `$nombre` → icono/clase/componente. Pisan el set bundleado (`$star`, ...). |
 | `size` | `String` | `'text-md'` | Tamaño (clase de texto o número → px). |
 | `color` | `String` | `'text-font-color'` | Color del ícono. |
 | `disabled` | `Boolean` | `false` | Atenúa el ícono y bloquea el click. |

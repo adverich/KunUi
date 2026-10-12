@@ -22,7 +22,7 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `label` | `String` | `-` | Etiqueta del campo de búsqueda. |
+| `label` | `String` | `''` | Etiqueta del campo de búsqueda. |
 | `itemValue` | `string \| null` | `null` | Campo del ítem usado como valor (null = primer valor del objeto). |
 | `itemTitle` | `string \| unknown[] \| null` | `null` | Campo(s) a mostrar (string, array o ruta `a.b`). |
 | `itemText` | `string \| unknown[] \| null` | `null` | Alias de `itemTitle`. |
@@ -47,8 +47,9 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 | `multiple` | `Boolean` | `false` | Selección múltiple (chips). |
 | `required` | `Boolean` | `false` | Marca el campo como requerido (asterisco). |
 | `disabled` | `Boolean` | `false` | Deshabilita el campo y sus acciones. |
-| `height` | `any` | `"h-[500px]"` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
-| `maxHeight` | `String \| Number` | `-` | Altura máxima del menú. |
+| `readonly` | `Boolean` | `false` | Solo lectura (no cambia el valor). |
+| `height` | `string \| number \| null` | `"h-[500px]"` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
+| `maxHeight` | `string \| number \| null \| undefined` | `-` | Altura máxima del menú. |
 | `density` | `KunTextFieldDensity` | `"default"` | Densidad del campo (se reenvía al KunTextField). |
 | `zIndex` | `String` | `"z-250"` | Z-index del menú. |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |

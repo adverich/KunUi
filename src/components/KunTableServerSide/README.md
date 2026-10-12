@@ -36,6 +36,7 @@ import { KunTableServerSide } from 'adverich-kun-ui'
 - `update:itemsPerPage`
 - `update:sortBy`
 - `update:search`
+- `update:selectedItems`
 - `update:query`
 - `focusOnSearch`
 

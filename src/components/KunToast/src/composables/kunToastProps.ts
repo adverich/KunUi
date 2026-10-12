@@ -14,8 +14,8 @@ export const kunToastProps = {
   /** Descripción (string o VNode). */
   description: { type: [String, Object, Function], default: '' },
 
-  /** Ícono principal (null = según `color`). */
-  icon: { type: [String, Object, Function] as PropType<string | Record<string, any> | Function | null>, default: null },
+  /** Ícono principal (null = según `color`). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`. */
+  icon: { type: [String, Object, Function, Array, Boolean] as PropType<string | Record<string, any> | Function | unknown[] | boolean | null>, default: null },
 
   /** Variante de color. */
   color: {
@@ -43,8 +43,8 @@ export const kunToastProps = {
   /** Botón de cierre. */
   closable: { type: Boolean, default: true },
 
-  /** Ícono del botón de cierre (null = default). */
-  closeIcon: { type: [String, Object, Function] as PropType<string | Record<string, any> | Function | null>, default: null },
+  /** Ícono del botón de cierre (null = default). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`. */
+  closeIcon: { type: [String, Object, Function, Array, Boolean] as PropType<string | Record<string, any> | Function | unknown[] | boolean | null>, default: null },
 
   /** Botones de acción `{ label, icon, variant, onClick, closeOnClick }`. */
   actions: { type: Array as PropType<ToastAction[]>, default: () => [] as ToastAction[] },

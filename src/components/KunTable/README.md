@@ -29,15 +29,16 @@ import { KunTable } from 'adverich-kun-ui'
 | `headers` | `KunTableHeader[]` | `() => [] as KunTableHeader[]` | Configuración de columnas `{ key, value, label, sortable, ... }`. |
 | `hasActions` | `Boolean` | `false` | Muestra columna de acciones (slot `item.actions`). |
 | `actionLabel` | `String` | `'Acciones'` | Etiqueta del header de acciones. |
-| `actionsAlign` | `KunTableActionsAlign` | `-` | Alineación de acciones: 'left' \| 'center' \| 'right'.<br/>Valores · Values: `left` `center` `right` |
+| `actionsAlign` | `KunTableActionsAlign` | `'center' as KunTableActionsAlign` | Alineación de acciones: 'left' \| 'center' \| 'right'.<br/>Valores · Values: `left` `center` `right` |
 | `actionLoadingMap` | `Record<string, unknown>` | `() => ({})` | Mapa de loading por rowKey para la columna de acciones. |
 | `filterable` | `Boolean` | `-` | Habilita filtros avanzados por columna (modal). |
 | `filters` | `TableFilterDefinition[]` | `() => [] as TableFilterDefinition[]` | Configuración de filtros por columna. |
 | `customFilter` | `((item: TableItem, key: string, value: unknown, header: KunTableHeader \| undefined) => boolean) \| null` | `null` | Función de filtrado personalizada `(item, key, value, header) => boolean`. |
 | `itemsPerPage` | `Number \| String` | `10` | Ítems por página. |
 | `page` | `Number \| String` | `1` | Página actual. |
-| `sortBy` | `string \| { key: string; order: string }[]` | `() => [] as { key: string; order: string }[]` | Criterio de orden (v-model): string, objeto o array. |
+| `sortBy` | `string \| string[] \| Record<string, unknown> \| { key: string; order: string }[]` | `() => [] as unknown[]` | Criterio de orden (v-model): string, objeto o array. |
 | `mutliSort` | `Boolean` | `-` | Habilita ordenar por múltiples columnas. |
+| `multiSort` | `Boolean` | `-` | Alias de `mutliSort` (nombre corregido). Usar este en código nuevo. |
 | `pageOptions` | `number[]` | `() => [5, 10, 25, 50, 100]` | Opciones del selector de ítems por página. |
 | `searchable` | `Boolean` | `false` | Habilita barra de búsqueda. |
 | `search` | `String` | `''` | Término de búsqueda (v-model). |
@@ -197,6 +198,7 @@ import { KunTable } from 'adverich-kun-ui'
 - `update:itemsPerPage`
 - `update:sortBy`
 - `update:search`
+- `update:selectedItems`
 - `focusOnSearch`
 
 ## Slots

@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-fit" ref="parentRef">
-    <KunTextField v-model="search" v-bind="textFieldProps" :label="label" :disabled="disabled" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
+    <KunTextField v-model="search" v-bind="textFieldProps" :label="label" :disabled="disabled" :readonly="readonly" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
       autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
       @blur="textFieldBlur" @keyDown="textKeyDown" @keyDown.enter.prevent="handleEnter"
       :placeholder="props.multiple && isArray(modelValue) && (modelValue as unknown[]).length ? '' : placeholder"
@@ -49,7 +49,7 @@
 
       <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :z-index="zIndex"
         :parent-ref="(parentRef as any)" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor"
-        :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
+        :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight ?? undefined" :hide-details="hideDetails"
       >
         <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b bg-select-background">
           <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass" >
@@ -106,7 +106,7 @@ import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 // any intencional: los tipos de Vue exigen default no-null para T=unknown;
 // el modelo acepta cualquier cosa (objeto, array, primitivo, null).
 const modelValue = defineModel<any>({ default: null });
-const items = defineModel<unknown[]>('items', { default: (() => []) as () => unknown[], required: true });
+const items = defineModel<unknown[]>('items', { default: (() => []) as () => unknown[] });
 
 const props = defineProps(KunAutocompleteProps);
 const emits = defineEmits<{

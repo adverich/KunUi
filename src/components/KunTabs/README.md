@@ -37,8 +37,8 @@ import { KunTabs } from 'adverich-kun-ui'
 | `centerActive` | `Boolean` | `-` | Desplaza el tab activo al centro. |
 | `hideSlider` | `Boolean` | `-` | Oculta el slider indicador. |
 | `showArrows` | `Boolean` | `-` | Muestra flechas de scroll. |
-| `nextIcon` | `String` | `'ri-arrow-right-s-line'` | Ícono de flecha siguiente. |
-| `prevIcon` | `String` | `'ri-arrow-left-s-line'` | Ícono de flecha anterior. |
+| `nextIcon` | `String \| Object \| Function` | `'$menuDownOutline'` | Ícono de flecha siguiente. Acepta alias `$` del set bundleado, componente o clase CSS. |
+| `prevIcon` | `String \| Object \| Function` | `'$menuUpOutline'` | Ícono de flecha anterior. Acepta alias `$` del set bundleado, componente o clase CSS. |
 | `height` | `String \| Number` | `-` | Altura de la barra. |
 | `multiple` | `Boolean` | `-` | Selección múltiple. |
 | `mandatory` | `Boolean \| String` | `false` | Siempre hay un tab seleccionado. |

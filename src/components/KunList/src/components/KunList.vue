@@ -33,8 +33,10 @@ const emit = defineEmits(['keyDown', 'click:select', 'update:selected'])
 const ulRef: Ref<HTMLUListElement | null> = ref(null)
 const itemRefs: Ref<HTMLElement[]> = ref([])
 
-const selectedItems = defineModel('selected', {
-  type: [Array, String, Number, Object, null],
+const selectedItems = defineModel<unknown[] | string | number | object | null>('selected', {
+  // `null`/`undefined` saltean la validación runtime si no es `required`;
+  // no se incluye `null` en el array (no es constructor válido).
+  type: [Array, String, Number, Object],
   default: () => [],
 })
 
@@ -67,7 +69,7 @@ function toggleItem(value: unknown): void {
     ? selectedArray.filter((v: unknown) => v !== value)
     : [...selectedArray, value]
   } else {
-    selectedItems.value = value
+    selectedItems.value = value as unknown[] | string | number | object | null
   }
 }
 
@@ -77,9 +79,10 @@ onUpdated(() => {
 
 function isSelected(value: unknown): boolean {
   if (!props.selectable || value == null) return false
+  const sel = selectedItems.value
   return isMultiple.value
-  ? selectedItems.value?.includes?.(value)
-  : selectedItems.value === value
+  ? Array.isArray(sel) && sel.includes(value)
+  : sel === value
 }
 
 // 🔴🔴 ESTE PROVIDE FALTABA
