@@ -1,9 +1,10 @@
 import { ref, type Ref } from "vue";
+import type { KunModalFooterColor } from './kunModalFooterProps.js';
 
 export interface ModalMessage {
     id: number | string;
     text: string;
-    color: string;
+    color: KunModalFooterColor;
     modelValue: boolean;
 }
 
@@ -13,7 +14,7 @@ export function useKunModalFooter() {
     function useAddMessage(
         text: string,
         baseId: number | string | null | undefined,
-        color = "blue",
+        color: KunModalFooterColor = "blue",
         duration = 5000,
         onRemove?: (id: number | string) => void,
     ): void {

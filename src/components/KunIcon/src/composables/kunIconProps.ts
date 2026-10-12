@@ -9,7 +9,7 @@ export const kunIconProps = {
     required: false as const,
     default: undefined,
   },
-  /** Aliases `$nombre` → icono/clase. */
+  /** Aliases `$nombre` → icono/clase. Pisan el set bundleado (`$star`, ...). */
   aliases: {
     type: Object as PropType<Record<string, string>>,
     default: (): Record<string, string> => ({}),

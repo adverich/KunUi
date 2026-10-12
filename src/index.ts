@@ -73,6 +73,9 @@ export function install(app: App, options: KunUIInstallOptions = {}): void {
 
 export * from './components/index.js';
 
+// Set de iconos propios (`$nombre` en KunIcon y props *Icon).
+export { icons } from './icons/index.js';
+
 // Exportar config para uso externo
 export { kunConfig, useKunConfig, resolveConfigValue } from './config/kunConfig.js';
 export { kunDocumentConfig } from './config/kunDocumentConfig.js';

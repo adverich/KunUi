@@ -26,7 +26,7 @@ import { KunForm } from 'adverich-kun-ui'
 | `padding` | `String` | `'px-2 py-4'` | Padding del formulario. |
 | `maxWidth` | `String` | `'max-w-full'` | Ancho máximo del formulario. |
 | `modelValue` | `Boolean` | `true` | Validez agregada (v-model, se actualiza con validate()). |
-| `validateOn` | `String` | `'submit'` | Cuándo validar hijos: 'submit' \| 'input'. |
+| `validateOn` | `KunFormValidateOn` | `'submit'` | Cuándo validar hijos: 'submit' \| 'input'.<br/>Valores · Values: `submit` `input` |
 
 ## Eventos · Events
 

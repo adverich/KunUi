@@ -32,7 +32,6 @@
             :max-height="maxHeight"
             :bg-color="bgColor"
             :content-class="contentClass"
-            @close="close"
           >
             <slot />
           </KunDialogContent>

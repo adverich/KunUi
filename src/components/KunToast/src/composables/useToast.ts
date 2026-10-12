@@ -16,6 +16,7 @@ export interface ToastAction {
 
 export interface ToastConfig {
     id?: string | number;
+    toastId?: string | number;
     title?: string;
     description?: string;
     icon?: unknown;
@@ -72,7 +73,7 @@ export function createKunToast(options: KunToastOptions = {}): KunToastSystem {
   const maxToasts = options.max ?? 5
 
   function add(config: ToastConfig = {}): { id: string | number } {
-    const id = config.id || `toast-${++toastCounter}`
+    const id = config.id ?? config.toastId ?? `toast-${++toastCounter}`
 
     // Si ya existe un toast con ese ID, hacer pulse en lugar de duplicar
     const existingIndex = toasts.value.findIndex((t: ToastItem) => t.id === id)

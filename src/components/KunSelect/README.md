@@ -23,17 +23,17 @@ import { KunSelect } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `label` | `String` | `''` | Etiqueta del campo. |
-| `itemValue` | `String` | `null` | Campo del ítem usado como valor (null = primer valor del objeto). |
-| `itemTitle` | `String \| Array` | `null` | Campo(s) a mostrar (string, array o ruta `a.b`). |
-| `itemText` | `String \| Array` | `null` | Alias de `itemTitle`. |
-| `itemSubtitle` | `String \| Array` | `null` | Campo(s) del subtítulo. |
+| `itemValue` | `string \| null` | `null` | Campo del ítem usado como valor (null = primer valor del objeto). |
+| `itemTitle` | `string \| unknown[] \| null` | `null` | Campo(s) a mostrar (string, array o ruta `a.b`). |
+| `itemText` | `string \| unknown[] \| null` | `null` | Alias de `itemTitle`. |
+| `itemSubtitle` | `string \| unknown[] \| null` | `null` | Campo(s) del subtítulo. |
 | `returnObject` | `Boolean` | `false` | Emite el objeto completo en vez del valor. |
 | `focusOnRender` | `Boolean` | `false` | Foco automático al montar. |
 | `focusOnSelect` | `Boolean` | `false` | Foco al campo tras seleccionar. |
 | `clearable` | `Boolean` | `false` | Muestra botón limpiar. |
 | `clearOnSelect` | `Boolean` | `false` | Limpia la selección al elegir (multiple). |
 | `closeOnSelect` | `Boolean` | `true` | Cierra el menú al seleccionar (single). |
-| `menuOrigin` | `KunMenuOrigin` | `'bottom left'` | Origen del menú (se reenvía a KunMenu). |
+| `menuOrigin` | `KunMenuOrigin` | `'bottom left'` | Origen del menú (se reenvía a KunMenu).<br/>Valores · Values: `auto` `top left` `top center` `top right` `bottom left` `bottom center` `bottom right` `left top` `left center` `left bottom` `right top` `right center` `right bottom` |
 | `placeholder` | `String` | `''` | Placeholder nativo (el visible es `placeholderText`). |
 | `placeholderText` | `String` | `'Seleccionar'` | Placeholder visible del campo readonly. |
 | `textNoItems` | `String` | `'No hay elementos'` | Texto cuando no hay ítems. |
@@ -47,7 +47,7 @@ import { KunSelect } from 'adverich-kun-ui'
 | `readonly` | `Boolean` | `false` | Solo lectura (no abre el menú). |
 | `height` | `any` | `'h-[500px]'` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
 | `maxHeight` | `String \| Number` | `-` | Altura máxima del menú. |
-| `density` | `KunTextFieldDensity` | `'default'` | Densidad del campo (se reenvía al KunTextField). |
+| `density` | `KunTextFieldDensity` | `'default'` | Densidad del campo (se reenvía al KunTextField).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `zIndex` | `String` | `'z-250'` | Z-index del menú. |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |
 | `hasIcons` | `Boolean` | `true` | Muestra iconos de estado (limpiar/desplegar). |

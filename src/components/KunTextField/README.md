@@ -30,27 +30,27 @@ import { KunTextField } from 'adverich-kun-ui'
 | `suffix` | `String` | `''` | Texto fijo al final. |
 | `prependIcon` | `String` | `-` | Ícono externo al inicio (fuera del borde). |
 | `appendIcon` | `String` | `-` | Ícono externo al final (fuera del borde). |
-| `prependInnerIcon` | `String \| Object \| Function \| Array` | `null` | Ícono interno al inicio. |
-| `appendInnerIcon` | `String \| Object \| Function \| Array` | `null` | Ícono interno al final. |
+| `prependInnerIcon` | `string \| Record<string, any> \| Function \| unknown[] \| null` | `null` | Ícono interno al inicio. |
+| `appendInnerIcon` | `string \| Record<string, any> \| Function \| unknown[] \| null` | `null` | Ícono interno al final. |
 | `prependInnerClass` | `String` | `-` | Clase del contenedor del ícono interno inicial. |
 | `appendInnerClass` | `String` | `-` | Clase del contenedor del ícono interno final. |
 | `rounded` | `String` | `'rounded'` | Redondeo del contenedor. |
 | `borderColor` | `String` | `'border-ui'` | Color del borde. |
 | `textColor` | `String` | `'text-ui'` | Color del texto del valor. |
 | `labelColor` | `String` | `'text-ui'` | Color del label en reposo. |
-| `floatingLabelColor` | `String` | `null` | Color del label flotando (null = usa `labelColor`). |
+| `floatingLabelColor` | `string \| null` | `null` | Color del label flotando (null = usa `labelColor`). |
 | `labelSize` | `String` | `'text-sm'` | Tamaño del label en reposo. |
 | `floatingLabelSize` | `String` | `'text-xs'` | Tamaño del label flotando. |
 | `labelOpacity` | `String` | `'opacity-60'` | Opacidad del label en reposo. |
 | `floatingLabelOpacity` | `String` | `'opacity-80'` | Opacidad del label flotando. |
-| `labelLeft` | `String` | `null` | Offset izquierdo del label en reposo (null = automático según iconos). |
+| `labelLeft` | `string \| null` | `null` | Offset izquierdo del label en reposo (null = automático según iconos). |
 | `floatingLabelLeft` | `String` | `'left-2'` | Offset izquierdo del label flotando. |
 | `floatingLabelTop` | `String` | `'-top-2'` | Posición superior del label flotando. |
 | `labelClass` | `String` | `''` | Clase libre para el label. |
 | `placeholderColor` | `String` | `'placeholder-ui'` | Color del placeholder. |
-| `inputTextSize` | `String` | `null` | Tamaño del texto del valor (null = 'text-sm'). |
-| `inputWeight` | `String` | `null` | Peso del texto del valor (null = hereda). |
-| `placeholderTextSize` | `String` | `null` | Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). |
+| `inputTextSize` | `string \| null` | `null` | Tamaño del texto del valor (null = 'text-sm'). |
+| `inputWeight` | `string \| null` | `null` | Peso del texto del valor (null = hereda). |
+| `placeholderTextSize` | `string \| null` | `null` | Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). |
 | `bgInput` | `String` | `'bg-field-background'` | Color de fondo del contenedor. |
 | `inputStyle` | `String` | `''` | Clase libre para el input. |
 | `textCenter` | `Boolean` | `false` | Centra el texto del valor. |
@@ -58,18 +58,18 @@ import { KunTextField } from 'adverich-kun-ui'
 | `error` | `Boolean` | `false` | Estado de error visual. |
 | `errorMessage` | `String` | `''` | Mensaje de error externo. |
 | `rules` | `Array` | `() => []` | Reglas de validación: `(valor) => true \| string`. |
-| `id` | `String` | `null` | Id del input nativo. |
-| `name` | `String` | `null` | Nombre del input nativo. |
+| `id` | `string \| null` | `null` | Id del input nativo. |
+| `name` | `string \| null` | `null` | Nombre del input nativo. |
 | `autocomplete` | `String` | `'off'` | Autocomplete nativo. |
 | `required` | `Boolean` | `false` | Requerido (nativo + validación). |
 | `disabled` | `Boolean` | `false` | Deshabilita el campo. |
 | `readonly` | `Boolean` | `false` | Solo lectura. |
-| `inputmode` | `String` | `null` | Teclado virtual en móvil. |
-| `minlength` | `Number \| String` | `null` | Longitud mínima nativa. |
+| `inputmode` | `string \| null` | `null` | Teclado virtual en móvil. |
+| `minlength` | `number \| string \| null` | `null` | Longitud mínima nativa. |
 | `clearable` | `Boolean` | `false` | Muestra botón limpiar. |
-| `maxlength` | `Number \| String` | `null` | Longitud máxima nativa (activa el counter). |
-| `pattern` | `String` | `null` | Patrón regex nativo. |
-| `spellcheck` | `Boolean \| String` | `null` | Corrector ortográfico nativo. |
+| `maxlength` | `number \| string \| null` | `null` | Longitud máxima nativa (activa el counter). |
+| `pattern` | `string \| null` | `null` | Patrón regex nativo. |
+| `spellcheck` | `boolean \| string \| null` | `null` | Corrector ortográfico nativo. |
 | `counter` | `Boolean` | `false` | Muestra contador (requiere `maxlength`). |
 | `debounce` | `Number` | `300` | Debounce en ms para emitir el modelo. |
 | `hint` | `String` | `''` | Texto de ayuda. |

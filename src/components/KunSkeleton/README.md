@@ -23,11 +23,11 @@ import { KunSkeleton } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `loading` | `Boolean` | `true` | Si es false muestra el slot default en vez del skeleton. |
-| `variant` | `String` | `"rect"` | Forma: 'rect' \| 'circle' \| 'text'. |
+| `variant` | `KunSkeletonVariant` | `"rect"` | Forma: 'rect' \| 'circle' \| 'text'.<br/>Valores · Values: `rect` `circle` `text` |
 | `width` | `String \| Number` | `"100%"` | Ancho (número = px). |
 | `height` | `String \| Number` | `"1rem"` | Altura (número = px). |
 | `rounded` | `String` | `"md"` | Redondeo. |
-| `animation` | `String` | `"shimmer"` | Animación: 'shimmer' \| 'shimmer-vertical' \| 'pulse' \| 'none'. |
+| `animation` | `KunSkeletonAnimation` | `"shimmer"` | Animación: 'shimmer' \| 'shimmer-vertical' \| 'pulse' \| 'none'.<br/>Valores · Values: `shimmer` `shimmer-vertical` `pulse` `none` |
 | `duration` | `Number` | `1500` | Duración de la animación en ms. |
 | `colorFrom` | `String` | `"bg-ui-surface-subtle"` | Color inicial del degradado. |
 | `colorTo` | `String` | `"bg-ui-hover"` | Color final del degradado. |

@@ -6,6 +6,7 @@ import IconArrowUp from './IconArrowUp.vue'
 import IconAsterisk from './IconAsterisk.vue'
 import IconCalendarOutline from './IconCalendarOutline.vue'
 import IconCheck from './IconCheck.vue'
+import IconCheckTwo from './IconCheckTwo.vue'
 import IconCheckBlankOutline from './IconCheckBlankOutline.vue'
 import IconCheckIndetOutline from './IconCheckIndetOutline.vue'
 import IconCheckOnOutline from './IconCheckOnOutline.vue'
@@ -13,8 +14,11 @@ import IconClose from './IconClose.vue'
 import IconDelete from './IconDelete.vue'
 import IconEdit from './IconEdit.vue'
 import IconEyeOutline from './IconEyeOutline.vue'
+import IconFilter from './IconFilter.vue'
+import IconInfo from './IconInfo.vue'
 import IconEyeOffOutline from './IconEyeOffOutline.vue'
 import IconMenuDownOutline from './IconMenuDownOutline.vue'
+import IconMenuRounded from './IconMenuRounded.vue'
 import IconMenuUpOutline from './IconMenuUpOutline.vue'
 import IconMinus from './IconMinus.vue'
 import IconPencil from './IconPencil.vue'
@@ -33,6 +37,7 @@ export const icons: Record<string, Component> = {
     asterisk: IconAsterisk,
     calendarOutline: IconCalendarOutline,
     check: IconCheck,
+    checkTwo: IconCheckTwo,
     checkboxBlank: IconCheckBlankOutline,
     checkboxIndeterminate: IconCheckIndetOutline,
     checkboxOn: IconCheckOnOutline,
@@ -40,8 +45,11 @@ export const icons: Record<string, Component> = {
     delete: IconDelete,
     edit: IconEdit,
     eyeOutline: IconEyeOutline,
+    filter: IconFilter,
+    info: IconInfo,
     eyeOffOutline: IconEyeOffOutline,
     menuDownOutline: IconMenuDownOutline,
+    menuRounded: IconMenuRounded,
     menuUpOutline: IconMenuUpOutline,
     minus: IconMinus,
     pencil: IconPencil,

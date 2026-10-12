@@ -18,7 +18,7 @@
         variant === 'solo' ? 'border-ui shadow-inner' :
         'bg-surface border border-ui',
         disabled ? 'border-ui cursor-not-allowed' : 'hover:border-ui-primary',
-        error || validationErrors.length ? 'border-error' : '',
+        error || validationErrors.length || externalErrorList.length ? 'border-error' : '',
         isFocused ? 'ring-2 ring-ui-focus' : '',
       ]"
       v-bind="$attrs" 
@@ -49,7 +49,10 @@
 
       <div class="flex-1 truncate">
         <slot name="selection" :fileNames="fileNames" :totalBytes="totalBytes" :totalBytesReadable="totalBytesReadable">
-          <span v-if="fileNames.length">{{ fileNames.join(', ') }}</span>
+          <span v-if="chips && fileNames.length" class="flex flex-wrap gap-1">
+            <span v-for="(name, i) in fileNames" :key="i" class="inline-flex max-w-full items-center truncate rounded bg-ui-selection px-2 py-0.5 text-xs">{{ name }}</span>
+          </span>
+          <span v-else-if="fileNames.length">{{ fileNames.join(', ') }}</span>
           <span v-else class="text-ui-disabled">Seleccionar archivo</span>
         </slot>
       </div>
@@ -75,18 +78,19 @@
       </button>
     </div>
 
-    <div v-if="hint || validationErrors.length" class="mt-1 text-sm">
-      <div v-if="validationErrors.length" class="text-ui-error">
+    <div v-if="(hint && (persistentHint || isFocused)) || validationErrors.length || externalErrorList.length" class="mt-1 text-sm">
+      <div v-if="validationErrors.length || externalErrorList.length" class="text-ui-error">
         <div v-for="(msg, i) in validationErrors" :key="i">{{ msg }}</div>
+        <div v-for="(msg, i) in externalErrorList" :key="`ext-${i}`">{{ msg }}</div>
       </div>
-      <div v-else-if="hint" class="text-ui-muted">
+      <div v-else-if="hint && (persistentHint || isFocused)" class="text-ui-muted">
         {{ hint }}
       </div>
     </div>
 
     <div v-if="counter" class="mt-1 text-xs text-ui-disabled text-right">
       {{ counterString ?? `${fileNames.length} archivo(s)` }}
-      <span v-if="showSize"> — {{ totalBytesReadable }}</span>
+      <span v-if="showSize"> — {{ counterSizeString ?? totalBytesReadable }}</span>
     </div>
   </div>
 </template>
@@ -150,6 +154,11 @@ function onBlur() {
 }
 
 const fileNames: ComputedRef<string[]> = computed(() => internalValue.value.map((f: File) => f.name))
+const externalErrorList: ComputedRef<string[]> = computed(() => {
+  const v = props.errorMessages as unknown
+  if (v == null || v === '') return []
+  return (Array.isArray(v) ? v : [v]).map((m: unknown) => String(m)).filter((m: string) => m !== '')
+})
 const isLabelActive = computed(() => props.dirty || isFocused.value || fileNames.value.length > 0)
 const slots = useSlots()
 const hasLeadingIcon = computed(() => !!(props.prependIcon || props.prependInnerIcon || slots.prepend || slots['prepend-inner']))

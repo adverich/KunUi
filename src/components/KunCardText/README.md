@@ -22,7 +22,7 @@ import { KunCardText } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `text` | `String \| Number` | `null` | Texto del cuerpo (alternativa al slot). |
+| `text` | `string \| number \| null` | `null` | Texto del cuerpo (alternativa al slot). |
 | `color` | `String` | `'text-ui'` | Color del texto. |
 | `dense` | `Boolean` | `false` | Reduce el padding. |
 | `opacity` | `String` | `'opacity-100'` | Opacidad del texto. |

@@ -16,6 +16,77 @@ import DemoAutoplay from './_demos/DemoAutoplay.vue'
 import DemoClassNames from './_demos/DemoClassNames.vue'
 import DemoProgress from './_demos/DemoProgress.vue'
 import DemoLazyLoad from './_demos/DemoLazyLoad.vue'
+import { ref, computed } from 'vue'
+import KunCarousel from '../src/components/KunCarousel.vue'
+import KunCarouselSlide from '../../KunCarouselSlide/src/components/KunCarouselSlide.vue'
+import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
+import type {
+  KunCarouselAlign,
+  KunCarouselAxis,
+  KunCarouselDirection,
+  KunCarouselContainScroll,
+  KunCarouselArrowsPosition,
+  KunCarouselAutoplayDirection,
+} from '../src/composables/kunCarouselProps.js'
+
+// ------------------------------------------------------------------
+// Variante principal: playground compacto de conjuntos cerrados.
+// Controla el carousel principal (declarado debajo del panel).
+// ------------------------------------------------------------------
+const mainSlides = ref([
+  { id: 1, title: 'Slide 1', bg: 'bg-red-500' },
+  { id: 2, title: 'Slide 2', bg: 'bg-blue-500' },
+  { id: 3, title: 'Slide 3', bg: 'bg-green-500' },
+  { id: 4, title: 'Slide 4', bg: 'bg-amber-500' },
+  { id: 5, title: 'Slide 5', bg: 'bg-purple-500' },
+])
+
+const mainSelected = ref(0)
+
+const align = ref<KunCarouselAlign>('center')
+const alignOptions = ref<{ id: KunCarouselAlign; name: string }[]>([
+  { id: 'start', name: 'start' },
+  { id: 'center', name: 'center' },
+  { id: 'end', name: 'end' },
+])
+
+const axis = ref<KunCarouselAxis>('x')
+const axisOptions = ref<{ id: KunCarouselAxis; name: string }[]>([
+  { id: 'x', name: 'x (horizontal)' },
+  { id: 'y', name: 'y (vertical)' },
+])
+
+const direction = ref<KunCarouselDirection>('ltr')
+const directionOptions = ref<{ id: KunCarouselDirection; name: string }[]>([
+  { id: 'ltr', name: 'ltr' },
+  { id: 'rtl', name: 'rtl' },
+])
+
+const containScroll = ref<KunCarouselContainScroll>('trimSnaps')
+// El select trabaja con ids string; 'off' equivale a `false`.
+const containScrollSelect = computed({
+  get: (): string => (containScroll.value === false ? 'off' : containScroll.value),
+  set: (v: string): void => {
+    containScroll.value = v === 'off' ? false : (v as KunCarouselContainScroll)
+  },
+})
+const containScrollOptions = ref<{ id: string; name: string }[]>([
+  { id: 'trimSnaps', name: 'trimSnaps' },
+  { id: 'keepSnaps', name: 'keepSnaps' },
+  { id: 'off', name: 'off (false)' },
+])
+
+const arrowsPosition = ref<KunCarouselArrowsPosition>('sides')
+const arrowsPositionOptions = ref<{ id: KunCarouselArrowsPosition; name: string }[]>([
+  { id: 'sides', name: 'sides' },
+  { id: 'bottom', name: 'bottom' },
+])
+
+const autoplayDirection = ref<KunCarouselAutoplayDirection>(1)
+const autoplayDirectionOptions = ref<{ id: KunCarouselAutoplayDirection; name: string }[]>([
+  { id: 1, name: '1 · adelante' },
+  { id: -1, name: '-1 · atrás' },
+])
 
 const groups = [
   {
@@ -247,6 +318,82 @@ const visible = ref([])
         <span class="italic">predefined examples</span> de Embla Carousel.
       </p>
     </header>
+
+    <section class="rounded-xl border border-surface bg-surface-dark p-4 sm:p-5">
+      <h3 class="text-base font-semibold">Variante principal</h3>
+      <p class="mt-1 text-sm opacity-70">
+        Playground compacto: los conjuntos cerrados controlan el carousel principal de abajo.
+      </p>
+      <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <KunSelect
+          v-model="align"
+          v-model:items="alignOptions"
+          label="Align"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="axis"
+          v-model:items="axisOptions"
+          label="Axis"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="direction"
+          v-model:items="directionOptions"
+          label="Direction"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="containScrollSelect"
+          v-model:items="containScrollOptions"
+          label="Contain scroll"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="arrowsPosition"
+          v-model:items="arrowsPositionOptions"
+          label="Arrows position"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="autoplayDirection"
+          v-model:items="autoplayDirectionOptions"
+          label="Autoplay direction"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+      </div>
+      <div class="mt-3">
+        <KunCarousel
+          v-model="mainSelected"
+          :align="align"
+          :axis="axis"
+          :direction="direction"
+          :contain-scroll="containScroll"
+          :arrows-position="arrowsPosition"
+          autoplay
+          :autoplay-delay="2500"
+          :autoplay-direction="autoplayDirection"
+        >
+          <KunCarouselSlide v-for="s in mainSlides" :key="s.id">
+            <div :class="['flex h-56 items-center justify-center rounded-xl text-2xl font-bold text-white', s.bg]">
+              {{ s.title }}
+            </div>
+          </KunCarouselSlide>
+        </KunCarousel>
+      </div>
+    </section>
 
     <nav class="sticky top-0 z-20 -mx-4 space-y-2 bg-surface-dark/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6">
       <div v-for="group in groups" :key="group.title" class="flex flex-wrap items-center gap-1.5">

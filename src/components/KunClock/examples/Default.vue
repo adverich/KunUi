@@ -1,20 +1,40 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import KunClock from '../src/components/KunClock.vue'
+import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
+import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+
+// ------------------------------------------------------------------
+// Controles del playground (color/size son estilos inline; format
+// está reservado sin efecto).
+// ------------------------------------------------------------------
+const show = ref(true)
+const color = ref('#ff0000')
+const size = ref('1.5rem')
+</script>
+
 <template>
-  <div class="h-[200px] w-full bg-gray-100 relative p-4 rounded-lg">
-    <h3 class="font-bold mb-4">KunClock Example</h3>
-    <p>The status of the clock is controlled by the component below.</p>
-    
-    <!-- This clock will be fixed to the viewport top-right when mounted -->
-    <KunClock 
-      color="#ff0000" 
-      size="1.5rem" 
-    />
-    
-    <div class="mt-4 text-sm text-gray-500">
-      Note: The clock is fixed positioned to the viewport, so look at the top right of your screen!
+  <div class="p-4 grid gap-6 lg:grid-cols-2 lg:items-start">
+    <!-- Vista previa (fija: siempre visible al scrollear opciones) -->
+    <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
+      <h2 class="text-lg font-semibold">KunClock</h2>
+
+      <div class="rounded-lg bg-surface p-3 text-sm">
+        <p class="text-ui-muted text-xs">El reloj flota fijo arriba a la derecha del viewport (miralo ahí ☝).</p>
+      </div>
+
+      <KunClock v-if="show" :color="color" :size="size" />
+    </div>
+
+    <!-- Panel de configuración (scroll propio: no arrastra la vista previa) -->
+    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+
+      <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
+        <KunSwitch v-model="show" label="Mostrar" />
+        <KunTextField v-model="color" label="Color (CSS)" density="compact" />
+        <KunTextField v-model="size" label="Size (CSS)" density="compact" />
+      </div>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import KunClock from '../index.js'
-</script>

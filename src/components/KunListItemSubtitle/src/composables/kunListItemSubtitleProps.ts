@@ -1,7 +1,9 @@
+import type { PropType } from 'vue';
+
 export const kunListItemSubtitleProps = {
   /** Texto del subtítulo. */
   text: {
-    type: [String, Number],
+    type: [String, Number] as PropType<string | number | null>,
     default: null
   },
   /** Color del texto. */

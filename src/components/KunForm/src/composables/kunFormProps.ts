@@ -1,3 +1,7 @@
+import type { PropType } from 'vue';
+
+export type KunFormValidateOn = 'submit' | 'input';
+
 export const kunFormProps = {
   /** Espaciado vertical entre campos. */
   gap: {
@@ -21,7 +25,8 @@ export const kunFormProps = {
   },
   /** Cuándo validar hijos: 'submit' | 'input'. */
   validateOn: {
-    type: String,
-    default: 'submit'
+    type: String as PropType<KunFormValidateOn>,
+    default: 'submit',
+    validator: (v: unknown) => ['submit', 'input'].includes(v as string),
   }
 }

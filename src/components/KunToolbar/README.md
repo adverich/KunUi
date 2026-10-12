@@ -26,11 +26,11 @@ import { KunToolbar } from 'adverich-kun-ui'
 |---|---|---|---|
 | `absolute` | `Boolean` | `-` | Posicionamiento absoluto. |
 | `bgColor` | `String` | `-` | Color de fondo. |
-| `titlePosition` | `String` | `'left'` | Posición del título. |
+| `titlePosition` | `KunToolbarTitlePosition` | `'left'` | Posición del título.<br/>Valores · Values: `left` `center` `right` |
 | `bordered` | `Boolean` | `false` | Muestra borde inferior. |
 | `borderColor` | `String` | `-` | Color del borde. |
 | `collapse` | `Boolean` | `-` | Colapsa el toolbar (solo extensión). |
-| `density` | `String` | `'default'` | Densidad del padding. |
+| `density` | `KunToolbarDensity` | `'default'` | Densidad del padding.<br/>Valores · Values: `default` `prominent` `comfortable` `compact` |
 | `elevation` | `String \| Number` | `-` | Nivel de sombra. |
 | `extended` | `Boolean` | `-` | Muestra la fila de extensión. |
 | `extensionHeight` | `String \| Number` | `48` | Altura de la extensión en px. |
@@ -40,7 +40,7 @@ import { KunToolbar } from 'adverich-kun-ui'
 | `image` | `String` | `-` | URL de imagen de fondo. |
 | `rounded` | `String \| Boolean` | `-` | Redondeo (true = default). |
 | `tag` | `String` | `'header'` | Tag del contenedor. |
-| `theme` | `String` | `-` | Tema de color. |
+| `theme` | `String` | `-` | Tema de color (hook de clase `theme-<valor>` para CSS del consumidor). |
 | `tile` | `Boolean` | `-` | Sin redondeo. |
 | `title` | `String` | `-` | Título (alternativa al slot). |
 | `titleMaxWidth` | `String` | `'max-w-3/4'` | Ancho máximo del título. |

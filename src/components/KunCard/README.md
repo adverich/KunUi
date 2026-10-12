@@ -22,11 +22,11 @@ import { KunCard } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `title` | `String` | `null` | Título (atajo; equivale al slot de título). |
-| `titleSize` | `String` | `null` | Tamaño del título. |
-| `subtitle` | `String` | `null` | Subtítulo (atajo). |
-| `subTitleSize` | `String` | `null` | Reservado. Actualmente sin efecto (no se propaga a KunCardTitle). |
-| `text` | `String` | `null` | Texto del cuerpo (atajo; equivale al slot default). |
+| `title` | `string \| null` | `null` | Título (atajo; equivale al slot de título). |
+| `titleSize` | `string \| null` | `null` | Tamaño del título. |
+| `subtitle` | `string \| null` | `null` | Subtítulo (atajo). |
+| `subTitleSize` | `string \| null` | `null` | Reservado. Actualmente sin efecto (no se propaga a KunCardTitle). |
+| `text` | `string \| null` | `null` | Texto del cuerpo (atajo; equivale al slot default). |
 | `textColor` | `String` | `'text-ui'` | Color del texto. |
 | `bgColor` | `String` | `'bg-transparent'` | Color de fondo. |
 | `flat` | `Boolean` | `false` | Sin sombra. |
@@ -40,23 +40,22 @@ import { KunCard } from 'adverich-kun-ui'
 | `tag` | `String` | `'div'` | Tag del contenedor. |
 | `disabled` | `Boolean` | `false` | Deshabilita interacción. |
 | `ripple` | `Boolean` | `true` | Efecto ripple al hacer click. |
-| `variant` | `String` | `'elevated'` | Variante visual. |
-| `height` | `String` | `null` | Altura fija (clase Tailwind). |
-| `width` | `String` | `null` | Ancho fijo (clase Tailwind). |
-| `maxHeight` | `String` | `null` | Altura máxima. |
-| `maxWidth` | `String` | `null` | Ancho máximo. |
-| `minHeight` | `String` | `null` | Altura mínima. |
-| `minWidth` | `String` | `null` | Ancho mínimo. |
-| `position` | `String` | `null` | Posicionamiento (clase Tailwind). |
-| `prependIcon` | `String` | `null` | Ícono al inicio del header. |
-| `appendIcon` | `String` | `null` | Ícono al final del header. |
-| `prependAvatar` | `String` | `null` | Avatar al inicio del header (URL de imagen). |
-| `appendAvatar` | `String` | `null` | Avatar al final del header (URL de imagen). |
-| `image` | `String` | `null` | Imagen superior del card (URL). |
+| `variant` | `KunCardVariant` | `'elevated'` | Variante visual.<br/>Valores · Values: `elevated` `outlined` `flat` `tonal` `text` `plain` |
+| `height` | `string \| null` | `null` | Altura fija (clase Tailwind). |
+| `width` | `string \| null` | `null` | Ancho fijo (clase Tailwind). |
+| `maxHeight` | `string \| null` | `null` | Altura máxima. |
+| `maxWidth` | `string \| null` | `null` | Ancho máximo. |
+| `minHeight` | `string \| null` | `null` | Altura mínima. |
+| `minWidth` | `string \| null` | `null` | Ancho mínimo. |
+| `position` | `string \| null` | `null` | Posicionamiento (clase Tailwind). |
+| `prependIcon` | `string \| null` | `null` | Ícono al inicio del header. |
+| `appendIcon` | `string \| null` | `null` | Ícono al final del header. |
+| `prependAvatar` | `string \| null` | `null` | Avatar al inicio del header (URL de imagen). |
+| `appendAvatar` | `string \| null` | `null` | Avatar al final del header (URL de imagen). |
+| `image` | `string \| null` | `null` | Imagen superior del card (URL). |
 | `loading` | `Boolean` | `false` | Muestra indicador de carga. |
 | `density` | `KunCardDensity` | `'default'` | Densidad del padding interno.<br/>Valores · Values: `default` `comfortable` `compact` |
 | `tile` | `Boolean` | `false` | Sin bordes redondeados. |
-| `exact` | `Boolean` | `false` | Coincidencia exacta de ruta (solo con `to`, se pasa al router-link). |
 | `hover` | `Boolean` | `false` | Sombra al pasar el mouse. |
 | `scrollable` | `Boolean` | `false` | Contenido con scroll interno. |
 

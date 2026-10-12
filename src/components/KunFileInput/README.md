@@ -45,7 +45,7 @@ import { KunFileInput } from 'adverich-kun-ui'
 | `appendInnerClass` | `String` | `-` | Clase del contenedor del ícono interno final. |
 | `clearIcon` | `String \| Object \| Function \| Array` | `-` | Ícono del botón limpiar. |
 | `iconSize` | `String` | `'text-base'` | Tamaño de los íconos. |
-| `variant` | `String` | `'filled'` | Variante visual del contenedor. |
+| `variant` | `KunFileInputVariant` | `'filled'` | Variante visual del contenedor.<br/>Valores · Values: `filled` `outlined` `solo` |
 | `rules` | `Array` | `() => []` | Reglas de validación: `(valor) => true \| string`. |
 
 ## Eventos · Events

@@ -9,22 +9,22 @@ export const KunAutocompleteProps = {
   },
   /** Campo del ítem usado como valor (null = primer valor del objeto). */
   itemValue: {
-    type: String,
+    type: String as PropType<string | null>,
     default: null,
   },
   /** Campo(s) a mostrar (string, array o ruta `a.b`). */
   itemTitle: {
-    type: [String, Array],
+    type: [String, Array] as PropType<string | unknown[] | null>,
     default: null,
   },
   /** Alias de `itemTitle`. */
   itemText: {
-    type: [String, Array],
+    type: [String, Array] as PropType<string | unknown[] | null>,
     default: null,
   },
   /** Campo(s) del subtítulo. */
   itemSubtitle: {
-    type: [String, Array],
+    type: [String, Array] as PropType<string | unknown[] | null>,
     default: null,
   },
 

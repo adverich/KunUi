@@ -35,7 +35,7 @@ watch(() => props.messages, (newMessages: unknown) => {
           }
         );
     });
-}, { deep: true });
+}, { deep: true, immediate: true });
 
 function emitUpdatedMessages(id: number | string): void {
     useMessages.value = useMessages.value.filter(msg => msg.id !== id);

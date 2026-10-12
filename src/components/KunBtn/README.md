@@ -41,8 +41,8 @@ import { KunBtn } from 'adverich-kun-ui'
 | `icon` | `Boolean \| String \| Function \| Object \| Array` | `-` | Ícono central (solo visible si no hay `text` ni slot default). |
 | `prependIcon` | `String \| Function \| Object \| Array` | `-` | Ícono a la izquierda del contenido. |
 | `appendIcon` | `String \| Function \| Object \| Array` | `-` | Ícono a la derecha del contenido. |
-| `iconSize` | `String` | `null` | Tamaño del ícono (sobrescribe el calculado por `size`). |
-| `focusColor` | `String` | `null` | Color extra en estado de foco. |
+| `iconSize` | `string \| null` | `null` | Tamaño del ícono (sobrescribe el calculado por `size`). |
+| `focusColor` | `string \| null` | `null` | Color extra en estado de foco. |
 
 ## Eventos · Events
 

@@ -25,6 +25,13 @@ export const useSliderInteractions = ({ trackRef, thumbs, props, emit }: SliderI
         return Math.min(max, Math.max(min, stepped));
     }
 
+    const emitValue = (next: number[]): void => {
+        const out = props.range ? next : next[0];
+        emit('update:modelValue', out);
+        emit('input', out);
+        emit('change', out);
+    }
+
     const onPointerDown = (e: PointerEvent, index: number): void => {
         e.preventDefault();
         if (props.disabled) return;
@@ -45,7 +52,7 @@ export const useSliderInteractions = ({ trackRef, thumbs, props, emit }: SliderI
             const next = [...thumbs.value];
             next[index] = Math.min(max, Math.max(min, newVal));
 
-            emit('update:modelValue', props.range ? next : next[0]);
+            emitValue(next);
         }
 
         const up = (): void => {
@@ -67,7 +74,7 @@ export const useSliderInteractions = ({ trackRef, thumbs, props, emit }: SliderI
 
         next[target] = Math.min(Number(props.max), Math.max(Number(props.min), value));
 
-        emit('update:modelValue', props.range ? next : next[0]);
+        emitValue(next);
     }
 
     const onTickClick = (i: number): void => {
@@ -79,7 +86,7 @@ export const useSliderInteractions = ({ trackRef, thumbs, props, emit }: SliderI
 
         next[target] = value;
 
-        emit('update:modelValue', props.range ? next : next[0]);
+        emitValue(next);
     }
 
     return { onPointerDown, onTrackClick, onTickClick };

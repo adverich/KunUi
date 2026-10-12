@@ -24,7 +24,7 @@ import { KunDragAndDropHandle } from 'adverich-kun-ui'
 |---|---|---|---|
 | `disabled` | `Boolean` | `false` | Deshabilita el handle. |
 | `label` | `String` | `'Arrastrar'` | Etiqueta accesible del handle. |
-| `size` | `String` | `'xs'` | Tamaño del handle.<br/>Valores · Values: `xxs` `xs` `sm` `md` `lg` `xl` `xxl` |
+| `size` | `KunDragAndDropHandleSize` | `'xs'` | Tamaño del handle.<br/>Valores · Values: `xxs` `xs` `sm` `md` `lg` `xl` `xxl` |
 | `wrapperClass` | `String` | `''` | Clase extra del handle. |
 
 ## Slots

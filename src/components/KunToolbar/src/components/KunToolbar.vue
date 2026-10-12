@@ -6,7 +6,11 @@
     v-bind="$attrs"
   >
     <!-- Imagen de fondo -->
-    <slot name="image" v-if="image" />
+    <template v-if="image || $slots.image">
+      <slot name="image">
+        <img :src="image || undefined" alt="" aria-hidden="true" class="pointer-events-none absolute inset-0 h-full w-full object-cover" />
+      </slot>
+    </template>
 
     <!-- Contenido principal -->
     <div
@@ -77,7 +81,7 @@ const slots = useSlots()
 const contentRef = ref(null)
 const extensionRef = ref(null)
 
-const hasExtension = computed(() => props.extended || !!slots.extension)
+const hasExtension = computed(() => (props.extended || !!slots.extension) && !props.collapse)
 
 const densityClass = computed(() => {
   switch (props.density) {
@@ -105,6 +109,7 @@ const roundedClass = computed(() => {
 
 const mergedClass = computed(() => [
     props.bgColor ? props.bgColor : 'bg-transparent',
+    props.theme ? `theme-${props.theme}` : '',
     props.floating ? 'inline-flex' : '',
     props.flat ? '' : `shadow-md`,
     props.absolute ? 'absolute inset-0' : '',

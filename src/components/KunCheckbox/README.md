@@ -36,10 +36,10 @@ import { KunCheckbox } from 'adverich-kun-ui'
 | `persistentHint` | `Boolean` | `-` | Muestra el hint siempre (no solo al enfocar). |
 | `errorMessages` | `String \| Array` | `-` | Mensajes de error externos. |
 | `rules` | `Array` | `-` | Reglas de validación: `(valor) => true \| string`. |
-| `validateOn` | `String` | `-` | Cuándo validar: 'input' valida al escribir. |
+| `validateOn` | `KunCheckboxValidateOn` | `-` | Cuándo validar: 'input' valida al escribir.<br/>Valores · Values: `blur` `input` |
 | `ripple` | `Boolean \| Object` | `true` | Efecto ripple al hacer click. |
-| `density` | `String` | `'default'` | Densidad del padding. |
-| `direction` | `String` | `'horizontal'` | Dirección del layout (label al lado o debajo). |
+| `density` | `KunCheckboxDensity` | `'default'` | Densidad del padding (escala el tamaño como KunAvatar: comfortable/compact reducen).<br/>Valores · Values: `default` `comfortable` `compact` |
+| `direction` | `KunCheckboxDirection` | `'horizontal'` | Dirección del layout (label al lado o debajo).<br/>Valores · Values: `horizontal` `vertical` |
 | `color` | `String` | `-` | Color cuando está activo. |
 | `iconColor` | `String \| Boolean` | `-` | Color del ícono. |
 | `baseColor` | `String` | `-` | Color base cuando está inactivo. |
@@ -60,7 +60,7 @@ import { KunCheckbox } from 'adverich-kun-ui'
 | `width` | `String \| Number` | `-` | Ancho del campo. |
 | `minWidth` | `String \| Number` | `-` | Ancho mínimo del campo. |
 | `maxWidth` | `String \| Number` | `-` | Ancho máximo del campo. |
-| `size` | `String` | `'md'` | Tamaño: 'sm' \| 'md' \| 'lg'. |
+| `size` | `KunCheckboxSize` | `'md'` | Tamaño: 'sm' \| 'md' \| 'lg'.<br/>Valores · Values: `sm` `md` `lg` |
 
 ## Eventos · Events
 

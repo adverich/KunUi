@@ -24,7 +24,7 @@ import { KunTableServerSide } from 'adverich-kun-ui'
 |---|---|---|---|
 | `result` | `Record<string, unknown>` | `() => ({})` | Respuesta paginada del servidor (`{ data, total, ... }`). Reutiliza todas las props de KunTable. |
 | `loading` | `Boolean` | `false` | Estado de carga (muestra skeleton y bloquea ordenamiento). |
-| `queryMode` | `KunTableServerSideQueryMode` | `'laravel'` | Formato de query emitido (`update:query`).<br/>Valores · Values: `laravel` |
+| `queryMode` | `KunTableServerSideQueryMode` | `'laravel'` | Formato de query emitido (`update:query`) (reservado, sin efecto: siempre emite formato laravel).<br/>Valores · Values: `laravel` |
 
 ## Modelos · Models
 

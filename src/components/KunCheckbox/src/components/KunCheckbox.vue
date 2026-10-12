@@ -46,11 +46,20 @@ const iconClass = computed(() => [
   props.glow && isFocused.value ? 'opacity-100' : 'opacity-70',
 ])
 
+// Escala de tamaño por densidad (como KunAvatar): comfortable -1, compact -2, piso en sm.
+const sizeOrder = ['sm', 'md', 'lg']
+const densityOffset: Record<string, number> = { compact: -2, comfortable: -1, default: 0 }
+const effectiveSize = computed(() => {
+  const i = sizeOrder.indexOf(props.size as string)
+  if (i < 0) return props.size as string
+  return sizeOrder[Math.max(0, i + (densityOffset[String(props.density)] ?? 0))]
+})
+
 const iconSizeClass = computed(() => ({
   sm: 'w-4 h-4 text-sm',
   md: 'w-5 h-5 text-base',
   lg: 'w-6 h-6 text-lg'
-}[props.size] || props.size)) // permite string personalizada tipo "w-6 h-6"
+}[effectiveSize.value] || props.size)) // permite string personalizada tipo "w-6 h-6"
 </script>
 
 <template>
@@ -58,7 +67,7 @@ const iconSizeClass = computed(() => ({
     :class="[
       'kun-checkbox',
       'flex flex-col',
-      props.color,
+      isChecked ? props.color : (props.baseColor || props.color),
       { 'text-ui-error': props.error || !isValid }
     ]"
     :style="{
@@ -95,7 +104,7 @@ const iconSizeClass = computed(() => ({
       @blur="() => { isFocused = false; emit('update:focused', false); if (props.validateOn?.includes('blur')) validate() }"
       @keydown.space.prevent="toggle"
     >
-      <div class="flex items-center gap-2" @click.stop="$emit('click:prepend')">
+      <div class="flex gap-2" :class="props.centerAffix ? 'items-center' : 'items-start'" @click.stop="$emit('click:prepend')">
         <slot name="prepend" />
         <KunIcon v-if="props.prependIcon" :icon="props.prependIcon" />
       </div>
@@ -113,7 +122,7 @@ const iconSizeClass = computed(() => ({
         <slot name="label" :label="props.label">{{ props.label }}</slot>
       </div>
 
-      <div class="flex items-center gap-2" @click.stop="$emit('click:append')">
+      <div class="flex gap-2" :class="props.centerAffix ? 'items-center' : 'items-start'" @click.stop="$emit('click:append')">
         <slot name="append" />
         <KunIcon v-if="props.appendIcon" :icon="props.appendIcon" />
       </div>

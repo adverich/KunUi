@@ -51,6 +51,8 @@ import { KunCarousel } from 'adverich-kun-ui'
 | `gap` | `String` | `'1rem'` | Espacio entre slides (clase Tailwind gap o valor CSS). |
 | `height` | `String` | `'400px'` | Altura del viewport cuando axis === 'y'. |
 | `showArrows` | `Boolean` | `true` | Muestra flechas prev/next. |
+| `prevLabel` | `String` | `'Anterior'` | Etiqueta accesible del botón anterior. |
+| `nextLabel` | `String` | `'Siguiente'` | Etiqueta accesible del botón siguiente. |
 | `showDots` | `Boolean` | `true` | Muestra dots de navegación. |
 | `arrowsPosition` | `KunCarouselArrowsPosition` | `'sides'` | Posición de las flechas: 'sides' (flotantes) \| 'bottom' (barra inferior).<br/>Valores · Values: `sides` `bottom` |
 | `stopOnInteraction` | `Boolean` | `true` | Detiene el autoplay al interactuar (pointerdown / foco). |

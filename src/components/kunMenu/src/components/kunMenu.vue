@@ -1,5 +1,5 @@
 <template>
-  <Teleport v-if="attach !== true" :to="attach || 'body'">
+  <Teleport v-if="attach !== true && !contained" :to="attach || 'body'">
     <transition
       enter-active-class="transition ease-out duration-150"
       leave-active-class="transition ease-in duration-100"
@@ -9,21 +9,49 @@
       :leave-to-class="leaveToClass"
     >
       <div 
+        v-if="eager || menuVisible"
         v-show="menuVisible" 
         ref="contentEl" 
         role="menu"
+        :aria-label="label"
         :tabindex="-1"
         class="relative shadow-xl rounded-b overflow-y-auto focus:outline-none border border-ui"
         :class="[(props.class as string), originClass, (width as string), (minWidth as string), (maxWidth as string), (minHeight as string), (height as string), (maxHeight as string), (zIndex as string), bgColor]"
         :style="contentStyle" 
+        @click="handleContentClick"
         @keydown.escape.stop="handleEscape"
       >
         <slot />
       </div>
     </transition>
   </Teleport>
+  <transition
+    v-else
+    enter-active-class="transition ease-out duration-150"
+    leave-active-class="transition ease-in duration-100"
+    :enter-from-class="enterFromClass"
+    :enter-to-class="enterToClass"
+    :leave-from-class="leaveFromClass"
+    :leave-to-class="leaveToClass"
+  >
+    <div
+      v-if="eager || menuVisible"
+      v-show="menuVisible"
+      ref="contentEl"
+      role="menu"
+      :aria-label="label"
+      :tabindex="-1"
+      class="relative shadow-xl rounded-b overflow-y-auto focus:outline-none border border-ui"
+      :class="[(props.class as string), originClass, (width as string), (minWidth as string), (maxWidth as string), (minHeight as string), (height as string), (maxHeight as string), (zIndex as string), bgColor]"
+      :style="contentStyle"
+      @click="handleContentClick"
+      @keydown.escape.stop="handleEscape"
+    >
+      <slot />
+    </div>
+  </transition>
 
-  <span ref="activatorEl" v-if="$slots.activator">
+  <span ref="activatorEl" v-if="$slots.activator" :aria-label="label">
     <slot name="activator" />
   </span>
 </template>
@@ -92,6 +120,10 @@ onMounted(() => {
 
 function handleMenuResize(): void {
   repositionMenu()
+}
+
+function handleContentClick(): void {
+  if (props.closeOnContentClick) hideMenu()
 }
 
 onUnmounted(() => {

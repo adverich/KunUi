@@ -41,6 +41,7 @@
         :disabled="disabled"
         :readonly="readonly"
         :placeholder="placeholder"
+        :maxlength="maxLength"
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
@@ -285,8 +286,19 @@ const densityClass = computed(() =>
   props.density === 'compact' ? 'px-2 py-1 text-sm min-h-[30px]' : props.density === 'comfortable' ? 'px-3 py-2 text-sm min-h-[38px]' : 'px-3 py-3 text-sm min-h-[46px]'
 )
 
+const textAlignClass = computed(() => {
+  const alignMap: Record<string, string> = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
+  }
+  return alignMap[props.textAlign as string] || 'text-left'
+})
+
 const textareaClasses = computed(() => [
-  'block w-full resize-none transition-colors duration-150 text-ui leading-normal',
+  'block w-full resize-none transition-colors duration-150 leading-normal',
+  props.textColor || 'text-ui',
+  textAlignClass.value,
   props.inputClass,
   {
     'rounded': !props.tile,

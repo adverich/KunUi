@@ -10,12 +10,18 @@ export interface KunSliderPropsLike {
     disabled?: boolean;
 }
 
-export type KunSliderEmit = (event: 'update:modelValue', value: number | number[]) => void;
+export type KunSliderEmit = (event: 'update:modelValue' | 'input' | 'change', value: number | number[]) => void;
 
 export function useSlider(props: KunSliderPropsLike, emit: KunSliderEmit, trackRef: Ref<HTMLElement | null>) {
+    const emitValue = (v: number | number[]): void => {
+        emit('update:modelValue', v)
+        emit('input', v)
+        emit('change', v)
+    }
+
     const val = computed<number | number[]>({
         get: () => (props.range ? [...(props.modelValue as number[])] : Number(props.modelValue)),
-        set: (v: number | number[]) => emit('update:modelValue', props.range ? v : (v as number[])[0])
+        set: (v: number | number[]) => emitValue(props.range ? v : (v as number[])[0])
     })
 
     watch(
@@ -27,12 +33,12 @@ export function useSlider(props: KunSliderPropsLike, emit: KunSliderEmit, trackR
             if (props.range) {
                 const normalized = (props.modelValue as number[]).map((v: number) => Math.min(max, Math.max(min, v)))
                 if (JSON.stringify(normalized) !== JSON.stringify(props.modelValue)) {
-                    emit('update:modelValue', normalized)
+                    emitValue(normalized)
                 }
             } else {
                 const value = Math.min(max, Math.max(min, Number(props.modelValue)))
                 if (value !== Number(props.modelValue)) {
-                    emit('update:modelValue', value)
+                    emitValue(value)
                 }
             }
         },
@@ -70,7 +76,7 @@ export function useSlider(props: KunSliderPropsLike, emit: KunSliderEmit, trackR
     })
 
     function updateValue(v: number | number[]): void {
-        emit('update:modelValue', v)
+        emitValue(v)
     }
 
     return {

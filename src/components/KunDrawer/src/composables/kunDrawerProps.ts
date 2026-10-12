@@ -1,3 +1,7 @@
+import type { PropType } from 'vue';
+
+export type KunDrawerLocation = 'start' | 'end' | 'top' | 'bottom' | 'left' | 'right';
+
 export const kunDrawerProps = {
   /** Apertura del drawer (v-model). */
   modelValue: Boolean,
@@ -14,7 +18,7 @@ export const kunDrawerProps = {
   /** URL de imagen de fondo. */
   image: String,
   /** Lado de apertura: 'start' | 'end' | 'top' | 'bottom'. */
-  location: { type: String, default: 'start' },
+  location: { type: String as PropType<KunDrawerLocation>, default: 'start', validator: (v: unknown) => ['start', 'end', 'top', 'bottom', 'left', 'right'].includes(v as string) },
   /** Siempre visible (ignora el modelo). */
   permanent: Boolean,
   /** No cierra al hacer click fuera. */

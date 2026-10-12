@@ -26,7 +26,7 @@ import { KunAlert } from 'adverich-kun-ui'
 | `title` | `String` | `-` | Título principal de la alerta. |
 | `message` | `String` | `-` | Mensaje descriptivo bajo el título. |
 | `position` | `KunAlertPosition` | `'br'` | Posición en pantalla: t(op)/c(enter)/b(ottom) + l(eft)/c(enter)/r(ight).<br/>Valores · Values: `tl` `tc` `tr` `cl` `cc` `cr` `bl` `bc` `br` |
-| `icon` | `String` | `null` | Ícono a mostrar (clase o nombre con `$`). |
+| `icon` | `string \| null` | `null` | Ícono a mostrar (clase o nombre con `$`). |
 | `iconSize` | `String` | `'text-2xl'` | Tamaño del ícono (clase Tailwind de texto). |
 | `iconBgColor` | `String` | `'bg-error'` | Color de fondo del contenedor del ícono. |
 | `bgColor` | `String` | `'bg-error'` | Color de fondo de la alerta. |

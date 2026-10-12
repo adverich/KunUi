@@ -24,7 +24,7 @@ function getScrollableAncestors(element: Element | null | undefined): Element[] 
 }
 
 function resolveOffset(dist: TooltipDist | undefined): TooltipOffset {
-  if (typeof dist === 'number') return { x: 0, y: dist }
+  if (typeof dist === 'number') return { x: dist, y: dist }
   return { x: dist?.x ?? 0, y: dist?.y ?? 0 }
 }
 

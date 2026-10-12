@@ -23,7 +23,7 @@ import { KunCarouselSlide } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `slideClass` | `String \| Array \| Object` | `''` | Clase extra del slide. |
-| `size` | `String` | `null` | Tamaño individual (sobrescribe el slideSize del carousel). |
+| `size` | `string \| null` | `null` | Tamaño individual (sobrescribe el slideSize del carousel). |
 
 ## Slots
 

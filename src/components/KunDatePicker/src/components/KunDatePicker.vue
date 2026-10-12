@@ -1,5 +1,5 @@
 <template>
-    <div ref="containerRef" class="relative" :class="onlyIcon ? 'w-fit' : 'w-full'">
+    <div ref="containerRef" class="relative" :class="onlyIcon ? 'w-fit' : 'w-full'" :style="wrapperStyle">
         <!-- Icon-only trigger -->
         <KunBtn
             v-if="onlyIcon"
@@ -443,6 +443,13 @@ const { style: popoverStyle, update: updatePosition } = usePosition(triggerRef, 
     align: props.align 
 });
 
+const wrapperStyle = computed(() => {
+    if (props.width == null || props.width === '') return undefined;
+    return {
+        width: typeof props.width === 'number' ? `${props.width}px` : props.width,
+    };
+});
+
 const dimensionsStyle = computed(() => {
     let w = props.calendarWidth;
     if (props.fullWidth && triggerRef.value?.rootRef) {
@@ -453,6 +460,7 @@ const dimensionsStyle = computed(() => {
     }
     return {
         width: typeof w === 'number' ? `${w}px` : w,
+        maxHeight: props.maxHeight,
     };
 });
 
@@ -661,6 +669,7 @@ function adjustTime(unit: string, delta: number): void {
 export interface CalendarDay { day: number; date: Date; isCurrentMonth: boolean }
 
 function selectDay(dateObj: CalendarDay): void {
+    if (isOutOfRange(dateObj.date)) return;
     const selectedDate = mergeTime(dateObj.date);
 
     if (props.range) {
@@ -860,7 +869,8 @@ function dayClasses(dayObj: CalendarDay): string {
 
     const base = 'flex items-center justify-center font-medium text-sm z-10'; 
     const text = !isCurrentMonth ? 'text-ui-disabled' : 'text-ui';
-    
+
+    if (isOutOfRange(date)) return `${base} text-ui-disabled opacity-40 cursor-not-allowed`;
     if (isSelected) return `${base} bg-ui-primary text-ui-inverse shadow-md hover:bg-ui-primary rounded-full`;
     if (inRange) return `${base} bg-ui-selection text-ui-selection rounded-none`;
     
@@ -871,6 +881,21 @@ function dayClasses(dayObj: CalendarDay): string {
 
 function isSameDay(d1: Date, d2: Date): boolean {
     return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+}
+
+function toDayStart(d: Date): number {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+}
+
+function isOutOfRange(date: Date): boolean {
+    const t = toDayStart(date);
+    const rawMin = props.minDate as unknown;
+    const rawMax = props.maxDate as unknown;
+    const min = rawMin ? (rawMin instanceof Date ? rawMin : new Date(rawMin as string)) : null;
+    const max = rawMax ? (rawMax instanceof Date ? rawMax : new Date(rawMax as string)) : null;
+    if (min && !isNaN(min.getTime()) && t < toDayStart(min)) return true;
+    if (max && !isNaN(max.getTime()) && t > toDayStart(max)) return true;
+    return false;
 }
 </script>
 

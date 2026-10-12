@@ -1,7 +1,9 @@
+import type { PropType } from 'vue';
+
 export const kunListItemActionProps = {
   /** Texto de la acción. */
   text: {
-    type: [String, Number],
+    type: [String, Number] as PropType<string | number | null>,
     default: null
   },
   /** Color del texto. */

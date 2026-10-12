@@ -1,3 +1,5 @@
+import type { PropType } from 'vue';
+
 export const KunSliderProps = {
     /** Valor (v-model): número único o par [min, max] con `range`. */
     modelValue: {
@@ -51,7 +53,7 @@ export const KunSliderProps = {
     },
     /** Etiqueta sobre el slider. */
     label: {
-        type: String,
+        type: String as PropType<string | null>,
         default: null
     },
     /** Muestra el valor sobre el thumb. */
@@ -76,12 +78,12 @@ export const KunSliderProps = {
     },
     /** Clase extra del contenedor. */
     class: {
-        type: [String, Array, Object],
+        type: [String, Array, Object] as PropType<string | unknown[] | Record<string, any> | null>,
         default: null
     },
     /** Estilos inline del contenedor. */
     style: {
-        type: Object,
+        type: Object as PropType<Record<string, any> | null>,
         default: null
     }
 }

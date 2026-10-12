@@ -6,6 +6,7 @@
       { 'opacity-60 cursor-not-allowed': disabled },
       props.class
     ]"
+    :style="props.style"
   >
     <div v-if="label" class="mb-2 text-sm font-medium text-ui">
       <slot name="label">{{ label }}</slot>
@@ -25,12 +26,12 @@
         @pointerdown="onTrackClick"
       >
         <!-- Track Fill -->
-        <!-- <div
+        <div
           class="absolute rounded-full z-10"
-          :class="trackColor"
+          :class="[trackColor, vertical ? 'inset-x-0' : 'inset-y-0']"
           :style="trackFillStyle"
           style="transition: all 150ms ease;"
-        /> -->
+        />
 
         <!-- Ticks and Labels -->
         <div
@@ -98,8 +99,9 @@
               :thumbColor="thumbColor"
               :min="min"
               :max="max"
+              :step="step"
               @pointerdown="(e: PointerEvent) => onPointerDown(e, i)"
-              @update="(val: number) => { const next = [...thumbs]; next[i] = val; emit('update:modelValue', props.range ? next : next[0]) }"
+              @update="(val: number) => onThumbUpdate(i, val)"
             />
           </slot>
         </template>
@@ -136,6 +138,15 @@ const {
 } = useSlider(props, emit, trackRef)
 
 const thumbs = computed(() => (Array.isArray(val.value) ? [...val.value] : [val.value]))
+
+function onThumbUpdate(index: number, value: number): void {
+  const next = [...thumbs.value]
+  next[index] = value
+  const out = props.range ? next : next[0]
+  emit('update:modelValue', out)
+  emit('input', out)
+  emit('change', out)
+}
 
 const { onPointerDown, onTrackClick, onTickClick } = useSliderInteractions({
   trackRef,

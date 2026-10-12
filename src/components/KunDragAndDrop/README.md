@@ -25,10 +25,10 @@ import { KunDragAndDrop } from 'adverich-kun-ui'
 | `modelValue` | `unknown[]` | `-` | Lista ordenada (v-model). Es la fuente de verdad del orden. |
 | `items` | `unknown[]` | `-` | Alias de `modelValue` (v-model:items). |
 | `itemKey` | `DragAndDropItemKey` | `'id'` | Clave estable por ítem: campo o función `(item, index) => key`. |
-| `group` | `String` | `null` | Grupo para transferir ítems entre listas con el mismo nombre. |
+| `group` | `string \| null` | `null` | Grupo para transferir ítems entre listas con el mismo nombre. |
 | `sortable` | `Boolean` | `true` | Permite reordenar dentro de la lista. |
 | `disabled` | `Boolean` | `false` | Desactiva todo el drag and drop. |
-| `dragHandle` | `String` | `null` | Selector CSS del handle (null = toda la tarjeta arrastra). |
+| `dragHandle` | `string \| null` | `null` | Selector CSS del handle (null = toda la tarjeta arrastra). |
 | `itemDraggable` | `((item: unknown, index: number) => boolean) \| null` | `null` | `(item) => boolean`: decide qué ítems se pueden arrastrar. |
 | `layout` | `KunDragAndDropLayout` | `'list'` | Layout visual: 'list' \| 'grid' (solo CSS, el orden lo manda el array).<br/>Valores · Values: `list` `grid` |
 | `draggingClass` | `String` | `''` | Clase extra del ítem mientras se arrastra. |

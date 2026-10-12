@@ -1,6 +1,7 @@
 <template>
   <div
     :class="[uiClasses.root, colorClasses.root, orientationClass, pulseClass]"
+    :data-toast-id="toastId"
     role="alert"
     :aria-live="type === 'foreground' ? 'assertive' : 'polite'"
     @mouseenter="onMouseEnter"

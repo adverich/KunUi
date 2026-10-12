@@ -22,8 +22,8 @@ import { KunDragAndDropItem } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `item` | `Object \| String \| Number` | `null` | Valor del ítem. |
-| `itemKey` | `String \| Number` | `null` | Clave estable del ítem (debe coincidir con el `itemKey` del padre). |
+| `item` | `Record<string, any> \| string \| number \| null` | `null` | Valor del ítem. |
+| `itemKey` | `string \| number \| null` | `null` | Clave estable del ítem (debe coincidir con el `itemKey` del padre). |
 | `index` | `Number` | `0` | Índice del ítem en la lista. |
 | `disabled` | `Boolean` | `false` | Excluye el ítem del drag. |
 | `tag` | `String` | `'div'` | Tag del contenedor del ítem. |

@@ -23,10 +23,10 @@ import { KunTooltip } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `class` | `String \| Array \| Object` | `-` | Clase extra del tooltip. |
-| `id` | `String` | `null` | Id del tooltip (se genera uno si se omite). |
+| `id` | `string \| null` | `null` | Id del tooltip (se genera uno si se omite). |
 | `text` | `String` | `-` | Texto del tooltip (alternativa al slot). |
-| `location` | `String` | `'top'` | Posición respecto al activador: 'top' \| 'bottom' \| 'left' \| 'right'. |
-| `openOn` | `String` | `'hover'` | Cómo se abre: 'hover' \| 'click' \| 'focus'. |
+| `location` | `KunTooltipLocation` | `'top'` | Posición respecto al activador: 'top' \| 'bottom' \| 'left' \| 'right'.<br/>Valores · Values: `top` `bottom` `left` `right` |
+| `openOn` | `KunTooltipOpenOn` | `'hover'` | Cómo se abre: 'hover' \| 'click' \| 'focus'.<br/>Valores · Values: `hover` `click` `focus` |
 | `transition` | `String` | `'fade'` | Transición de entrada/salida. |
 | `disabled` | `Boolean` | `-` | Deshabilita el tooltip. |
 | `delay` | `Number \| String` | `0` | Retraso en ms antes de mostrar. |
@@ -35,7 +35,7 @@ import { KunTooltip } from 'adverich-kun-ui'
 | `bgColor` | `String` | `'bg-surface-dark'` | Color de fondo. |
 | `rounded` | `String` | `'rounded'` | Redondeo. |
 | `textSize` | `String` | `'text-sm'` | Tamaño del texto. |
-| `dist` | `Number \| Object` | `() => ({ x: 0, y: 8 })` | Offset extra `{ x, y }` o número (solo `y`). |
+| `dist` | `Number \| Object` | `() => ({ x: 0, y: 8 })` | Offset extra `{ x, y }` o número (simétrico: aplica a `x` e `y`). |
 | `flip` | `Boolean` | `true` | Voltea al lado opuesto si no hay espacio. |
 
 ## Slots

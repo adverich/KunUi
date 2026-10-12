@@ -22,7 +22,7 @@ import { KunListItemText } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `text` | `String \| Number` | `null` | Texto a mostrar. |
+| `text` | `string \| number \| null` | `null` | Texto a mostrar. |
 | `fontSize` | `String` | `'text-sm'` | Tamaño del texto. |
 | `textColor` | `String` | `'text-ui-muted'` | Color del texto. |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |

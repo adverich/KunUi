@@ -177,6 +177,9 @@
           </div>
           <div v-else-if="typeof errorMessages === 'string'">{{ errorMessages }}</div>
         </div>
+        <div v-else-if="internalError" class="text-ui-error text-sm text-center">
+          {{ internalError }}
+        </div>
         <div v-else-if="hint && (persistentHint || focus)" class="text-xs text-center">
           {{ hint }}
         </div>
@@ -191,15 +194,14 @@
 </template>
 
 <script setup lang="ts">
-import { useId, computed, nextTick, useSlots, withDefaults } from 'vue';
-import type { KunNumberFieldProps } from '../composables/KunNumberFieldProps.js';
-import { kunNumberFieldDefaults } from '../composables/KunNumberFieldProps.js';
+import { useId, computed, nextTick, useSlots } from 'vue';
+import { KunNumberFieldProps } from '../composables/KunNumberFieldProps.js';
 import { useKunNumberField } from '../composables/useKunNumberFieldComposable.js';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import IconClose from '../../../../icons/IconClose.vue';
 
-const props = withDefaults(defineProps<KunNumberFieldProps>(), kunNumberFieldDefaults);
+const props = defineProps(KunNumberFieldProps);
 const emits = defineEmits([
   'update:modelValue',
   'focus',
@@ -242,7 +244,8 @@ const {
   focus,
   handleFocus,
   handleBlur,
-  handleInput
+  handleInput,
+  internalError
 } = useKunNumberField(props, emits);
 
 defineExpose({

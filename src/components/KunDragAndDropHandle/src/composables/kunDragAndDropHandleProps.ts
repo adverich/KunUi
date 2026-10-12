@@ -1,3 +1,7 @@
+import type { PropType } from 'vue';
+
+export type KunDragAndDropHandleSize = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+
 export const kunDragAndDropHandleProps = {
   /** Deshabilita el handle. */
   disabled: {
@@ -11,7 +15,7 @@ export const kunDragAndDropHandleProps = {
   },
   /** Tamaño del handle. */
   size: {
-    type: String,
+    type: String as PropType<KunDragAndDropHandleSize>,
     default: 'xs',
     validator: (v: unknown) => ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'].includes(v as string),
   },

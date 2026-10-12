@@ -83,7 +83,10 @@ const {
   centerActive: props.centerActive as boolean,
 })
 
-const heightPx = computed(() => (props.height ? `${props.height}px` : undefined))
+const heightPx = computed(() => {
+  if (props.height === undefined || props.height === null || props.height === '') return undefined
+  return typeof props.height === 'number' ? `${props.height}px` : props.height
+})
 
 const alignTabsClass = computed(() => {
   return {

@@ -14,9 +14,9 @@ export const kunRadioProps = {
   /** Valor que representa el estado inactivo. */
   falseValue: { default: false },
   /** Ícono personalizado para el estado activo. */
-  trueIcon: { type: [String, Object], default: null },
+  trueIcon: { type: [String, Object] as PropType<string | Record<string, any> | null>, default: null },
   /** Ícono personalizado para el estado inactivo. */
-  falseIcon: { type: [String, Object], default: null },
+  falseIcon: { type: [String, Object] as PropType<string | Record<string, any> | null>, default: null },
   /** Valor de esta opción. */
   value: [String, Number, Boolean, Object],
   /** Deshabilita la opción. */

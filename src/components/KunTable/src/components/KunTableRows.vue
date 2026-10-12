@@ -10,6 +10,7 @@
         :is-selected="isSelected(item)"
         :is-expanded="isExpanded(item)"
         :has-actions="hasActions"
+        :actions-align="actionsAlign"
         :loading="getActionLoading(item, index)"
         @toggle-expand="emits('toggle-expand', item)"
         @toggle-select="emits('toggle-select', item)"

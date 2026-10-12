@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed, provide } from 'vue'
-import { kunTabWindowProps, type KunTabWindowItem } from '../composables/kunTabWindowProps.js'
+import { kunTabWindowProps } from '../composables/kunTabWindowProps.js'
 
 const props = defineProps(kunTabWindowProps)
 
@@ -12,12 +11,6 @@ const isSelected = (itemValue: unknown): boolean => {
   }
   return props.modelValue === itemValue
 }
-
-// Proveer para posible uso en tabs anidadas
-provide('kun-tab-window', {
-  modelValue: computed(() => props.modelValue),
-  select: (val: unknown) => emit('update:modelValue', val),
-})
 
 </script>
 

@@ -1,9 +1,8 @@
 <template>
   <RouterLink
-    v-if="isLink"
+    v-if="props.to"
     :to="(to as any)"
     :replace="replace"
-    :exact="exact"
     custom
     v-slot="{ navigate, href }"
   >
@@ -18,7 +17,7 @@
     >
       <template v-if="image || $slots.image">
         <slot name="image">
-          <img :src="image" class="w-full h-auto object-cover" />
+          <img :src="image || undefined" class="w-full h-auto object-cover" />
         </slot>
       </template>
 
@@ -62,13 +61,14 @@
 
   <component
     v-else
-    :is="tag"
+    :is="props.href && !props.to ? 'a' : tag"
+    :href="props.href && !props.to ? props.href : undefined"
     :class="cardClass"
     v-bind="$attrs"
   >
     <template v-if="image || $slots.image">
       <slot name="image">
-        <img :src="image" class="w-full h-auto object-cover" />
+        <img :src="image || undefined" class="w-full h-auto object-cover" />
       </slot>
     </template>
 

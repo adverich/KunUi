@@ -72,8 +72,9 @@
   <component
     v-else
     :id="computedId"
-    :is="isLink ? 'a' : tag"
+    :is="props.href ? 'a' : tag"
     ref="liRef"
+    :href="props.href || undefined"
     role="option"
     :aria-selected="isItemSelected || isActive"
     :aria-disabled="disabled"
@@ -125,7 +126,7 @@
         <slot name="append">
           <img v-if="appendAvatar" :src="appendAvatar" class="w-8 h-8 rounded-full" />
           <component v-if="isComponent(appendIcon)" :is="appendIcon" class="w-5 h-5" />
-          <i v-else-if="appendIcon" :class="appendIcon" class="text-xl leading-none" />
+          <i v-else-if="appendIcon" :class="appendClass" class="text-xl leading-none" />
         </slot>
       </div>
     </div>

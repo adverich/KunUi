@@ -28,7 +28,7 @@ import { KunRadioGroup } from 'adverich-kun-ui'
 | `name` | `String` | `-` | Nombre del grupo (inputs nativos). |
 | `disabled` | `Boolean` | `-` | Deshabilita todas las opciones. |
 | `readonly` | `Boolean` | `-` | Solo lectura. |
-| `direction` | `String` | `'vertical'` | Dirección del layout: 'vertical' \| 'horizontal'. |
+| `direction` | `KunRadioGroupDirection` | `'vertical'` | Dirección del layout: 'vertical' \| 'horizontal'.<br/>Valores · Values: `vertical` `horizontal` |
 | `inline` | `Boolean` | `-` | Opciones en línea (atajo de direction='horizontal'). |
 | `error` | `Boolean` | `-` | Estado de error visual. |
 | `trueIcon` | `String \| Object` | `'mdi-radiobox-marked'` | Ícono por defecto para el estado activo. |

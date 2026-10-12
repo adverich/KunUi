@@ -29,8 +29,8 @@ import { KunTextarea } from 'adverich-kun-ui'
 | `class` | `String` | `-` | Clase extra del textarea. |
 | `bgColor` | `String` | `-` | Color de fondo (se usa si la variante no lo define). |
 | `textColor` | `String` | `-` | Color del texto. |
-| `textAlign` | `String` | `'left'` | Alineación del texto. |
-| `formatModel` | `String` | `'auto'` | Formato del modelo: 'auto' (detecta JSON) \| 'json' \| 'plain'. |
+| `textAlign` | `KunTextareaTextAlign` | `'left'` | Alineación del texto.<br/>Valores · Values: `left` `center` `right` |
+| `formatModel` | `KunTextareaFormatModel` | `'auto'` | Formato del modelo: 'auto' (detecta JSON) \| 'json' \| 'plain'.<br/>Valores · Values: `auto` `json` `plain` |
 | `loading` | `Boolean` | `-` | Muestra barra de carga superior. |
 | `prependIcon` | `String \| Object \| Function` | `-` | Ícono externo al inicio. |
 | `appendIcon` | `String \| Object \| Function` | `-` | Ícono externo al final. |
@@ -49,7 +49,7 @@ import { KunTextarea } from 'adverich-kun-ui'
 | `error` | `Boolean` | `-` | Estado de error visual. |
 | `counter` | `Boolean` | `-` | Muestra contador de caracteres. |
 | `persistentCounter` | `Boolean` | `-` | Contador siempre visible (no solo en foco). |
-| `maxLength` | `Number \| String` | `-` | Límite para el contador (no limita el input). |
+| `maxLength` | `Number \| String` | `-` | Máximo de caracteres (`maxlength` nativo; también limita el contador). |
 | `autoGrow` | `Boolean` | `-` | Ajusta la altura al contenido automáticamente. |
 | `noResize` | `Boolean` | `-` | Deshabilita el resize manual. |
 | `maxRows` | `Number \| String` | `-` | Filas máximas con `autoGrow`. |
@@ -59,8 +59,8 @@ import { KunTextarea } from 'adverich-kun-ui'
 | `autocomplete` | `String` | `-` | Autocomplete nativo. |
 | `rows` | `Number \| String` | `5` | Filas visibles iniciales. |
 | `dirty` | `Boolean` | `-` | Marca el campo como tocado (flota el label). |
-| `variant` | `String` | `'outlined'` | Variante visual: 'filled' \| 'outlined' \| 'underlined' \| 'solo'. |
-| `density` | `String` | `'default'` | Densidad del padding. |
+| `variant` | `KunTextareaVariant` | `'outlined'` | Variante visual: 'filled' \| 'outlined' \| 'underlined' \| 'solo'.<br/>Valores · Values: `filled` `outlined` `underlined` `solo` |
+| `density` | `KunTextareaDensity` | `'default'` | Densidad del padding.<br/>Valores · Values: `default` `comfortable` `compact` |
 | `inputClass` | `String \| Array` | `-` | Clase extra del textarea. |
 | `wrapperClass` | `String \| Array` | `-` | Clase extra del contenedor. |
 | `tile` | `Boolean` | `-` | Sin redondeo. |

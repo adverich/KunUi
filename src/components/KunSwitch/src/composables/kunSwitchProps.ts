@@ -13,7 +13,11 @@ export const kunSwitchProps = {
   /** Etiqueta al lado del switch. */
   label: String,
   /** Posición de la etiqueta: 'top' | 'bottom' | 'left' | 'right'. */
-  labelPosition: { type: String as PropType<KunSwitchLabelPosition>, default: 'right' },
+  labelPosition: {
+    type: String as PropType<KunSwitchLabelPosition>,
+    default: 'right',
+    validator: (v: unknown) => ['top', 'bottom', 'left', 'right'].includes(v as string),
+  },
   /** Deshabilita el switch. */
   disabled: Boolean,
   /** Color del track en estado activo. */

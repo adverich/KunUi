@@ -1,3 +1,7 @@
+import type { PropType } from 'vue';
+
+export type KunModalFooterColor = 'blue' | 'green' | 'red' | 'yellow' | 'gray' | 'orange';
+
 export const kunModalFooterProps = {
   /** Visibilidad del mensaje (v-model, requerido). */
   modelValue: {
@@ -15,8 +19,9 @@ export const kunModalFooterProps = {
   },
   /** Color temático ('green' | 'blue' | 'red' | ...). */
   color: {
-    type: String,
+    type: String as PropType<KunModalFooterColor>,
     default: "green",
+    validator: (v: unknown) => ['blue', 'green', 'red', 'yellow', 'gray', 'orange'].includes(v as string),
   },
   /** Ancho del contenedor. */
   width: {

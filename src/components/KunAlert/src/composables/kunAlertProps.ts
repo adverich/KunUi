@@ -23,7 +23,7 @@ export const kunAlertProps = {
     ].includes(v as string)
   },
   /** Ícono a mostrar (clase o nombre con `$`). */
-  icon: { type: String, default: null },
+  icon: { type: String as PropType<string | null>, default: null },
   /** Tamaño del ícono (clase Tailwind de texto). */
   iconSize: { type: String, default: 'text-2xl' },
   /** Color de fondo del contenedor del ícono. */

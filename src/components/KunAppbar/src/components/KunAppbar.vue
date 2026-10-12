@@ -88,6 +88,7 @@ import { setAppbarHeight } from '@/utils/useLayout.js';
 import { kunAppbarProps } from '../composables/kunAppbarProps.js'
 
 const props = defineProps(kunAppbarProps)
+defineEmits(['toggle-drawer'])
 defineOptions({ inheritAttrs: false });
 
 const el: Ref<HTMLElement | null> = ref(null);

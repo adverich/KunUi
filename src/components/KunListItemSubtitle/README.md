@@ -22,7 +22,7 @@ import { KunListItemSubtitle } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `text` | `String \| Number` | `null` | Texto del subtítulo. |
+| `text` | `string \| number \| null` | `null` | Texto del subtítulo. |
 | `textColor` | `String` | `'text-ui-muted'` | Color del texto. |
 | `fontSize` | `String` | `'text-xs'` | Tamaño del texto. |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |

@@ -34,13 +34,13 @@ import { KunSlider } from 'adverich-kun-ui'
 | `tickColor` | `String` | `'border-error'` | Color de las marcas. |
 | `vertical` | `Boolean` | `false` | Orientación vertical. |
 | `range` | `Boolean` | `false` | Doble thumb (rango). El modelValue es `[min, max]`. |
-| `label` | `String` | `null` | Etiqueta sobre el slider. |
+| `label` | `string \| null` | `null` | Etiqueta sobre el slider. |
 | `thumbLabel` | `Boolean` | `true` | Muestra el valor sobre el thumb. |
 | `disabled` | `Boolean` | `false` | Deshabilita el slider. |
 | `trackColor` | `String` | `'bg-primary'` | Color del track. |
 | `thumbColor` | `String` | `'bg-primary'` | Color del thumb. |
-| `class` | `String \| Array \| Object` | `null` | Clase extra del contenedor. |
-| `style` | `Object` | `null` | Estilos inline del contenedor. |
+| `class` | `string \| unknown[] \| Record<string, any> \| null` | `null` | Clase extra del contenedor. |
+| `style` | `Record<string, any> \| null` | `null` | Estilos inline del contenedor. |
 
 ### `kunThumbProps.ts`
 

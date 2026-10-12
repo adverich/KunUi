@@ -61,7 +61,7 @@ export const kunBtnProps = {
   /** Ícono a la derecha del contenido. */
   appendIcon: [String, Function, Object, Array],
   /** Tamaño del ícono (sobrescribe el calculado por `size`). */
-  iconSize: { type: String, default: null },
+  iconSize: { type: String as PropType<string | null>, default: null },
   /** Color extra en estado de foco. */
-  focusColor: { type: String, default: null }
+  focusColor: { type: String as PropType<string | null>, default: null }
 }

@@ -1,6 +1,7 @@
 import type { PropType } from 'vue';
 import type { KunTableHeader } from '@/utils/tableFormatters.js';
 import type { TableItem } from './useRowKey.js';
+import type { KunTableActionsAlign } from './KunTableProps.js';
 
 export const kunTableRowProps = {
   /** Ítem de la fila. */
@@ -29,8 +30,12 @@ export const kunTableRowProps = {
   stripedClass: String,
   /** Columna de acciones. */
   hasActions: Boolean,
-  /** Alineación de la columna de acciones. */
-  actionsAlign: String,
+  /** Alineación de la columna de acciones: 'left' | 'center' | 'right'. */
+  actionsAlign: {
+    type: String as PropType<KunTableActionsAlign>,
+    default: 'center',
+    validator: (v: unknown) => ['left', 'center', 'right'].includes(v as string),
+  },
   /** Estado de carga de las acciones. */
   loading: { type: [Boolean, Object], default: false },
   /** Clase condicional por ítem (string o `(item) => clase|false`). */

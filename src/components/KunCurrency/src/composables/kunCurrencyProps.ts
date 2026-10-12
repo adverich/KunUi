@@ -1,7 +1,9 @@
+import type { PropType } from 'vue';
+
 export const kunCurrencyProps = {
   /** Moneda `{ value, name, symbol }`. Si es null usa la config global. */
   currency: {
-    type: Object,
+    type: Object as PropType<Record<string, any> | null>,
     default: null,
   },
   /** Oculta el símbolo/prefijo de moneda. */
@@ -11,16 +13,17 @@ export const kunCurrencyProps = {
   },
   /** Locale de formato (null = config global, default 'es-AR'). */
   locale: {
-    type: String,
+    type: String as PropType<string | null>,
     default: null
   },
   /** Decimales (null = config global, default 2). */
   precision: {
-    type: Number,
+    type: Number as PropType<number | null>,
     default: null,
   },
   /** Valor numérico (v-model). */
   modelValue: {
+    type: [Number, String] as PropType<number | string | null>,
     default: null,
   },
   /** Placeholder del input. */
@@ -30,7 +33,7 @@ export const kunCurrencyProps = {
   },
   /** Texto fijo al inicio. */
   prefix: {
-    type: String,
+    type: String as PropType<string | null>,
     default: null
   },
   /** Texto fijo al final. */

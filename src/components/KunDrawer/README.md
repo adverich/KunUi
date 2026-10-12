@@ -29,7 +29,7 @@ import { KunDrawer } from 'adverich-kun-ui'
 | `elevation` | `String \| Number` | `-` | Nivel de sombra. |
 | `floating` | `Boolean` | `-` | Sin bordes ni fondo (flotante). |
 | `image` | `String` | `-` | URL de imagen de fondo. |
-| `location` | `String` | `'start'` | Lado de apertura: 'start' \| 'end' \| 'top' \| 'bottom'. |
+| `location` | `KunDrawerLocation` | `'start'` | Lado de apertura: 'start' \| 'end' \| 'top' \| 'bottom'.<br/>Valores · Values: `start` `end` `top` `bottom` `left` `right` |
 | `permanent` | `Boolean` | `-` | Siempre visible (ignora el modelo). |
 | `persistent` | `Boolean` | `-` | No cierra al hacer click fuera. |
 | `rail` | `Boolean` | `-` | Modo rail (colapsado a iconos). |

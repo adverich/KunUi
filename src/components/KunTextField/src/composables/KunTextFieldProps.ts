@@ -24,9 +24,9 @@ export default {
   /** Ícono externo al final (fuera del borde). */
   appendIcon: String,
   /** Ícono interno al inicio. */
-  prependInnerIcon: { type: [String, Object, Function, Array], default: null },
+  prependInnerIcon: { type: [String, Object, Function, Array] as PropType<string | Record<string, any> | Function | unknown[] | null>, default: null },
   /** Ícono interno al final. */
-  appendInnerIcon: { type: [String, Object, Function, Array], default: null },
+  appendInnerIcon: { type: [String, Object, Function, Array] as PropType<string | Record<string, any> | Function | unknown[] | null>, default: null },
   /** Clase del contenedor del ícono interno inicial. */
   prependInnerClass: String,
   /** Clase del contenedor del ícono interno final. */
@@ -42,7 +42,7 @@ export default {
   /** Color del label en reposo. */
   labelColor: { type: String, default: 'text-ui' },
   /** Color del label flotando (null = usa `labelColor`). */
-  floatingLabelColor: { type: String, default: null },
+  floatingLabelColor: { type: String as PropType<string | null>, default: null },
   /** Tamaño del label en reposo. */
   labelSize: { type: String, default: 'text-sm' },
   /** Tamaño del label flotando. */
@@ -52,7 +52,7 @@ export default {
   /** Opacidad del label flotando. */
   floatingLabelOpacity: { type: String, default: 'opacity-80' },
   /** Offset izquierdo del label en reposo (null = automático según iconos). */
-  labelLeft: { type: String, default: null },
+  labelLeft: { type: String as PropType<string | null>, default: null },
   /** Offset izquierdo del label flotando. */
   floatingLabelLeft: { type: String, default: 'left-2' },
   /** Posición superior del label flotando. */
@@ -62,11 +62,11 @@ export default {
   /** Color del placeholder. */
   placeholderColor: { type: String, default: 'placeholder-ui' },
   /** Tamaño del texto del valor (null = 'text-sm'). */
-  inputTextSize: { type: String, default: null },
+  inputTextSize: { type: String as PropType<string | null>, default: null },
   /** Peso del texto del valor (null = hereda). */
-  inputWeight: { type: String, default: null },
+  inputWeight: { type: String as PropType<string | null>, default: null },
   /** Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). */
-  placeholderTextSize: { type: String, default: null },
+  placeholderTextSize: { type: String as PropType<string | null>, default: null },
   /** Color de fondo del contenedor. */
   bgInput: { type: String, default: 'bg-field-background' },
   /** Clase libre para el input. */
@@ -89,9 +89,9 @@ export default {
   rules: { type: Array, default: () => [] },
   // Atributos HTML nativos
   /** Id del input nativo. */
-  id: { type: String, default: null },
+  id: { type: String as PropType<string | null>, default: null },
   /** Nombre del input nativo. */
-  name: { type: String, default: null },
+  name: { type: String as PropType<string | null>, default: null },
   /** Autocomplete nativo. */
   autocomplete: { type: String, default: 'off' },
   /** Requerido (nativo + validación). */
@@ -101,17 +101,17 @@ export default {
   /** Solo lectura. */
   readonly: { type: Boolean, default: false },
   /** Teclado virtual en móvil. */
-  inputmode: { type: String, default: null },
+  inputmode: { type: String as PropType<string | null>, default: null },
   /** Longitud mínima nativa. */
-  minlength: { type: [Number, String], default: null },
+  minlength: { type: [Number, String] as PropType<number | string | null>, default: null },
   /** Muestra botón limpiar. */
   clearable: { type: Boolean, default: false },
   /** Longitud máxima nativa (activa el counter). */
-  maxlength: { type: [Number, String], default: null },
+  maxlength: { type: [Number, String] as PropType<number | string | null>, default: null },
   /** Patrón regex nativo. */
-  pattern: { type: String, default: null },
+  pattern: { type: String as PropType<string | null>, default: null },
   /** Corrector ortográfico nativo. */
-  spellcheck: { type: [Boolean, String], default: null },
+  spellcheck: { type: [Boolean, String] as PropType<boolean | string | null>, default: null },
   /** Muestra contador (requiere `maxlength`). */
   counter: { type: Boolean, default: false },
   /** Debounce en ms para emitir el modelo. */

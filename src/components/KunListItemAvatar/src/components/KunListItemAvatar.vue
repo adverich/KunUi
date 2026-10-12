@@ -11,15 +11,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { kunListItemAvatarProps } from '../composables/kunListItemAvatarProps.js'
 
 const props = defineProps(kunListItemAvatarProps)
 
-const sizeClass = {
+const sizeClass = computed(() => ({
   sm: 'w-6 h-6 text-xs',
   md: 'w-8 h-8 text-sm',
   lg: 'w-10 h-10 text-base'
-}[props.size] || 'w-8 h-8 text-sm'
+} as Record<string, string>)[props.size] || 'w-8 h-8 text-sm')
 </script>
 
 <style scoped>

@@ -1,8 +1,10 @@
+import type { PropType } from 'vue';
+
 export const kunListGroupProps = {
   /** Expansión del grupo (v-model). */
   modelValue: { type: Boolean, default: false },
   /** Id para aria-controls. Se genera uno si se omite. */
-  id: { type: String, default: null },
+  id: { type: String as PropType<string | null>, default: null },
   /** Título del activador (alternativa al slot). */
   title: { type: String, default: '' },
   /** Ícono cuando está expandido. */

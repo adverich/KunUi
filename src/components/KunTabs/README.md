@@ -26,14 +26,14 @@ import { KunTabs } from 'adverich-kun-ui'
 |---|---|---|---|
 | `modelValue` | `String \| Number \| Array` | `-` | Tab activo (v-model): valor o array con `multiple`. |
 | `items` | `Array` | `-` | Reservado para tabs por datos. Actualmente sin efecto (usar slots KunTab o items de KunTabWindow). |
-| `alignTabs` | `String` | `'start'` | Alineación de los tabs. |
-| `direction` | `String` | `'horizontal'` | Dirección del layout: 'horizontal' \| 'vertical'. |
+| `alignTabs` | `KunTabsAlignTabs` | `'start'` | Alineación de los tabs.<br/>Valores · Values: `start` `center` `end` `title` |
+| `direction` | `KunTabsDirection` | `'horizontal'` | Dirección del layout: 'horizontal' \| 'vertical'.<br/>Valores · Values: `horizontal` `vertical` |
 | `bgColor` | `String` | `''` | Color de fondo de la barra. |
-| `color` | `String` | `-` | Color de los tabs. |
+| `color` | `String` | `-` | Color de los tabs (reservado, sin efecto). |
 | `sliderColor` | `String` | `'bg-primary'` | Color del slider indicador. |
 | `selectedClass` | `String` | `'text-primary font-medium'` | Clase del tab activo. |
 | `grow` | `Boolean` | `-` | Los tabs ocupan todo el ancho. |
-| `fixedTabs` | `Boolean` | `-` | Ancho fijo por tab (sin scroll). |
+| `fixedTabs` | `Boolean` | `-` | Ancho fijo por tab, sin scroll (reservado, sin efecto). |
 | `centerActive` | `Boolean` | `-` | Desplaza el tab activo al centro. |
 | `hideSlider` | `Boolean` | `-` | Oculta el slider indicador. |
 | `showArrows` | `Boolean` | `-` | Muestra flechas de scroll. |

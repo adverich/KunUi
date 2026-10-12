@@ -31,6 +31,18 @@ const {
   itemsPerIntersection: props.itemsPerIntersection,
 })
 
+// Emite la ventana visible (contrato `@update:items`) cada vez que cambia
+// (carga de batches, búsqueda o cambio de items).
+watch(visibleItems, (val) => {
+  emit('update:items', val)
+})
+
+// Cablea el prop scrollToIndex a la lógica interna: carga batches hasta
+// que el índice objetivo esté dentro de la ventana visible.
+watch(() => props.scrollToIndex, (index) => {
+  if (typeof index === 'number' && index >= 0) setScrollToIndex(index)
+}, { immediate: true })
+
 
 // El sentinel debe paginar contra el scroller real (ej. el KunMenu con
 // overflow-y-auto), no contra el viewport: si el menú está limitado por
@@ -56,7 +68,7 @@ onMounted(() => {
         loadNextBatch();
       }
     }
-  }, { root });
+  }, { root, rootMargin: props.rootMargin });
 });
 </script>
 

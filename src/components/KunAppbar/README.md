@@ -28,9 +28,9 @@ import { KunAppbar } from 'adverich-kun-ui'
 | `titleSize` | `String` | `'text-base'` | Tamaño del título (clase Tailwind). |
 | `titleWeight` | `String` | `'font-medium'` | Peso del título (clase Tailwind). |
 | `titlePosition` | `KunAppbarTitlePosition` | `'center'` | Posición del título.<br/>Valores · Values: `left` `center` `right` |
-| `density` | `String` | `'default'` | Densidad visual. |
+| `density` | `KunAppbarDensity` | `'default'` | Densidad visual.<br/>Valores · Values: `default` `comfortable` `compact` |
 | `height` | `String` | `-` | Altura (clase Tailwind). |
-| `elevation` | `String` | `'md'` | Elevación/sombra. |
+| `elevation` | `KunAppbarElevation` | `'md'` | Elevación/sombra.<br/>Valores · Values: `sm` `md` `lg` `xl` `2xl` `none` |
 | `bordered` | `Boolean` | `false` | Muestra borde inferior (usa `borderColor`). |
 | `borderColor` | `String` | `'border-b border-ui'` | Clases del borde inferior. |
 | `showDrawerButton` | `Boolean` | `true` | Muestra el botón para abrir/cerrar el drawer. |
@@ -47,6 +47,10 @@ import { KunAppbar } from 'adverich-kun-ui'
 | `collapseBreakpoint` | `Number` | `768` | Ancho en px bajo el cual colapsa (requiere `responsiveCollapse`). |
 | `transition` | `KunAppbarTransition` | `'fade-slide'` | Transición de aparición.<br/>Valores · Values: `fade-slide` `fade` `scale` |
 | `animationClass` | `String` | `''` | Clase de animación extra. |
+
+## Eventos · Events
+
+- `toggle-drawer`
 
 ## Slots
 

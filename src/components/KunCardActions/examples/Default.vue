@@ -3,8 +3,8 @@
         <h3>Ejemplo básico de KunCardActions</h3>
 
         <KunCardActions justify="justify-between" align="items-center" class="bg-gray-100 rounded-lg">
-            <KunBtn text="Cancelar" variant="outlined" color="text-red-600" />
-            <KunBtn text="Guardar" color="bg-blue-600 text-white" />
+            <KunBtn text="Cancelar" variant="outlined" textColor="text-red-600" />
+            <KunBtn text="Guardar" bgColor="bg-blue-600" textColor="text-white" />
         </KunCardActions>
 
         <h3>Ejemplo con wrap y acciones múltiples</h3>

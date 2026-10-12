@@ -1,5 +1,7 @@
 import type { PropType } from 'vue';
 
+export type KunFileInputVariant = 'filled' | 'outlined' | 'solo';
+
 export const kunFileInputProps = {
   /** Archivo(s) seleccionado(s) (v-model): File único o array con `multiple`. `null` = sin selección (lo emite `clearable` en modo simple). */
   modelValue: { type: [File, Array] as PropType<File | File[] | null> },
@@ -55,8 +57,9 @@ export const kunFileInputProps = {
   },
   /** Variante visual del contenedor. */
   variant: {
-    type: String,
+    type: String as PropType<KunFileInputVariant>,
     default: 'filled',
+    validator: (v: unknown) => ['filled', 'outlined', 'solo'].includes(v as string),
   },
   /** Reglas de validación: `(valor) => true | string`. */
   rules: {

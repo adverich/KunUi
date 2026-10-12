@@ -23,20 +23,20 @@ import { KunAvatar } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `image` | `String` | `-` | URL de imagen a mostrar (tiene prioridad sobre icon/text/slot). |
-| `icon` | `String` | `-` | Ícono a mostrar si no hay imagen. |
+| `icon` | `string \| Record<string, any> \| Function` | `-` | Ícono: alias `$nombre`, SVG inline, componente o texto libre (se muestra tal cual). |
 | `text` | `String` | `-` | Texto (iniciales) a mostrar si no hay imagen ni ícono. |
 | `alt` | `String` | `-` | Texto alternativo de la imagen. |
-| `size` | `String \| Number` | `"default"` | Tamaño predefinido: 'x-small' \| 'small' \| 'default' \| 'large' \| 'x-large'. |
+| `size` | `string \| number` | `"default"` | Tamaño predefinido ('x-small' \| 'small' \| 'default' \| 'large' \| 'x-large') o px numéricos. |
 | `rounded` | `String \| Number \| Boolean` | `-` | Radio de borde (true = circular). |
 | `border` | `String \| Number \| Boolean` | `false` | Borde: se renderiza como `border border-<valor>`. |
 | `color` | `String` | `-` | Sufijo de color de fondo (`bg-<color>`). |
-| `density` | `String` | `"default"` | Densidad del padding interno. |
+| `density` | `KunAvatarDensity` | `"default"` | Densidad: escala el tamaño del avatar (comfortable −1 paso, compact −2 pasos).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `end` | `Boolean` | `-` | Margen al final (útil en listas). |
 | `start` | `Boolean` | `-` | Margen al inicio (útil en listas). |
 | `tag` | `String` | `"div"` | Tag del contenedor. |
-| `theme` | `String` | `-` | Tema de color. |
+| `theme` | `String` | `-` | Tema de color (hook de clase `theme-<valor>` para CSS del consumidor). |
 | `tile` | `Boolean` | `-` | Sin redondeo (esquinas rectas). |
-| `variant` | `String` | `"flat"` | Variante visual. |
+| `variant` | `KunAvatarVariant` | `"flat"` | Variante visual: 'flat' (fondo pleno) \| 'outlined' (transparente con borde) \| 'tonal' (fondo suave) \| 'text' (transparente).<br/>Valores · Values: `flat` `outlined` `tonal` `text` |
 
 ## Eventos · Events
 

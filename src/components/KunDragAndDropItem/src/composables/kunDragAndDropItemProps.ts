@@ -1,12 +1,14 @@
+import type { PropType } from 'vue';
+
 export const kunDragAndDropItemProps = {
   /** Valor del ítem. */
   item: {
-    type: [Object, String, Number],
+    type: [Object, String, Number] as PropType<Record<string, any> | string | number | null>,
     default: null,
   },
   /** Clave estable del ítem (debe coincidir con el `itemKey` del padre). */
   itemKey: {
-    type: [String, Number],
+    type: [String, Number] as PropType<string | number | null>,
     default: null,
   },
   /** Índice del ítem en la lista. */

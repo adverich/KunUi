@@ -11,33 +11,53 @@ const emits = defineEmits(['update:modelValue', 'focus', 'blur'])
 interface KunRadioGroupContext {
   modelValue?: Ref<unknown>;
   update?: (value: unknown) => void;
+  color?: Ref<string | undefined>;
+  baseColor?: Ref<string | undefined>;
+  name?: Ref<string | undefined>;
+  disabled?: Ref<boolean | undefined>;
+  readonly?: Ref<boolean | undefined>;
+  error?: Ref<boolean | undefined>;
+  trueIcon?: Ref<string | object | undefined>;
+  falseIcon?: Ref<string | object | undefined>;
 }
 
 const radioGroup = inject<KunRadioGroupContext | null>('kun-radio-group', null)
 
+const isDisabled = computed(() => props.disabled || radioGroup?.disabled?.value || false)
+const isReadonly = computed(() => props.readonly || radioGroup?.readonly?.value || false)
+const effectiveName = computed(() => props.name ?? radioGroup?.name?.value)
+const effectiveColor = computed(() => props.color || radioGroup?.color?.value || 'text-primary')
+const effectiveBaseColor = computed(() => props.baseColor || radioGroup?.baseColor?.value || 'text-ui-muted')
+
+const onValue = computed(() => props.value ?? props.trueValue)
+const isError = computed(() => props.error || radioGroup?.error?.value || false)
+
 const isSelected = computed(() => {
   const val = radioGroup?.modelValue?.value ?? props.modelValue
-  return val === (props.value ?? props.trueValue)
+  if (val === props.falseValue && val !== onValue.value) return false
+  return val === onValue.value
 })
 
 const icon = computed(() =>
-  isSelected.value ? (props.trueIcon ?? icons.radioboxMarked) : (props.falseIcon ?? icons.radioboxBlank)
+  isSelected.value ? (props.trueIcon ?? radioGroup?.trueIcon?.value ?? icons.radioboxMarked) : (props.falseIcon ?? radioGroup?.falseIcon?.value ?? icons.radioboxBlank)
 )
 
 const colorClass = computed(() =>
-  props.disabled
+  isDisabled.value
     ? 'text-ui-disabled'
+    : isError.value
+    ? 'text-ui-error'
     : isSelected.value
-    ? props.color || 'text-primary'
-    : props.baseColor || 'text-ui-muted'
+    ? effectiveColor.value
+    : effectiveBaseColor.value
 )
 
 const uid = useId()
 const inputId = computed(() => props.id || `kun-radio-${uid}`)
 
 function handleChange() {
-  if (props.readonly || props.disabled) return
-  const val = props.value ?? props.trueValue
+  if (isReadonly.value || isDisabled.value) return
+  const val = isSelected.value && props.value == null ? props.falseValue : onValue.value
   if (radioGroup) {
     radioGroup.update?.(val)
   } else {
@@ -49,7 +69,7 @@ function handleChange() {
 <template>
   <div
     class="inline-flex items-center gap-2 select-none cursor-pointer"
-    :class="{ 'opacity-50 pointer-events-none': disabled || readonly }"
+    :class="{ 'opacity-50 pointer-events-none': isDisabled || isReadonly }"
     @click="handleChange"
   >
     <!-- <input
@@ -68,8 +88,8 @@ function handleChange() {
       class="sr-only"
       type="radio"
       :id="inputId"
-      :name="name"
-      :disabled="disabled"
+      :name="effectiveName"
+      :disabled="isDisabled"
       :checked="isSelected"
       @change="handleChange"
     />

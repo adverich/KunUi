@@ -216,6 +216,18 @@ export const kunCarouselProps = {
     default: true,
   },
 
+  /** Etiqueta accesible del botón anterior. */
+  prevLabel: {
+    type: String,
+    default: 'Anterior',
+  },
+
+  /** Etiqueta accesible del botón siguiente. */
+  nextLabel: {
+    type: String,
+    default: 'Siguiente',
+  },
+
   /** Muestra dots de navegación. */
   showDots: {
     type: Boolean,

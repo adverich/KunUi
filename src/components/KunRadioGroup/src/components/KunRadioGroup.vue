@@ -15,11 +15,19 @@ const update = (val: unknown): void => {
 provide('kun-radio-group', {
   modelValue: computed(() => props.modelValue),
   update,
+  color: computed(() => props.color),
+  baseColor: computed(() => props.baseColor),
+  name: computed(() => props.name),
+  disabled: computed(() => props.disabled),
+  readonly: computed(() => props.readonly),
+  error: computed(() => props.error),
+  trueIcon: computed(() => props.trueIcon),
+  falseIcon: computed(() => props.falseIcon),
 })
 </script>
 
 <template>
-  <div class="w-full" role="radiogroup">
+  <div class="w-full" :class="{ 'text-ui-error': props.error }" role="radiogroup" :aria-invalid="props.error || undefined">
     <slot name="label">
       <div v-if="label" class="block mb-1 text-sm font-medium">{{ label }}</div>
     </slot>

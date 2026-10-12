@@ -23,10 +23,10 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `label` | `String` | `-` | Etiqueta del campo de búsqueda. |
-| `itemValue` | `String` | `null` | Campo del ítem usado como valor (null = primer valor del objeto). |
-| `itemTitle` | `String \| Array` | `null` | Campo(s) a mostrar (string, array o ruta `a.b`). |
-| `itemText` | `String \| Array` | `null` | Alias de `itemTitle`. |
-| `itemSubtitle` | `String \| Array` | `null` | Campo(s) del subtítulo. |
+| `itemValue` | `string \| null` | `null` | Campo del ítem usado como valor (null = primer valor del objeto). |
+| `itemTitle` | `string \| unknown[] \| null` | `null` | Campo(s) a mostrar (string, array o ruta `a.b`). |
+| `itemText` | `string \| unknown[] \| null` | `null` | Alias de `itemTitle`. |
+| `itemSubtitle` | `string \| unknown[] \| null` | `null` | Campo(s) del subtítulo. |
 | `returnObject` | `Boolean` | `false` | Emite el objeto completo en vez del valor. |
 | `searchableKeys` | `Array` | `[]` | Campos donde buscar (vacío = todos). Soporta rutas `a.b.c`. |
 | `focusOnRender` | `Boolean` | `false` | Foco automático al montar. |

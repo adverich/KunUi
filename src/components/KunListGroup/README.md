@@ -23,7 +23,7 @@ import { KunListGroup } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `modelValue` | `Boolean` | `false` | Expansión del grupo (v-model). |
-| `id` | `String` | `null` | Id para aria-controls. Se genera uno si se omite. |
+| `id` | `string \| null` | `null` | Id para aria-controls. Se genera uno si se omite. |
 | `title` | `String` | `''` | Título del activador (alternativa al slot). |
 | `expandIcon` | `String` | `'$mdi-chevron-up'` | Ícono cuando está expandido. |
 | `collapseIcon` | `String` | `'$mdi-chevron-down'` | Ícono cuando está colapsado. |

@@ -29,7 +29,7 @@ import { KunTable } from 'adverich-kun-ui'
 | `headers` | `KunTableHeader[]` | `() => [] as KunTableHeader[]` | Configuración de columnas `{ key, value, label, sortable, ... }`. |
 | `hasActions` | `Boolean` | `false` | Muestra columna de acciones (slot `item.actions`). |
 | `actionLabel` | `String` | `'Acciones'` | Etiqueta del header de acciones. |
-| `actionsAlign` | `String` | `-` | Alineación de acciones: 'left' \| 'center' \| 'right'. |
+| `actionsAlign` | `KunTableActionsAlign` | `-` | Alineación de acciones: 'left' \| 'center' \| 'right'.<br/>Valores · Values: `left` `center` `right` |
 | `actionLoadingMap` | `Record<string, unknown>` | `() => ({})` | Mapa de loading por rowKey para la columna de acciones. |
 | `filterable` | `Boolean` | `-` | Habilita filtros avanzados por columna (modal). |
 | `filters` | `TableFilterDefinition[]` | `() => [] as TableFilterDefinition[]` | Configuración de filtros por columna. |
@@ -47,7 +47,7 @@ import { KunTable } from 'adverich-kun-ui'
 | `debounceTime` | `Number` | `300` | Debounce en ms para ejecutar la búsqueda. |
 | `showSelect` | `Boolean` | `false` | Muestra checkboxes de selección. |
 | `showExpand` | `Boolean` | `false` | Habilita expansión de filas (slot `expand`). |
-| `showGroupBy` | `Boolean` | `false` | (Futuro) Agrupamiento. Actualmente sin efecto. |
+| `showGroupBy` | `Boolean` | `false` | Agrupamiento (reservado, sin efecto). |
 | `rowKey` | `string \| ((item: TableItem, index: number) => unknown)` | `'id'` | Clave estable para identidad de filas ('id', path o función). |
 | `hideDefaultHeader` | `Boolean` | `false` | Oculta el header por defecto (usar slot `thead`). |
 | `hideDefaultFooter` | `Boolean` | `false` | Oculta el footer por defecto (usar slot `footer`). |
@@ -163,7 +163,7 @@ import { KunTable } from 'adverich-kun-ui'
 | `selectedClass` | `String` | `-` | Clase cuando está seleccionada. |
 | `stripedClass` | `String` | `-` | Clase de filas alternas. |
 | `hasActions` | `Boolean` | `-` | Columna de acciones. |
-| `actionsAlign` | `String` | `-` | Alineación de la columna de acciones. |
+| `actionsAlign` | `KunTableActionsAlign` | `'center'` | Alineación de la columna de acciones: 'left' \| 'center' \| 'right'.<br/>Valores · Values: `left` `center` `right` |
 | `loading` | `Boolean \| Object` | `false` | Estado de carga de las acciones. |
 | `rowClassCondition` | `String \| Function` | `-` | Clase condicional por ítem (string o `(item) => clase\|false`). |
 | `customSlots` | `Object` | `-` | Celdas custom por columna (`item.<key>` → componente). |
@@ -181,6 +181,7 @@ import { KunTable } from 'adverich-kun-ui'
 | `showExpand` | `Boolean` | `-` | Columna de expansión. |
 | `showSelect` | `Boolean` | `-` | Columna de selección. |
 | `hasActions` | `Boolean` | `-` | Columna de acciones. |
+| `actionsAlign` | `KunTableActionsAlign` | `'center'` | Alineación de la columna de acciones (se reenvía a KunTableRow).<br/>Valores · Values: `left` `center` `right` |
 | `loading` | `Boolean` | `-` | Estado de carga global. |
 | `actionLoadingMap` | `Object` | `-` | Mapa de loading de acciones por rowKey. |
 | `getActionLoading` | `(item: TableItem, index: number) => boolean` | `() => false` | `(item, index) => boolean`: loading de las acciones. |

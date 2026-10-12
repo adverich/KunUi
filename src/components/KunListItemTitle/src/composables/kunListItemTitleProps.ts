@@ -1,7 +1,9 @@
+import type { PropType } from 'vue';
+
 export const kunListItemTitleProps = {
   /** Título a mostrar. */
   title: {
-    type: [String, Number],
+    type: [String, Number] as PropType<string | number | null>,
     default: null
   },
   /** Color del texto. */

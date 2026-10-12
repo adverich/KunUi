@@ -1,6 +1,8 @@
+import type { PropType } from 'vue';
+
 export const kunCardTextProps = {
     /** Texto del cuerpo (alternativa al slot). */
-    text: { type: [String, Number], default: null },
+    text: { type: [String, Number] as PropType<string | number | null>, default: null },
     /** Color del texto. */
     color: { type: String, default: 'text-ui' },
     /** Reduce el padding. */

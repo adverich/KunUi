@@ -27,7 +27,7 @@ import { KunModalFooter } from 'adverich-kun-ui'
 | `modelValue` | `Boolean` | `-` | Visibilidad del mensaje (v-model, requerido). |
 | `id` | `String \| Number` | `-` | Id del mensaje (se emite en `removeMessage`). |
 | `message` | `String` | `"Mensaje predeterminado"` | Texto del mensaje. |
-| `color` | `String` | `"green"` | Color temático ('green' \| 'blue' \| 'red' \| ...). |
+| `color` | `KunModalFooterColor` | `"green"` | Color temático ('green' \| 'blue' \| 'red' \| ...).<br/>Valores · Values: `blue` `green` `red` `yellow` `gray` `orange` |
 | `width` | `String` | `"300px"` | Ancho del contenedor. |
 | `height` | `String` | `"auto"` | Altura del contenedor ('auto' = contenido). |
 | `isFixed` | `Boolean` | `false` | Posicionamiento fijo en viewport. |
@@ -37,8 +37,8 @@ import { KunModalFooter } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `messages` | `Array` | `() => []` | Lista de mensajes `{ id, text, color }` a mostrar apilados. |
-| `position` | `String` | `"bottom-right"` | Esquina del viewport donde se apilan. |
-| `stackDirection` | `String` | `"bottom-to-top"` | Dirección de apilado: 'bottom-to-top' \| 'top-to-bottom'. |
+| `position` | `KunMultipleModalFooterPosition` | `"bottom-right"` | Esquina del viewport donde se apilan.<br/>Valores · Values: `bottom-left` `bottom-right` `bottom-center` `top-left` `top-right` `top-center` |
+| `stackDirection` | `KunMultipleModalFooterStackDirection` | `"bottom-to-top"` | Dirección de apilado: 'bottom-to-top' \| 'top-to-bottom'.<br/>Valores · Values: `bottom-to-top` `top-to-bottom` |
 | `width` | `String` | `"300px"` | Ancho de cada mensaje. |
 | `height` | `String` | `"auto"` | Altura de cada mensaje ('auto' = contenido). |
 

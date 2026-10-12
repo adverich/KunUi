@@ -3,11 +3,11 @@ import type { PropType } from 'vue';
 
 export const kunCardTitleProps = {
     /** Título (alternativa al slot). */
-    title: String,
+    title: String as PropType<string | null>,
     /** Tamaño del título. */
-    titleSize: String,
+    titleSize: String as PropType<string | null>,
     /** Subtítulo (alternativa al slot). */
-    subtitle: String,
+    subtitle: String as PropType<string | null>,
     /** Contenido al inicio (componente o icono). */
     prepend: [String, Object, Function],
     /** Contenido al final (componente o icono). */

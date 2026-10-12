@@ -23,7 +23,7 @@ import { KunColorPicker } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `modelValue` | `String` | `'#000000'` | Color seleccionado (v-model). Emite HEX opaco o `rgba()` con opacidad. |
-| `originalColor` | `String` | `null` | Color to restore with the reset action. Defaults to the initial model value. |
+| `originalColor` | `string \| null` | `null` | Color to restore with the reset action. Defaults to the initial model value. |
 | `label` | `String` | `''` | Etiqueta del campo. |
 | `disabled` | `Boolean` | `false` | Deshabilita el control. |
 | `allowTransparent` | `Boolean` | `true` | Habilita el selector transparente. |

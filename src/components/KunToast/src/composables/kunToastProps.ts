@@ -6,8 +6,8 @@ export type KunToastOrientation = 'vertical' | 'horizontal';
 export type KunToastType = 'foreground' | 'background';
 
 export const kunToastProps = {
-  /** Id único (lo genera KunToaster si se omite). */
-  toastId: { type: [String, Number], default: null },
+  /** Id único (lo genera KunToaster si se omite; `useToast().add()` acepta `id` o `toastId`). */
+  toastId: { type: [String, Number] as PropType<string | number | null>, default: null },
 
   /** Título (string o VNode). */
   title: { type: [String, Object, Function], default: '' },
@@ -15,7 +15,7 @@ export const kunToastProps = {
   description: { type: [String, Object, Function], default: '' },
 
   /** Ícono principal (null = según `color`). */
-  icon: { type: [String, Object, Function], default: null },
+  icon: { type: [String, Object, Function] as PropType<string | Record<string, any> | Function | null>, default: null },
 
   /** Variante de color. */
   color: {
@@ -32,19 +32,19 @@ export const kunToastProps = {
   },
 
   /** Duración en ms (0 = sin auto-dismiss, null = global del Toaster). */
-  duration: { type: Number, default: null },
+  duration: { type: Number as PropType<number | null>, default: null },
 
   /** Barra de progreso del timeout. */
   progress: { type: Boolean, default: true },
 
   /** Color de la barra de progreso (null = según `color`). */
-  progressColor: { type: String, default: null },
+  progressColor: { type: String as PropType<string | null>, default: null },
 
   /** Botón de cierre. */
   closable: { type: Boolean, default: true },
 
   /** Ícono del botón de cierre (null = default). */
-  closeIcon: { type: [String, Object, Function], default: null },
+  closeIcon: { type: [String, Object, Function] as PropType<string | Record<string, any> | Function | null>, default: null },
 
   /** Botones de acción `{ label, icon, variant, onClick, closeOnClick }`. */
   actions: { type: Array as PropType<ToastAction[]>, default: () => [] as ToastAction[] },

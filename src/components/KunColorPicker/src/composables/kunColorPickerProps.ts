@@ -6,7 +6,7 @@ export const kunColorPickerProps = {
   /** Color seleccionado (v-model). Emite HEX opaco o `rgba()` con opacidad. */
   modelValue: { type: String, default: '#000000' },
   /** Color to restore with the reset action. Defaults to the initial model value. */
-  originalColor: { type: String, default: null },
+  originalColor: { type: String as PropType<string | null>, default: null },
   /** Etiqueta del campo. */
   label: { type: String, default: '' },
   /** Deshabilita el control. */

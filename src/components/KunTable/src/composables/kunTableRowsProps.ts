@@ -1,6 +1,7 @@
 import type { PropType } from 'vue';
 import type { KunTableHeader } from '@/utils/tableFormatters.js';
 import type { TableItem } from './useRowKey.js';
+import type { KunTableActionsAlign } from './KunTableProps.js';
 
 export const kunTableRowsProps = {
   /** Ítems paginados del `<tbody>`. */
@@ -30,6 +31,12 @@ export const kunTableRowsProps = {
   showSelect: Boolean,
   /** Columna de acciones. */
   hasActions: Boolean,
+  /** Alineación de la columna de acciones (se reenvía a KunTableRow). */
+  actionsAlign: {
+    type: String as PropType<KunTableActionsAlign>,
+    default: 'center',
+    validator: (v: unknown) => ['left', 'center', 'right'].includes(v as string),
+  },
   /** Estado de carga global. */
   loading: Boolean,
   /** Mapa de loading de acciones por rowKey. */

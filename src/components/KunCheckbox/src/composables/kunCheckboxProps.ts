@@ -1,5 +1,10 @@
 import type { PropType } from 'vue';
 
+export type KunCheckboxDirection = 'horizontal' | 'vertical';
+export type KunCheckboxSize = 'sm' | 'md' | 'lg';
+export type KunCheckboxValidateOn = 'blur' | 'input';
+export type KunCheckboxDensity = 'default' | 'comfortable' | 'compact';
+
 export const kunCheckboxProps = {
   /** Valor del checkbox (v-model). En modo `multiple` es el array de seleccionados. Acepta `null` (sin valor). */
   modelValue: { type: [Boolean, Array, String, Number, Object] as PropType<boolean | unknown[] | string | number | Record<string, unknown> | null> },
@@ -30,13 +35,24 @@ export const kunCheckboxProps = {
   /** Reglas de validación: `(valor) => true | string`. */
   rules: Array,
   /** Cuándo validar: 'input' valida al escribir. */
-  validateOn: String,
+  validateOn: {
+    type: String as PropType<KunCheckboxValidateOn>,
+    validator: (v: unknown) => ['blur', 'input'].includes(v as string)
+  },
   /** Efecto ripple al hacer click. */
   ripple: { type: [Boolean, Object], default: true },
-  /** Densidad del padding. */
-  density: { type: String, default: 'default' },
+  /** Densidad del padding (escala el tamaño como KunAvatar: comfortable/compact reducen). */
+  density: {
+    type: String as PropType<KunCheckboxDensity>,
+    default: 'default',
+    validator: (v: unknown) => ['default', 'comfortable', 'compact'].includes(v as string)
+  },
   /** Dirección del layout (label al lado o debajo). */
-  direction: { type: String, default: 'horizontal' },
+  direction: {
+    type: String as PropType<KunCheckboxDirection>,
+    default: 'horizontal',
+    validator: (v: unknown) => ['horizontal', 'vertical'].includes(v as string)
+  },
   /** Color cuando está activo. */
   color: String,
   /** Color del ícono. */
@@ -78,5 +94,9 @@ export const kunCheckboxProps = {
   /** Ancho máximo del campo. */
   maxWidth: [String, Number],
   /** Tamaño: 'sm' | 'md' | 'lg'. */
-  size: { type: String, default: 'md' }
+  size: {
+    type: String as PropType<KunCheckboxSize>,
+    default: 'md',
+    validator: (v: unknown) => ['sm', 'md', 'lg'].includes(v as string)
+  }
 }

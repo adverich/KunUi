@@ -100,6 +100,8 @@ provide('kunForm', {
   onFieldChange,
   validateOn: props.validateOn
 });
+provide('registerField', registerField);
+provide('unregisterField', unregisterField);
 
 // Exponer métodos a padres
 defineExpose({

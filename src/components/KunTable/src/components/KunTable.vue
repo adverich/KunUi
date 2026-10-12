@@ -25,7 +25,7 @@
         </template>
       </div>
 
-      <div class="min-w-1/3 flex h-full items-center justify-end">
+      <div class="min-w-1/3 flex h-full items-center" :class="[searchPositionClass]">
         <slot name="prependSearch" />
 
         <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-success">
@@ -94,6 +94,7 @@
             :show-select="showSelect"
             :show-expand="showExpand"
             :has-actions="hasActions"
+            :actions-align="actionsAlign"
             :action-loading-map="actionLoadingMap"
             :item-key="getRowRenderKey"
             @toggle-expand="toggleExpand"
@@ -108,7 +109,7 @@
           <slot name="body.append" v-bind="slotProps" />
         </template>
 
-        <template v-else="isMobile">
+        <template v-else>
           <KunTableIterators
             :items="paginatedItems"
             :headers="resolvedHeaders"
@@ -133,7 +134,7 @@
         </template>
 
         <template v-if="$slots.tfoot">
-            <tfoot><slot name="tfoot" v-bind="slotProps" /></tfoot>
+            <tfoot :class="tfootClass"><slot name="tfoot" v-bind="slotProps" /></tfoot>
         </template>
       </table>
 
@@ -348,5 +349,13 @@ function hideIconSearch(){
   emits('focusOnSearch', true);
 }
 const searchClass = ref("w-full border max-w-sm");
+const searchPositionClass = computed(() => {
+  const positionMap: Record<string, string> = {
+    start: 'justify-start',
+    center: 'justify-center',
+    end: 'justify-end',
+  };
+  return positionMap[props.searchPosition as string] || 'justify-end';
+});
 </script>
 

@@ -9,7 +9,7 @@ export default () => ({
     result: { type: Object as PropType<Record<string, unknown>>, default: () => ({}) },
     /** Estado de carga (muestra skeleton y bloquea ordenamiento). */
     loading: { type: Boolean, default: false },
-    /** Formato de query emitido (`update:query`). */
+    /** Formato de query emitido (`update:query`) (reservado, sin efecto: siempre emite formato laravel). */
     queryMode: {
         type: String as PropType<KunTableServerSideQueryMode>,
         default: 'laravel',

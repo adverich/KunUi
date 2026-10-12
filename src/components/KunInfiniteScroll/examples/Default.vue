@@ -16,6 +16,11 @@
       </button>
     </div>
 
+    <div class="grid grid-cols-2 gap-3 max-w-xl [&>*]:min-w-0">
+      <KunTextField v-model="rootMargin" label="Root margin" density="compact" />
+      <KunTextField v-model="itemSizeRaw" label="Item size (px, modo virtual)" density="compact" inputmode="numeric" />
+    </div>
+
     <KunInfiniteScroll
       :items="allItems"
       :search="search"
@@ -23,6 +28,8 @@
       :items-per-intersection="20"
       :enabled="true"
       :virtual="useVirtual"
+      :root-margin="rootMargin"
+      :item-size="itemSizeProp"
       :scroll-to-index="scrollTarget"
       @update:items="visibleItems = $event"
     >
@@ -39,13 +46,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import KunInfiniteScroll from '../src/components/KunInfiniteScroll.vue'
+import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 
 const search = ref('')
 const useVirtual = ref(true)
 const scrollTarget: Ref<number | null> = ref(null)
 const visibleItems = ref([])
+
+// ------------------------------------------------------------------
+// Controles del playground
+// ------------------------------------------------------------------
+const rootMargin = ref('0px')
+const itemSizeRaw = ref('48')
+const itemSizeProp = computed(() => (itemSizeRaw.value === '' ? 48 : Number(itemSizeRaw.value)))
 
 const allItems = ref(
   Array.from({ length: 200 }, (_, i) => ({

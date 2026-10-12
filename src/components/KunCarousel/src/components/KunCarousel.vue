@@ -240,8 +240,6 @@ import { KUN_CAROUSEL_KEY } from '../composables/kunCarouselContext.js'
 const props = defineProps({
   ...kunCarouselProps,
   ariaLabel: { type: String, default: 'Carrusel' },
-  prevLabel: { type: String, default: 'Anterior' },
-  nextLabel: { type: String, default: 'Siguiente' },
 })
 
 const emit = defineEmits([

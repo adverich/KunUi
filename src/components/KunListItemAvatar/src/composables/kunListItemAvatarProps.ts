@@ -1,13 +1,18 @@
+import type { PropType } from 'vue';
+
+export type KunListItemAvatarSize = 'sm' | 'md' | 'lg';
+
 export const kunListItemAvatarProps = {
   /** Texto (iniciales) del avatar. */
   text: {
-    type: [String, Number],
+    type: [String, Number] as PropType<string | number | null>,
     default: null
   },
   /** Tamaño predefinido. */
   size: {
-    type: String,
-    default: 'md'
+    type: String as PropType<KunListItemAvatarSize>,
+    default: 'md',
+    validator: (v: unknown) => ['sm', 'md', 'lg'].includes(v as string),
   },
   /** Redondeo. */
   rounded: {

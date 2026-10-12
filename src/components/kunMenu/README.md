@@ -25,8 +25,8 @@ import { KunMenu } from 'adverich-kun-ui'
 | `class` | `String \| Array \| Object` | `-` | Clase extra del contenido. |
 | `bgColor` | `String` | `'bg-menu'` | Color de fondo. |
 | `modelValue` | `Boolean` | `-` | Apertura (v-model). |
-| `activator` | `String \| Object` | `-` | Selector o elemento que dispara el menú. |
-| `activatorProps` | `Object` | `() => ({})` | Props que se pasan al activador. |
+| `activator` | `String \| Object` | `-` | Selector o elemento que dispara el menú (reservado, sin efecto; usar el slot `activator`). |
+| `activatorProps` | `Object` | `() => ({})` | Props que se pasan al activador (reservado, sin efecto; usar el slot `activator`). |
 | `parentRef` | `Object` | `-` | Ref del elemento padre para posicionar. |
 | `attach` | `Boolean \| String \| Object` | `-` | Dónde montar el contenido (Teleport). |
 | `openOnClick` | `Boolean` | `-` | Abrir al hacer click en el activador. |
@@ -51,9 +51,9 @@ import { KunMenu } from 'adverich-kun-ui'
 | `transition` | `KunMenuTransition` | `'fade-scale'` | Animación de apertura/cierre.<br/>Valores · Values: `fade` `fade-scale` `slide-down` `slide-up` `slide-left` `slide-right` `none` |
 | `persistent` | `Boolean` | `-` | No cierra al hacer click fuera ni con Escape. |
 | `zIndex` | `String \| Number` | `-` | Z-index del contenido. |
-| `submenu` | `Boolean` | `-` | Comportamiento de submenú (hereda contexto del padre). |
+| `submenu` | `Boolean` | `-` | Comportamiento de submenú (reservado, sin efecto). |
 | `label` | `String` | `'Menú contextual'` | Etiqueta accesible del menú. |
-| `keyboardNavigation` | `Boolean` | `true` | Navegación con teclado (flechas/Enter/Escape). |
+| `keyboardNavigation` | `Boolean` | `true` | Navegación con teclado (reservado, sin efecto). |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |
 
 ## Eventos · Events

@@ -22,13 +22,13 @@ import { KunCurrency } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `currency` | `Object` | `null` | Moneda `{ value, name, symbol }`. Si es null usa la config global. |
+| `currency` | `Record<string, any> \| null` | `null` | Moneda `{ value, name, symbol }`. Si es null usa la config global. |
 | `hideCurrency` | `Boolean` | `false` | Oculta el símbolo/prefijo de moneda. |
-| `locale` | `String` | `null` | Locale de formato (null = config global, default 'es-AR'). |
-| `precision` | `Number` | `null` | Decimales (null = config global, default 2). |
-| `modelValue` | `any` | `null` | Valor numérico (v-model). |
+| `locale` | `string \| null` | `null` | Locale de formato (null = config global, default 'es-AR'). |
+| `precision` | `number \| null` | `null` | Decimales (null = config global, default 2). |
+| `modelValue` | `number \| string \| null` | `null` | Valor numérico (v-model). |
 | `placeholder` | `String` | `'0.00'` | Placeholder del input. |
-| `prefix` | `String` | `null` | Texto fijo al inicio. |
+| `prefix` | `string \| null` | `null` | Texto fijo al inicio. |
 | `suffix` | `String` | `''` | Texto fijo al final. |
 
 ## Eventos · Events

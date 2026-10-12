@@ -58,9 +58,12 @@ const props = defineProps(kunAlertProps)
 
 const emits = defineEmits(['update:modelValue', 'action'])
 
-onMounted(() => setTimeout(() => {
-  emits('update:modelValue', false);
-}, props.timeout))
+onMounted(() => {
+  if (!props.timeout || props.persistent) return
+  setTimeout(() => {
+    emits('update:modelValue', false);
+  }, props.timeout)
+})
 
 const positionClass = computed(() => {
   if (props.fullscreen) return `fixed inset-0 flex items-center justify-center ${props.margin}`

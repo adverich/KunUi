@@ -5,9 +5,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, provide } from 'vue'
+import { computed, provide, type PropType } from 'vue'
 
 const DEFAULT_COLS = 12
+
+type KunRowAlign = 'start' | 'center' | 'end' | 'stretch'
+type KunRowJustify = 'start' | 'center' | 'end' | 'space-between' | 'space-around'
 
 const normalizeCols = (value: unknown): number => {
   const parsedValue = Number.parseInt(String(value), 10)
@@ -29,12 +32,14 @@ const props = defineProps({
     default: true,
   },
   align:  {
-    type: String,
+    type: String as PropType<KunRowAlign>,
     default: 'center',
+    validator: (v: unknown) => ['start', 'center', 'end', 'stretch'].includes(v as string),
   },
   justify: {
-    type: String,
+    type: String as PropType<KunRowJustify>,
     default: 'space-around',
+    validator: (v: unknown) => ['start', 'center', 'end', 'space-between', 'space-around'].includes(v as string),
   },
   cols: {
     type: [String, Number],

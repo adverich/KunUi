@@ -4,6 +4,7 @@ import type { TableItem } from './useRowKey.js';
 import type { TableFilterDefinition } from './kunTableFilterProps.js';
 
 export type KunTableSearchPosition = 'start' | 'center' | 'end';
+export type KunTableActionsAlign = 'left' | 'center' | 'right';
 
 /**
  * Definición centralizada de las propiedades (props) para el componente KunTable.
@@ -24,7 +25,10 @@ export default () => ({
     /** Etiqueta del header de acciones. */
     actionLabel: { type: String, default: 'Acciones' },
     /** Alineación de acciones: 'left' | 'center' | 'right'. */
-    actionsAlign: String,
+    actionsAlign: {
+        type: String as PropType<KunTableActionsAlign>,
+        validator: (v: unknown) => ['left', 'center', 'right'].includes(v as string),
+    },
     /** Mapa de loading por rowKey para la columna de acciones. */
     actionLoadingMap: { type: Object as PropType<Record<string, unknown>>, default: () => ({}) },
 
@@ -77,7 +81,7 @@ export default () => ({
     showSelect: { type: Boolean, default: false },
     /** Habilita expansión de filas (slot `expand`). */
     showExpand: { type: Boolean, default: false },
-    /** (Futuro) Agrupamiento. Actualmente sin efecto. */
+    /** Agrupamiento (reservado, sin efecto). */
     showGroupBy: { type: Boolean, default: false },
     /** Clave estable para identidad de filas ('id', path o función). */
     rowKey: { type: [String, Function] as PropType<string | ((item: TableItem, index: number) => unknown)>, default: 'id' },

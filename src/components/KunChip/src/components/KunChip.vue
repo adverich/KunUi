@@ -15,9 +15,8 @@
 
     <!-- Content -->
     <div class="kun-chip__content truncate">
-      <slot v-if="$slots.default">
-        {{ label || text }}
-      </slot>
+      <slot v-if="$slots.default" />
+      <template v-else>{{ label || text }}</template>
     </div>
 
     <!-- Append slot or icon -->

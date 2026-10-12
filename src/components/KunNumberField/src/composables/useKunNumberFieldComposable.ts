@@ -9,6 +9,12 @@ export interface KunNumberFieldPropsLike {
     max?: unknown;
     step?: unknown;
     formatMode?: unknown;
+    locale?: unknown;
+    separator?: unknown;
+    useGrouping?: unknown;
+    debounce?: unknown;
+    rules?: unknown;
+    validateOnBlur?: unknown;
 }
 
 export type KunNumberFieldEmits = (event: 'update:modelValue' | 'input' | 'focus' | 'blur', value?: unknown) => void;
@@ -27,6 +33,43 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
 
     // Solo usado en modo bank
     let rawNumberString = '';
+
+    // Mensaje de validación interna (reglas). '' = válido / sin reglas.
+    const internalError: Ref<string> = ref('');
+
+    // Separadores de formato: el decimal sale de `separator` (default ',');
+    // los miles usan el otro ('.' si decimal es ',', ',' en caso contrario).
+    // Con el default el comportamiento es idéntico al histórico.
+    function separators(): { decimal: string; thousands: string } {
+        const dec = String(props.separator ?? ',') || ',';
+        return { decimal: dec, thousands: dec === ',' ? '.' : ',' };
+    }
+
+    function escapeRegExp(s: string): string {
+        return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Validación interna por reglas: la primera que falle fija el mensaje.
+    // Corre al escribir (salvo `validateOnBlur`) y siempre al perder el foco.
+    function runRules(value: unknown): boolean {
+        const rules = Array.isArray(props.rules)
+            ? props.rules as Array<(v: unknown) => boolean | string>
+            : [];
+        for (const rule of rules) {
+            let res: boolean | string = true;
+            try {
+                res = rule(value);
+            } catch {
+                res = 'Valor inválido';
+            }
+            if (res !== true) {
+                internalError.value = typeof res === 'string' ? res : 'Valor inválido';
+                return false;
+            }
+        }
+        internalError.value = '';
+        return true;
+    }
 
     const minLen = computed(() => {
         const precision = Number(props.precision);
@@ -56,15 +99,17 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
             decRaw = decRaw.replace(/0+$/, '');
         }
 
-        // 👇 Solo aplicar separador de miles si withThousands = true
-        const intFormatted = withThousands
-            ? intRaw.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+        // 👇 Solo aplicar separador de miles si withThousands = true y useGrouping no lo desactiva
+        const { decimal: decSep, thousands: thouSep } = separators();
+        const grouping = withThousands && (props.useGrouping ?? true);
+        const intFormatted = grouping
+            ? intRaw.replace(/\B(?=(\d{3})+(?!\d))/g, thouSep)
             : intRaw;
 
         if (p === 0) return sign + intFormatted;
         if (!decRaw || decRaw.length === 0) return sign + intFormatted;
 
-        return sign + intFormatted + ',' + decRaw;
+        return sign + intFormatted + decSep + decRaw;
     }
 
     // Parsea un string formateado (con miles y decimal usando '.' o ',')
@@ -77,9 +122,10 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         // Quitar espacios
         s = s.replace(/\s+/g, '');
 
-        // Siempre: '.' = miles, ',' = decimal
-        s = s.replace(/\./g, '');   // eliminar miles
-        s = s.replace(/,/g, '.');   // coma decimal → punto decimal
+        // Separadores según props: miles se eliminan, decimal pasa a '.'.
+        const { decimal: decSep, thousands: thouSep } = separators();
+        s = s.split(thouSep).join('');
+        if (decSep !== '.') s = s.split(decSep).join('.');
 
         // Mantener solo números, signo y decimal
         s = s.replace(/[^0-9\.\-]/g, '');
@@ -89,7 +135,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
 
     const emitModelValue = useDebounce((num: unknown) => {
         emits('update:modelValue', num);
-    }, 100);
+    }, Math.max(0, Number(props.debounce ?? 300)));
 
     // =========================================================
     // MODO NATURAL (estilo Vuetify) - con control de precision en input
@@ -129,22 +175,25 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
             return;
         }
 
-        // 1) Normalizar puntos -> coma (usuario podría escribir . como decimal)
-        val = val.replace(/\./g, ',').replace(/\s+/g, '');
-        // 2) Mantener solo dígitos, coma y signo
-        val = val.replace(/[^0-9,\-]/g, '');
-        // 3) Mantener una sola coma
-        if ((val.match(/,/g) || []).length > 1) {
-            const parts = val.split(',');
+        // 1) Normalizar el otro separador -> decimal (usuario podría escribir . como decimal)
+        const { decimal: decSep } = separators();
+        if (decSep !== '.') val = val.split('.').join(decSep);
+        val = val.replace(/\s+/g, '');
+        // 2) Mantener solo dígitos, decimal y signo
+        val = val.replace(new RegExp(`[^0-9\\-${escapeRegExp(decSep)}]`, 'g'), '');
+        // 3) Mantener un solo decimal
+        const decCount = (val.split(decSep).length - 1);
+        if (decCount > 1) {
+            const parts = val.split(decSep);
             const integerPart = parts.shift() || '';
             const decimalPart = parts.join('');
-            val = integerPart + (decimalPart.length ? ',' + decimalPart : '');
+            val = integerPart + (decimalPart.length ? decSep + decimalPart : '');
         }
         // 4) Limitar decimales
-        if (val.includes(',')) {
-            const [intP, decP = ''] = val.split(',');
+        if (val.includes(decSep)) {
+            const [intP, decP = ''] = val.split(decSep);
             const truncatedDec = decP.slice(0, precision);
-            val = intP + (truncatedDec.length ? ',' + truncatedDec : ',');
+            val = intP + (truncatedDec.length ? decSep + truncatedDec : decSep);
         }
 
         inputValue.value = val;
@@ -160,6 +209,9 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         const parsed = parseFormattedToNumber(val);
         if (!isNaN(parsed)) {
             emitModelValue(parsed);
+        }
+        if (!props.validateOnBlur) {
+            runRules(!isNaN(parsed) ? parsed : val);
         }
     }
 
@@ -222,7 +274,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         inputValue.value =
             (num < 0 ? '-' : '') +
             intRaw +
-            (decRaw.length ? ',' + decRaw : '');
+            (decRaw.length ? separators().decimal + decRaw : '');
 
         nextTick(() => {
             try {
@@ -246,6 +298,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
 
         // Formatear determinísticamente con todos los decimales según precision
         inputValue.value = formatNumberForDisplay(num, Number(props.precision), false);
+        runRules(num);
         emits('update:modelValue', num);
         emits('blur');
     }
@@ -334,6 +387,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         rawNumberString = nf.toRawNumberString(clamped, Number(props.precision));
         rawNumberString = ensureMinLength(rawNumberString);
         inputValue.value = formatNumberForDisplay(clamped, Number(props.precision), false);
+        runRules(clamped);
         emits('update:modelValue', clamped);
         emits('blur');
     }
@@ -550,5 +604,6 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         onClear,
         isActive,
         focus: isActive,
+        internalError,
     };
 }

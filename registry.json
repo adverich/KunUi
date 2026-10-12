@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.655",
+  "version": "0.1.656",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -52,7 +52,7 @@
         },
         {
           "name": "icon",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Ícono a mostrar (clase o nombre con `$`).",
@@ -270,9 +270,13 @@
         },
         {
           "name": "density",
-          "type": "String",
+          "type": "KunAppbarDensity",
           "default": "'default'",
-          "values": [],
+          "values": [
+            "default",
+            "comfortable",
+            "compact"
+          ],
           "description": "Densidad visual.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
         },
@@ -286,9 +290,16 @@
         },
         {
           "name": "elevation",
-          "type": "String",
+          "type": "KunAppbarElevation",
           "default": "'md'",
-          "values": [],
+          "values": [
+            "sm",
+            "md",
+            "lg",
+            "xl",
+            "2xl",
+            "none"
+          ],
           "description": "Elevación/sombra.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
         },
@@ -425,7 +436,9 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
         }
       ],
-      "emits": [],
+      "emits": [
+        "toggle-drawer"
+      ],
       "slots": [
         "appbarButton",
         "prepend",
@@ -503,7 +516,7 @@
         },
         {
           "name": "itemValue",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Campo del ítem usado como valor (null = primer valor del objeto).",
@@ -511,7 +524,7 @@
         },
         {
           "name": "itemTitle",
-          "type": "String | Array",
+          "type": "string | unknown[] | null",
           "default": "null",
           "values": [],
           "description": "Campo(s) a mostrar (string, array o ruta `a.b`).",
@@ -519,7 +532,7 @@
         },
         {
           "name": "itemText",
-          "type": "String | Array",
+          "type": "string | unknown[] | null",
           "default": "null",
           "values": [],
           "description": "Alias de `itemTitle`.",
@@ -527,7 +540,7 @@
         },
         {
           "name": "itemSubtitle",
-          "type": "String | Array",
+          "type": "string | unknown[] | null",
           "default": "null",
           "values": [],
           "description": "Campo(s) del subtítulo.",
@@ -855,10 +868,10 @@
         },
         {
           "name": "icon",
-          "type": "String",
+          "type": "string | Record<string, any> | Function",
           "default": "-",
           "values": [],
-          "description": "Ícono a mostrar si no hay imagen.",
+          "description": "Ícono: alias `$nombre`, SVG inline, componente o texto libre (se muestra tal cual).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAvatar\\src\\composables\\kunAvatarProps.ts"
         },
         {
@@ -879,10 +892,10 @@
         },
         {
           "name": "size",
-          "type": "String | Number",
+          "type": "string | number",
           "default": "\"default\"",
           "values": [],
-          "description": "Tamaño predefinido: 'x-small' | 'small' | 'default' | 'large' | 'x-large'.",
+          "description": "Tamaño predefinido ('x-small' | 'small' | 'default' | 'large' | 'x-large') o px numéricos.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAvatar\\src\\composables\\kunAvatarProps.ts"
         },
         {
@@ -911,10 +924,14 @@
         },
         {
           "name": "density",
-          "type": "String",
+          "type": "KunAvatarDensity",
           "default": "\"default\"",
-          "values": [],
-          "description": "Densidad del padding interno.",
+          "values": [
+            "default",
+            "comfortable",
+            "compact"
+          ],
+          "description": "Densidad: escala el tamaño del avatar (comfortable −1 paso, compact −2 pasos).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAvatar\\src\\composables\\kunAvatarProps.ts"
         },
         {
@@ -946,7 +963,7 @@
           "type": "String",
           "default": "-",
           "values": [],
-          "description": "Tema de color.",
+          "description": "Tema de color (hook de clase `theme-<valor>` para CSS del consumidor).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAvatar\\src\\composables\\kunAvatarProps.ts"
         },
         {
@@ -959,10 +976,15 @@
         },
         {
           "name": "variant",
-          "type": "String",
+          "type": "KunAvatarVariant",
           "default": "\"flat\"",
-          "values": [],
-          "description": "Variante visual.",
+          "values": [
+            "flat",
+            "outlined",
+            "tonal",
+            "text"
+          ],
+          "description": "Variante visual: 'flat' (fondo pleno) | 'outlined' (transparente con borde) | 'tonal' (fondo suave) | 'text' (transparente).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAvatar\\src\\composables\\kunAvatarProps.ts"
         }
       ],
@@ -1261,7 +1283,7 @@
         },
         {
           "name": "iconSize",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Tamaño del ícono (sobrescribe el calculado por `size`).",
@@ -1269,7 +1291,7 @@
         },
         {
           "name": "focusColor",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Color extra en estado de foco.",
@@ -1300,7 +1322,7 @@
       "props": [
         {
           "name": "title",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Título (atajo; equivale al slot de título).",
@@ -1308,7 +1330,7 @@
         },
         {
           "name": "titleSize",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Tamaño del título.",
@@ -1316,7 +1338,7 @@
         },
         {
           "name": "subtitle",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Subtítulo (atajo).",
@@ -1324,7 +1346,7 @@
         },
         {
           "name": "subTitleSize",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Reservado. Actualmente sin efecto (no se propaga a KunCardTitle).",
@@ -1332,7 +1354,7 @@
         },
         {
           "name": "text",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Texto del cuerpo (atajo; equivale al slot default).",
@@ -1452,15 +1474,22 @@
         },
         {
           "name": "variant",
-          "type": "String",
+          "type": "KunCardVariant",
           "default": "'elevated'",
-          "values": [],
+          "values": [
+            "elevated",
+            "outlined",
+            "flat",
+            "tonal",
+            "text",
+            "plain"
+          ],
           "description": "Variante visual.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCard\\src\\composables\\kunCardProps.ts"
         },
         {
           "name": "height",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Altura fija (clase Tailwind).",
@@ -1468,7 +1497,7 @@
         },
         {
           "name": "width",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Ancho fijo (clase Tailwind).",
@@ -1476,7 +1505,7 @@
         },
         {
           "name": "maxHeight",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Altura máxima.",
@@ -1484,7 +1513,7 @@
         },
         {
           "name": "maxWidth",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Ancho máximo.",
@@ -1492,7 +1521,7 @@
         },
         {
           "name": "minHeight",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Altura mínima.",
@@ -1500,7 +1529,7 @@
         },
         {
           "name": "minWidth",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Ancho mínimo.",
@@ -1508,7 +1537,7 @@
         },
         {
           "name": "position",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Posicionamiento (clase Tailwind).",
@@ -1516,7 +1545,7 @@
         },
         {
           "name": "prependIcon",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Ícono al inicio del header.",
@@ -1524,7 +1553,7 @@
         },
         {
           "name": "appendIcon",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Ícono al final del header.",
@@ -1532,7 +1561,7 @@
         },
         {
           "name": "prependAvatar",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Avatar al inicio del header (URL de imagen).",
@@ -1540,7 +1569,7 @@
         },
         {
           "name": "appendAvatar",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Avatar al final del header (URL de imagen).",
@@ -1548,7 +1577,7 @@
         },
         {
           "name": "image",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Imagen superior del card (URL).",
@@ -1580,14 +1609,6 @@
           "default": "false",
           "values": [],
           "description": "Sin bordes redondeados.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCard\\src\\composables\\kunCardProps.ts"
-        },
-        {
-          "name": "exact",
-          "type": "Boolean",
-          "default": "false",
-          "values": [],
-          "description": "Coincidencia exacta de ruta (solo con `to`, se pasa al router-link).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCard\\src\\composables\\kunCardProps.ts"
         },
         {
@@ -1718,7 +1739,7 @@
       "props": [
         {
           "name": "subtitle",
-          "type": "String | Number",
+          "type": "string | number | null",
           "default": "null",
           "values": [],
           "description": "Texto del subtítulo (alternativa al slot).",
@@ -1763,7 +1784,7 @@
       "props": [
         {
           "name": "text",
-          "type": "String | Number",
+          "type": "string | number | null",
           "default": "null",
           "values": [],
           "description": "Texto del cuerpo (alternativa al slot).",
@@ -2165,6 +2186,22 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCarousel\\src\\composables\\kunCarouselProps.ts"
         },
         {
+          "name": "prevLabel",
+          "type": "String",
+          "default": "'Anterior'",
+          "values": [],
+          "description": "Etiqueta accesible del botón anterior.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCarousel\\src\\composables\\kunCarouselProps.ts"
+        },
+        {
+          "name": "nextLabel",
+          "type": "String",
+          "default": "'Siguiente'",
+          "values": [],
+          "description": "Etiqueta accesible del botón siguiente.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCarousel\\src\\composables\\kunCarouselProps.ts"
+        },
+        {
           "name": "showDots",
           "type": "Boolean",
           "default": "true",
@@ -2362,7 +2399,7 @@
         },
         {
           "name": "size",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Tamaño individual (sobrescribe el slideSize del carousel).",
@@ -2495,9 +2532,12 @@
         },
         {
           "name": "validateOn",
-          "type": "String",
+          "type": "KunCheckboxValidateOn",
           "default": "-",
-          "values": [],
+          "values": [
+            "blur",
+            "input"
+          ],
           "description": "Cuándo validar: 'input' valida al escribir.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
@@ -2511,17 +2551,24 @@
         },
         {
           "name": "density",
-          "type": "String",
+          "type": "KunCheckboxDensity",
           "default": "'default'",
-          "values": [],
-          "description": "Densidad del padding.",
+          "values": [
+            "default",
+            "comfortable",
+            "compact"
+          ],
+          "description": "Densidad del padding (escala el tamaño como KunAvatar: comfortable/compact reducen).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
         {
           "name": "direction",
-          "type": "String",
+          "type": "KunCheckboxDirection",
           "default": "'horizontal'",
-          "values": [],
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
           "description": "Dirección del layout (label al lado o debajo).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
@@ -2687,9 +2734,13 @@
         },
         {
           "name": "size",
-          "type": "String",
+          "type": "KunCheckboxSize",
           "default": "'md'",
-          "values": [],
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
           "description": "Tamaño: 'sm' | 'md' | 'lg'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         }
@@ -2930,7 +2981,7 @@
         },
         {
           "name": "originalColor",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Color to restore with the reset action. Defaults to the initial model value.",
@@ -3051,7 +3102,7 @@
       "props": [
         {
           "name": "currency",
-          "type": "Object",
+          "type": "Record<string, any> | null",
           "default": "null",
           "values": [],
           "description": "Moneda `{ value, name, symbol }`. Si es null usa la config global.",
@@ -3067,7 +3118,7 @@
         },
         {
           "name": "locale",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Locale de formato (null = config global, default 'es-AR').",
@@ -3075,7 +3126,7 @@
         },
         {
           "name": "precision",
-          "type": "Number",
+          "type": "number | null",
           "default": "null",
           "values": [],
           "description": "Decimales (null = config global, default 2).",
@@ -3083,7 +3134,7 @@
         },
         {
           "name": "modelValue",
-          "type": "any",
+          "type": "number | string | null",
           "default": "null",
           "values": [],
           "description": "Valor numérico (v-model).",
@@ -3099,7 +3150,7 @@
         },
         {
           "name": "prefix",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Texto fijo al inicio.",
@@ -3136,7 +3187,7 @@
         },
         {
           "name": "id",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Id del input (se genera uno si se omite).",
@@ -3200,9 +3251,13 @@
         },
         {
           "name": "mode",
-          "type": "String",
+          "type": "KunDatePickerMode",
           "default": "'date'",
-          "values": [],
+          "values": [
+            "date",
+            "datetime",
+            "time"
+          ],
           "description": "Modo: 'date' | 'datetime' | 'time'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunDatePicker\\src\\composables\\kunDatePickerProps.ts"
         },
@@ -3224,7 +3279,7 @@
         },
         {
           "name": "startDate",
-          "type": "Date | String",
+          "type": "Date | string | null",
           "default": "null",
           "values": [],
           "description": "Fecha inicial del calendario.",
@@ -3232,7 +3287,7 @@
         },
         {
           "name": "startTime",
-          "type": "String | Object",
+          "type": "string | Record<string, any> | null",
           "default": "null",
           "values": [],
           "description": "Hora inicial ('HH:mm' u objeto).",
@@ -3240,7 +3295,7 @@
         },
         {
           "name": "minDate",
-          "type": "Date",
+          "type": "Date | null",
           "default": "null",
           "values": [],
           "description": "Fecha mínima seleccionable.",
@@ -3248,7 +3303,7 @@
         },
         {
           "name": "maxDate",
-          "type": "Date",
+          "type": "Date | null",
           "default": "null",
           "values": [],
           "description": "Fecha máxima seleccionable.",
@@ -3264,7 +3319,7 @@
         },
         {
           "name": "timezone",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Zona horaria IANA para formateo (e.g. 'America/Argentina/Buenos_Aires').",
@@ -3272,7 +3327,7 @@
         },
         {
           "name": "valueFormat",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Formato del valor emitido (tokens YYYY/MM/DD/HH/mm/ss).",
@@ -3280,7 +3335,7 @@
         },
         {
           "name": "format",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Formato legacy (alias de valueFormat/displayFormat).",
@@ -3288,7 +3343,7 @@
         },
         {
           "name": "displayFormat",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Formato del texto visible.",
@@ -3296,7 +3351,7 @@
         },
         {
           "name": "formats",
-          "type": "Object",
+          "type": "Record<string, any> | null",
           "default": "() => null",
           "values": [],
           "description": "Formatos por canal: { input, value, display }.",
@@ -3304,7 +3359,7 @@
         },
         {
           "name": "outputFormat",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Formato de salida: 'date' | 'datetime' | 'time' | 'iso' o custom.",
@@ -3312,7 +3367,7 @@
         },
         {
           "name": "width",
-          "type": "String | Number",
+          "type": "string | number | null",
           "default": "null",
           "values": [],
           "description": "Ancho del campo.",
@@ -3336,9 +3391,13 @@
         },
         {
           "name": "align",
-          "type": "String",
+          "type": "KunDatePickerAlign",
           "default": "'left'",
-          "values": [],
+          "values": [
+            "left",
+            "center",
+            "right"
+          ],
           "description": "Alineación del popover: 'left' | 'center' | 'right'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunDatePicker\\src\\composables\\kunDatePickerProps.ts"
         },
@@ -3722,7 +3781,7 @@
         },
         {
           "name": "group",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Grupo para transferir ítems entre listas con el mismo nombre.",
@@ -3746,7 +3805,7 @@
         },
         {
           "name": "dragHandle",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Selector CSS del handle (null = toda la tarjeta arrastra).",
@@ -3900,7 +3959,7 @@
         },
         {
           "name": "size",
-          "type": "String",
+          "type": "KunDragAndDropHandleSize",
           "default": "'xs'",
           "values": [
             "xxs",
@@ -3937,7 +3996,7 @@
       "props": [
         {
           "name": "item",
-          "type": "Object | String | Number",
+          "type": "Record<string, any> | string | number | null",
           "default": "null",
           "values": [],
           "description": "Valor del ítem.",
@@ -3945,7 +4004,7 @@
         },
         {
           "name": "itemKey",
-          "type": "String | Number",
+          "type": "string | number | null",
           "default": "null",
           "values": [],
           "description": "Clave estable del ítem (debe coincidir con el `itemKey` del padre).",
@@ -4054,9 +4113,16 @@
         },
         {
           "name": "location",
-          "type": "String",
+          "type": "KunDrawerLocation",
           "default": "'start'",
-          "values": [],
+          "values": [
+            "start",
+            "end",
+            "top",
+            "bottom",
+            "left",
+            "right"
+          ],
           "description": "Lado de apertura: 'start' | 'end' | 'top' | 'bottom'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunDrawer\\src\\composables\\kunDrawerProps.ts"
         },
@@ -4435,9 +4501,13 @@
         },
         {
           "name": "variant",
-          "type": "String",
+          "type": "KunFileInputVariant",
           "default": "'filled'",
-          "values": [],
+          "values": [
+            "filled",
+            "outlined",
+            "solo"
+          ],
           "description": "Variante visual del contenedor.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunFileInput\\src\\composables\\kunFileInputProps.ts"
         },
@@ -4513,9 +4583,12 @@
         },
         {
           "name": "validateOn",
-          "type": "String",
+          "type": "KunFormValidateOn",
           "default": "'submit'",
-          "values": [],
+          "values": [
+            "submit",
+            "input"
+          ],
           "description": "Cuándo validar hijos: 'submit' | 'input'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunForm\\src\\composables\\kunFormProps.ts"
         }
@@ -4553,7 +4626,7 @@
           "type": "Record<string, string>",
           "default": "(): Record<string",
           "values": [],
-          "description": "Aliases `$nombre` → icono/clase.",
+          "description": "Aliases `$nombre` → icono/clase. Pisan el set bundleado (`$star`, ...).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunIcon\\src\\composables\\kunIconProps.ts"
         },
         {
@@ -4793,7 +4866,7 @@
         },
         {
           "name": "id",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Id para aria-controls. Se genera uno si se omite.",
@@ -4915,14 +4988,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
         },
         {
-          "name": "exact",
-          "type": "Boolean",
-          "default": "-",
-          "values": [],
-          "description": "Coincidencia exacta de ruta activa.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
-        },
-        {
           "name": "tag",
           "type": "String",
           "default": "'li'",
@@ -4964,17 +5029,28 @@
         },
         {
           "name": "variant",
-          "type": "String",
+          "type": "KunListItemVariant",
           "default": "'text'",
-          "values": [],
+          "values": [
+            "text",
+            "outlined",
+            "elevated",
+            "tonal",
+            "flat",
+            "plain"
+          ],
           "description": "Variante visual.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
         },
         {
           "name": "density",
-          "type": "String",
+          "type": "KunListItemDensity",
           "default": "'default'",
-          "values": [],
+          "values": [
+            "default",
+            "comfortable",
+            "compact"
+          ],
           "description": "Densidad del padding vertical.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
         },
@@ -5159,7 +5235,7 @@
       "props": [
         {
           "name": "text",
-          "type": "String | Number",
+          "type": "string | number | null",
           "default": "null",
           "values": [],
           "description": "Texto de la acción.",
@@ -5204,7 +5280,7 @@
       "props": [
         {
           "name": "text",
-          "type": "String | Number",
+          "type": "string | number | null",
           "default": "null",
           "values": [],
           "description": "Texto (iniciales) del avatar.",
@@ -5212,9 +5288,13 @@
         },
         {
           "name": "size",
-          "type": "String",
+          "type": "KunListItemAvatarSize",
           "default": "'md'",
-          "values": [],
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
           "description": "Tamaño predefinido.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemAvatar\\src\\composables\\kunListItemAvatarProps.ts"
         },
@@ -5265,7 +5345,7 @@
       "props": [
         {
           "name": "text",
-          "type": "String | Number",
+          "type": "string | number | null",
           "default": "null",
           "values": [],
           "description": "Texto del subtítulo.",
@@ -5310,7 +5390,7 @@
       "props": [
         {
           "name": "text",
-          "type": "String | Number",
+          "type": "string | number | null",
           "default": "null",
           "values": [],
           "description": "Texto a mostrar.",
@@ -5355,7 +5435,7 @@
       "props": [
         {
           "name": "title",
-          "type": "String | Number",
+          "type": "string | number | null",
           "default": "null",
           "values": [],
           "description": "Título a mostrar.",
@@ -5515,7 +5595,7 @@
           "type": "String | Object",
           "default": "-",
           "values": [],
-          "description": "Selector o elemento que dispara el menú.",
+          "description": "Selector o elemento que dispara el menú (reservado, sin efecto; usar el slot `activator`).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunMenu\\src\\composables\\kunMenuProps.ts"
         },
         {
@@ -5523,7 +5603,7 @@
           "type": "Object",
           "default": "() => ({})",
           "values": [],
-          "description": "Props que se pasan al activador.",
+          "description": "Props que se pasan al activador (reservado, sin efecto; usar el slot `activator`).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunMenu\\src\\composables\\kunMenuProps.ts"
         },
         {
@@ -5736,7 +5816,7 @@
           "type": "Boolean",
           "default": "-",
           "values": [],
-          "description": "Comportamiento de submenú (hereda contexto del padre).",
+          "description": "Comportamiento de submenú (reservado, sin efecto).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunMenu\\src\\composables\\kunMenuProps.ts"
         },
         {
@@ -5752,7 +5832,7 @@
           "type": "Boolean",
           "default": "true",
           "values": [],
-          "description": "Navegación con teclado (flechas/Enter/Escape).",
+          "description": "Navegación con teclado (reservado, sin efecto).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunMenu\\src\\composables\\kunMenuProps.ts"
         },
         {
@@ -5807,9 +5887,16 @@
         },
         {
           "name": "color",
-          "type": "String",
+          "type": "KunModalFooterColor",
           "default": "\"green\"",
-          "values": [],
+          "values": [
+            "blue",
+            "green",
+            "red",
+            "yellow",
+            "gray",
+            "orange"
+          ],
           "description": "Color temático ('green' | 'blue' | 'red' | ...).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunModalFooterProps.ts"
         },
@@ -5847,17 +5934,27 @@
         },
         {
           "name": "position",
-          "type": "String",
+          "type": "KunMultipleModalFooterPosition",
           "default": "\"bottom-right\"",
-          "values": [],
+          "values": [
+            "bottom-left",
+            "bottom-right",
+            "bottom-center",
+            "top-left",
+            "top-right",
+            "top-center"
+          ],
           "description": "Esquina del viewport donde se apilan.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunMultipleModalFooterProps.ts"
         },
         {
           "name": "stackDirection",
-          "type": "String",
+          "type": "KunMultipleModalFooterStackDirection",
           "default": "\"bottom-to-top\"",
-          "values": [],
+          "values": [
+            "bottom-to-top",
+            "top-to-bottom"
+          ],
           "description": "Dirección de apilado: 'bottom-to-top' | 'top-to-bottom'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunMultipleModalFooterProps.ts"
         },
@@ -5901,7 +5998,7 @@
         },
         {
           "name": "placeholder",
-          "type": "string | number",
+          "type": "String | Number",
           "default": "''",
           "values": [],
           "description": "Placeholder. Si existe, el label flota siempre.",
@@ -5909,7 +6006,7 @@
         },
         {
           "name": "label",
-          "type": "string",
+          "type": "String",
           "default": "''",
           "values": [],
           "description": "Etiqueta flotante (mismo sistema que KunTextField).",
@@ -5917,7 +6014,7 @@
         },
         {
           "name": "labelColor",
-          "type": "string",
+          "type": "String",
           "default": "'text-ui'",
           "values": [],
           "description": "Color del label en reposo.",
@@ -5933,7 +6030,7 @@
         },
         {
           "name": "labelSize",
-          "type": "string",
+          "type": "String",
           "default": "'text-sm'",
           "values": [],
           "description": "Tamaño del label en reposo.",
@@ -5941,7 +6038,7 @@
         },
         {
           "name": "floatingLabelSize",
-          "type": "string",
+          "type": "String",
           "default": "'text-xs'",
           "values": [],
           "description": "Tamaño del label flotando.",
@@ -5949,7 +6046,7 @@
         },
         {
           "name": "labelOpacity",
-          "type": "string",
+          "type": "String",
           "default": "'opacity-60'",
           "values": [],
           "description": "Opacidad del label en reposo.",
@@ -5957,7 +6054,7 @@
         },
         {
           "name": "floatingLabelOpacity",
-          "type": "string",
+          "type": "String",
           "default": "'opacity-80'",
           "values": [],
           "description": "Opacidad del label flotando.",
@@ -5973,7 +6070,7 @@
         },
         {
           "name": "floatingLabelLeft",
-          "type": "string",
+          "type": "String",
           "default": "'left-2'",
           "values": [],
           "description": "Offset izquierdo flotando.",
@@ -5981,7 +6078,7 @@
         },
         {
           "name": "floatingLabelTop",
-          "type": "string",
+          "type": "String",
           "default": "'-top-2'",
           "values": [],
           "description": "Posición superior flotando.",
@@ -5989,7 +6086,7 @@
         },
         {
           "name": "labelClass",
-          "type": "string",
+          "type": "String",
           "default": "''",
           "values": [],
           "description": "Clase libre para el label.",
@@ -5997,7 +6094,7 @@
         },
         {
           "name": "dirty",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Marca el campo como tocado (flota el label).",
@@ -6005,7 +6102,7 @@
         },
         {
           "name": "prefix",
-          "type": "string",
+          "type": "String",
           "default": "''",
           "values": [],
           "description": "Texto fijo al inicio.",
@@ -6013,7 +6110,7 @@
         },
         {
           "name": "suffix",
-          "type": "string",
+          "type": "String",
           "default": "''",
           "values": [],
           "description": "Texto fijo al final.",
@@ -6021,7 +6118,7 @@
         },
         {
           "name": "prependIcon",
-          "type": "string",
+          "type": "String",
           "default": "-",
           "values": [],
           "description": "Ícono externo al inicio (fuera del borde). Legacy: ver `prependInnerIcon`.",
@@ -6029,7 +6126,7 @@
         },
         {
           "name": "appendIcon",
-          "type": "string",
+          "type": "String",
           "default": "-",
           "values": [],
           "description": "Ícono externo al final (fuera del borde). Legacy: ver `appendInnerIcon`.",
@@ -6053,7 +6150,7 @@
         },
         {
           "name": "prependInnerClass",
-          "type": "string",
+          "type": "String",
           "default": "-",
           "values": [],
           "description": "Clase del contenedor del ícono interno inicial.",
@@ -6061,7 +6158,7 @@
         },
         {
           "name": "appendInnerClass",
-          "type": "string",
+          "type": "String",
           "default": "-",
           "values": [],
           "description": "Clase del contenedor del ícono interno final.",
@@ -6069,7 +6166,7 @@
         },
         {
           "name": "rounded",
-          "type": "string",
+          "type": "String",
           "default": "'rounded'",
           "values": [],
           "description": "Redondeo del contenedor.",
@@ -6077,7 +6174,7 @@
         },
         {
           "name": "borderColor",
-          "type": "string",
+          "type": "String",
           "default": "'border-ui'",
           "values": [],
           "description": "Color del borde.",
@@ -6085,7 +6182,7 @@
         },
         {
           "name": "textColor",
-          "type": "string",
+          "type": "String",
           "default": "'text-ui'",
           "values": [],
           "description": "Color del texto del valor.",
@@ -6109,7 +6206,7 @@
         },
         {
           "name": "placeholderColor",
-          "type": "string",
+          "type": "String",
           "default": "'placeholder-ui'",
           "values": [],
           "description": "Color del placeholder.",
@@ -6125,7 +6222,7 @@
         },
         {
           "name": "inputStyle",
-          "type": "string",
+          "type": "String",
           "default": "''",
           "values": [],
           "description": "Clase libre para el input.",
@@ -6133,7 +6230,7 @@
         },
         {
           "name": "bgInput",
-          "type": "string",
+          "type": "String",
           "default": "'bg-field-background'",
           "values": [],
           "description": "Color de fondo del contenedor.",
@@ -6141,7 +6238,7 @@
         },
         {
           "name": "textCenter",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Centra el texto del valor.",
@@ -6161,7 +6258,7 @@
         },
         {
           "name": "noArrows",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Oculta los botones ▲▼ (quedan `onIncrement`/`onDecrement` por slot).",
@@ -6181,7 +6278,7 @@
         },
         {
           "name": "error",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Estado de error visual.",
@@ -6189,7 +6286,7 @@
         },
         {
           "name": "errorMessages",
-          "type": "string | string[]",
+          "type": "String | Array",
           "default": "-",
           "values": [],
           "description": "Mensajes de error externos.",
@@ -6197,7 +6294,7 @@
         },
         {
           "name": "rules",
-          "type": "Array<(value: any) => boolean | string>",
+          "type": "Array",
           "default": "() => []",
           "values": [],
           "description": "Reglas de validación: `(valor) => true | string`.",
@@ -6221,7 +6318,7 @@
         },
         {
           "name": "autocomplete",
-          "type": "string",
+          "type": "String",
           "default": "'off'",
           "values": [],
           "description": "Autocomplete nativo.",
@@ -6246,7 +6343,7 @@
         },
         {
           "name": "required",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Requerido (nativo + validación).",
@@ -6254,7 +6351,7 @@
         },
         {
           "name": "disabled",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Deshabilita el campo.",
@@ -6262,7 +6359,7 @@
         },
         {
           "name": "readonly",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Solo lectura.",
@@ -6270,7 +6367,7 @@
         },
         {
           "name": "clearable",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Muestra botón limpiar.",
@@ -6286,7 +6383,7 @@
         },
         {
           "name": "counter",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Muestra contador (requiere `maxlength`).",
@@ -6294,7 +6391,7 @@
         },
         {
           "name": "debounce",
-          "type": "number",
+          "type": "Number",
           "default": "300",
           "values": [],
           "description": "Debounce en ms para emitir el modelo.",
@@ -6302,7 +6399,7 @@
         },
         {
           "name": "hint",
-          "type": "string",
+          "type": "String",
           "default": "''",
           "values": [],
           "description": "Texto de ayuda.",
@@ -6310,7 +6407,7 @@
         },
         {
           "name": "persistentHint",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Muestra el hint siempre.",
@@ -6318,7 +6415,7 @@
         },
         {
           "name": "hideDetails",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Oculta el área de detalles.",
@@ -6326,7 +6423,7 @@
         },
         {
           "name": "validateOnBlur",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "false",
           "values": [],
           "description": "Valida solo al perder el foco.",
@@ -6334,7 +6431,7 @@
         },
         {
           "name": "min",
-          "type": "number | string",
+          "type": "Number | String",
           "default": "-Infinity",
           "values": [],
           "description": "Valor mínimo (clamp + flechas). Acepta -Infinity.",
@@ -6342,7 +6439,7 @@
         },
         {
           "name": "max",
-          "type": "number | string",
+          "type": "Number | String",
           "default": "Infinity",
           "values": [],
           "description": "Valor máximo (clamp + flechas). Acepta Infinity.",
@@ -6350,7 +6447,7 @@
         },
         {
           "name": "step",
-          "type": "number | string",
+          "type": "Number | String",
           "default": "1",
           "values": [],
           "description": "Paso de incremento/decremento.",
@@ -6366,15 +6463,15 @@
         },
         {
           "name": "separator",
-          "type": "string",
+          "type": "String",
           "default": "','",
           "values": [],
-          "description": "Separador decimal de entrada (típico ',' o '.').",
+          "description": "Separador decimal de entrada.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
         },
         {
           "name": "useGrouping",
-          "type": "boolean",
+          "type": "Boolean",
           "default": "true",
           "values": [],
           "description": "Agrupa miles al mostrar.",
@@ -6382,7 +6479,7 @@
         },
         {
           "name": "precision",
-          "type": "number | string",
+          "type": "Number | String",
           "default": "2",
           "values": [],
           "description": "Decimales de formato y edición.",
@@ -6478,7 +6575,7 @@
         },
         {
           "name": "trueIcon",
-          "type": "String | Object",
+          "type": "string | Record<string, any> | null",
           "default": "null",
           "values": [],
           "description": "Ícono personalizado para el estado activo.",
@@ -6486,7 +6583,7 @@
         },
         {
           "name": "falseIcon",
-          "type": "String | Object",
+          "type": "string | Record<string, any> | null",
           "default": "null",
           "values": [],
           "description": "Ícono personalizado para el estado inactivo.",
@@ -6607,9 +6704,12 @@
         },
         {
           "name": "direction",
-          "type": "String",
+          "type": "KunRadioGroupDirection",
           "default": "'vertical'",
-          "values": [],
+          "values": [
+            "vertical",
+            "horizontal"
+          ],
           "description": "Dirección del layout: 'vertical' | 'horizontal'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunRadioGroup\\src\\composables\\kunRadioGroupProps.ts"
         },
@@ -6801,7 +6901,7 @@
         },
         {
           "name": "itemValue",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Campo del ítem usado como valor (null = primer valor del objeto).",
@@ -6809,7 +6909,7 @@
         },
         {
           "name": "itemTitle",
-          "type": "String | Array",
+          "type": "string | unknown[] | null",
           "default": "null",
           "values": [],
           "description": "Campo(s) a mostrar (string, array o ruta `a.b`).",
@@ -6817,7 +6917,7 @@
         },
         {
           "name": "itemText",
-          "type": "String | Array",
+          "type": "string | unknown[] | null",
           "default": "null",
           "values": [],
           "description": "Alias de `itemTitle`.",
@@ -6825,7 +6925,7 @@
         },
         {
           "name": "itemSubtitle",
-          "type": "String | Array",
+          "type": "string | unknown[] | null",
           "default": "null",
           "values": [],
           "description": "Campo(s) del subtítulo.",
@@ -6883,7 +6983,21 @@
           "name": "menuOrigin",
           "type": "KunMenuOrigin",
           "default": "'bottom left'",
-          "values": [],
+          "values": [
+            "auto",
+            "top left",
+            "top center",
+            "top right",
+            "bottom left",
+            "bottom center",
+            "bottom right",
+            "left top",
+            "left center",
+            "left bottom",
+            "right top",
+            "right center",
+            "right bottom"
+          ],
           "description": "Origen del menú (se reenvía a KunMenu).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
         },
@@ -6995,7 +7109,11 @@
           "name": "density",
           "type": "KunTextFieldDensity",
           "default": "'default'",
-          "values": [],
+          "values": [
+            "default",
+            "comfortable",
+            "compact"
+          ],
           "description": "Densidad del campo (se reenvía al KunTextField).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
         },
@@ -7138,9 +7256,13 @@
         },
         {
           "name": "variant",
-          "type": "String",
+          "type": "KunSkeletonVariant",
           "default": "\"rect\"",
-          "values": [],
+          "values": [
+            "rect",
+            "circle",
+            "text"
+          ],
           "description": "Forma: 'rect' | 'circle' | 'text'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
@@ -7170,9 +7292,14 @@
         },
         {
           "name": "animation",
-          "type": "String",
+          "type": "KunSkeletonAnimation",
           "default": "\"shimmer\"",
-          "values": [],
+          "values": [
+            "shimmer",
+            "shimmer-vertical",
+            "pulse",
+            "none"
+          ],
           "description": "Animación: 'shimmer' | 'shimmer-vertical' | 'pulse' | 'none'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
@@ -7311,7 +7438,7 @@
         },
         {
           "name": "label",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Etiqueta sobre el slider.",
@@ -7351,7 +7478,7 @@
         },
         {
           "name": "class",
-          "type": "String | Array | Object",
+          "type": "string | unknown[] | Record<string, any> | null",
           "default": "null",
           "values": [],
           "description": "Clase extra del contenedor.",
@@ -7359,7 +7486,7 @@
         },
         {
           "name": "style",
-          "type": "Object",
+          "type": "Record<string, any> | null",
           "default": "null",
           "values": [],
           "description": "Estilos inline del contenedor.",
@@ -7487,7 +7614,12 @@
           "name": "labelPosition",
           "type": "KunSwitchLabelPosition",
           "default": "'right'",
-          "values": [],
+          "values": [
+            "top",
+            "bottom",
+            "left",
+            "right"
+          ],
           "description": "Posición de la etiqueta: 'top' | 'bottom' | 'left' | 'right'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSwitch\\src\\composables\\kunSwitchProps.ts"
         },
@@ -7614,9 +7746,13 @@
         },
         {
           "name": "actionsAlign",
-          "type": "String",
+          "type": "KunTableActionsAlign",
           "default": "-",
-          "values": [],
+          "values": [
+            "left",
+            "center",
+            "right"
+          ],
           "description": "Alineación de acciones: 'left' | 'center' | 'right'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTable\\src\\composables\\KunTableProps.ts"
         },
@@ -7765,7 +7901,7 @@
           "type": "Boolean",
           "default": "false",
           "values": [],
-          "description": "(Futuro) Agrupamiento. Actualmente sin efecto.",
+          "description": "Agrupamiento (reservado, sin efecto).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTable\\src\\composables\\KunTableProps.ts"
         },
         {
@@ -8450,10 +8586,14 @@
         },
         {
           "name": "actionsAlign",
-          "type": "String",
-          "default": "-",
-          "values": [],
-          "description": "Alineación de la columna de acciones.",
+          "type": "KunTableActionsAlign",
+          "default": "'center'",
+          "values": [
+            "left",
+            "center",
+            "right"
+          ],
+          "description": "Alineación de la columna de acciones: 'left' | 'center' | 'right'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTable\\src\\composables\\kunTableRowProps.ts"
         },
         {
@@ -8553,6 +8693,18 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTable\\src\\composables\\kunTableRowsProps.ts"
         },
         {
+          "name": "actionsAlign",
+          "type": "KunTableActionsAlign",
+          "default": "'center'",
+          "values": [
+            "left",
+            "center",
+            "right"
+          ],
+          "description": "Alineación de la columna de acciones (se reenvía a KunTableRow).",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTable\\src\\composables\\kunTableRowsProps.ts"
+        },
+        {
           "name": "loading",
           "type": "Boolean",
           "default": "-",
@@ -8641,7 +8793,7 @@
           "values": [
             "laravel"
           ],
-          "description": "Formato de query emitido (`update:query`).",
+          "description": "Formato de query emitido (`update:query`) (reservado, sin efecto: siempre emite formato laravel).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTableServerSide\\src\\composables\\KunTableServerSideProps.ts"
         }
       ],
@@ -8697,17 +8849,25 @@
         },
         {
           "name": "alignTabs",
-          "type": "String",
+          "type": "KunTabsAlignTabs",
           "default": "'start'",
-          "values": [],
+          "values": [
+            "start",
+            "center",
+            "end",
+            "title"
+          ],
           "description": "Alineación de los tabs.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabsProps.ts"
         },
         {
           "name": "direction",
-          "type": "String",
+          "type": "KunTabsDirection",
           "default": "'horizontal'",
-          "values": [],
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
           "description": "Dirección del layout: 'horizontal' | 'vertical'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabsProps.ts"
         },
@@ -8724,7 +8884,7 @@
           "type": "String",
           "default": "-",
           "values": [],
-          "description": "Color de los tabs.",
+          "description": "Color de los tabs (reservado, sin efecto).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabsProps.ts"
         },
         {
@@ -8756,7 +8916,7 @@
           "type": "Boolean",
           "default": "-",
           "values": [],
-          "description": "Ancho fijo por tab (sin scroll).",
+          "description": "Ancho fijo por tab, sin scroll (reservado, sin efecto).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabsProps.ts"
         },
         {
@@ -9048,17 +9208,25 @@
         },
         {
           "name": "textAlign",
-          "type": "String",
+          "type": "KunTextareaTextAlign",
           "default": "'left'",
-          "values": [],
+          "values": [
+            "left",
+            "center",
+            "right"
+          ],
           "description": "Alineación del texto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
         },
         {
           "name": "formatModel",
-          "type": "String",
+          "type": "KunTextareaFormatModel",
           "default": "'auto'",
-          "values": [],
+          "values": [
+            "auto",
+            "json",
+            "plain"
+          ],
           "description": "Formato del modelo: 'auto' (detecta JSON) | 'json' | 'plain'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
         },
@@ -9211,7 +9379,7 @@
           "type": "Number | String",
           "default": "-",
           "values": [],
-          "description": "Límite para el contador (no limita el input).",
+          "description": "Máximo de caracteres (`maxlength` nativo; también limita el contador).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
         },
         {
@@ -9288,17 +9456,26 @@
         },
         {
           "name": "variant",
-          "type": "String",
+          "type": "KunTextareaVariant",
           "default": "'outlined'",
-          "values": [],
+          "values": [
+            "filled",
+            "outlined",
+            "underlined",
+            "solo"
+          ],
           "description": "Variante visual: 'filled' | 'outlined' | 'underlined' | 'solo'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
         },
         {
           "name": "density",
-          "type": "String",
+          "type": "KunTextareaDensity",
           "default": "'default'",
-          "values": [],
+          "values": [
+            "default",
+            "comfortable",
+            "compact"
+          ],
           "description": "Densidad del padding.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
         },
@@ -9487,7 +9664,7 @@
         },
         {
           "name": "prependInnerIcon",
-          "type": "String | Object | Function | Array",
+          "type": "string | Record<string, any> | Function | unknown[] | null",
           "default": "null",
           "values": [],
           "description": "Ícono interno al inicio.",
@@ -9495,7 +9672,7 @@
         },
         {
           "name": "appendInnerIcon",
-          "type": "String | Object | Function | Array",
+          "type": "string | Record<string, any> | Function | unknown[] | null",
           "default": "null",
           "values": [],
           "description": "Ícono interno al final.",
@@ -9551,7 +9728,7 @@
         },
         {
           "name": "floatingLabelColor",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Color del label flotando (null = usa `labelColor`).",
@@ -9591,7 +9768,7 @@
         },
         {
           "name": "labelLeft",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Offset izquierdo del label en reposo (null = automático según iconos).",
@@ -9631,7 +9808,7 @@
         },
         {
           "name": "inputTextSize",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Tamaño del texto del valor (null = 'text-sm').",
@@ -9639,7 +9816,7 @@
         },
         {
           "name": "inputWeight",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Peso del texto del valor (null = hereda).",
@@ -9647,7 +9824,7 @@
         },
         {
           "name": "placeholderTextSize",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Tamaño del placeholder ('text-lg' o 'placeholder:text-lg').",
@@ -9715,7 +9892,7 @@
         },
         {
           "name": "id",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Id del input nativo.",
@@ -9723,7 +9900,7 @@
         },
         {
           "name": "name",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Nombre del input nativo.",
@@ -9763,7 +9940,7 @@
         },
         {
           "name": "inputmode",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Teclado virtual en móvil.",
@@ -9771,7 +9948,7 @@
         },
         {
           "name": "minlength",
-          "type": "Number | String",
+          "type": "number | string | null",
           "default": "null",
           "values": [],
           "description": "Longitud mínima nativa.",
@@ -9787,7 +9964,7 @@
         },
         {
           "name": "maxlength",
-          "type": "Number | String",
+          "type": "number | string | null",
           "default": "null",
           "values": [],
           "description": "Longitud máxima nativa (activa el counter).",
@@ -9795,7 +9972,7 @@
         },
         {
           "name": "pattern",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Patrón regex nativo.",
@@ -9803,7 +9980,7 @@
         },
         {
           "name": "spellcheck",
-          "type": "Boolean | String",
+          "type": "boolean | string | null",
           "default": "null",
           "values": [],
           "description": "Corrector ortográfico nativo.",
@@ -9901,10 +10078,10 @@
       "props": [
         {
           "name": "toastId",
-          "type": "String | Number",
+          "type": "string | number | null",
           "default": "null",
           "values": [],
-          "description": "Id único (lo genera KunToaster si se omite).",
+          "description": "Id único (lo genera KunToaster si se omite; `useToast().add()` acepta `id` o `toastId`).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToastProps.ts"
         },
         {
@@ -9925,7 +10102,7 @@
         },
         {
           "name": "icon",
-          "type": "String | Object | Function",
+          "type": "string | Record<string, any> | Function | null",
           "default": "null",
           "values": [],
           "description": "Ícono principal (null = según `color`).",
@@ -9959,7 +10136,7 @@
         },
         {
           "name": "duration",
-          "type": "Number",
+          "type": "number | null",
           "default": "null",
           "values": [],
           "description": "Duración en ms (0 = sin auto-dismiss, null = global del Toaster).",
@@ -9975,7 +10152,7 @@
         },
         {
           "name": "progressColor",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Color de la barra de progreso (null = según `color`).",
@@ -9991,7 +10168,7 @@
         },
         {
           "name": "closeIcon",
-          "type": "String | Object | Function",
+          "type": "string | Record<string, any> | Function | null",
           "default": "null",
           "values": [],
           "description": "Ícono del botón de cierre (null = default).",
@@ -10123,9 +10300,13 @@
         },
         {
           "name": "titlePosition",
-          "type": "String",
+          "type": "KunToolbarTitlePosition",
           "default": "'left'",
-          "values": [],
+          "values": [
+            "left",
+            "center",
+            "right"
+          ],
           "description": "Posición del título.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToolbar\\src\\composables\\kunToolbarProps.ts"
         },
@@ -10155,9 +10336,14 @@
         },
         {
           "name": "density",
-          "type": "String",
+          "type": "KunToolbarDensity",
           "default": "'default'",
-          "values": [],
+          "values": [
+            "default",
+            "prominent",
+            "comfortable",
+            "compact"
+          ],
           "description": "Densidad del padding.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToolbar\\src\\composables\\kunToolbarProps.ts"
         },
@@ -10238,7 +10424,7 @@
           "type": "String",
           "default": "-",
           "values": [],
-          "description": "Tema de color.",
+          "description": "Tema de color (hook de clase `theme-<valor>` para CSS del consumidor).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToolbar\\src\\composables\\kunToolbarProps.ts"
         },
         {
@@ -10349,7 +10535,7 @@
         },
         {
           "name": "id",
-          "type": "String",
+          "type": "string | null",
           "default": "null",
           "values": [],
           "description": "Id del tooltip (se genera uno si se omite).",
@@ -10365,17 +10551,26 @@
         },
         {
           "name": "location",
-          "type": "String",
+          "type": "KunTooltipLocation",
           "default": "'top'",
-          "values": [],
+          "values": [
+            "top",
+            "bottom",
+            "left",
+            "right"
+          ],
           "description": "Posición respecto al activador: 'top' | 'bottom' | 'left' | 'right'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTooltip\\src\\composables\\kunTooltipProps.ts"
         },
         {
           "name": "openOn",
-          "type": "String",
+          "type": "KunTooltipOpenOn",
           "default": "'hover'",
-          "values": [],
+          "values": [
+            "hover",
+            "click",
+            "focus"
+          ],
           "description": "Cómo se abre: 'hover' | 'click' | 'focus'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTooltip\\src\\composables\\kunTooltipProps.ts"
         },
@@ -10448,7 +10643,7 @@
           "type": "Number | Object",
           "default": "() => ({ x: 0, y: 8 })",
           "values": [],
-          "description": "Offset extra `{ x, y }` o número (solo `y`).",
+          "description": "Offset extra `{ x, y }` o número (simétrico: aplica a `x` e `y`).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTooltip\\src\\composables\\kunTooltipProps.ts"
         },
         {

@@ -23,7 +23,7 @@ import { KunDatePicker } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `modelValue` | `Date \| unknown[] \| string \| null` | `null` | Fecha seleccionada (v-model): Date, string o array de 2 en modo rango. |
-| `id` | `String` | `null` | Id del input (se genera uno si se omite). |
+| `id` | `string \| null` | `null` | Id del input (se genera uno si se omite). |
 | `range` | `Boolean` | `false` | Selección de rango (emite array de 2 fechas). |
 | `label` | `String` | `''` | Etiqueta del campo. |
 | `placeholder` | `String` | `''` | Placeholder del campo. |
@@ -31,24 +31,24 @@ import { KunDatePicker } from 'adverich-kun-ui'
 | `disabled` | `Boolean` | `false` | Deshabilita el control. |
 | `errorMessage` | `String` | `''` | Mensaje de error bajo el campo. |
 | `autoApply` | `Boolean` | `true` | Aplica la selección sin botón Aplicar. |
-| `mode` | `String` | `'date'` | Modo: 'date' \| 'datetime' \| 'time'. |
+| `mode` | `KunDatePickerMode` | `'date'` | Modo: 'date' \| 'datetime' \| 'time'.<br/>Valores · Values: `date` `datetime` `time` |
 | `enableTime` | `Boolean` | `false` | Habilita selector de hora (atajo de mode='datetime'). |
 | `enableSeconds` | `Boolean` | `false` | Habilita segundos en el selector de hora. |
-| `startDate` | `Date \| String` | `null` | Fecha inicial del calendario. |
-| `startTime` | `String \| Object` | `null` | Hora inicial ('HH:mm' u objeto). |
-| `minDate` | `Date` | `null` | Fecha mínima seleccionable. |
-| `maxDate` | `Date` | `null` | Fecha máxima seleccionable. |
+| `startDate` | `Date \| string \| null` | `null` | Fecha inicial del calendario. |
+| `startTime` | `string \| Record<string, any> \| null` | `null` | Hora inicial ('HH:mm' u objeto). |
+| `minDate` | `Date \| null` | `null` | Fecha mínima seleccionable. |
+| `maxDate` | `Date \| null` | `null` | Fecha máxima seleccionable. |
 | `locale` | `String` | `'es-ES'` | Locale de nombres de mes/día. |
-| `timezone` | `String` | `null` | Zona horaria IANA para formateo (e.g. 'America/Argentina/Buenos_Aires'). |
-| `valueFormat` | `String` | `null` | Formato del valor emitido (tokens YYYY/MM/DD/HH/mm/ss). |
-| `format` | `String` | `null` | Formato legacy (alias de valueFormat/displayFormat). |
-| `displayFormat` | `String` | `null` | Formato del texto visible. |
-| `formats` | `Object` | `() => null` | Formatos por canal: { input, value, display }. |
-| `outputFormat` | `String` | `null` | Formato de salida: 'date' \| 'datetime' \| 'time' \| 'iso' o custom. |
-| `width` | `String \| Number` | `null` | Ancho del campo. |
+| `timezone` | `string \| null` | `null` | Zona horaria IANA para formateo (e.g. 'America/Argentina/Buenos_Aires'). |
+| `valueFormat` | `string \| null` | `null` | Formato del valor emitido (tokens YYYY/MM/DD/HH/mm/ss). |
+| `format` | `string \| null` | `null` | Formato legacy (alias de valueFormat/displayFormat). |
+| `displayFormat` | `string \| null` | `null` | Formato del texto visible. |
+| `formats` | `Record<string, any> \| null` | `() => null` | Formatos por canal: { input, value, display }. |
+| `outputFormat` | `string \| null` | `null` | Formato de salida: 'date' \| 'datetime' \| 'time' \| 'iso' o custom. |
+| `width` | `string \| number \| null` | `null` | Ancho del campo. |
 | `calendarWidth` | `String \| Number` | `320` | Ancho del calendario en px. |
 | `fullWidth` | `Boolean` | `false` | El campo ocupa todo el ancho. |
-| `align` | `String` | `'left'` | Alineación del popover: 'left' \| 'center' \| 'right'. |
+| `align` | `KunDatePickerAlign` | `'left'` | Alineación del popover: 'left' \| 'center' \| 'right'.<br/>Valores · Values: `left` `center` `right` |
 | `daySize` | `String` | `'2rem'` | Tamaño de cada día. |
 | `fontSize` | `String` | `'0.875rem'` | Tamaño de fuente del calendario. |
 | `maxHeight` | `String` | `'400px'` | Altura máxima del popover. |

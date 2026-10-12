@@ -1,7 +1,9 @@
+import type { PropType } from 'vue';
+
 export const kunCardSubtitleProps = {
     /** Texto del subtítulo (alternativa al slot). */
     subtitle: {
-        type: [String, Number],
+        type: [String, Number] as PropType<string | number | null>,
         default: null
     },
     /** Reduce el padding. */

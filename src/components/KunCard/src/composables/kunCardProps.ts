@@ -3,18 +3,19 @@ import type { PropType } from 'vue';
 export type KunCardRounded = boolean | 'sm' | 'md' | 'lg' | 'xl';
 export type KunCardElevation = '' | '0' | '1' | '2' | '3' | '4' | '5' | 0 | 1 | 2 | 3 | 4 | 5;
 export type KunCardDensity = 'default' | 'comfortable' | 'compact';
+export type KunCardVariant = 'elevated' | 'outlined' | 'flat' | 'tonal' | 'text' | 'plain';
 
 export const kunCardProps = {
     /** Título (atajo; equivale al slot de título). */
-    title: { type: String, default: null },
+    title: { type: String as PropType<string | null>, default: null },
     /** Tamaño del título. */
-    titleSize: { type: String, default: null },
+    titleSize: { type: String as PropType<string | null>, default: null },
     /** Subtítulo (atajo). */
-    subtitle: { type: String, default: null },
+    subtitle: { type: String as PropType<string | null>, default: null },
     /** Reservado. Actualmente sin efecto (no se propaga a KunCardTitle). */
-    subTitleSize: { type: String, default: null },
+    subTitleSize: { type: String as PropType<string | null>, default: null },
     /** Texto del cuerpo (atajo; equivale al slot default). */
-    text: { type: String, default: null },
+    text: { type: String as PropType<string | null>, default: null },
     /** Color del texto. */
     textColor: { type: String, default: 'text-ui' },
     /** Color de fondo. */
@@ -52,31 +53,35 @@ export const kunCardProps = {
     /** Efecto ripple al hacer click. */
     ripple: { type: Boolean, default: true },
     /** Variante visual. */
-    variant: { type: String, default: 'elevated' },
+    variant: {
+        type: String as PropType<KunCardVariant>,
+        default: 'elevated',
+        validator: (v: unknown) => ['elevated', 'outlined', 'flat', 'tonal', 'text', 'plain'].includes(v as string)
+    },
     /** Altura fija (clase Tailwind). */
-    height: { type: String, default: null },
+    height: { type: String as PropType<string | null>, default: null },
     /** Ancho fijo (clase Tailwind). */
-    width: { type: String, default: null },
+    width: { type: String as PropType<string | null>, default: null },
     /** Altura máxima. */
-    maxHeight: { type: String, default: null },
+    maxHeight: { type: String as PropType<string | null>, default: null },
     /** Ancho máximo. */
-    maxWidth: { type: String, default: null },
+    maxWidth: { type: String as PropType<string | null>, default: null },
     /** Altura mínima. */
-    minHeight: { type: String, default: null },
+    minHeight: { type: String as PropType<string | null>, default: null },
     /** Ancho mínimo. */
-    minWidth: { type: String, default: null },
+    minWidth: { type: String as PropType<string | null>, default: null },
     /** Posicionamiento (clase Tailwind). */
-    position: { type: String, default: null },
+    position: { type: String as PropType<string | null>, default: null },
     /** Ícono al inicio del header. */
-    prependIcon: { type: String, default: null },
+    prependIcon: { type: String as PropType<string | null>, default: null },
     /** Ícono al final del header. */
-    appendIcon: { type: String, default: null },
+    appendIcon: { type: String as PropType<string | null>, default: null },
     /** Avatar al inicio del header (URL de imagen). */
-    prependAvatar: { type: String, default: null },
+    prependAvatar: { type: String as PropType<string | null>, default: null },
     /** Avatar al final del header (URL de imagen). */
-    appendAvatar: { type: String, default: null },
+    appendAvatar: { type: String as PropType<string | null>, default: null },
     /** Imagen superior del card (URL). */
-    image: { type: String, default: null },
+    image: { type: String as PropType<string | null>, default: null },
     /** Muestra indicador de carga. */
     loading: { type: Boolean, default: false },
     /** Densidad del padding interno. */
@@ -87,8 +92,6 @@ export const kunCardProps = {
     },
     /** Sin bordes redondeados. */
     tile: { type: Boolean, default: false },
-    /** Coincidencia exacta de ruta (solo con `to`, se pasa al router-link). */
-    exact: { type: Boolean, default: false },
     /** Sombra al pasar el mouse. */
     hover: { type: Boolean, default: false },
     /** Contenido con scroll interno. */

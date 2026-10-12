@@ -18,17 +18,31 @@
     @touchmove="onTouchMove"
     @touchend.passive="onTouchEnd"
   >
+    <img
+      v-if="image"
+      :src="image"
+      alt=""
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+    />
     <slot name="prepend" />
     <slot />
     <slot name="append" />
+    <div
+      v-if="swipeable && (isStart || isEnd)"
+      aria-hidden="true"
+      class="pointer-events-none absolute top-1/2 -translate-y-1/2 rounded-full bg-surface-light opacity-60"
+      :class="[isStart ? 'right-1' : 'left-1']"
+      :style="{ width: `${swipeHandleSize}px`, height: `${swipeHandleSize}px` }"
+    />
   </component>
 
   <!-- Scrim -->
   <Transition name="kun-scrim">
     <div
-      v-if="scrim && (modelValue || isDragging) && !permanent && !persistent"
+      v-if="(scrim || temporary) && (modelValue || isDragging) && !permanent && !persistent"
       class="fixed inset-0 bg-black"
-      :style="{ opacity: 0.4 * (1 - openProgress) }"
+      :style="{ opacity: 0.4 * (1 - openProgress), transition: scrimTransition }"
       @click="close"
     />
   </Transition>

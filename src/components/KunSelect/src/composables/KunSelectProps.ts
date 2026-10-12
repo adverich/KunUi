@@ -10,22 +10,22 @@ export const KunSelectProps = {
   },
   /** Campo del ítem usado como valor (null = primer valor del objeto). */
   itemValue: {
-    type: String,
+    type: String as PropType<string | null>,
     default: null,
   },
   /** Campo(s) a mostrar (string, array o ruta `a.b`). */
   itemTitle: {
-    type: [String, Array],
+    type: [String, Array] as PropType<string | unknown[] | null>,
     default: null,
   },
   /** Alias de `itemTitle`. */
   itemText: {
-    type: [String, Array],
+    type: [String, Array] as PropType<string | unknown[] | null>,
     default: null,
   },
   /** Campo(s) del subtítulo. */
   itemSubtitle: {
-    type: [String, Array],
+    type: [String, Array] as PropType<string | unknown[] | null>,
     default: null,
   },
 
@@ -60,7 +60,17 @@ export const KunSelectProps = {
   /** Cierra el menú al seleccionar (single). */
   closeOnSelect: { type: Boolean, default: true },
   /** Origen del menú (se reenvía a KunMenu). */
-  menuOrigin: { type: String as PropType<KunMenuOrigin>, default: 'bottom left' },
+  menuOrigin: {
+    type: String as PropType<KunMenuOrigin>,
+    default: 'bottom left',
+    validator: (v: unknown) => [
+      'auto',
+      'top left', 'top center', 'top right',
+      'bottom left', 'bottom center', 'bottom right',
+      'left top', 'left center', 'left bottom',
+      'right top', 'right center', 'right bottom',
+    ].includes(v as string),
+  },
 
   /** Placeholder nativo (el visible es `placeholderText`). */
   placeholder: { type: String, default: '' },
@@ -105,7 +115,11 @@ export const KunSelectProps = {
   /** Altura máxima del menú. */
   maxHeight: { type: [String, Number], default: undefined },
   /** Densidad del campo (se reenvía al KunTextField). */
-  density: { type: String as PropType<KunTextFieldDensity>, default: 'default' },
+  density: {
+    type: String as PropType<KunTextFieldDensity>,
+    default: 'default',
+    validator: (v: unknown) => ['default', 'comfortable', 'compact'].includes(v as string),
+  },
   /** Z-index del menú. */
   zIndex: { type: String, default: 'z-250' },
   /** Oculta el área de detalles. */

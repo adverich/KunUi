@@ -22,7 +22,7 @@ export const kunDragAndDropProps = {
   },
   /** Grupo para transferir ítems entre listas con el mismo nombre. */
   group: {
-    type: String,
+    type: String as PropType<string | null>,
     default: null,
   },
   /** Permite reordenar dentro de la lista. */
@@ -37,7 +37,7 @@ export const kunDragAndDropProps = {
   },
   /** Selector CSS del handle (null = toda la tarjeta arrastra). */
   dragHandle: {
-    type: String,
+    type: String as PropType<string | null>,
     default: null,
   },
   /** `(item) => boolean`: decide qué ítems se pueden arrastrar. */

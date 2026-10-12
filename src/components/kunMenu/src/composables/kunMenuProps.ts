@@ -18,9 +18,9 @@ export const kunMenuProps = {
     bgColor: { type: String, default: 'bg-menu' },
     /** Apertura (v-model). */
     modelValue: Boolean,
-    /** Selector o elemento que dispara el menú. */
+    /** Selector o elemento que dispara el menú (reservado, sin efecto; usar el slot `activator`). */
     activator: [String, Object],
-    /** Props que se pasan al activador. */
+    /** Props que se pasan al activador (reservado, sin efecto; usar el slot `activator`). */
     activatorProps: {
         type: Object,
         default: () => ({})
@@ -111,14 +111,14 @@ export const kunMenuProps = {
     persistent: Boolean,
     /** Z-index del contenido. */
     zIndex: [String, Number],
-    /** Comportamiento de submenú (hereda contexto del padre). */
+    /** Comportamiento de submenú (reservado, sin efecto). */
     submenu: Boolean,
     /** Etiqueta accesible del menú. */
     label: {
         type: String,
         default: 'Menú contextual'
     },
-    /** Navegación con teclado (flechas/Enter/Escape). */
+    /** Navegación con teclado (reservado, sin efecto). */
     keyboardNavigation: {
         type: Boolean,
         default: true

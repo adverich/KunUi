@@ -4,7 +4,7 @@ import { isObject, isArray, fullCopy } from '../../../../utils/utils.js'
 export interface AutocompletePropsLike {
     itemTitle?: unknown;
     itemText?: unknown;
-    itemValue?: string;
+    itemValue?: string | null;
     returnObject?: boolean;
     multiple?: boolean;
     disabled?: boolean;

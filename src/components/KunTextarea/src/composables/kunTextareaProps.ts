@@ -1,3 +1,10 @@
+import type { PropType } from 'vue';
+
+export type KunTextareaTextAlign = 'left' | 'center' | 'right';
+export type KunTextareaFormatModel = 'auto' | 'json' | 'plain';
+export type KunTextareaVariant = 'filled' | 'outlined' | 'underlined' | 'solo';
+export type KunTextareaDensity = 'default' | 'comfortable' | 'compact';
+
 export const kunTextareaProps = {
   /** Valor del campo (v-model). Con formatModel='json' acepta objetos. */
   modelValue: [String, Number, Object],
@@ -15,9 +22,17 @@ export const kunTextareaProps = {
   /** Color del texto. */
   textColor: String,
   /** Alineación del texto. */
-  textAlign: { type: String, default: 'left' },
+  textAlign: {
+    type: String as PropType<KunTextareaTextAlign>,
+    default: 'left',
+    validator: (v: unknown) => ['left', 'center', 'right'].includes(v as string),
+  },
   /** Formato del modelo: 'auto' (detecta JSON) | 'json' | 'plain'. */
-  formatModel: { type: String, default: 'auto' }, // 'auto' | 'json' | 'plain'
+  formatModel: {
+    type: String as PropType<KunTextareaFormatModel>,
+    default: 'auto',
+    validator: (v: unknown) => ['auto', 'json', 'plain'].includes(v as string),
+  }, // 'auto' | 'json' | 'plain'
 
   /** Muestra barra de carga superior. */
   loading: Boolean,
@@ -67,7 +82,7 @@ export const kunTextareaProps = {
   counter: Boolean,
   /** Contador siempre visible (no solo en foco). */
   persistentCounter: Boolean,
-  /** Límite para el contador (no limita el input). */
+  /** Máximo de caracteres (`maxlength` nativo; también limita el contador). */
   maxLength: [Number, String],
 
   /** Ajusta la altura al contenido automáticamente. */
@@ -95,13 +110,15 @@ export const kunTextareaProps = {
   dirty: Boolean,
   /** Variante visual: 'filled' | 'outlined' | 'underlined' | 'solo'. */
   variant: {
-    type: String,
+    type: String as PropType<KunTextareaVariant>,
     default: 'outlined',
+    validator: (v: unknown) => ['filled', 'outlined', 'underlined', 'solo'].includes(v as string),
   },
   /** Densidad del padding. */
   density: {
-    type: String,
+    type: String as PropType<KunTextareaDensity>,
     default: 'default',
+    validator: (v: unknown) => ['default', 'comfortable', 'compact'].includes(v as string),
   },
   /** Clase extra del textarea. */
   inputClass: [String, Array],

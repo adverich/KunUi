@@ -22,6 +22,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { kunIconProps } from '../composables/kunIconProps.js'
+import { icons as bundledIcons } from '../../../../icons/index.js'
 
 const props = defineProps(kunIconProps);
 
@@ -40,7 +41,8 @@ const resolvedIcon = computed(() => {
   if (Array.isArray(props.icon)) return props.icon[0];
   if (typeof props.icon === 'string' && props.icon.startsWith('$')) {
     const key = props.icon.slice(1);
-    return props.aliases[key] || '';
+    // Aliases del consumidor primero; si no, el set bundleado (`$star`, ...).
+    return props.aliases[key] || (bundledIcons as Record<string, unknown>)[key] || '';
   }
   return props.icon;
 });

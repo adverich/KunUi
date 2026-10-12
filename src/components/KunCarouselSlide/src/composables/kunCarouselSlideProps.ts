@@ -1,3 +1,5 @@
+import type { PropType } from 'vue';
+
 export const kunCarouselSlideProps = {
   /** Clase extra del slide. */
   slideClass: {
@@ -6,7 +8,7 @@ export const kunCarouselSlideProps = {
   },
   /** Tamaño individual (sobrescribe el slideSize del carousel). */
   size: {
-    type: String,
+    type: String as PropType<string | null>,
     default: null,
   },
 }

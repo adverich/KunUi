@@ -7,6 +7,7 @@ export interface KunMenuStylesProps {
     width?: unknown;
     maxHeight?: unknown;
     hideDetails?: unknown;
+    offset?: unknown;
 }
 
 export interface MenuPositionStyle {
@@ -185,6 +186,7 @@ export function useKunMenuStyles(
                 ? String(props.origin)
                 : defaultOriginFromLocation(props.location);
             const [, horizontalOrigin] = origin.split(' ');
+            const { x: offsetX, y: offsetY } = parseMenuOffset(props.offset);
 
             let left = 0;
             if (horizontalOrigin === 'right') {
@@ -194,6 +196,7 @@ export function useKunMenuStyles(
             } else {
                 left = parentRect.left;
             }
+            left += offsetX;
 
             // Horizontal boundary check (skip for w-full: menu matches parent width, parent is already in viewport)
             if (props.width !== 'w-full') {
@@ -210,10 +213,10 @@ export function useKunMenuStyles(
             if (placeAbove) {
                 // Grow upwards using bottom CSS property
                 newStyle.top = 'auto';
-                newStyle.bottom = `${viewportHeight - parentRect.top}px`;
+                newStyle.bottom = `${viewportHeight - parentRect.top + offsetY}px`;
                 smartMaxHeight.value = spaceAbove;
             } else {
-                newStyle.top = `${parentRect.bottom - pxHideDetails}px`;
+                newStyle.top = `${parentRect.bottom - pxHideDetails + offsetY}px`;
                 newStyle.bottom = 'auto';
                 smartMaxHeight.value = spaceBelow;
             }
@@ -230,6 +233,33 @@ export function useKunMenuStyles(
             case 'right': return 'right top';
             default: return 'bottom left';
         }
+    }
+
+    // Desplazamiento respecto al activador: Number o string numérico = eje
+    // vertical; Array [x, y] o string "x y" / "x,y" = ambos ejes (px).
+    function parseMenuOffset(offset: unknown): { x: number; y: number } {
+        if (offset === null || offset === undefined || offset === '') return { x: 0, y: 0 };
+        if (typeof offset === 'number') return Number.isFinite(offset) ? { x: 0, y: offset } : { x: 0, y: 0 };
+        if (Array.isArray(offset)) {
+            const x = Number(offset[0] ?? 0);
+            const y = Number(offset[1] ?? 0);
+            return {
+                x: Number.isFinite(x) ? x : 0,
+                y: Number.isFinite(y) ? y : 0,
+            };
+        }
+        if (typeof offset === 'string') {
+            const parts = offset.trim().split(/[\s,]+/).filter(Boolean);
+            const nums = parts.map(Number);
+            if (nums.length === 1) return Number.isFinite(nums[0]) ? { x: 0, y: nums[0] } : { x: 0, y: 0 };
+            if (nums.length >= 2) {
+                return {
+                    x: Number.isFinite(nums[0]) ? nums[0] : 0,
+                    y: Number.isFinite(nums[1]) ? nums[1] : 0,
+                };
+            }
+        }
+        return { x: 0, y: 0 };
     }
 
     function initializeMenu(): void {

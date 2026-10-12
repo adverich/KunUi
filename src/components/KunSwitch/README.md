@@ -26,7 +26,7 @@ import { KunSwitch } from 'adverich-kun-ui'
 | `trueValue` | `Boolean \| String \| Number` | `true` | Valor que representa el estado activo. |
 | `falseValue` | `Boolean \| String \| Number` | `false` | Valor que representa el estado inactivo. |
 | `label` | `String` | `-` | Etiqueta al lado del switch. |
-| `labelPosition` | `KunSwitchLabelPosition` | `'right'` | Posición de la etiqueta: 'top' \| 'bottom' \| 'left' \| 'right'. |
+| `labelPosition` | `KunSwitchLabelPosition` | `'right'` | Posición de la etiqueta: 'top' \| 'bottom' \| 'left' \| 'right'.<br/>Valores · Values: `top` `bottom` `left` `right` |
 | `disabled` | `Boolean` | `-` | Deshabilita el switch. |
 | `onColor` | `String` | `'bg-success'` | Color del track en estado activo. |
 | `offColor` | `String` | `'bg-surface-light'` | Color del track en estado inactivo. |

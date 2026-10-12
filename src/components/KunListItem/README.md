@@ -26,14 +26,13 @@ import { KunListItem } from 'adverich-kun-ui'
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link). |
 | `href` | `String` | `-` | URL externa (renderiza <a>). |
 | `replace` | `Boolean` | `-` | Navegación con replace (solo con `to`). |
-| `exact` | `Boolean` | `-` | Coincidencia exacta de ruta activa. |
 | `tag` | `String` | `'li'` | Tag del contenedor. |
 | `disabled` | `Boolean` | `-` | Deshabilita el ítem. |
 | `active` | `Boolean` | `-` | Marca el ítem como activo. |
 | `activeClass` | `String` | `'bg-surface-light'` | Clase cuando está activo o seleccionado. |
 | `selectable` | `Boolean` | `false` | Permite selección (emite toggle al contexto KunList). |
-| `variant` | `String` | `'text'` | Variante visual. |
-| `density` | `String` | `'default'` | Densidad del padding vertical. |
+| `variant` | `KunListItemVariant` | `'text'` | Variante visual.<br/>Valores · Values: `text` `outlined` `elevated` `tonal` `flat` `plain` |
+| `density` | `KunListItemDensity` | `'default'` | Densidad del padding vertical.<br/>Valores · Values: `default` `comfortable` `compact` |
 | `rounded` | `Boolean \| String` | `true` | Redondeo (true = default, string = clase). |
 | `tile` | `Boolean` | `-` | Sin redondeo. |
 | `ripple` | `Boolean \| Object` | `true` | Efecto ripple al hacer click. |

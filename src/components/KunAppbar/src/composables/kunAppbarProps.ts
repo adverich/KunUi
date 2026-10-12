@@ -2,6 +2,8 @@ import type { PropType } from 'vue';
 
 export type KunAppbarTitlePosition = 'left' | 'center' | 'right';
 export type KunAppbarTransition = 'fade-slide' | 'fade' | 'scale';
+export type KunAppbarDensity = 'default' | 'comfortable' | 'compact';
+export type KunAppbarElevation = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'none';
 
 export const kunAppbarProps = {
   /** Color de fondo. */
@@ -21,11 +23,19 @@ export const kunAppbarProps = {
     validator: (val: unknown) => ['left', 'center', 'right'].includes(val as string)
   },
   /** Densidad visual. */
-  density: { type: String, default: 'default' },
+  density: {
+    type: String as PropType<KunAppbarDensity>,
+    default: 'default',
+    validator: (v: unknown) => ['default', 'comfortable', 'compact'].includes(v as string)
+  },
   /** Altura (clase Tailwind). */
   height: String,
   /** Elevación/sombra. */
-  elevation: { type: String, default: 'md' },
+  elevation: {
+    type: String as PropType<KunAppbarElevation>,
+    default: 'md',
+    validator: (v: unknown) => ['sm', 'md', 'lg', 'xl', '2xl', 'none'].includes(v as string)
+  },
   /** Muestra borde inferior (usa `borderColor`). */
   bordered: { type: Boolean, default: false },
   /** Clases del borde inferior. */

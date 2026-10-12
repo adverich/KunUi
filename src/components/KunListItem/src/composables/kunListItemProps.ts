@@ -1,3 +1,8 @@
+import type { PropType } from 'vue';
+
+export type KunListItemVariant = 'text' | 'outlined' | 'elevated' | 'tonal' | 'flat' | 'plain';
+export type KunListItemDensity = 'default' | 'comfortable' | 'compact';
+
 export const kunListItemProps = {
   /** Valor del ítem (selección y eventos). Acepta cualquier tipo. */
   value: [String, Number, Boolean, Object, Array, null],
@@ -8,7 +13,6 @@ export const kunListItemProps = {
   /** Navegación con replace (solo con `to`). */
   replace: Boolean,
   /** Coincidencia exacta de ruta activa. */
-  exact: Boolean,
   /** Tag del contenedor. */
   tag: { type: String, default: 'li' },
   /** Deshabilita el ítem. */
@@ -20,9 +24,9 @@ export const kunListItemProps = {
   /** Permite selección (emite toggle al contexto KunList). */
   selectable: { type: Boolean, default: false },
   /** Variante visual. */
-  variant: { type: String, default: 'text' },
+  variant: { type: String as PropType<KunListItemVariant>, default: 'text', validator: (v: unknown) => ['text', 'outlined', 'elevated', 'tonal', 'flat', 'plain'].includes(v as string) },
   /** Densidad del padding vertical. */
-  density: { type: String, default: 'default' },
+  density: { type: String as PropType<KunListItemDensity>, default: 'default', validator: (v: unknown) => ['default', 'comfortable', 'compact'].includes(v as string) },
   /** Redondeo (true = default, string = clase). */
   rounded: { type: [Boolean, String], default: true },
   /** Sin redondeo. */

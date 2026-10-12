@@ -28,8 +28,8 @@ import { KunRadio } from 'adverich-kun-ui'
 | `baseColor` | `String` | `-` | Color base cuando no está seleccionado. |
 | `trueValue` | `any` | `true` | Valor que representa el estado activo. |
 | `falseValue` | `any` | `false` | Valor que representa el estado inactivo. |
-| `trueIcon` | `String \| Object` | `null` | Ícono personalizado para el estado activo. |
-| `falseIcon` | `String \| Object` | `null` | Ícono personalizado para el estado inactivo. |
+| `trueIcon` | `string \| Record<string, any> \| null` | `null` | Ícono personalizado para el estado activo. |
+| `falseIcon` | `string \| Record<string, any> \| null` | `null` | Ícono personalizado para el estado inactivo. |
 | `value` | `String \| Number \| Boolean \| Object` | `-` | Valor de esta opción. |
 | `disabled` | `Boolean` | `-` | Deshabilita la opción. |
 | `readonly` | `Boolean` | `-` | Solo lectura. |

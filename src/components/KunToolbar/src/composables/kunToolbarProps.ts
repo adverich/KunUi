@@ -1,10 +1,19 @@
+import type { PropType } from 'vue';
+
+export type KunToolbarTitlePosition = 'left' | 'center' | 'right';
+export type KunToolbarDensity = 'default' | 'prominent' | 'comfortable' | 'compact';
+
 export const kunToolbarProps = {
   /** Posicionamiento absoluto. */
   absolute: Boolean,
   /** Color de fondo. */
   bgColor: String,
   /** Posición del título. */
-  titlePosition: { type: String, default: 'left' },
+  titlePosition: {
+    type: String as PropType<KunToolbarTitlePosition>,
+    default: 'left',
+    validator: (v: unknown) => ['left', 'center', 'right'].includes(v as string),
+  },
   /** Muestra borde inferior. */
   bordered: { type: Boolean, default: false },
   /** Color del borde. */
@@ -12,7 +21,11 @@ export const kunToolbarProps = {
   /** Colapsa el toolbar (solo extensión). */
   collapse: Boolean,
   /** Densidad del padding. */
-  density: { type: String, default: 'default' },
+  density: {
+    type: String as PropType<KunToolbarDensity>,
+    default: 'default',
+    validator: (v: unknown) => ['default', 'prominent', 'comfortable', 'compact'].includes(v as string),
+  },
   /** Nivel de sombra. */
   elevation: [String, Number],
   /** Muestra la fila de extensión. */
@@ -34,7 +47,7 @@ export const kunToolbarProps = {
   rounded: [String, Boolean],
   /** Tag del contenedor. */
   tag: { type: String, default: 'header' },
-  /** Tema de color. */
+  /** Tema de color (hook de clase `theme-<valor>` para CSS del consumidor). */
   theme: String,
   /** Sin redondeo. */
   tile: Boolean,

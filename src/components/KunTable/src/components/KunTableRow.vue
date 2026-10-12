@@ -59,7 +59,7 @@
     </td>
 
     <!-- Action space -->
-    <td v-if="hasActions" class="print:hidden" :class="['text-center', props.actionsAlign]">
+    <td v-if="hasActions" class="print:hidden" :class="[actionsAlignClass]">
       <slot name="item.actions" :item="item" :index="index" :loading="loading" />
     </td>
   </tr>
@@ -105,6 +105,15 @@ function resolveTdClass(item: TableItem | undefined, index: number | undefined):
 
 const baseRowClass = 'hover:bg-ui-selection-hover border-t border-ui';
 const rowClass = computed(() => props.rowClass || baseRowClass);
+
+const actionsAlignClass = computed(() => {
+  const alignMap: Record<string, string> = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
+  }
+  return alignMap[props.actionsAlign as string] || 'text-center'
+});
 const baseTrClass = 'bg-surface';
 const trClass = computed(() => props.trClass || baseTrClass);
 const conditionalRowClass = computed(() => resolveTdClass(props.item, props.index));

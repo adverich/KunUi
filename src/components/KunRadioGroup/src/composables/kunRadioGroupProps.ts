@@ -1,5 +1,7 @@
 import type { PropType } from 'vue';
 
+export type KunRadioGroupDirection = 'vertical' | 'horizontal';
+
 export const kunRadioGroupProps = {
   /** Valor seleccionado (v-model). Acepta `null` (nada seleccionado). */
   modelValue: { type: [String, Number, Boolean, Object] as PropType<string | number | boolean | Record<string, unknown> | null> },
@@ -14,7 +16,11 @@ export const kunRadioGroupProps = {
   /** Solo lectura. */
   readonly: Boolean,
   /** Dirección del layout: 'vertical' | 'horizontal'. */
-  direction: { type: String, default: 'vertical' },
+  direction: {
+    type: String as PropType<KunRadioGroupDirection>,
+    default: 'vertical',
+    validator: (v: unknown) => ['vertical', 'horizontal'].includes(v as string),
+  },
   /** Opciones en línea (atajo de direction='horizontal'). */
   inline: Boolean,
   /** Estado de error visual. */
