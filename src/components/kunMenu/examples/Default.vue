@@ -104,6 +104,7 @@ const disabled = ref(false)
 const eager = ref(false)
 const persistent = ref(false)
 const hideDetails = ref(true)
+const anchor = ref(true)
 
 // ------------------------------------------------------------------
 // Log de eventos en vivo
@@ -162,6 +163,7 @@ function handleSelect(item: string): void {
         :eager="eager"
         :persistent="persistent"
         :hide-details="hideDetails"
+        :anchor="anchor"
         @update:model-value="logEvent($event ? 'open' : 'close', $event)"
         @click:outside="logEvent('click:outside', 'click fuera')"
         @handle-escape="logEvent('handleEscape', 'Escape')"
@@ -250,6 +252,7 @@ function handleSelect(item: string): void {
         <KunSwitch v-model="eager" label="Eager" />
         <KunSwitch v-model="persistent" label="Persistent" />
         <KunSwitch v-model="hideDetails" label="Sin details" />
+        <KunSwitch v-model="anchor" label="Anchor positioning (nativo si soportado)" />
       </div>
     </div>
   </div>

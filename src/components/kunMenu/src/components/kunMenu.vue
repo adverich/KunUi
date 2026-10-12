@@ -85,6 +85,9 @@ const {
 const {
   initializeMenu,
   repositionMenu,
+  resetMenuPosition,
+  setAnchorName,
+  clearAnchorName,
   startScrollTracking,
   stopScrollTracking,
   startContentTracking,
@@ -129,6 +132,7 @@ function handleContentClick(): void {
 onUnmounted(() => {
   stopScrollTracking()
   stopContentTracking()
+  clearAnchorName()
   const el = contentEl.value
   if (el) {
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
@@ -137,21 +141,35 @@ onUnmounted(() => {
 })
 
 watch(menuVisible, (visible) => {
-  const el = contentEl.value
-  if (!el) return
+  // Al cerrar, el contenido sigue montado en este punto (el `v-if` lo
+  // desmonta en el patch posterior): la limpieza puede ser síncrona.
+  if (!visible) {
+    stopScrollTracking()
+    stopContentTracking()
+    const closedEl = contentEl.value
+    if (closedEl) closedEl.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
+    removeEventListeners();
+    resetMenuPosition()
+    return
+  }
 
-  if (visible) {
+  // Al abrir, el contenido (`v-if="eager || menuVisible"`) aún no está
+  // montado cuando este watcher corre en pre-flush: `contentEl` es null y
+  // posicionar ahí es un no-op que deja el menú sin `fixed` (bloque
+  // estático al fondo del body). Se difiere al post-mount.
+  nextTick(() => {
+    const el = contentEl.value
+    if (!el) return
+
+    // Registra el `anchor-name` en el activador antes de posicionar (si el
+    // navegador soporta anchors, `repositionMenu` usa el motor nativo).
+    setAnchorName()
     repositionMenu()
     startScrollTracking(parentEl.value)
     startContentTracking()
     el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false });
     addEventListeners();
-  } else {
-    stopScrollTracking()
-    stopContentTracking()
-    el.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
-    removeEventListeners();
-  }
+  })
 })
 
 function preventBodyScrollWhenAtEdge(e: WheelEvent): void {

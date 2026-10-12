@@ -27,7 +27,7 @@
         <div v-if="!noArrows && controlVariant === 'split'" class="flex self-stretch shrink-0 items-stretch">
           <button
             type="button"
-            :class="[controlPadding, controlClass, 'flex items-center justify-center text-lg border-r border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
+            :class="[controlPadding, controlStartRounded, controlClass, controlStartClass, 'flex items-center justify-center text-lg border-r border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
             @click="onDecrement"
             :disabled="disabled || readonly"
           >−</button>
@@ -159,7 +159,7 @@
         <div v-if="!noArrows && controlVariant === 'split'" class="flex self-stretch shrink-0 items-stretch">
           <button
             type="button"
-            :class="[controlPadding, controlClass, 'flex items-center justify-center text-lg border-l border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
+            :class="[controlPadding, controlEndRounded, controlClass, controlEndClass, 'flex items-center justify-center text-lg border-l border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
             @click="onIncrement"
             :disabled="disabled || readonly"
           >+</button>
@@ -331,6 +331,13 @@ const controlPadding = computed(() =>
 // Clase libre para los botones (ej. `px-4` para más aire horizontal en pill).
 // Se combina después del padding por densidad para permitir override.
 const controlClass = computed(() => props.controlClass || '');
+const controlStartClass = computed(() => props.controlStartClass || '');
+const controlEndClass = computed(() => props.controlEndClass || '');
+// El botón split es cuadrado por defecto y taparía el pill del contenedor
+// (`rounded-full`). Heredar el redondeo solo en el extremo externo mantiene
+// la esquina exterior redonda y el divisor interno recto.
+const controlStartRounded = computed(() => props.rounded ? 'rounded-l-[inherit]' : '');
+const controlEndRounded = computed(() => props.rounded ? 'rounded-r-[inherit]' : '');
 const controlPx = computed(() =>
   props.density === "compact" ? "px-1" :
   props.density === "comfortable" ? "px-2" :

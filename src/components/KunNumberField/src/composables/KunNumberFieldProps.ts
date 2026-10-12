@@ -93,8 +93,12 @@ export const KunNumberFieldProps = {
   },
   /** Oculta los botones ▲▼ (quedan `onIncrement`/`onDecrement` por slot). */
   noArrows: { type: Boolean, default: false },
-  /** Clase libre para los botones de incremento/decremento (ej. `px-4` para más padding horizontal). Se combina con el padding por `density`. */
+  /** Clase libre para los botones de incremento/decremento (ej. `px-4` para más padding horizontal). Se combina con el padding por `density`. Aplica a ambas variantes; para `split` se puede refinar por extremo con `controlStartClass` / `controlEndClass`. */
   controlClass: { type: String, default: '' },
+  /** Clase libre solo para el botón inicial (−, izquierda en LTR) en `control-variant="split"` (ej. `pl-4` para aire solo en el extremo externo sin deformar el divisor interno). Se combina después de `controlClass`. */
+  controlStartClass: { type: String, default: '' },
+  /** Clase libre solo para el botón final (+, derecha en LTR) en `control-variant="split"` (ej. `pr-4` para aire solo en el extremo externo sin deformar el divisor interno). Se combina después de `controlClass`. */
+  controlEndClass: { type: String, default: '' },
   /** Densidad del padding y alturas (misma escala que KunTextField). */
   density: {
     type: String as PropType<KunNumberFieldDensity>,

@@ -110,6 +110,8 @@ const placeholderTextSize = ref('')
 const inputStyle = ref('')
 const bgInput = ref('bg-field-background')
 const controlClass = ref('')
+const controlStartClass = ref('')
+const controlEndClass = ref('')
 
 // ------------------------------------------------------------------
 // Estado y ayuda
@@ -206,6 +208,8 @@ function logEvent(name: string, detail: unknown): void {
         :input-style="inputStyle"
         :bg-input="bgInput"
         :control-class="controlClass || undefined"
+        :control-start-class="controlStartClass || undefined"
+        :control-end-class="controlEndClass || undefined"
         :error="error"
         :error-messages="errorMessage"
         :hint="hint"
@@ -350,6 +354,8 @@ function logEvent(name: string, detail: unknown): void {
 
         <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Densidad y controles</p>
         <KunTextField v-model="controlClass" label="Control class (ej. px-4)" density="compact" />
+        <KunTextField v-model="controlStartClass" label="Control start class (ej. pl-4)" density="compact" />
+        <KunTextField v-model="controlEndClass" label="Control end class (ej. pr-4)" density="compact" />
         <KunSwitch v-model="useGrouping" label="Grouping" />
         <KunSwitch v-model="textCenter" label="Centrado" />
         <KunSwitch v-model="clearable" label="Clearable" />

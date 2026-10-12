@@ -56,7 +56,9 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `textCenter` | `Boolean` | `false` | Centra el texto del valor. |
 | `controlVariant` | `KunNumberFieldControlVariant` | `'default'` | Variante de botones de incremento: 'default' \| 'stacked' \| 'split'.<br/>Valores · Values: `default` `stacked` `split` |
 | `noArrows` | `Boolean` | `false` | Oculta los botones ▲▼ (quedan `onIncrement`/`onDecrement` por slot). |
-| `controlClass` | `String` | `''` | Clase libre para los botones de incremento/decremento (ej. `px-4` para más padding horizontal). Se combina con el padding por `density`. |
+| `controlClass` | `String` | `''` | Clase libre para los botones de incremento/decremento (ej. `px-4` para más padding horizontal). Se combina con el padding por `density`. Aplica a ambas variantes; para `split` se puede refinar por extremo con `controlStartClass` / `controlEndClass`. |
+| `controlStartClass` | `String` | `''` | Clase libre solo para el botón inicial (−, izquierda en LTR) en `control-variant="split"` (ej. `pl-4` para aire solo en el extremo externo sin deformar el divisor interno). Se combina después de `controlClass`. |
+| `controlEndClass` | `String` | `''` | Clase libre solo para el botón final (+, derecha en LTR) en `control-variant="split"` (ej. `pr-4` para aire solo en el extremo externo sin deformar el divisor interno). Se combina después de `controlClass`. |
 | `density` | `KunNumberFieldDensity` | `'default'` | Densidad del padding y alturas (misma escala que KunTextField).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `error` | `Boolean` | `false` | Estado de error visual. |
 | `errorMessages` | `String \| Array` | `-` | Mensajes de error externos. |
@@ -128,22 +130,28 @@ Mismo sistema de 4 iconos (`prepend`/`append` externos + `prepend-inner` /
 `append-inner`), label flotante, densidades y eventos (más `input` crudo).
 Los slots `prepend`/`append` externos aún no existen en NF (solo en TF).
 
-## Controles split centrados + `controlClass`
+## Controles split centrados + `controlClass` / extremos independientes
 
 La variante `control-variant="split"` usa wrappers `flex self-stretch`
 con botones `flex items-center justify-center` para que `−`/`+` queden
-centrados verticalmente incluso con `rounded-full`.
+centrados verticalmente incluso con `rounded-full`. Cada botón split
+hereda el redondeo del contenedor solo en su extremo externo
+(`rounded-l/r-[inherit]`), así el pill no se deforma y el divisor interno
+sigue recto.
 
-La prop `controlClass` (default `''`) se combina después del padding por
-`density` en todas las variantes (`default`/`stacked`/`split`).
-Ej. pill con más aire horizontal:
+- `controlClass` (default `''`): base para ambas variantes, después del
+  padding por `density`. `px-*` afecta ambos lados de cada botón.
+- `controlStartClass` / `controlEndClass` (default `''`, solo `split`):
+  override independiente por extremo, después de `controlClass`.
+  Para dar aire solo hacia afuera sin ensanchar el divisor interno:
 
 ```vue
 <KunNumberField
   v-model="cantidad"
   control-variant="split"
   rounded="rounded-full"
-  control-class="px-4"
+  control-start-class="pl-4"
+  control-end-class="pr-4"
   text-center
 />
 ```

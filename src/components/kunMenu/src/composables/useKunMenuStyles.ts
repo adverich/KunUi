@@ -1,4 +1,4 @@
-import { ref, computed, nextTick, type Ref, type ComputedRef } from 'vue'
+import { ref, computed, nextTick, useId, type Ref, type ComputedRef } from 'vue'
 
 export interface KunMenuStylesProps {
     parentRef?: unknown;
@@ -8,6 +8,7 @@ export interface KunMenuStylesProps {
     maxHeight?: unknown;
     hideDetails?: unknown;
     offset?: unknown;
+    anchor?: unknown;
 }
 
 export interface MenuPositionStyle {
@@ -35,6 +36,129 @@ export function useKunMenuStyles(
     const activatorEl: Ref<HTMLElement | null> = ref(null);
     const smartMaxHeight: Ref<number | null> = ref(null);
     const currentPlacement = ref('bottom');
+
+    // Estilo inicial oculto: mientras el menú no está posicionado (montaje
+    // pendiente del `v-if`) no debe pintar como bloque estático al fondo del
+    // body. El estilo posicionado ya setea `opacity: '1'`.
+    const HIDDEN_POSITION_STYLE: Record<string, string> = {
+        position: 'fixed',
+        top: '0px',
+        left: '0px',
+        opacity: '0',
+        pointerEvents: 'none',
+    };
+    menuPositionStyle.value = { ...HIDDEN_POSITION_STYLE };
+
+    // Vuelve al estilo oculto (ej. al cerrar) para que una reapertura nunca
+    // pinte un frame con coordenadas viejas.
+    function resetMenuPosition(): void {
+        smartMaxHeight.value = null;
+        menuPositionStyle.value = { ...HIDDEN_POSITION_STYLE };
+    }
+
+    // --- CSS Anchor Positioning -------------------------------------------
+    // Nombre único por instancia para `anchor-name` (document-scoped, por eso
+    // funciona igual con el contenido teleportado a body).
+    const anchorName = `--kun-menu-${useId()}`;
+    // Detección solo-cliente (en SSR `CSS` no existe → false, y el menú nace
+    // cerrado así que no hay mismatch de hidratación).
+    const anchorSupported = ref(false);
+
+    function isAnchorPositioningSupported(): boolean {
+        if (typeof CSS === 'undefined' || typeof CSS.supports !== 'function') return false;
+        try {
+            return CSS.supports('position-anchor: --kun-menu-probe');
+        } catch {
+            return false;
+        }
+    }
+
+    // El motor anchor cubre el eje vertical (bottom/top). `location`
+    // left/right sigue por el path JS.
+    function useAnchorMode(): boolean {
+        if (props.anchor === false) return false;
+        if (!anchorSupported.value) return false;
+        const loc = props.location ?? 'bottom';
+        return loc === 'bottom' || loc === 'top';
+    }
+
+    function setAnchorName(): boolean {
+        const el = resolveParentEl();
+        if (!(el instanceof HTMLElement)) return false;
+        el.style.setProperty('anchor-name', anchorName);
+        return true;
+    }
+
+    function clearAnchorName(): void {
+        const el = resolveParentEl();
+        if (el instanceof HTMLElement) el.style.removeProperty('anchor-name');
+    }
+
+    // Espacio disponible sobre/debajo del activador (px, puede ser negativo).
+    function spaceAround(rect: DOMRect): { below: number; above: number } {
+        const viewportHeight = window.innerHeight;
+        const margin = 8;
+        const pxHideDetails = props.hideDetails ? 0 : 19;
+        return {
+            below: viewportHeight - rect.bottom + pxHideDetails - margin,
+            above: rect.top - margin,
+        };
+    }
+
+    // En modo anchor la posición es nativa (el navegador elige el lado con
+    // flip-block): el cap de altura debe servir a ambos lados, si no el lado
+    // flipeado nacería recortado. Por eso se usa el máximo, no el lado actual.
+    function refreshAnchorMaxHeight(rect: DOMRect): void {
+        const { below, above } = spaceAround(rect);
+        smartMaxHeight.value = Math.max(0, Math.round(Math.max(below, above)));
+        currentPlacement.value = (props.location ?? 'bottom') === 'top' ? 'top' : 'bottom';
+    }
+
+    function buildAnchorStyle(): Record<string, string> {
+        const viewportWidth = window.innerWidth;
+        const margin = 8;
+        const pxHideDetails = props.hideDetails ? 0 : 19;
+        const { x: offsetX, y: offsetY } = parseMenuOffset(props.offset);
+        const origin = (props.origin && props.origin !== 'auto')
+            ? String(props.origin)
+            : defaultOriginFromLocation(props.location);
+        const [, horizontalOrigin] = origin.split(' ');
+
+        const style: Record<string, string> = {
+            position: 'fixed',
+            'position-anchor': anchorName,
+            opacity: '1',
+            pointerEvents: 'auto',
+            transform: 'scale(1)',
+            zIndex: '99999',
+            maxWidth: `${viewportWidth - margin * 2}px`,
+            // Flip nativo arriba/abajo + clamp horizontal; auto-hide si el
+            // ancla sale del viewport (mata el menú flotando despegado).
+            'position-try-fallbacks': 'flip-block flip-inline',
+            'position-visibility': 'anchors-visible',
+        };
+
+        if (horizontalOrigin === 'right') {
+            style.left = `calc(anchor(right) + ${offsetX}px)`;
+            style.translate = '-100% 0';
+        } else if (horizontalOrigin === 'center') {
+            style.left = `calc(anchor(center) + ${offsetX}px)`;
+            style.translate = '-50% 0';
+        } else {
+            style.left = `calc(anchor(left) + ${offsetX}px)`;
+        }
+
+        if ((props.location ?? 'bottom') === 'top') {
+            style.top = 'auto';
+            style.bottom = `calc(anchor(top) + ${offsetY}px)`;
+        } else {
+            style.top = `calc(anchor(bottom) - ${pxHideDetails}px + ${offsetY}px)`;
+            style.bottom = 'auto';
+        }
+
+        if (props.width === 'w-full') style.width = 'anchor-size(width)';
+        return style;
+    }
 
     const locationMap: Record<string, { class: string }> = {
         top: { class: 'origin-bottom' },
@@ -124,12 +248,27 @@ export function useKunMenuStyles(
         const parentEl = resolveParentEl();
         const menuEl = contentEl.value;
 
-        if (!(parentEl instanceof HTMLElement) || !(menuEl instanceof HTMLElement)) return;
+        if (!(parentEl instanceof HTMLElement) || !(menuEl instanceof HTMLElement)) {
+            // Antes: return silencioso que dejaba el menú sin posicionar para
+            // siempre (estilo `{}` = bloque estático al fondo del body).
+            // Ahora: reintenta, cubre montajes tardíos del Teleport.
+            if (attempt < 10) requestAnimationFrame(() => repositionMenu(attempt + 1));
+            return;
+        }
 
         const parentRect = parentEl.getBoundingClientRect();
 
         if ((parentRect.width < 1 || parentRect.height < 1) && attempt < 10) {
             requestAnimationFrame(() => repositionMenu(attempt + 1));
+            return;
+        }
+
+        // Modo anchor: la posición es nativa (el navegador sigue al ancla en
+        // el compositor, sin lag). Acá solo se refresca el cap de altura y se
+        // escribe el estilo con `position-anchor`; no hay coordenadas JS.
+        if (useAnchorMode() && setAnchorName()) {
+            refreshAnchorMaxHeight(parentRect);
+            menuPositionStyle.value = buildAnchorStyle();
             return;
         }
 
@@ -139,12 +278,8 @@ export function useKunMenuStyles(
         // spaceAbove; forzar spaceBelow lo encogería y el rAF lo restauraría
         // (= parpadeo en cada scroll). Primera apertura: 'bottom' por defecto.
         {
-            const viewportHeight = window.innerHeight;
-            const margin = 8;
-            const pxHideDetails = props.hideDetails ? 0 : 19;
-            const spaceBelowSync = viewportHeight - parentRect.bottom + pxHideDetails - margin;
-            const spaceAboveSync = parentRect.top - margin;
-            const syncSpace = currentPlacement.value === 'top' ? spaceAboveSync : spaceBelowSync;
+            const { below, above } = spaceAround(parentRect);
+            const syncSpace = currentPlacement.value === 'top' ? above : below;
             smartMaxHeight.value = Math.max(0, Math.round(syncSpace));
         }
 
@@ -263,6 +398,9 @@ export function useKunMenuStyles(
     }
 
     function initializeMenu(): void {
+        // Detección solo-cliente (esta función corre en onMounted).
+        anchorSupported.value = isAnchorPositioningSupported();
+
         const el = resolveParentEl() || contentEl.value?.parentElement
 
         if (!(el instanceof HTMLElement)) {
@@ -395,6 +533,10 @@ export function useKunMenuStyles(
     return {
         initializeMenu,
         repositionMenu,
+        resetMenuPosition,
+        setAnchorName,
+        clearAnchorName,
+        anchorName,
         startScrollTracking,
         stopScrollTracking,
         startContentTracking,

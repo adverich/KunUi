@@ -128,4 +128,9 @@ export const kunMenuProps = {
         type: Boolean,
         default: true,
     },
+    /** Usa CSS Anchor Positioning cuando el navegador lo soporta (sin lag al scrollear). `false` fuerza el posicionamiento JS. */
+    anchor: {
+        type: Boolean,
+        default: true,
+    },
 }
