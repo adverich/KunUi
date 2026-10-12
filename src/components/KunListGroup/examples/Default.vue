@@ -9,15 +9,16 @@ import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 // ------------------------------------------------------------------
 // Controles del playground (grupo principal)
 // ------------------------------------------------------------------
-const open = ref(false)
+const open = ref(true)
 const idRaw = ref('')
 const title = ref('Equipo')
 const expandIcon = ref('$menuUpOutline')
 const collapseIcon = ref('$menuDownOutline')
 const disabled = ref(false)
 
-// Segundo grupo (siempre visible para mostrar el funcionamiento)
-const openPermisos = ref(true)
+// Segundo grupo + selección (para mostrar el funcionamiento)
+const openPermisos = ref(false)
+const selected = ref<unknown[]>([])
 </script>
 
 <template>
@@ -26,8 +27,8 @@ const openPermisos = ref(true)
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunListGroup</h2>
 
-      <div class="rounded-lg bg-surface p-3">
-        <KunList selectable selection-mode="multiple">
+      <div class="rounded-xl border border-ui bg-surface p-3">
+        <KunList v-model:selected="selected" selectable selection-mode="multiple" nav>
           <!-- Grupo principal (configurable desde el panel) -->
           <KunListGroup
             :model-value="open"
@@ -54,13 +55,14 @@ const openPermisos = ref(true)
           </KunListGroup>
 
           <!-- Ítem suelto fuera de grupos -->
-          <KunListItem value="ayuda" title="Ayuda" subtitle="Centro de soporte" prepend-icon="$info" />
+          <KunListItem value="ayuda" title="Ayuda" subtitle="Centro de soporte" prepend-icon="$info" selectable />
         </KunList>
       </div>
 
       <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">model-value en crudo</div>
+        <div class="text-ui-muted text-xs mb-1">Estado en crudo</div>
         <div>Equipo: {{ JSON.stringify(open) }} · Permisos: {{ JSON.stringify(openPermisos) }}</div>
+        <div>Seleccionados: {{ JSON.stringify(selected) }}</div>
       </div>
     </div>
 
