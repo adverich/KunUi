@@ -115,11 +115,15 @@ import { KunNumberField } from 'adverich-kun-ui'
 
 ## Notas · Notes
 
-## Muesca del label flotante (borde segmentado medido)
+## Muesca del label flotante + desplazamiento por `rounded`
 
-Igual que `KunTextField`: overlay `div` con borde superior en dos segmentos
-que abrazan la caja real del label (medida por JS + `ResizeObserver`). Hueco
-real en cualquier fondo, simétrico por construcción, sin `fieldset`/`legend`.
+Igual que `KunTextField`, vía el composable compartido `useKunFieldNotch`
+(`src/utils/useKunFieldNotch.ts`): el overlay dibuja el borde nativo
+completo (respeta cualquier `rounded`, pill incluida) y la muesca se recorta
+con `mask` sobre la caja real del label (medida por JS + `ResizeObserver`).
+Hueco real en cualquier fondo, sin `fieldset`/`legend`. El label flotante se
+desplaza 2px por escalón de `rounded` (`margin-left`; `margin-right` si flota
+anclado a la derecha con `floatingLabelLeft: 'right-*'`).
 
 ## Input siempre `type="text"`
 

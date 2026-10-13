@@ -19,6 +19,7 @@ const animation = ref<KunSkeletonAnimation>('shimmer')
 const animationOptions = ref([
   { id: 'shimmer', name: 'shimmer' },
   { id: 'shimmer-vertical', name: 'shimmer-vertical' },
+  { id: 'wave', name: 'wave' },
   { id: 'pulse', name: 'pulse' },
   { id: 'none', name: 'none' },
 ])
@@ -26,10 +27,9 @@ const animationOptions = ref([
 const width = ref('100%')
 const height = ref('1rem')
 const rounded = ref('md')
-const durationRaw = ref('1500')
-const durationProp = computed(() => (durationRaw.value === '' ? 1500 : Number(durationRaw.value)))
-const colorFrom = ref('bg-ui-surface-subtle')
-const colorTo = ref('bg-ui-hover')
+const durationRaw = ref('1600')
+const durationProp = computed(() => (durationRaw.value === '' ? 1600 : Number(durationRaw.value)))
+const colorFrom = ref('bg-ui-hover')
 </script>
 
 <template>
@@ -48,7 +48,6 @@ const colorTo = ref('bg-ui-hover')
           :animation="animation"
           :duration="durationProp"
           :color-from="colorFrom || undefined"
-          :color-to="colorTo || undefined"
         >
           <div class="flex items-center gap-3">
             <div class="h-10 w-10 rounded-full bg-success/30" />
@@ -91,9 +90,8 @@ const colorTo = ref('bg-ui-hover')
         <KunTextField v-model="width" label="Width (vacío = 100%)" density="compact" />
         <KunTextField v-model="height" label="Height (vacío = 1rem)" density="compact" />
         <KunTextField v-model="rounded" label="Rounded" density="compact" />
-        <KunTextField v-model="durationRaw" label="Duration ms (vacío = 1500)" density="compact" inputmode="numeric" />
+        <KunTextField v-model="durationRaw" label="Duration ms (vacío = 1600)" density="compact" inputmode="numeric" />
         <KunTextField v-model="colorFrom" label="Color from (vacío = default)" density="compact" />
-        <KunTextField v-model="colorTo" label="Color to (vacío = default)" density="compact" />
       </div>
     </div>
   </div>

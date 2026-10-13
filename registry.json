@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.662",
+  "version": "0.1.664",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -7305,7 +7305,7 @@
             "circle",
             "text"
           ],
-          "description": "Forma: 'rect' | 'circle' | 'text'.",
+          "description": "Forma: 'rect' (bloque con redondeo configurable) | 'text' (píldora) | 'circle' (círculo perfecto, fuerza tamaño cuadrado).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
@@ -7313,7 +7313,7 @@
           "type": "String | Number",
           "default": "\"100%\"",
           "values": [],
-          "description": "Ancho (número = px).",
+          "description": "Ancho (número = px). En 'circle' define el diámetro, salvo porcentaje (usa height).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
@@ -7321,7 +7321,7 @@
           "type": "String | Number",
           "default": "\"1rem\"",
           "values": [],
-          "description": "Altura (número = px).",
+          "description": "Altura (número = px). En 'circle' solo se usa si width es porcentaje.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
@@ -7339,26 +7339,27 @@
           "values": [
             "shimmer",
             "shimmer-vertical",
+            "wave",
             "pulse",
             "none"
           ],
-          "description": "Animación: 'shimmer' | 'shimmer-vertical' | 'pulse' | 'none'.",
+          "description": "Animación: 'shimmer' (barrido con pausa) | 'shimmer-vertical' (barrido vertical) | 'wave' (oscilación continua) | 'pulse' (pulso de opacidad) | 'none' (estático).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
           "name": "duration",
           "type": "Number",
-          "default": "1500",
+          "default": "1600",
           "values": [],
-          "description": "Duración de la animación en ms.",
+          "description": "Duración de la animación en ms. Se aplica a todas las animaciones.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
           "name": "colorFrom",
           "type": "String",
-          "default": "\"bg-ui-surface-subtle\"",
+          "default": "\"bg-ui-hover\"",
           "values": [],
-          "description": "Color inicial del degradado.",
+          "description": "Clase de fondo base del placeholder.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
@@ -7366,7 +7367,7 @@
           "type": "String",
           "default": "\"bg-ui-hover\"",
           "values": [],
-          "description": "Color final del degradado.",
+          "description": "Reservado para compatibilidad. Actualmente sin efecto (el brillo deriva de la superficie elevada).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
