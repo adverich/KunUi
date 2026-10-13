@@ -55,8 +55,8 @@ export default {
   labelLeft: { type: String as PropType<string | null>, default: null },
   /** Offset izquierdo del label flotando. */
   floatingLabelLeft: { type: String, default: 'left-2' },
-  /** Posición superior del label flotando. */
-  floatingLabelTop: { type: String, default: '-top-2' },
+  /** Posición superior del label flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). */
+  floatingLabelTop: { type: String, default: 'top-[-2px]' },
   /** Clase libre para el label. */
   labelClass: { type: String, default: '' },
   /** Color del placeholder. */

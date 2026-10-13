@@ -33,7 +33,7 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `floatingLabelOpacity` | `String` | `'opacity-80'` | Opacidad del label flotando. |
 | `labelLeft` | `string \| null` | `null` | Offset izquierdo en reposo (null = automático según iconos). |
 | `floatingLabelLeft` | `String` | `'left-2'` | Offset izquierdo flotando. |
-| `floatingLabelTop` | `String` | `'-top-2'` | Posición superior flotando. |
+| `floatingLabelTop` | `String` | `'top-[-2px]'` | Posición superior flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). |
 | `labelClass` | `String` | `''` | Clase libre para el label. |
 | `dirty` | `Boolean` | `false` | Marca el campo como tocado (flota el label). |
 | `prefix` | `String` | `''` | Texto fijo al inicio. |
@@ -114,6 +114,12 @@ import { KunNumberField } from 'adverich-kun-ui'
 - `focus()`
 
 ## Notas · Notes
+
+## Muesca del label flotante (borde segmentado medido)
+
+Igual que `KunTextField`: overlay `div` con borde superior en dos segmentos
+que abrazan la caja real del label (medida por JS + `ResizeObserver`). Hueco
+real en cualquier fondo, simétrico por construcción, sin `fieldset`/`legend`.
 
 ## Input siempre `type="text"`
 

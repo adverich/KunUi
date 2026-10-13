@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.661",
+  "version": "0.1.662",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -6095,9 +6095,9 @@
         {
           "name": "floatingLabelTop",
           "type": "String",
-          "default": "'-top-2'",
+          "default": "'top-[-2px]'",
           "values": [],
-          "description": "Posición superior flotando.",
+          "description": "Posición superior flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
         },
         {
@@ -9837,9 +9837,9 @@
         {
           "name": "floatingLabelTop",
           "type": "String",
-          "default": "'-top-2'",
+          "default": "'top-[-2px]'",
           "values": [],
-          "description": "Posición superior del label flotando.",
+          "description": "Posición superior del label flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
         },
         {

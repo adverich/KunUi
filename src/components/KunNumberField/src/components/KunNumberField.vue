@@ -2,27 +2,40 @@
   <div class="w-full flex flex-col relative h-fit" ref="rootRef">
     <div class="w-full flex flex-col justify-center relative">
       <div
-        class="flex items-center w-full h-full border"
+        class="flex items-center w-full h-full border border-transparent relative"
         :class="[bgInput, rounded, containerDensity,
-          focus ? 'border-ui-focus shadow-ui-focus' : borderColor,
           disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
           error ? 'bg-ui-error-soft' : ''
         ]"
       >
+        <!-- Borde nativo completo (respeta cualquier `rounded`, pill incluido)
+             con la muesca del label recortada vía mask (ver `useKunFieldNotch`):
+             hueco real en cualquier fondo, sin fieldset/legend. -->
+        <div
+          aria-hidden="true"
+          data-kun-notch="KunNumberField"
+          ref="overlayRef"
+          class="absolute inset-0 pointer-events-none border"
+          :class="[rounded, notchBorderClass]"
+          :style="[notchMaskStyle, notchGlowStyle]"
+        />
         <!-- Label flotante (centrado en reposo, arriba en foco/valor) -->
         <label
+          ref="labelRef"
           v-if="label"
           :for="uid"
+          :style="labelShiftStyle"
           :class="[labelColorClass, labelLeftClass, labelClass,
             'absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10 px-1',
             isFloating
-              ? [floatingLabelTop, floatingLabelSize, floatingLabelOpacity, 'translate-y-0']
+              ? [floatingLabelTop, floatingLabelSize, floatingLabelOpacity, '-translate-y-1/2']
               : ['top-1/2 -translate-y-1/2', labelSize, labelOpacity]
           ]"
         >
           {{ label }}
         </label>
 
+        <div class="flex items-center w-full h-full flex-1 min-w-0">
         <!-- Control - (SPLIT start) -->
         <div v-if="!noArrows && controlVariant === 'split'" class="flex self-stretch shrink-0 items-stretch">
           <button
@@ -167,6 +180,7 @@
 
         <!-- Suffix -->
         <div v-if="suffix" class="ml-2">{{ suffix }}</div>
+        </div>
       </div>
 
       <!-- Details -->
@@ -194,12 +208,13 @@
 </template>
 
 <script setup lang="ts">
-import { useId, computed, nextTick, useSlots } from 'vue';
+import { useId, computed, nextTick, ref, useSlots } from 'vue';
 import { KunNumberFieldProps } from '../composables/KunNumberFieldProps.js';
 import { useKunNumberField } from '../composables/useKunNumberFieldComposable.js';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import IconClose from '../../../../icons/IconClose.vue';
+import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js';
 
 const props = defineProps(KunNumberFieldProps);
 const emits = defineEmits([
@@ -312,6 +327,23 @@ const labelOpacity = computed(() => props.labelOpacity);
 const floatingLabelOpacity = computed(() => props.floatingLabelOpacity);
 const floatingLabelTop = computed(() => props.floatingLabelTop);
 const labelClass = computed(() => props.labelClass);
+
+// Muesca del borde + desplazamiento del label (ver `useKunFieldNotch`).
+const { labelRef, overlayRef, notchMaskStyle, labelShiftStyle } = useKunFieldNotch(
+  {
+    isFloating: () => isFloating.value,
+    hasLabel: () => props.label,
+    labelLeftClass: () => labelLeftClass.value,
+    roundedClass: () => props.rounded,
+  },
+  [floatingLabelSize, labelSize, labelClass]
+);
+const notchBorderClass = computed(() => focus.value ? 'border-ui-focus' : (props.borderColor as string));
+// Glow de foco como drop-shadow sobre el overlay: sigue la forma pintada
+// (respeta la muesca y las curvas), a diferencia del box-shadow rectangular.
+const notchGlowStyle = computed(() => focus.value
+  ? { filter: 'drop-shadow(0 0 1px var(--field-ring-focus))' }
+  : undefined);
 
 // Misma escala que KunTextField: altura mínima del contenedor por densidad
 const containerDensity = computed(() =>

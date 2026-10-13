@@ -45,7 +45,7 @@ import { KunTextField } from 'adverich-kun-ui'
 | `floatingLabelOpacity` | `String` | `'opacity-80'` | Opacidad del label flotando. |
 | `labelLeft` | `string \| null` | `null` | Offset izquierdo del label en reposo (null = automático según iconos). |
 | `floatingLabelLeft` | `String` | `'left-2'` | Offset izquierdo del label flotando. |
-| `floatingLabelTop` | `String` | `'-top-2'` | Posición superior del label flotando. |
+| `floatingLabelTop` | `String` | `'top-[-2px]'` | Posición superior del label flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). |
 | `labelClass` | `String` | `''` | Clase libre para el label. |
 | `placeholderColor` | `String` | `'placeholder-ui'` | Color del placeholder. |
 | `inputTextSize` | `string \| null` | `null` | Tamaño del texto del valor (null = 'text-sm'). |
@@ -108,6 +108,23 @@ import { KunTextField } from 'adverich-kun-ui'
 - `focus()`
 
 ## Notas · Notes
+
+## Muesca del label flotante (borde segmentado medido)
+
+El borde visible lo dibuja un overlay `div` (`absolute inset-0`) con los
+lados y el borde superior dividido en dos segmentos. Al flotar, se mide la
+caja real del label (`offsetLeft`/`offsetWidth` + `ResizeObserver`) y se abre
+el hueco exacto: hueco real en cualquier fondo, simétrico por construcción y
+sin `fieldset`/`legend` (render idéntico en todos los navegadores). La fila
+superior se extiende 1px por lado (`-left-px`/`-right-px`) y va a `top-[-1px]`
+(la caja de borde, donde viviría el borde nativo: así los segmentos trazan
+exactamente su path, en cualquier `rounded`, pill incluido) y los radios
+viajan por `inherit` en inline style (cadena overlay → fila → segmento), sin depender
+de que Tailwind genere la clase: las esquinas siempre siguen el `rounded` del
+field. Sin flotar, los segmentos colapsan y el borde queda continuo. El glow de
+foco es `drop-shadow` sobre el overlay (sigue la forma pintada: respeta muesca
+y curvas, a diferencia del `box-shadow` rectangular). El label flotante
+usa `top-[-2px]` + `-translate-y-1/2` (centrado óptico sobre el borde).
 
 ## Sistema de iconos y slots
 
