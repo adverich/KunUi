@@ -1,5 +1,6 @@
-import { ref, computed, watch, inject, onUnmounted, type Ref, type ComputedRef } from 'vue'
+import { ref, computed, watch, inject, onMounted, onUnmounted, nextTick, type Ref, type ComputedRef } from 'vue'
 import { debounce } from '../../../../utils/utils.js'
+import { isAutofillAnimation, readNativeValue } from '../../../../utils/kunAutofill.js'
 
 export type TextFieldRule = (value: unknown) => unknown;
 
@@ -71,7 +72,37 @@ export default function useKunTextField(props: KunTextFieldPropsLike, emits: Kun
         emits('input', inputValue.value)
     }
 
+    // Sincroniza el valor nativo del input al estado. El navegador puede
+    // cambiarlo sin eventos de Vue (autofill, password managers, scripts):
+    // sin esto el label flotante no sube sobre el texto visible.
+    // Retorna true si hubo cambios.
+    const syncFromDom = (): boolean => {
+        const native = readNativeValue(inputField.value);
+        if (native === null || native === inputValue.value) return false;
+        inputValue.value = native;
+        emits('input', native);
+        return true;
+    }
+
+    // Chrome dispara `change` (pero no `input`) al autocompletar.
+    const handleChange = (): void => {
+        syncFromDom();
+    }
+
+    // `animationstart` de `kun-autofill-*` (ver `style.css`): autofill
+    // aplicado por WebKit/Blink. Se lee en el próximo tick porque el valor
+    // nativo se aplica junto con el estilo.
+    const handleAnimationStart = (e: Event): void => {
+        if (!isAutofillAnimation(e)) return;
+        nextTick(() => {
+            syncFromDom();
+        });
+    }
+
     const handleBlur = async (): Promise<void> => {
+        // Por si el valor llegó sin eventos (autofill tardío): sincronizar
+        // antes de apagar el foco para que el label quede arriba.
+        syncFromDom();
         inputFocused.value = false
 
         if (props.validateOnBlur) {
@@ -82,6 +113,8 @@ export default function useKunTextField(props: KunTextFieldPropsLike, emits: Kun
     }
 
     const focusInput = (): void => {
+        // Si el navegador rellenó sin eventos, el padre recibe el valor ahora.
+        syncFromDom();
         inputFocused.value = true;
         emits('focus')
     }
@@ -120,6 +153,14 @@ export default function useKunTextField(props: KunTextFieldPropsLike, emits: Kun
         if (unregisterField) unregisterField(fieldApi)
     })
 
+    // Autofill aplicado antes del montaje o restaurado por bfcache: el valor
+    // nativo ya está en el DOM pero el estado interno parte de `modelValue`.
+    onMounted(() => {
+        nextTick(() => {
+            syncFromDom();
+        });
+    })
+
     return {
         inputField,
         inputValue,
@@ -128,6 +169,9 @@ export default function useKunTextField(props: KunTextFieldPropsLike, emits: Kun
         validationError,
         hasError,
         handleInput,
+        handleChange,
+        handleAnimationStart,
+        syncFromDom,
         handleBlur,
         focusInput,
         validate,

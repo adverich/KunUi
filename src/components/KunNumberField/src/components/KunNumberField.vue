@@ -94,6 +94,8 @@
           @blur="handleBlur"
           @focus="handleFocus"
           @input="handleInput"
+          @change="handleChange"
+          @animationstart="handleAnimationStart"
           @click.stop="emits('handleClick')"
           @keydown="handleKeyDown"
           @keyup="emits('keyUp', $event)"
@@ -260,6 +262,8 @@ const {
   handleFocus,
   handleBlur,
   handleInput,
+  handleChange,
+  handleAnimationStart,
   internalError
 } = useKunNumberField(props, emits);
 

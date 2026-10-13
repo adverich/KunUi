@@ -70,6 +70,8 @@
         :placeholder="placeholder"
         :maxlength="maxLength"
         @input="handleInput"
+        @change="handleChange"
+        @animationstart="handleAnimationStart"
         @focus="handleFocus"
         @blur="handleBlur"
         @keydown.enter="handleJsonEnter"
@@ -94,6 +96,8 @@
         :placeholder="placeholder"
         :maxlength="maxLength"
         @input="handleInput"
+        @change="handleChange"
+        @animationstart="handleAnimationStart"
         @focus="handleFocus"
         @blur="handleBlur"
         @keydown.enter="handleJsonEnter"
@@ -182,9 +186,10 @@
 </template>
 
 <script setup lang="ts">
-import { useAttrs, computed, ref, useId, useSlots, type Ref } from 'vue'
+import { useAttrs, computed, ref, useId, useSlots, nextTick, type Ref } from 'vue'
 import { kunTextareaProps } from '../composables/kunTextareaProps.js'
 import useTextarea from '../composables/useKunTextareaComposable.js'
+import { isAutofillAnimation } from '@/utils/kunAutofill.js'
 import { renderIconSlot } from '@/utils/renderIcon.js'
 import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js'
 import { debounce } from '@/utils/utils.js';
@@ -200,6 +205,7 @@ const {
   isFocused,
   internalValue,
   updateModel,
+  syncFromDom,
   validate,
   reset,
   resetValidation,
@@ -284,13 +290,32 @@ const debouncedUpdateModel = debounce((val: unknown) => {
 }, Number(props.debounceTime ?? 300))
 
 const handleFocus = () => {
+  // Por si el navegador rellenó sin eventos (autofill): el padre recibe el
+  // valor ahora.
+  syncFromDom()
   isFocused.value = true
   emits('update:focused', true)
 }
 
 const handleBlur = () => {
+  // Sincronizar antes de apagar el foco para que el label quede arriba si hay
+  // texto autocompletado.
+  syncFromDom()
   isFocused.value = false
   emits('update:focused', false)
+}
+
+// Chrome dispara `change` (pero no `input`) al autocompletar.
+const handleChange = () => {
+  syncFromDom()
+}
+
+// `animationstart` de `kun-autofill-*` (ver `style.css`): autofill de WebKit.
+const handleAnimationStart = (e: Event) => {
+  if (!isAutofillAnimation(e)) return
+  nextTick(() => {
+    syncFromDom()
+  })
 }
 
 const isActive = computed(() => isFocused.value || !!internalValue.value || props.dirty)

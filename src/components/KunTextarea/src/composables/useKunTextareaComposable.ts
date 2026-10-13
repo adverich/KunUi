@@ -1,4 +1,5 @@
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount, type Ref, type ComputedRef } from 'vue';
+import { readNativeValue } from '../../../../utils/kunAutofill.js';
 
 export interface KunTextareaPropsLike {
     modelValue?: unknown;
@@ -97,6 +98,19 @@ export default function useTextarea(
         const parsed = parseInputValue(val)
         rawModelValue.value = parsed
         emit('update:modelValue', parsed)
+    }
+
+    // Sincroniza el valor nativo del textarea al estado. El navegador puede
+    // rellenarlo sin eventos de Vue (autofill): sin esto el label flotante no
+    // sube sobre el texto visible. Retorna true si hubo cambios.
+    function syncFromDom(): boolean {
+        const native = readNativeValue(textareaRef.value);
+        if (native === null || native === internalValue.value) return false;
+        isLocalChange.value = true;
+        internalValue.value = native;
+        updateModel(native);
+        if (props.autoGrow) adjustHeight();
+        return true;
     }
 
     // -------- CRECIMIENTO AUTOMÁTICO ----------
@@ -256,6 +270,8 @@ export default function useTextarea(
         internalValue.value = formatInputValue(props.modelValue)
         nextTick(() => {
             if (props.autoGrow) adjustHeight()
+            // Autofill aplicado antes del montaje o restaurado por bfcache.
+            syncFromDom();
         })
     })
 
@@ -322,6 +338,7 @@ export default function useTextarea(
         resetValidation,
         reset,
         updateModel,
+        syncFromDom,
         adjustHeight,
         handleJsonEnter,
         isLocalChange,

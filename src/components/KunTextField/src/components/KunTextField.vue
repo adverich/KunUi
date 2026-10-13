@@ -54,7 +54,7 @@
           class="min-w-12 flex-1 bg-transparent focus:outline-none leading-normal" :aria-invalid="hasError ? 'true' : 'false'"
           :class="[inputDensity, inputTextSizeClass, inputWeightClass, textColor, placeholderColor, placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           :aria-describedby="hasError ? `error-${uid}` : undefined" 
-          @input="handleInput" @blur="handleBlur" @focus="focusInput" 
+          @input="handleInput" @change="handleChange" @animationstart="handleAnimationStart" @blur="handleBlur" @focus="focusInput" 
           @click.stop="emits('handleClick')" 
           @keydown="handleKeyDown" @keyup="emits('keyUp', $event)" 
         />
@@ -138,6 +138,8 @@ const {
   validationError,
   hasError,
   handleInput,
+  handleChange,
+  handleAnimationStart,
   handleBlur,
   focusInput,
   validate,

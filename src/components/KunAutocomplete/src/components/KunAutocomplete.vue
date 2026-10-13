@@ -52,10 +52,11 @@
         :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight ?? undefined" :hide-details="hideDetails"
       >
         <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b bg-select-background">
-          <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass" >
+          <KunBtn ref="createBtnRef" @click="createItem" @keydown="handleCreateBtnKeydown" :bgColor="btnCreateBg" :class="btnCreateClass" >
             {{ btnCreateText }}
           </KunBtn>
         </div>
+        <div @keydown.capture="handleListCapture">
         <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false">
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="sp">
@@ -78,6 +79,7 @@
             </template>
           </KunInfiniteScroll>
         </KunList>
+        </div>
       </KunMenu>
     </KunTextField>
   </div>
@@ -120,6 +122,42 @@ const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clea
   getSelectedItem, textArr, getArrayText, isAlphanumeric, checkIfValueExist, extractValueKey,
   createItem, checkDisabled, itemToString, placeholder,
 } = useAutocomplete(props, emits, modelValue, items);
+
+// Ref al botón crear (hasCreateItem): participa del ciclo de foco con flechas.
+const createBtnRef: Ref<{ focus?: () => void } | null> = ref(null);
+
+function focusCreateButton(): void {
+  createBtnRef.value?.focus?.();
+}
+
+function focusTextInput(): void {
+  textFieldRef.value?.inputField?.focus();
+}
+
+// Ítems focuseables reales del menú (excluye el "sin elementos" disabled).
+function getFocusableListItems(): HTMLElement[] {
+  try {
+    const root = (listRef.value as unknown as { $el?: unknown })?.$el as HTMLElement | undefined;
+    if (!root || typeof root.querySelectorAll !== 'function') return [];
+    return Array.from(root.querySelectorAll('[role="option"]')).filter((el) => {
+      const node = el as HTMLElement;
+      if (!node.isConnected) return false;
+      return node.getAttribute('aria-disabled') !== 'true';
+    }) as HTMLElement[];
+  } catch {
+    return [];
+  }
+}
+
+function focusFirstListItem(): boolean {
+  const items = getFocusableListItems();
+  const el = items[0];
+  if (el) {
+    el.focus?.();
+    return true;
+  }
+  return false;
+}
 
 function isItemSelected(item: unknown): boolean {
   try {
@@ -251,7 +289,73 @@ function textKeyDown(e: KeyboardEvent): void {
     e.preventDefault();
     if (!menuModel.value) openMenu();
 
+    // Con botón crear visible, ArrowDown desde el input va al botón
+    // (no al primer ítem) para no omitirlo del ciclo de teclado.
+    if (key === 'ArrowDown' && props.hasCreateItem) {
+      nextTick(() => focusCreateButton());
+      return;
+    }
+
     focusListWithKey(key);
+  }
+}
+
+function handleCreateBtnKeydown(e: KeyboardEvent): void {
+  if (props.disabled || props.readonly) return;
+  const key = e.key;
+  if (key === 'ArrowDown') {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!focusFirstListItem()) focusTextInput();
+    return;
+  }
+  if (key === 'ArrowUp') {
+    e.preventDefault();
+    e.stopPropagation();
+    focusTextInput();
+    return;
+  }
+  if (key === 'Escape') {
+    e.stopPropagation();
+    handleEscape();
+    return;
+  }
+  if (key === 'Tab') {
+    closeMenu();
+  }
+}
+
+// Intercepta (fase capture, antes que KunList) los bordes de la lista:
+// primer ítem + ArrowUp y último ítem + ArrowDown redirigen al botón crear
+// en vez del wrap circular interno de KunList.
+function handleListCapture(e: KeyboardEvent): void {
+  if (!props.hasCreateItem || props.disabled || props.readonly) return;
+  const key = e.key;
+  if (key !== 'ArrowUp' && key !== 'ArrowDown') return;
+
+  const items = getFocusableListItems();
+  if (!items.length) {
+    // Sin ítems focuseables: las flechas desde la lista vuelven al botón.
+    const active = document.activeElement as HTMLElement | null;
+    const root = (listRef.value as unknown as { $el?: unknown })?.$el as HTMLElement | undefined;
+    if (active && root?.contains(active)) {
+      e.preventDefault();
+      e.stopPropagation();
+      focusCreateButton();
+    }
+    return;
+  }
+
+  const active = document.activeElement as HTMLElement | null;
+  const idx = items.findIndex((el) => el === active);
+  if (idx === -1) return;
+
+  const atFirst = idx === 0 && key === 'ArrowUp';
+  const atLast = idx === items.length - 1 && key === 'ArrowDown';
+  if (atFirst || atLast) {
+    e.preventDefault();
+    e.stopPropagation();
+    focusCreateButton();
   }
 }
 
