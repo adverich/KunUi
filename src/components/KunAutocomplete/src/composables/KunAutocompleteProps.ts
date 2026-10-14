@@ -117,6 +117,12 @@ export const KunAutocompleteProps = {
   height: { type: [String, Number] as PropType<string | number | null>, default: "h-[500px]" },
   /** Altura máxima del menú. */
   maxHeight: { type: [String, Number] as PropType<string | number | null | undefined>, default: undefined },
+  /** Tamaño de fuente del campo (clase Tailwind, se reenvía al KunTextField). */
+  fontSize: { type: String, default: 'text-base' },
+  /** Tamaño de fuente del título de cada opción (clase Tailwind). */
+  itemFontSize: { type: String, default: 'text-base' },
+  /** Tamaño de fuente del subtítulo de cada opción (clase Tailwind). */
+  subtitleFontSize: { type: String, default: 'text-xs' },
   /** Densidad del campo (se reenvía al KunTextField). */
   density: { type: String as PropType<KunTextFieldDensity>, default: "default" },
   /** Z-index del menú. */

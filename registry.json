@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.664",
+  "version": "0.1.666",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -728,6 +728,30 @@
           "default": "-",
           "values": [],
           "description": "Altura máxima del menú.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
+        },
+        {
+          "name": "fontSize",
+          "type": "String",
+          "default": "'text-base'",
+          "values": [],
+          "description": "Tamaño de fuente del campo (clase Tailwind, se reenvía al KunTextField).",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
+        },
+        {
+          "name": "itemFontSize",
+          "type": "String",
+          "default": "'text-base'",
+          "values": [],
+          "description": "Tamaño de fuente del título de cada opción (clase Tailwind).",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
+        },
+        {
+          "name": "subtitleFontSize",
+          "type": "String",
+          "default": "'text-xs'",
+          "values": [],
+          "description": "Tamaño de fuente del subtítulo de cada opción (clase Tailwind).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
         },
         {
@@ -4836,6 +4860,14 @@
           "default": "'border-ui'",
           "values": [],
           "description": "Color de borde del `<ul>`.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunList\\src\\composables\\kunListProps.ts"
+        },
+        {
+          "name": "fontSize",
+          "type": "String",
+          "default": "'text-base'",
+          "values": [],
+          "description": "Tamaño de fuente de la lista (clase Tailwind).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunList\\src\\composables\\kunListProps.ts"
         }
       ],

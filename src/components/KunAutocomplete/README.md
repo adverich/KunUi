@@ -50,6 +50,9 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 | `readonly` | `Boolean` | `false` | Solo lectura (no cambia el valor). |
 | `height` | `string \| number \| null` | `"h-[500px]"` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
 | `maxHeight` | `string \| number \| null \| undefined` | `-` | Altura máxima del menú. |
+| `fontSize` | `String` | `'text-base'` | Tamaño de fuente del campo (clase Tailwind, se reenvía al KunTextField). |
+| `itemFontSize` | `String` | `'text-base'` | Tamaño de fuente del título de cada opción (clase Tailwind). |
+| `subtitleFontSize` | `String` | `'text-xs'` | Tamaño de fuente del subtítulo de cada opción (clase Tailwind). |
 | `density` | `KunTextFieldDensity` | `"default"` | Densidad del campo (se reenvía al KunTextField). |
 | `zIndex` | `String` | `"z-250"` | Z-index del menú. |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |

@@ -29,6 +29,7 @@ import { KunList } from 'adverich-kun-ui'
 | `selectionMode` | `KunListSelectionMode` | `'single'` | Modo de selección (requiere `selectable`).<br/>Valores · Values: `single` `multiple` |
 | `bgList` | `String` | `'bg-transparent'` | Color de fondo del `<ul>`. |
 | `borderColor` | `String` | `'border-ui'` | Color de borde del `<ul>`. |
+| `fontSize` | `String` | `'text-base'` | Tamaño de fuente de la lista (clase Tailwind). |
 
 ## Modelos · Models
 

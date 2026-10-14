@@ -9,6 +9,7 @@
     :class="[
       bgList,
       borderColor,
+      fontSize,
       {
         'space-y-1': !dense,
         'space-y-0.5': dense,

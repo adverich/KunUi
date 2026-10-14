@@ -1,6 +1,7 @@
 <template>
   <div class="w-full h-fit" ref="parentRef">
     <KunTextField v-model="search" v-bind="textFieldProps" :label="label" :disabled="disabled" :readonly="readonly" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
+      :input-text-size="resolvedInputTextSize"
       autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
       @blur="textFieldBlur" @keyDown="textKeyDown" @keyDown.enter.prevent="handleEnter"
       :placeholder="props.multiple && isArray(modelValue) && (modelValue as unknown[]).length ? '' : placeholder"
@@ -57,22 +58,22 @@
           </KunBtn>
         </div>
         <div @keydown.capture="handleListCapture">
-        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false">
+        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false" :font-size="itemFontSize">
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="sp">
             <template v-if="!(sp as any).empty && ((sp as any).item !== undefined && (sp as any).item !== null)">
               <KunListItem :value="(sp as any).item" :key="`kun-list-${(sp as any).index + 1}`" :id="`kun-item-${(sp as any).index + 1}`" :disabled="checkDisabled((sp as any).item)"
               :bg-items="bgItemListColor" :hover-bg="hoverItemListColor" :activeClass="selectedItemListColor"
               :density="density" :selectable="true" :active="isItemSelected((sp as any).item)" rounded="none">
-                <KunListItemTitle class="text-wrap">
+                <KunListItemTitle class="text-wrap" :font-size="itemFontSize">
                   {{ itemToString((sp as any).item, itemTitle ?? textArr, 'hasDefault') }}
                 </KunListItemTitle>
-                <KunListItemSubtitle :text="itemSubtitle ? itemToString((sp as any).item, itemSubtitle) : ''" />
+                <KunListItemSubtitle :text="itemSubtitle ? itemToString((sp as any).item, itemSubtitle) : ''" :font-size="subtitleFontSize" />
               </KunListItem>
             </template>
             <template v-else>
           <KunListItem disabled>
-                <KunListItemTitle :class="['text-center w-full', emptyTextClass]">
+                <KunListItemTitle :class="['text-center w-full', emptyTextClass, itemFontSize]">
                   {{ textNoItems }}
                 </KunListItemTitle>
               </KunListItem>
@@ -122,6 +123,12 @@ const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clea
   getSelectedItem, textArr, getArrayText, isAlphanumeric, checkIfValueExist, extractValueKey,
   createItem, checkDisabled, itemToString, placeholder,
 } = useAutocomplete(props, emits, modelValue, items);
+
+// Tamaño del input: `textFieldProps` explícito tiene prioridad sobre `fontSize`.
+const resolvedInputTextSize = computed(() => {
+  const tfp = (props.textFieldProps ?? {}) as Record<string, unknown>;
+  return (tfp.inputTextSize ?? tfp['input-text-size'] ?? props.fontSize) as string | null;
+});
 
 // Ref al botón crear (hasCreateItem): participa del ciclo de foco con flechas.
 const createBtnRef: Ref<{ focus?: () => void } | null> = ref(null);

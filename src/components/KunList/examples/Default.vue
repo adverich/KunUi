@@ -32,6 +32,7 @@ watch(selectionMode, (mode) => {
 
 const bgList = ref('bg-surface')
 const borderColor = ref('border-ui')
+const fontSize = ref('text-base')
 </script>
 
 <template>
@@ -49,6 +50,7 @@ const borderColor = ref('border-ui')
         :selection-mode="selectionMode"
         :bg-list="bgList"
         :border-color="borderColor"
+        :font-size="fontSize"
       >
         <KunListItem value="ada" title="Ada Lovelace" subtitle="Ingeniera" selectable />
         <KunListItem value="grace" title="Grace Hopper" subtitle="Almirante" selectable />
@@ -82,6 +84,7 @@ const borderColor = ref('border-ui')
         />
         <KunTextField v-model="bgList" label="Background list" density="compact" />
         <KunTextField v-model="borderColor" label="Border color" density="compact" />
+        <KunTextField v-model="fontSize" label="Font size" density="compact" />
       </div>
     </div>
   </div>

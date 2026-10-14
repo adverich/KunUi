@@ -127,6 +127,9 @@ const bgMenuColor = ref('bg-menu')
 const bgItemListColor = ref('bg-transparent')
 const selectedItemListColor = ref('bg-ui-selection text-ui-selection')
 const hoverItemListColor = ref('hover:bg-ui-selection-hover')
+const fontSize = ref('text-base')
+const itemFontSize = ref('text-base')
+const subtitleFontSize = ref('text-xs')
 
 // NOTA: no se exponen `itemText` (alias de `itemTitle`), `startEmtpy` y
 // `attach` (reservadas sin efecto), `height` (en desuso) ni
@@ -206,6 +209,9 @@ function logEvent(name: string, detail: unknown): void {
         :bg-item-list-color="bgItemListColor"
         :selected-item-list-color="selectedItemListColor"
         :hover-item-list-color="hoverItemListColor"
+        :font-size="fontSize"
+        :item-font-size="itemFontSize"
+        :subtitle-font-size="subtitleFontSize"
         @selectedItem="logEvent('selectedItem', $event)"
         @cleared="logEvent('cleared', 'selección limpiada')"
         @createItem="logEvent('createItem', $event)"
@@ -275,6 +281,9 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="bgItemListColor" label="Bg item color" density="compact" />
         <KunTextField v-model="selectedItemListColor" label="Selected item class" density="compact" />
         <KunTextField v-model="hoverItemListColor" label="Hover item class" density="compact" />
+        <KunTextField v-model="fontSize" label="Font size (input)" density="compact" />
+        <KunTextField v-model="itemFontSize" label="Item font size" density="compact" />
+        <KunTextField v-model="subtitleFontSize" label="Subtitle font size" density="compact" />
 
         <KunTextField v-model="btnCreateText" label="Btn crear: texto" density="compact" />
         <KunTextField v-model="btnCreateBg" label="Btn crear: bg" density="compact" />

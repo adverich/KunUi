@@ -20,5 +20,7 @@ export const kunListProps = {
   /** Color de fondo del `<ul>`. */
   bgList: { type: String, default: 'bg-transparent' },
   /** Color de borde del `<ul>`. */
-  borderColor: { type: String, default: 'border-ui' }
+  borderColor: { type: String, default: 'border-ui' },
+  /** Tamaño de fuente de la lista (clase Tailwind). */
+  fontSize: { type: String, default: 'text-base' }
 }
