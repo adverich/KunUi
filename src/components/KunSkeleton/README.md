@@ -23,14 +23,14 @@ import { KunSkeleton } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `loading` | `Boolean` | `true` | Si es false muestra el slot default en vez del skeleton. |
-| `variant` | `KunSkeletonVariant` | `"rect"` | Forma: 'rect' \| 'circle' \| 'text'.<br/>Valores · Values: `rect` `circle` `text` |
-| `width` | `String \| Number` | `"100%"` | Ancho (número = px). |
-| `height` | `String \| Number` | `"1rem"` | Altura (número = px). |
+| `variant` | `KunSkeletonVariant` | `"rect"` | Forma: 'rect' (bloque con redondeo configurable) \| 'text' (píldora) \| 'circle' (círculo perfecto, fuerza tamaño cuadrado).<br/>Valores · Values: `rect` `circle` `text` |
+| `width` | `String \| Number` | `"100%"` | Ancho (número = px). En 'circle' define el diámetro, salvo porcentaje (usa height). |
+| `height` | `String \| Number` | `"1rem"` | Altura (número = px). En 'circle' solo se usa si width es porcentaje. |
 | `rounded` | `String` | `"md"` | Redondeo. |
-| `animation` | `KunSkeletonAnimation` | `"shimmer"` | Animación: 'shimmer' \| 'shimmer-vertical' \| 'pulse' \| 'none'.<br/>Valores · Values: `shimmer` `shimmer-vertical` `pulse` `none` |
-| `duration` | `Number` | `1500` | Duración de la animación en ms. |
-| `colorFrom` | `String` | `"bg-ui-surface-subtle"` | Color inicial del degradado. |
-| `colorTo` | `String` | `"bg-ui-hover"` | Color final del degradado. |
+| `animation` | `KunSkeletonAnimation` | `"shimmer"` | Animación: 'shimmer' (barrido con pausa) \| 'shimmer-vertical' (barrido vertical) \| 'wave' (oscilación continua) \| 'pulse' (pulso de opacidad) \| 'none' (estático).<br/>Valores · Values: `shimmer` `shimmer-vertical` `wave` `pulse` `none` |
+| `duration` | `Number` | `1600` | Duración de la animación en ms. Se aplica a todas las animaciones. |
+| `colorFrom` | `String` | `"bg-ui-hover"` | Clase de fondo base del placeholder. |
+| `colorTo` | `String` | `"bg-ui-hover"` | Reservado para compatibilidad. Actualmente sin efecto (el brillo deriva de la superficie elevada). |
 | `repeat` | `Boolean` | `true` | Reservado para repetir el placeholder. Actualmente sin efecto. |
 | `class` | `String \| Array \| Object` | `""` | Clase extra del placeholder. |
 

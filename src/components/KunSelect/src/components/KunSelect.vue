@@ -64,7 +64,7 @@
 
       <KunMenu transition="fade" @click:outside="closeMenu" v-model="menuModel" activator="parent" :z-index="zIndex"
         :parent-ref="(parentRef as any)" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor"
-        :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
+        :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight ?? undefined" :hide-details="hideDetails"
       >
         <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b bg-select-background">
           <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass">

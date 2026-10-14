@@ -7,8 +7,10 @@ export interface SortCriterion { key: string; order: string }
 export interface OptionsRefsLike {
     page: Ref<number | string>;
     itemsPerPage: Ref<number | string>;
-    sortBy: Ref<string | SortCriterion[]>;
+    sortBy: Ref<string | string[] | SortCriterion[] | Record<string, unknown>>;
     mutliSort: Ref<boolean>;
+    /** Alias de `mutliSort` (nombre corregido). */
+    multiSort?: Ref<boolean>;
     headers?: Ref<KunTableHeader[]> | KunTableHeader[];
 }
 
@@ -20,7 +22,8 @@ export default function useOptions(
     filteredItems: Ref<TableItem[]> | ComputedRef<TableItem[]>,
     headers: Ref<KunTableHeader[]> | ComputedRef<KunTableHeader[]> | undefined,
 ) {
-    const { page, itemsPerPage, sortBy, mutliSort } = props;
+    const { page, itemsPerPage, sortBy, mutliSort, multiSort } = props;
+    const isMultiSort = (): boolean => !!(mutliSort?.value || multiSort?.value);
 
     const normalizeSortBy = (rawSortBy: string | SortCriterion[]): SortCriterion[] => {
         if (typeof rawSortBy === 'string') {
@@ -152,7 +155,7 @@ export default function useOptions(
         if (existing) {
             existing.order = order;
         } else {
-            if (mutliSort.value) {
+            if (isMultiSort()) {
                 options.sortBy.push({ key, order });
             } else {
                 options.sortBy = [{ key, order }]

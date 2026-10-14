@@ -1,6 +1,6 @@
 # KunUI — Full Documentation
 
-> Complete reference for AI agents. Generated from source by `scripts/generate-docs.ts` (v0.1.658). Start with `llms.txt` for the index; use `registry.json` for machine-readable data.
+> Complete reference for AI agents. Generated from source by `scripts/generate-docs.ts` (v0.1.664). Start with `llms.txt` for the index; use `registry.json` for machine-readable data.
 
 <!-- component: KunAlert -->
 
@@ -203,7 +203,7 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `label` | `String` | `-` | Etiqueta del campo de búsqueda. |
+| `label` | `String` | `''` | Etiqueta del campo de búsqueda. |
 | `itemValue` | `string \| null` | `null` | Campo del ítem usado como valor (null = primer valor del objeto). |
 | `itemTitle` | `string \| unknown[] \| null` | `null` | Campo(s) a mostrar (string, array o ruta `a.b`). |
 | `itemText` | `string \| unknown[] \| null` | `null` | Alias de `itemTitle`. |
@@ -228,8 +228,9 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 | `multiple` | `Boolean` | `false` | Selección múltiple (chips). |
 | `required` | `Boolean` | `false` | Marca el campo como requerido (asterisco). |
 | `disabled` | `Boolean` | `false` | Deshabilita el campo y sus acciones. |
-| `height` | `any` | `"h-[500px]"` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
-| `maxHeight` | `String \| Number` | `-` | Altura máxima del menú. |
+| `readonly` | `Boolean` | `false` | Solo lectura (no cambia el valor). |
+| `height` | `string \| number \| null` | `"h-[500px]"` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
+| `maxHeight` | `string \| number \| null \| undefined` | `-` | Altura máxima del menú. |
 | `density` | `KunTextFieldDensity` | `"default"` | Densidad del campo (se reenvía al KunTextField). |
 | `zIndex` | `String` | `"z-250"` | Z-index del menú. |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |
@@ -989,9 +990,9 @@ import { KunCheckbox } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `modelValue` | `boolean \| unknown[] \| string \| number \| Record<string, unknown> \| null` | `-` | Valor del checkbox (v-model). En modo `multiple` es el array de seleccionados. Acepta `null` (sin valor). |
-| `trueValue` | `any` | `true` | Valor que representa el estado activo. |
-| `falseValue` | `any` | `false` | Valor que representa el estado inactivo. |
-| `value` | `any` | `-` | Valor de esta opción (para grupos con `multiple`). |
+| `trueValue` | `unknown` | `true as unknown` | Valor que representa el estado activo (cualquier tipo; el default no estrecha la inferencia). |
+| `falseValue` | `unknown` | `false as unknown` | Valor que representa el estado inactivo (cualquier tipo; el default no estrecha la inferencia). |
+| `value` | `unknown` | `undefined as unknown` | Valor de esta opción (para grupos con `multiple`). Acepta cualquier tipo. |
 | `indeterminate` | `Boolean` | `-` | Estado indeterminado (guion medio). |
 | `multiple` | `Boolean` | `-` | Permite selección múltiple (usa `value` por opción). |
 | `disabled` | `Boolean` | `-` | Deshabilita el checkbox. |
@@ -1009,18 +1010,18 @@ import { KunCheckbox } from 'adverich-kun-ui'
 | `color` | `String` | `-` | Color cuando está activo. |
 | `iconColor` | `String \| Boolean` | `-` | Color del ícono. |
 | `baseColor` | `String` | `-` | Color base cuando está inactivo. |
-| `trueIcon` | `any` | `-` | Ícono personalizado para el estado activo. |
-| `falseIcon` | `any` | `-` | Ícono personalizado para el estado inactivo. |
-| `indeterminateIcon` | `any` | `-` | Ícono personalizado para el estado indeterminado. |
-| `prependIcon` | `any` | `-` | Ícono externo al inicio. |
-| `appendIcon` | `any` | `-` | Ícono externo al final. |
+| `trueIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado activo. Acepta alias `$`, componente o clase CSS. |
+| `falseIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado inactivo. Acepta alias `$`, componente o clase CSS. |
+| `indeterminateIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado indeterminado. Acepta alias `$`, componente o clase CSS. |
+| `prependIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono externo al inicio. Acepta alias `$`, componente o clase CSS. |
+| `appendIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono externo al final. Acepta alias `$`, componente o clase CSS. |
 | `name` | `String` | `-` | Nombre del input nativo (agrupa radios/checkboxes). |
 | `id` | `String` | `-` | Id del input nativo. |
 | `glow` | `Boolean` | `-` | Resplandor decorativo. |
 | `hideDetails` | `Boolean \| String` | `-` | Oculta el área de detalles (errores/hint). Acepta 'auto'. |
 | `centerAffix` | `Boolean` | `true` | Centra el afijo verticalmente. |
 | `valueComparator` | `Function` | `-` | Comparador custom para igualdad de valores: `(a, b) => boolean`. |
-| `validationValue` | `any` | `-` | Valor usado para validar (por defecto el modelValue). |
+| `validationValue` | `unknown` | `undefined as unknown` | Valor usado para validar (por defecto el modelValue). Acepta cualquier tipo. |
 | `focused` | `Boolean` | `-` | Estado de foco controlado. |
 | `maxErrors` | `String \| Number` | `1` | Cantidad máxima de errores visibles. |
 | `width` | `String \| Number` | `-` | Ancho del campo. |
@@ -1977,7 +1978,7 @@ import { KunIcon } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `icon` | `KunIconInput` | `-` | Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente o `[icono, tamaño]`. |
-| `aliases` | `Record<string, string>` | `(): Record<string` | Aliases `$nombre` → icono/clase. Pisan el set bundleado (`$star`, ...). |
+| `aliases` | `Record<string, unknown>` | `(): Record<string` | Aliases `$nombre` → icono/clase/componente. Pisan el set bundleado (`$star`, ...). |
 | `size` | `String` | `'text-md'` | Tamaño (clase de texto o número → px). |
 | `color` | `String` | `'text-font-color'` | Color del ícono. |
 | `disabled` | `Boolean` | `false` | Atenúa el ícono y bloquea el click. |
@@ -2086,7 +2087,7 @@ import { KunList } from 'adverich-kun-ui'
 
 ## Modelos · Models
 
-- `v-model:selected` (`unknown`, defecto · default: `() => []`)
+- `v-model:selected` (`unknown[] | string | number | object | null`, defecto · default: `() => []`)
 
 ## Eventos · Events
 
@@ -2139,8 +2140,8 @@ import { KunListGroup } from 'adverich-kun-ui'
 | `modelValue` | `Boolean` | `false` | Expansión del grupo (v-model). |
 | `id` | `string \| null` | `null` | Id para aria-controls. Se genera uno si se omite. |
 | `title` | `String` | `''` | Título del activador (alternativa al slot). |
-| `expandIcon` | `String` | `'$mdi-chevron-up'` | Ícono cuando está expandido. |
-| `collapseIcon` | `String` | `'$mdi-chevron-down'` | Ícono cuando está colapsado. |
+| `expandIcon` | `String` | `'$menuUpOutline'` | Ícono cuando está expandido. Acepta alias `$` del set bundleado, clase CSS o SVG. |
+| `collapseIcon` | `String` | `'$menuDownOutline'` | Ícono cuando está colapsado. Acepta alias `$` del set bundleado, clase CSS o SVG. |
 | `disabled` | `Boolean` | `false` | Deshabilita el toggle. |
 
 ## Eventos · Events
@@ -2777,7 +2778,7 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `floatingLabelOpacity` | `String` | `'opacity-80'` | Opacidad del label flotando. |
 | `labelLeft` | `string \| null` | `null` | Offset izquierdo en reposo (null = automático según iconos). |
 | `floatingLabelLeft` | `String` | `'left-2'` | Offset izquierdo flotando. |
-| `floatingLabelTop` | `String` | `'-top-2'` | Posición superior flotando. |
+| `floatingLabelTop` | `String` | `'top-[-2px]'` | Posición superior flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). |
 | `labelClass` | `String` | `''` | Clase libre para el label. |
 | `dirty` | `Boolean` | `false` | Marca el campo como tocado (flota el label). |
 | `prefix` | `String` | `''` | Texto fijo al inicio. |
@@ -2844,9 +2845,11 @@ import { KunNumberField } from 'adverich-kun-ui'
 
 ## Slots
 
+- `#prepend`
 - `#prepend-icon`
 - `#prepend-inner`
 - `#append-inner`
+- `#append`
 - `#append-icon`
 
 ## Métodos expuestos · Exposed
@@ -2856,6 +2859,16 @@ import { KunNumberField } from 'adverich-kun-ui'
 - `focus()`
 
 ## Notas · Notes
+
+## Muesca del label flotante + desplazamiento por `rounded`
+
+Igual que `KunTextField`, vía el composable compartido `useKunFieldNotch`
+(`src/utils/useKunFieldNotch.ts`): el overlay dibuja el borde nativo
+completo (respeta cualquier `rounded`, pill incluida) y la muesca se recorta
+con `mask` sobre la caja real del label (medida por JS + `ResizeObserver`).
+Hueco real en cualquier fondo, sin `fieldset`/`legend`. El label flotante se
+desplaza 2px por escalón de `rounded` (`margin-left`; `margin-right` si flota
+anclado a la derecha con `floatingLabelLeft: 'right-*'`).
 
 ## Input siempre `type="text"`
 
@@ -3000,8 +3013,8 @@ import { KunRadioGroup } from 'adverich-kun-ui'
 | `direction` | `KunRadioGroupDirection` | `'vertical'` | Dirección del layout: 'vertical' \| 'horizontal'.<br/>Valores · Values: `vertical` `horizontal` |
 | `inline` | `Boolean` | `-` | Opciones en línea (atajo de direction='horizontal'). |
 | `error` | `Boolean` | `-` | Estado de error visual. |
-| `trueIcon` | `String \| Object` | `'mdi-radiobox-marked'` | Ícono por defecto para el estado activo. |
-| `falseIcon` | `String \| Object` | `'mdi-radiobox-blank'` | Ícono por defecto para el estado inactivo. |
+| `trueIcon` | `String \| Object` | `'$radioboxMarked'` | Ícono por defecto para el estado activo. Acepta alias `$` del set bundleado, componente o clase CSS. |
+| `falseIcon` | `String \| Object` | `'$radioboxBlank'` | Ícono por defecto para el estado inactivo. Acepta alias `$` del set bundleado, componente o clase CSS. |
 | `label` | `String` | `-` | Etiqueta del grupo. |
 
 ## Eventos · Events
@@ -3150,8 +3163,8 @@ import { KunSelect } from 'adverich-kun-ui'
 | `required` | `Boolean` | `false` | Marca el campo como requerido (asterisco). |
 | `disabled` | `Boolean` | `false` | Deshabilita el campo. |
 | `readonly` | `Boolean` | `false` | Solo lectura (no abre el menú). |
-| `height` | `any` | `'h-[500px]'` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
-| `maxHeight` | `String \| Number` | `-` | Altura máxima del menú. |
+| `height` | `string \| number \| null` | `'h-[500px]'` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
+| `maxHeight` | `string \| number \| null \| undefined` | `-` | Altura máxima del menú. |
 | `density` | `KunTextFieldDensity` | `'default'` | Densidad del campo (se reenvía al KunTextField).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `zIndex` | `String` | `'z-250'` | Z-index del menú. |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |
@@ -3219,14 +3232,14 @@ import { KunSkeleton } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `loading` | `Boolean` | `true` | Si es false muestra el slot default en vez del skeleton. |
-| `variant` | `KunSkeletonVariant` | `"rect"` | Forma: 'rect' \| 'circle' \| 'text'.<br/>Valores · Values: `rect` `circle` `text` |
-| `width` | `String \| Number` | `"100%"` | Ancho (número = px). |
-| `height` | `String \| Number` | `"1rem"` | Altura (número = px). |
+| `variant` | `KunSkeletonVariant` | `"rect"` | Forma: 'rect' (bloque con redondeo configurable) \| 'text' (píldora) \| 'circle' (círculo perfecto, fuerza tamaño cuadrado).<br/>Valores · Values: `rect` `circle` `text` |
+| `width` | `String \| Number` | `"100%"` | Ancho (número = px). En 'circle' define el diámetro, salvo porcentaje (usa height). |
+| `height` | `String \| Number` | `"1rem"` | Altura (número = px). En 'circle' solo se usa si width es porcentaje. |
 | `rounded` | `String` | `"md"` | Redondeo. |
-| `animation` | `KunSkeletonAnimation` | `"shimmer"` | Animación: 'shimmer' \| 'shimmer-vertical' \| 'pulse' \| 'none'.<br/>Valores · Values: `shimmer` `shimmer-vertical` `pulse` `none` |
-| `duration` | `Number` | `1500` | Duración de la animación en ms. |
-| `colorFrom` | `String` | `"bg-ui-surface-subtle"` | Color inicial del degradado. |
-| `colorTo` | `String` | `"bg-ui-hover"` | Color final del degradado. |
+| `animation` | `KunSkeletonAnimation` | `"shimmer"` | Animación: 'shimmer' (barrido con pausa) \| 'shimmer-vertical' (barrido vertical) \| 'wave' (oscilación continua) \| 'pulse' (pulso de opacidad) \| 'none' (estático).<br/>Valores · Values: `shimmer` `shimmer-vertical` `wave` `pulse` `none` |
+| `duration` | `Number` | `1600` | Duración de la animación en ms. Se aplica a todas las animaciones. |
+| `colorFrom` | `String` | `"bg-ui-hover"` | Clase de fondo base del placeholder. |
+| `colorTo` | `String` | `"bg-ui-hover"` | Reservado para compatibilidad. Actualmente sin efecto (el brillo deriva de la superficie elevada). |
 | `repeat` | `Boolean` | `true` | Reservado para repetir el placeholder. Actualmente sin efecto. |
 | `class` | `String \| Array \| Object` | `""` | Clase extra del placeholder. |
 
@@ -3439,15 +3452,16 @@ import { KunTable } from 'adverich-kun-ui'
 | `headers` | `KunTableHeader[]` | `() => [] as KunTableHeader[]` | Configuración de columnas `{ key, value, label, sortable, ... }`. |
 | `hasActions` | `Boolean` | `false` | Muestra columna de acciones (slot `item.actions`). |
 | `actionLabel` | `String` | `'Acciones'` | Etiqueta del header de acciones. |
-| `actionsAlign` | `KunTableActionsAlign` | `-` | Alineación de acciones: 'left' \| 'center' \| 'right'.<br/>Valores · Values: `left` `center` `right` |
+| `actionsAlign` | `KunTableActionsAlign` | `'center' as KunTableActionsAlign` | Alineación de acciones: 'left' \| 'center' \| 'right'.<br/>Valores · Values: `left` `center` `right` |
 | `actionLoadingMap` | `Record<string, unknown>` | `() => ({})` | Mapa de loading por rowKey para la columna de acciones. |
 | `filterable` | `Boolean` | `-` | Habilita filtros avanzados por columna (modal). |
 | `filters` | `TableFilterDefinition[]` | `() => [] as TableFilterDefinition[]` | Configuración de filtros por columna. |
 | `customFilter` | `((item: TableItem, key: string, value: unknown, header: KunTableHeader \| undefined) => boolean) \| null` | `null` | Función de filtrado personalizada `(item, key, value, header) => boolean`. |
 | `itemsPerPage` | `Number \| String` | `10` | Ítems por página. |
 | `page` | `Number \| String` | `1` | Página actual. |
-| `sortBy` | `string \| { key: string; order: string }[]` | `() => [] as { key: string; order: string }[]` | Criterio de orden (v-model): string, objeto o array. |
+| `sortBy` | `string \| string[] \| Record<string, unknown> \| { key: string; order: string }[]` | `() => [] as unknown[]` | Criterio de orden (v-model): string, objeto o array. |
 | `mutliSort` | `Boolean` | `-` | Habilita ordenar por múltiples columnas. |
+| `multiSort` | `Boolean` | `-` | Alias de `mutliSort` (nombre corregido). Usar este en código nuevo. |
 | `pageOptions` | `number[]` | `() => [5, 10, 25, 50, 100]` | Opciones del selector de ítems por página. |
 | `searchable` | `Boolean` | `false` | Habilita barra de búsqueda. |
 | `search` | `String` | `''` | Término de búsqueda (v-model). |
@@ -3607,6 +3621,7 @@ import { KunTable } from 'adverich-kun-ui'
 - `update:itemsPerPage`
 - `update:sortBy`
 - `update:search`
+- `update:selectedItems`
 - `focusOnSearch`
 
 ## Slots
@@ -3750,6 +3765,7 @@ import { KunTableServerSide } from 'adverich-kun-ui'
 - `update:itemsPerPage`
 - `update:sortBy`
 - `update:search`
+- `update:selectedItems`
 - `update:query`
 - `focusOnSearch`
 
@@ -3814,8 +3830,8 @@ import { KunTabs } from 'adverich-kun-ui'
 | `centerActive` | `Boolean` | `-` | Desplaza el tab activo al centro. |
 | `hideSlider` | `Boolean` | `-` | Oculta el slider indicador. |
 | `showArrows` | `Boolean` | `-` | Muestra flechas de scroll. |
-| `nextIcon` | `String` | `'ri-arrow-right-s-line'` | Ícono de flecha siguiente. |
-| `prevIcon` | `String` | `'ri-arrow-left-s-line'` | Ícono de flecha anterior. |
+| `nextIcon` | `String \| Object \| Function` | `'$menuDownOutline'` | Ícono de flecha siguiente. Acepta alias `$` del set bundleado, componente o clase CSS. |
+| `prevIcon` | `String \| Object \| Function` | `'$menuUpOutline'` | Ícono de flecha anterior. Acepta alias `$` del set bundleado, componente o clase CSS. |
 | `height` | `String \| Number` | `-` | Altura de la barra. |
 | `multiple` | `Boolean` | `-` | Selección múltiple. |
 | `mandatory` | `Boolean \| String` | `false` | Siempre hay un tab seleccionado. |
@@ -3974,6 +3990,18 @@ import { KunTextarea } from 'adverich-kun-ui'
 - `rootRef()`
 - `textareaRef()`
 
+## Notas · Notes
+
+## Muesca del label flotante + desplazamiento por `rounded` (variante outlined)
+
+Igual que `KunTextField`/`KunNumberField`, vía el composable compartido
+`useKunFieldNotch` (`src/utils/useKunFieldNotch.ts`): el overlay dibuja el
+borde nativo completo (respeta cualquier `rounded`, pill incluida;
+`roundedClass` = `fieldsetRoundedClass`) y la muesca se recorta con `mask`
+sobre la caja real del label (medida por JS + `ResizeObserver`). Hueco real
+en cualquier fondo, sin `fieldset`/`legend`. El label flotante se desplaza
+2px por escalón de `rounded`.
+
 ---
 
 _Generado por · Generated by `scripts/generate-docs.ts`. No editar a mano · Do not edit by hand._
@@ -4030,7 +4058,7 @@ import { KunTextField } from 'adverich-kun-ui'
 | `floatingLabelOpacity` | `String` | `'opacity-80'` | Opacidad del label flotando. |
 | `labelLeft` | `string \| null` | `null` | Offset izquierdo del label en reposo (null = automático según iconos). |
 | `floatingLabelLeft` | `String` | `'left-2'` | Offset izquierdo del label flotando. |
-| `floatingLabelTop` | `String` | `'-top-2'` | Posición superior del label flotando. |
+| `floatingLabelTop` | `String` | `'top-[-2px]'` | Posición superior del label flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). |
 | `labelClass` | `String` | `''` | Clase libre para el label. |
 | `placeholderColor` | `String` | `'placeholder-ui'` | Color del placeholder. |
 | `inputTextSize` | `string \| null` | `null` | Tamaño del texto del valor (null = 'text-sm'). |
@@ -4094,6 +4122,59 @@ import { KunTextField } from 'adverich-kun-ui'
 
 ## Notas · Notes
 
+## Muesca del label flotante (borde segmentado medido)
+
+El borde visible lo dibuja un overlay `div` (`absolute inset-0`) con **borde
+nativo completo** (los cuatro lados): el navegador traza el rectángulo
+redondeado y respeta cualquier `rounded`, pill incluida, sin costuras ni
+arcos incompletos. La muesca del label flotante se recorta con `mask`:
+capa 1 = `linear-gradient(#000 0 0)` a caja completa, capa 2 = rectángulo
+negro sobre la caja real del label (`offsetLeft/offsetWidth/offsetHeight`
++ `ResizeObserver`) que se resta con `mask-composite: exclude`
+(`-webkit-mask-composite: xor` para WebKit legacy). Hueco real en cualquier
+fondo y sin `fieldset`/`legend`: render idéntico en todos los navegadores.
+El recorte baja hasta el pie del label para limpiar también el arco cuando
+el label flota dentro de la zona de curva (pill / radios grandes). Sin
+flotar, el recorte se cierra (tamaño 0) y el borde queda continuo; la
+apertura se anima transicionando `mask-position`/`mask-size`.
+
+> Historial: antes el borde superior se dibujaba a mano con segmentos que
+> "abrazaban" el label y cuyos extremos redondeados intentaban completar los
+> arcos. Se descartó porque un `div` con solo `border-t` no pinta la curva
+> de la esquina (la mitad curva pertenece al borde adyacente de ancho 0):
+> la línea recta se pasaba del inicio del arco y las esquinas quedaban
+> cortadas o escaladas con radios que no coincidían.
+
+El glow de foco es `drop-shadow` sobre el overlay (sigue la forma pintada:
+respeta muesca y curvas, a diferencia del `box-shadow` rectangular). El
+label flotante usa `top-[-2px]` + `-translate-y-1/2` (centrado óptico sobre
+el borde).
+
+## Desplazamiento del label flotante según el `rounded`
+
+El label flotante se separa de la curva con 2px por escalón de la escala
+(`rounded-none` = 0 … `rounded-full` = 16), partiendo de su posición actual
+en `rounded-none`. La detección es por nombre de clase; clases no listadas
+(p. ej. `rounded-[10px]` o radios por esquina) usan fallback al radio
+superior izquierdo medido → paso estándar más cercano (un radio que
+desborda la caja se comporta como pill → último escalón).
+
+- El desplazamiento viaja como `margin-left` (anclaje `left-*`); como el
+  label tiene `transition-all`, el cambio se anima junto con la flotación.
+- Si el label flota anclado a la derecha (`floatingLabelLeft: 'right-*'`),
+  el desplazamiento espeja con `margin-right`: 2px a la izquierda por
+  escalón.
+- Solo aplica en flotación; en reposo el label no se mueve.
+- Como el margen mueve la caja, la muesca se re-mide tras aplicarlo
+  (`watch(labelShift)` → `updateNotch()` en `nextTick`; el valor se
+  estabiliza en dos pasadas y el `ResizeObserver` no entra en loop porque
+  solo observa tamaño, no posición).
+- La medición en `nextTick` puede caer a mitad de las transiciones del label
+  (`transition-all`: margen, tamaño al flotar) y dejar la muesca corrida
+  hasta el próximo reflow: por eso se re-mide al terminar cada transición
+  (`transitionend` sobre el label) y cuando el field cambia de tamaño
+  (`ResizeObserver` sobre label + overlay).
+
 ## Sistema de iconos y slots
 
 - Externos (fuera del borde): `prependIcon` / `appendIcon`.
@@ -4140,14 +4221,14 @@ import { KunToast } from 'adverich-kun-ui'
 | `toastId` | `string \| number \| null` | `null` | Id único (lo genera KunToaster si se omite; `useToast().add()` acepta `id` o `toastId`). |
 | `title` | `String \| Object \| Function` | `''` | Título (string o VNode). |
 | `description` | `String \| Object \| Function` | `''` | Descripción (string o VNode). |
-| `icon` | `string \| Record<string, any> \| Function \| null` | `null` | Ícono principal (null = según `color`). |
+| `icon` | `string \| Record<string, any> \| Function \| unknown[] \| boolean \| null` | `null` | Ícono principal (null = según `color`). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`. |
 | `color` | `KunToastColor` | `'primary'` | Variante de color.<br/>Valores · Values: `primary` `success` `error` `warning` `info` `neutral` |
 | `orientation` | `KunToastOrientation` | `'vertical'` | Layout: acciones abajo ('vertical') o al costado ('horizontal').<br/>Valores · Values: `vertical` `horizontal` |
 | `duration` | `number \| null` | `null` | Duración en ms (0 = sin auto-dismiss, null = global del Toaster). |
 | `progress` | `Boolean` | `true` | Barra de progreso del timeout. |
 | `progressColor` | `string \| null` | `null` | Color de la barra de progreso (null = según `color`). |
 | `closable` | `Boolean` | `true` | Botón de cierre. |
-| `closeIcon` | `string \| Record<string, any> \| Function \| null` | `null` | Ícono del botón de cierre (null = default). |
+| `closeIcon` | `string \| Record<string, any> \| Function \| unknown[] \| boolean \| null` | `null` | Ícono del botón de cierre (null = default). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`. |
 | `actions` | `ToastAction[]` | `() => [] as ToastAction[]` | Botones de acción `{ label, icon, variant, onClick, closeOnClick }`. |
 | `isPaused` | `Boolean` | `false` | Estado interno: pausa el auto-dismiss (gestionado por KunToaster). No pasar manualmente. |
 | `isPulsing` | `Boolean` | `false` | Estado interno: aplica `animate-pulse` al aparecer/actualizar (gestionado por useToast). No pasar manualmente. |

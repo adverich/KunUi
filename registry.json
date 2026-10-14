@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.658",
+  "version": "0.1.664",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -509,7 +509,7 @@
         {
           "name": "label",
           "type": "String",
-          "default": "-",
+          "default": "''",
           "values": [],
           "description": "Etiqueta del campo de búsqueda.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
@@ -707,8 +707,16 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
         },
         {
+          "name": "readonly",
+          "type": "Boolean",
+          "default": "false",
+          "values": [],
+          "description": "Solo lectura (no cambia el valor).",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
+        },
+        {
           "name": "height",
-          "type": "any",
+          "type": "string | number | null",
           "default": "\"h-[500px]\"",
           "values": [],
           "description": "***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind.",
@@ -716,7 +724,7 @@
         },
         {
           "name": "maxHeight",
-          "type": "String | Number",
+          "type": "string | number | null | undefined",
           "default": "-",
           "values": [],
           "description": "Altura máxima del menú.",
@@ -2428,26 +2436,26 @@
         },
         {
           "name": "trueValue",
-          "type": "any",
-          "default": "true",
+          "type": "unknown",
+          "default": "true as unknown",
           "values": [],
-          "description": "Valor que representa el estado activo.",
+          "description": "Valor que representa el estado activo (cualquier tipo; el default no estrecha la inferencia).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
         {
           "name": "falseValue",
-          "type": "any",
-          "default": "false",
+          "type": "unknown",
+          "default": "false as unknown",
           "values": [],
-          "description": "Valor que representa el estado inactivo.",
+          "description": "Valor que representa el estado inactivo (cualquier tipo; el default no estrecha la inferencia).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
         {
           "name": "value",
-          "type": "any",
-          "default": "-",
+          "type": "unknown",
+          "default": "undefined as unknown",
           "values": [],
-          "description": "Valor de esta opción (para grupos con `multiple`).",
+          "description": "Valor de esta opción (para grupos con `multiple`). Acepta cualquier tipo.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
         {
@@ -2598,42 +2606,42 @@
         },
         {
           "name": "trueIcon",
-          "type": "any",
+          "type": "string | Record<string, unknown> | Function | null",
           "default": "-",
           "values": [],
-          "description": "Ícono personalizado para el estado activo.",
+          "description": "Ícono personalizado para el estado activo. Acepta alias `$`, componente o clase CSS.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
         {
           "name": "falseIcon",
-          "type": "any",
+          "type": "string | Record<string, unknown> | Function | null",
           "default": "-",
           "values": [],
-          "description": "Ícono personalizado para el estado inactivo.",
+          "description": "Ícono personalizado para el estado inactivo. Acepta alias `$`, componente o clase CSS.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
         {
           "name": "indeterminateIcon",
-          "type": "any",
+          "type": "string | Record<string, unknown> | Function | null",
           "default": "-",
           "values": [],
-          "description": "Ícono personalizado para el estado indeterminado.",
+          "description": "Ícono personalizado para el estado indeterminado. Acepta alias `$`, componente o clase CSS.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
         {
           "name": "prependIcon",
-          "type": "any",
+          "type": "string | Record<string, unknown> | Function | null",
           "default": "-",
           "values": [],
-          "description": "Ícono externo al inicio.",
+          "description": "Ícono externo al inicio. Acepta alias `$`, componente o clase CSS.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
         {
           "name": "appendIcon",
-          "type": "any",
+          "type": "string | Record<string, unknown> | Function | null",
           "default": "-",
           "values": [],
-          "description": "Ícono externo al final.",
+          "description": "Ícono externo al final. Acepta alias `$`, componente o clase CSS.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
         {
@@ -2686,10 +2694,10 @@
         },
         {
           "name": "validationValue",
-          "type": "any",
-          "default": "-",
+          "type": "unknown",
+          "default": "undefined as unknown",
           "values": [],
-          "description": "Valor usado para validar (por defecto el modelValue).",
+          "description": "Valor usado para validar (por defecto el modelValue). Acepta cualquier tipo.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCheckbox\\src\\composables\\kunCheckboxProps.ts"
         },
         {
@@ -4623,10 +4631,10 @@
         },
         {
           "name": "aliases",
-          "type": "Record<string, string>",
+          "type": "Record<string, unknown>",
           "default": "(): Record<string",
           "values": [],
-          "description": "Aliases `$nombre` → icono/clase. Pisan el set bundleado (`$star`, ...).",
+          "description": "Aliases `$nombre` → icono/clase/componente. Pisan el set bundleado (`$star`, ...).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunIcon\\src\\composables\\kunIconProps.ts"
         },
         {
@@ -4846,7 +4854,7 @@
       "models": [
         {
           "name": "selected",
-          "type": "unknown",
+          "type": "unknown[] | string | number | object | null",
           "default": "() => []"
         }
       ]
@@ -4883,17 +4891,17 @@
         {
           "name": "expandIcon",
           "type": "String",
-          "default": "'$mdi-chevron-up'",
+          "default": "'$menuUpOutline'",
           "values": [],
-          "description": "Ícono cuando está expandido.",
+          "description": "Ícono cuando está expandido. Acepta alias `$` del set bundleado, clase CSS o SVG.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListGroup\\src\\composables\\kunListGroupProps.ts"
         },
         {
           "name": "collapseIcon",
           "type": "String",
-          "default": "'$mdi-chevron-down'",
+          "default": "'$menuDownOutline'",
           "values": [],
-          "description": "Ícono cuando está colapsado.",
+          "description": "Ícono cuando está colapsado. Acepta alias `$` del set bundleado, clase CSS o SVG.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListGroup\\src\\composables\\kunListGroupProps.ts"
         },
         {
@@ -6087,9 +6095,9 @@
         {
           "name": "floatingLabelTop",
           "type": "String",
-          "default": "'-top-2'",
+          "default": "'top-[-2px]'",
           "values": [],
-          "description": "Posición superior flotando.",
+          "description": "Posición superior flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
         },
         {
@@ -6540,9 +6548,11 @@
         "enter"
       ],
       "slots": [
+        "prepend",
         "prepend-icon",
         "prepend-inner",
         "append-inner",
+        "append",
         "append-icon"
       ],
       "expose": [
@@ -6764,17 +6774,17 @@
         {
           "name": "trueIcon",
           "type": "String | Object",
-          "default": "'mdi-radiobox-marked'",
+          "default": "'$radioboxMarked'",
           "values": [],
-          "description": "Ícono por defecto para el estado activo.",
+          "description": "Ícono por defecto para el estado activo. Acepta alias `$` del set bundleado, componente o clase CSS.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunRadioGroup\\src\\composables\\kunRadioGroupProps.ts"
         },
         {
           "name": "falseIcon",
           "type": "String | Object",
-          "default": "'mdi-radiobox-blank'",
+          "default": "'$radioboxBlank'",
           "values": [],
-          "description": "Ícono por defecto para el estado inactivo.",
+          "description": "Ícono por defecto para el estado inactivo. Acepta alias `$` del set bundleado, componente o clase CSS.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunRadioGroup\\src\\composables\\kunRadioGroupProps.ts"
         },
         {
@@ -7123,7 +7133,7 @@
         },
         {
           "name": "height",
-          "type": "any",
+          "type": "string | number | null",
           "default": "'h-[500px]'",
           "values": [],
           "description": "***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind.",
@@ -7131,7 +7141,7 @@
         },
         {
           "name": "maxHeight",
-          "type": "String | Number",
+          "type": "string | number | null | undefined",
           "default": "-",
           "values": [],
           "description": "Altura máxima del menú.",
@@ -7295,7 +7305,7 @@
             "circle",
             "text"
           ],
-          "description": "Forma: 'rect' | 'circle' | 'text'.",
+          "description": "Forma: 'rect' (bloque con redondeo configurable) | 'text' (píldora) | 'circle' (círculo perfecto, fuerza tamaño cuadrado).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
@@ -7303,7 +7313,7 @@
           "type": "String | Number",
           "default": "\"100%\"",
           "values": [],
-          "description": "Ancho (número = px).",
+          "description": "Ancho (número = px). En 'circle' define el diámetro, salvo porcentaje (usa height).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
@@ -7311,7 +7321,7 @@
           "type": "String | Number",
           "default": "\"1rem\"",
           "values": [],
-          "description": "Altura (número = px).",
+          "description": "Altura (número = px). En 'circle' solo se usa si width es porcentaje.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
@@ -7329,26 +7339,27 @@
           "values": [
             "shimmer",
             "shimmer-vertical",
+            "wave",
             "pulse",
             "none"
           ],
-          "description": "Animación: 'shimmer' | 'shimmer-vertical' | 'pulse' | 'none'.",
+          "description": "Animación: 'shimmer' (barrido con pausa) | 'shimmer-vertical' (barrido vertical) | 'wave' (oscilación continua) | 'pulse' (pulso de opacidad) | 'none' (estático).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
           "name": "duration",
           "type": "Number",
-          "default": "1500",
+          "default": "1600",
           "values": [],
-          "description": "Duración de la animación en ms.",
+          "description": "Duración de la animación en ms. Se aplica a todas las animaciones.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
           "name": "colorFrom",
           "type": "String",
-          "default": "\"bg-ui-surface-subtle\"",
+          "default": "\"bg-ui-hover\"",
           "values": [],
-          "description": "Color inicial del degradado.",
+          "description": "Clase de fondo base del placeholder.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
@@ -7356,7 +7367,7 @@
           "type": "String",
           "default": "\"bg-ui-hover\"",
           "values": [],
-          "description": "Color final del degradado.",
+          "description": "Reservado para compatibilidad. Actualmente sin efecto (el brillo deriva de la superficie elevada).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
         },
         {
@@ -7779,7 +7790,7 @@
         {
           "name": "actionsAlign",
           "type": "KunTableActionsAlign",
-          "default": "-",
+          "default": "'center' as KunTableActionsAlign",
           "values": [
             "left",
             "center",
@@ -7838,8 +7849,8 @@
         },
         {
           "name": "sortBy",
-          "type": "string | { key: string; order: string }[]",
-          "default": "() => [] as { key: string; order: string }[]",
+          "type": "string | string[] | Record<string, unknown> | { key: string; order: string }[]",
+          "default": "() => [] as unknown[]",
           "values": [],
           "description": "Criterio de orden (v-model): string, objeto o array.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTable\\src\\composables\\KunTableProps.ts"
@@ -7850,6 +7861,14 @@
           "default": "-",
           "values": [],
           "description": "Habilita ordenar por múltiples columnas.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTable\\src\\composables\\KunTableProps.ts"
+        },
+        {
+          "name": "multiSort",
+          "type": "Boolean",
+          "default": "-",
+          "values": [],
+          "description": "Alias de `mutliSort` (nombre corregido). Usar este en código nuevo.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTable\\src\\composables\\KunTableProps.ts"
         },
         {
@@ -8774,6 +8793,7 @@
         "update:itemsPerPage",
         "update:sortBy",
         "update:search",
+        "update:selectedItems",
         "focusOnSearch"
       ],
       "slots": [
@@ -8834,6 +8854,7 @@
         "update:itemsPerPage",
         "update:sortBy",
         "update:search",
+        "update:selectedItems",
         "update:query",
         "focusOnSearch"
       ],
@@ -8977,18 +8998,18 @@
         },
         {
           "name": "nextIcon",
-          "type": "String",
-          "default": "'ri-arrow-right-s-line'",
+          "type": "String | Object | Function",
+          "default": "'$menuDownOutline'",
           "values": [],
-          "description": "Ícono de flecha siguiente.",
+          "description": "Ícono de flecha siguiente. Acepta alias `$` del set bundleado, componente o clase CSS.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabsProps.ts"
         },
         {
           "name": "prevIcon",
-          "type": "String",
-          "default": "'ri-arrow-left-s-line'",
+          "type": "String | Object | Function",
+          "default": "'$menuUpOutline'",
           "values": [],
-          "description": "Ícono de flecha anterior.",
+          "description": "Ícono de flecha anterior. Acepta alias `$` del set bundleado, componente o clase CSS.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabsProps.ts"
         },
         {
@@ -9817,9 +9838,9 @@
         {
           "name": "floatingLabelTop",
           "type": "String",
-          "default": "'-top-2'",
+          "default": "'top-[-2px]'",
           "values": [],
-          "description": "Posición superior del label flotando.",
+          "description": "Posición superior del label flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
         },
         {
@@ -10134,10 +10155,10 @@
         },
         {
           "name": "icon",
-          "type": "string | Record<string, any> | Function | null",
+          "type": "string | Record<string, any> | Function | unknown[] | boolean | null",
           "default": "null",
           "values": [],
-          "description": "Ícono principal (null = según `color`).",
+          "description": "Ícono principal (null = según `color`). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToastProps.ts"
         },
         {
@@ -10200,10 +10221,10 @@
         },
         {
           "name": "closeIcon",
-          "type": "string | Record<string, any> | Function | null",
+          "type": "string | Record<string, any> | Function | unknown[] | boolean | null",
           "default": "null",
           "values": [],
-          "description": "Ícono del botón de cierre (null = default).",
+          "description": "Ícono del botón de cierre (null = default). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToastProps.ts"
         },
         {

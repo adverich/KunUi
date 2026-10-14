@@ -8,12 +8,12 @@ export type KunCheckboxDensity = 'default' | 'comfortable' | 'compact';
 export const kunCheckboxProps = {
   /** Valor del checkbox (v-model). En modo `multiple` es el array de seleccionados. Acepta `null` (sin valor). */
   modelValue: { type: [Boolean, Array, String, Number, Object] as PropType<boolean | unknown[] | string | number | Record<string, unknown> | null> },
-  /** Valor que representa el estado activo. */
-  trueValue: { type: null, default: true },
-  /** Valor que representa el estado inactivo. */
-  falseValue: { type: null, default: false },
-  /** Valor de esta opción (para grupos con `multiple`). */
-  value: null,
+  /** Valor que representa el estado activo (cualquier tipo; el default no estrecha la inferencia). */
+  trueValue: { type: [Boolean, Array, String, Number, Object] as PropType<unknown>, default: true as unknown },
+  /** Valor que representa el estado inactivo (cualquier tipo; el default no estrecha la inferencia). */
+  falseValue: { type: [Boolean, Array, String, Number, Object] as PropType<unknown>, default: false as unknown },
+  /** Valor de esta opción (para grupos con `multiple`). Acepta cualquier tipo. */
+  value: { type: [Boolean, Array, String, Number, Object] as PropType<unknown>, default: undefined as unknown },
   /** Estado indeterminado (guion medio). */
   indeterminate: Boolean,
   /** Permite selección múltiple (usa `value` por opción). */
@@ -59,16 +59,16 @@ export const kunCheckboxProps = {
   iconColor: [String, Boolean],
   /** Color base cuando está inactivo. */
   baseColor: String,
-  /** Ícono personalizado para el estado activo. */
-  trueIcon: { type: null, default: undefined },
-  /** Ícono personalizado para el estado inactivo. */
-  falseIcon: { type: null, default: undefined },
-  /** Ícono personalizado para el estado indeterminado. */
-  indeterminateIcon: { type: null, default: undefined },
-  /** Ícono externo al inicio. */
-  prependIcon: { type: null, default: undefined },
-  /** Ícono externo al final. */
-  appendIcon: { type: null, default: undefined },
+  /** Ícono personalizado para el estado activo. Acepta alias `$`, componente o clase CSS. */
+  trueIcon: { type: [String, Object, Function] as PropType<string | Record<string, unknown> | Function | null>, default: undefined },
+  /** Ícono personalizado para el estado inactivo. Acepta alias `$`, componente o clase CSS. */
+  falseIcon: { type: [String, Object, Function] as PropType<string | Record<string, unknown> | Function | null>, default: undefined },
+  /** Ícono personalizado para el estado indeterminado. Acepta alias `$`, componente o clase CSS. */
+  indeterminateIcon: { type: [String, Object, Function] as PropType<string | Record<string, unknown> | Function | null>, default: undefined },
+  /** Ícono externo al inicio. Acepta alias `$`, componente o clase CSS. */
+  prependIcon: { type: [String, Object, Function] as PropType<string | Record<string, unknown> | Function | null>, default: undefined },
+  /** Ícono externo al final. Acepta alias `$`, componente o clase CSS. */
+  appendIcon: { type: [String, Object, Function] as PropType<string | Record<string, unknown> | Function | null>, default: undefined },
   /** Nombre del input nativo (agrupa radios/checkboxes). */
   name: String,
   /** Id del input nativo. */
@@ -81,8 +81,8 @@ export const kunCheckboxProps = {
   centerAffix: { type: Boolean, default: true },
   /** Comparador custom para igualdad de valores: `(a, b) => boolean`. */
   valueComparator: Function,
-  /** Valor usado para validar (por defecto el modelValue). */
-  validationValue: null,
+  /** Valor usado para validar (por defecto el modelValue). Acepta cualquier tipo. */
+  validationValue: { type: [Boolean, Array, String, Number, Object] as PropType<unknown>, default: undefined as unknown },
   /** Estado de foco controlado. */
   focused: Boolean,
   /** Cantidad máxima de errores visibles. */

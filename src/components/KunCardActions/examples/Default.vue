@@ -10,9 +10,9 @@
         <h3>Ejemplo con wrap y acciones múltiples</h3>
 
         <KunCardActions gap="gap-3" wrap dense class="bg-gray-50">
-            <KunBtn text="Editar" icon="$mdi-pencil" size="sm" />
-            <KunBtn text="Eliminar" icon="$mdi-delete" size="sm" />
-            <KunBtn text="Compartir" icon="$mdi-share" size="sm" />
+            <KunBtn text="Editar" icon="$pencil" size="sm" />
+            <KunBtn text="Eliminar" icon="$delete" size="sm" />
+            <KunBtn text="Compartir" icon="$star" size="sm" />
         </KunCardActions>
     </div>
 </template>

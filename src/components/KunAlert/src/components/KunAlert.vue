@@ -40,7 +40,6 @@
           class="absolute top-0 right-1 px-1 text-xl focus:outline-none cursor-pointer"
           @click="onClose"
         >
-          <KunIcon icon="hand" size="text-base" class="mr-1" />
           &times;
         </button>
       </div>

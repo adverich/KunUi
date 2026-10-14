@@ -1,6 +1,7 @@
 // useKunNumberFieldComposable.ts
-import { ref, watch, computed, nextTick, type Ref } from 'vue';
+import { ref, watch, computed, nextTick, onMounted, type Ref } from 'vue';
 import * as nf from './numberFormatUtils.js';
+import { isAutofillAnimation, readNativeValue } from '../../../../utils/kunAutofill.js';
 
 export interface KunNumberFieldPropsLike {
     modelValue?: unknown;
@@ -574,6 +575,51 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
     );
 
     // ----------------------------
+    // Sincronización DOM -> estado (autofill del navegador)
+    // ----------------------------
+    // El navegador puede rellenar el input sin eventos de Vue (autofill,
+    // password managers): sin esto el label flotante no sube sobre el texto
+    // visible. Retorna true si hubo cambios.
+    function syncFromDom(): boolean {
+        const native = readNativeValue(numberInput.value);
+        if (native === null || native === inputValue.value) return false;
+        if (props.formatMode === 'bank') {
+            const digits = native.replace(/\D/g, '');
+            if (!digits) return false;
+            rawNumberString = digits;
+            const minLenLocal = Number(props.precision) + 1;
+            while (rawNumberString.length < minLenLocal) rawNumberString = '0' + rawNumberString;
+            updateValue();
+            return true;
+        }
+        inputValue.value = native;
+        emits('input', native);
+        const parsed = parseFormattedToNumber(native);
+        if (!isNaN(parsed)) emitModelValue(parsed);
+        return true;
+    }
+
+    // Chrome dispara `change` (pero no `input`) al autocompletar.
+    function handleChange(): void {
+        syncFromDom();
+    }
+
+    // `animationstart` de `kun-autofill-*` (ver `style.css`).
+    function handleAnimationStart(e: Event): void {
+        if (!isAutofillAnimation(e)) return;
+        nextTick(() => {
+            syncFromDom();
+        });
+    }
+
+    // Autofill aplicado antes del montaje o restaurado por bfcache.
+    onMounted(() => {
+        nextTick(() => {
+            syncFromDom();
+        });
+    });
+
+    // ----------------------------
     // API expuesta
     // ----------------------------
     function handleInput(e: Event): void {
@@ -582,11 +628,15 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
     }
 
     function handleFocus(e: FocusEvent): void {
+        syncFromDom();
         if (props.formatMode !== 'bank') return handleFocusNatural(e);
         return handleFocusBank(e);
     }
 
     function handleBlur(e: FocusEvent): void {
+        // Sincronizar antes del commit del blur para no pisar un valor
+        // autocompletado con el formateo del estado anterior.
+        syncFromDom();
         if (props.formatMode !== 'bank') return handleBlurNatural(e);
         return handleBlurBank(e);
     }
@@ -599,6 +649,9 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         handleFocus,
         handleBlur,
         handleInput,
+        handleChange,
+        handleAnimationStart,
+        syncFromDom,
         onIncrement,
         onDecrement,
         onClear,

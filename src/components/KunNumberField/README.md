@@ -33,7 +33,7 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `floatingLabelOpacity` | `String` | `'opacity-80'` | Opacidad del label flotando. |
 | `labelLeft` | `string \| null` | `null` | Offset izquierdo en reposo (null = automático según iconos). |
 | `floatingLabelLeft` | `String` | `'left-2'` | Offset izquierdo flotando. |
-| `floatingLabelTop` | `String` | `'-top-2'` | Posición superior flotando. |
+| `floatingLabelTop` | `String` | `'top-[-2px]'` | Posición superior flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). |
 | `labelClass` | `String` | `''` | Clase libre para el label. |
 | `dirty` | `Boolean` | `false` | Marca el campo como tocado (flota el label). |
 | `prefix` | `String` | `''` | Texto fijo al inicio. |
@@ -100,9 +100,11 @@ import { KunNumberField } from 'adverich-kun-ui'
 
 ## Slots
 
+- `#prepend`
 - `#prepend-icon`
 - `#prepend-inner`
 - `#append-inner`
+- `#append`
 - `#append-icon`
 
 ## Métodos expuestos · Exposed
@@ -112,6 +114,16 @@ import { KunNumberField } from 'adverich-kun-ui'
 - `focus()`
 
 ## Notas · Notes
+
+## Muesca del label flotante + desplazamiento por `rounded`
+
+Igual que `KunTextField`, vía el composable compartido `useKunFieldNotch`
+(`src/utils/useKunFieldNotch.ts`): el overlay dibuja el borde nativo
+completo (respeta cualquier `rounded`, pill incluida) y la muesca se recorta
+con `mask` sobre la caja real del label (medida por JS + `ResizeObserver`).
+Hueco real en cualquier fondo, sin `fieldset`/`legend`. El label flotante se
+desplaza 2px por escalón de `rounded` (`margin-left`; `margin-right` si flota
+anclado a la derecha con `floatingLabelLeft: 'right-*'`).
 
 ## Input siempre `type="text"`
 

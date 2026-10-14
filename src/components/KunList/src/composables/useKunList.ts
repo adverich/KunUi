@@ -1,5 +1,10 @@
 import { ref, provide, type Ref, type InjectionKey } from 'vue'
 
+/**
+ * @deprecated Huérfano desde la migración JS→TS: `KunList.vue` provee
+ * `'kunListContext'` (string) directamente y ningún hijo inyecta este
+ * `Symbol('kun-list')`. No importar en código nuevo; será eliminado.
+ */
 export interface KunListContext {
     toggleItem: (value: unknown) => void;
     isSelected: (value: unknown) => boolean;

@@ -97,7 +97,7 @@ const alignTabsClass = computed(() => {
   }[props.alignTabs] || 'justify-start'
 })
 
-// Contexto para KunTab y KunTabWindow
+// Contexto para KunTab (`KunTabWindow` usa solo su prop `modelValue`, no inyecta).
 provide('modelValue', computed(() => props.modelValue))
 provide('updateModelValue', select)
 provide('registerTab', registerTab)

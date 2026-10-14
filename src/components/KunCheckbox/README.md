@@ -23,9 +23,9 @@ import { KunCheckbox } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `modelValue` | `boolean \| unknown[] \| string \| number \| Record<string, unknown> \| null` | `-` | Valor del checkbox (v-model). En modo `multiple` es el array de seleccionados. Acepta `null` (sin valor). |
-| `trueValue` | `any` | `true` | Valor que representa el estado activo. |
-| `falseValue` | `any` | `false` | Valor que representa el estado inactivo. |
-| `value` | `any` | `-` | Valor de esta opción (para grupos con `multiple`). |
+| `trueValue` | `unknown` | `true as unknown` | Valor que representa el estado activo (cualquier tipo; el default no estrecha la inferencia). |
+| `falseValue` | `unknown` | `false as unknown` | Valor que representa el estado inactivo (cualquier tipo; el default no estrecha la inferencia). |
+| `value` | `unknown` | `undefined as unknown` | Valor de esta opción (para grupos con `multiple`). Acepta cualquier tipo. |
 | `indeterminate` | `Boolean` | `-` | Estado indeterminado (guion medio). |
 | `multiple` | `Boolean` | `-` | Permite selección múltiple (usa `value` por opción). |
 | `disabled` | `Boolean` | `-` | Deshabilita el checkbox. |
@@ -43,18 +43,18 @@ import { KunCheckbox } from 'adverich-kun-ui'
 | `color` | `String` | `-` | Color cuando está activo. |
 | `iconColor` | `String \| Boolean` | `-` | Color del ícono. |
 | `baseColor` | `String` | `-` | Color base cuando está inactivo. |
-| `trueIcon` | `any` | `-` | Ícono personalizado para el estado activo. |
-| `falseIcon` | `any` | `-` | Ícono personalizado para el estado inactivo. |
-| `indeterminateIcon` | `any` | `-` | Ícono personalizado para el estado indeterminado. |
-| `prependIcon` | `any` | `-` | Ícono externo al inicio. |
-| `appendIcon` | `any` | `-` | Ícono externo al final. |
+| `trueIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado activo. Acepta alias `$`, componente o clase CSS. |
+| `falseIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado inactivo. Acepta alias `$`, componente o clase CSS. |
+| `indeterminateIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado indeterminado. Acepta alias `$`, componente o clase CSS. |
+| `prependIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono externo al inicio. Acepta alias `$`, componente o clase CSS. |
+| `appendIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono externo al final. Acepta alias `$`, componente o clase CSS. |
 | `name` | `String` | `-` | Nombre del input nativo (agrupa radios/checkboxes). |
 | `id` | `String` | `-` | Id del input nativo. |
 | `glow` | `Boolean` | `-` | Resplandor decorativo. |
 | `hideDetails` | `Boolean \| String` | `-` | Oculta el área de detalles (errores/hint). Acepta 'auto'. |
 | `centerAffix` | `Boolean` | `true` | Centra el afijo verticalmente. |
 | `valueComparator` | `Function` | `-` | Comparador custom para igualdad de valores: `(a, b) => boolean`. |
-| `validationValue` | `any` | `-` | Valor usado para validar (por defecto el modelValue). |
+| `validationValue` | `unknown` | `undefined as unknown` | Valor usado para validar (por defecto el modelValue). Acepta cualquier tipo. |
 | `focused` | `Boolean` | `-` | Estado de foco controlado. |
 | `maxErrors` | `String \| Number` | `1` | Cantidad máxima de errores visibles. |
 | `width` | `String \| Number` | `-` | Ancho del campo. |

@@ -25,6 +25,8 @@ const props = defineProps({
   xl: [String, Number],
 })
 
+// `KunRow` provee `ComputedRef` (reactivo); el default es booleano plano.
+// `unref` cubre ambos casos y mantiene la reactividad dentro del computed.
 const noGutters = inject('noGutters', false)
 const dense = inject('dense', false)
 const rowCols = inject('rowCols', 12)
@@ -32,8 +34,8 @@ const rowCols = inject('rowCols', 12)
 const colClasses = computed(() => {
   const classes = []
 
-  if (!noGutters) {
-    classes.push(dense ? 'p-1' : 'p-2')
+  if (!unref(noGutters)) {
+    classes.push(unref(dense) ? 'p-1' : 'p-2')
   }
 
   classes.push('kun-col')

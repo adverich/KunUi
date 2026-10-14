@@ -217,6 +217,7 @@ const emits = defineEmits([
   'update:itemsPerPage',
   'update:sortBy',
   'update:search',
+  'update:selectedItems',
   'update:query',
   'focusOnSearch',
 ]);
@@ -355,7 +356,9 @@ const getRowKeyValue = (item: TableItem, index = -1): unknown => resolveRowKeyVa
 const getRowRenderKey = (item: TableItem, index = -1): string => String(getRowKeyValue(item, index) ?? `kun-table-server-row-${index}`);
 const getActionLoading = (item: TableItem, index = -1): boolean => {
   const key = getRowKeyValue(item, index);
-  return key === null ? false : ((props.actionLoadingMap as Record<string, unknown> | undefined)?.[key as string] as boolean) || false;
+  if (key === null || key === undefined) return false;
+  // La clave puede ser numérica u objeto: normalizar a string para indexar el mapa.
+  return ((props.actionLoadingMap as Record<string, unknown> | undefined)?.[String(key)] as boolean) || false;
 };
 const isSameItem = (leftItem: TableItem, rightItem: TableItem, leftIndex = -1, rightIndex = -1): boolean => {
   const leftKey = getRowKeyValue(leftItem, leftIndex);

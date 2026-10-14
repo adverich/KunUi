@@ -205,7 +205,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick, watch, provide, inject, h, useId, useSlots, type Ref } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick, watch, h, useId, useSlots, type Ref } from 'vue';
 import KunTextField from '../../../KunTextField/src/components/KunTextField.vue';
 import KunNumberField from '../../../KunNumberField/src/components/KunNumberField.vue';
 import { usePosition } from '../composables/usePosition.js';
@@ -221,7 +221,15 @@ defineOptions({ inheritAttrs: false })
 const props = defineProps(kunDatePickerProps)
 const slots = useSlots()
 
-const triggerIcon = () => slots.icon?.() ?? h(IconCalendarOutline)
+/**
+ * Ícono del trigger `onlyIcon`: componente funcional válido para `KunBtn → KunIcon`.
+ * Si hay slot `icon`, renderiza su primer nodo; si no, el calendario bundleado.
+ */
+const triggerIcon = (_props: unknown) => {
+  const nodes = slots.icon?.();
+  if (nodes && nodes.length) return nodes.length === 1 ? nodes[0] : h('span', nodes);
+  return h(IconCalendarOutline);
+};
 
 const emit = defineEmits(['update:modelValue', 'change', 'close', 'open']);
 

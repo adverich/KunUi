@@ -129,10 +129,33 @@ function handleContentClick(): void {
   if (props.closeOnContentClick) hideMenu()
 }
 
+// Con el menú abierto, la rueda sobre el activador (ej. el KunTextField
+// de un Autocomplete/Select) no debe scrollear la página: se anula el
+// scroll de fondo y se reenvía al contenido del menú. Evita que el ancla
+// se mueva bajo el cursor y el menú "persiga" al campo (efecto confuso).
+let activatorWheelEl: HTMLElement | null = null
+
+function forwardActivatorWheel(e: WheelEvent): void {
+  const el = contentEl.value
+  if (!el) return
+  e.preventDefault()
+  e.stopPropagation()
+  if (e.deltaY) el.scrollTop += e.deltaY
+  if (e.deltaX) el.scrollLeft += e.deltaX
+}
+
+function detachActivatorWheel(): void {
+  if (activatorWheelEl) {
+    activatorWheelEl.removeEventListener('wheel', forwardActivatorWheel)
+    activatorWheelEl = null
+  }
+}
+
 onUnmounted(() => {
   stopScrollTracking()
   stopContentTracking()
   clearAnchorName()
+  detachActivatorWheel()
   const el = contentEl.value
   if (el) {
     el.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
@@ -146,6 +169,7 @@ watch(menuVisible, (visible) => {
   if (!visible) {
     stopScrollTracking()
     stopContentTracking()
+    detachActivatorWheel()
     const closedEl = contentEl.value
     if (closedEl) closedEl.removeEventListener('wheel', preventBodyScrollWhenAtEdge)
     removeEventListeners();
@@ -168,6 +192,12 @@ watch(menuVisible, (visible) => {
     startScrollTracking(parentEl.value)
     startContentTracking()
     el.addEventListener('wheel', preventBodyScrollWhenAtEdge, { passive: false });
+    detachActivatorWheel()
+    const activator = parentEl.value
+    if (activator instanceof HTMLElement) {
+      activatorWheelEl = activator
+      activatorWheelEl.addEventListener('wheel', forwardActivatorWheel, { passive: false });
+    }
     addEventListeners();
   })
 })

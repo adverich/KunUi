@@ -1,7 +1,7 @@
 <template>
   <div :class="wrapperClasses" ref="rootRef" v-bind="restAttrs">
-    <!-- Label -->
-    <slot name="label" :for="uid" v-bind="labelSlotBindings">
+    <!-- Label (variantes no-outlined: posición legacy contra el wrapper) -->
+    <slot v-if="variant !== 'outlined'" name="label" :for="uid" v-bind="labelSlotBindings">
       <label
         v-if="label"
         :for="uid"
@@ -15,7 +15,7 @@
     <div class="relative ">
 
       <!-- Prepend Icon -->
-      <div v-if="prependIcon || $slots.prepend" class="absolute left-2 top-2 flex items-center">
+      <div v-if="prependIcon || $slots.prepend" class="absolute left-2 top-2 flex items-center z-10">
         <slot name="prepend" v-bind="prependSlotBindings">
           <div @click="handleIconClick($event, 'prepend')">
             <component :is="renderIconSlot(prependIcon)" />
@@ -24,7 +24,7 @@
       </div>
 
       <!-- Prepend-inner Icon -->
-      <div v-if="prependInnerIcon || $slots['prepend-inner']" class="absolute left-2 top-2 ml-1">
+      <div v-if="prependInnerIcon || $slots['prepend-inner']" class="absolute left-2 top-2 ml-1 z-10">
         <slot name="prepend-inner">
           <div @click="handleIconClick($event, 'prependInner')">
             <component :is="renderIconSlot(prependInnerIcon)" />
@@ -32,8 +32,35 @@
         </slot>
       </div>
 
-      <!-- Textarea Mejorado -->
+      <!-- Variante outlined: el textarea lleva borde transparente propio (métricas),
+           un overlay dibuja el borde con muesca medida (sin fieldset/legend:
+           idéntico en todos los navegadores), y el label flota sobre el hueco. -->
+      <template v-if="variant === 'outlined'">
+        <div
+          aria-hidden="true"
+          data-kun-notch="KunTextarea"
+          ref="overlayRef"
+          class="absolute inset-0 pointer-events-none border bg-transparent transition-colors duration-150"
+          :class="[fieldsetRoundedClass, notchBorderClass]"
+          :style="[notchMaskStyle, notchGlowStyle]"
+        />
+        <slot name="label" :for="uid" v-bind="labelSlotBindings">
+          <label
+            ref="labelRef"
+            v-if="label && !$slots.label"
+            :for="uid"
+            :style="labelShiftStyle"
+            class="absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10"
+            :class="[labelLeftClass, labelPositionClass]"
+          >
+            {{ label }}
+          </label>
+        </slot>
+      </template>
+
+      <!-- Textarea (outlined: borde transparente, el visible lo da el fieldset) -->
       <textarea
+        v-if="variant === 'outlined'"
         ref="textareaRef"
         :id="uid"
         :value="internalValue"
@@ -43,6 +70,34 @@
         :placeholder="placeholder"
         :maxlength="maxLength"
         @input="handleInput"
+        @change="handleChange"
+        @animationstart="handleAnimationStart"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @keydown.enter="handleJsonEnter"
+        @click="$emit('click:control', $event)"
+        @mousedown="$emit('mousedown:control', $event)"
+        class="bg-transparent border border-transparent"
+        :class="[textareaOutlinedInnerClasses]"
+        style="width: 100%; box-sizing: border-box;"
+        :style="autoGrow ? 'overflow-y: hidden;' : 'overflow-y: auto;'"
+      ></textarea>
+
+      <!-- Textarea (variantes no-outlined: con su propio borde/fondo) -->
+      <!-- Textarea (variantes no-outlined: con su propio borde/fondo) -->
+      <textarea
+        v-else
+        ref="textareaRef"
+        :id="uid"
+        :value="internalValue"
+        :rows="rows"
+        :disabled="disabled"
+        :readonly="readonly"
+        :placeholder="placeholder"
+        :maxlength="maxLength"
+        @input="handleInput"
+        @change="handleChange"
+        @animationstart="handleAnimationStart"
         @focus="handleFocus"
         @blur="handleBlur"
         @keydown.enter="handleJsonEnter"
@@ -131,10 +186,12 @@
 </template>
 
 <script setup lang="ts">
-import { useAttrs, computed, ref, useId, useSlots, type Ref } from 'vue'
+import { useAttrs, computed, ref, useId, useSlots, nextTick, type Ref } from 'vue'
 import { kunTextareaProps } from '../composables/kunTextareaProps.js'
 import useTextarea from '../composables/useKunTextareaComposable.js'
+import { isAutofillAnimation } from '@/utils/kunAutofill.js'
 import { renderIconSlot } from '@/utils/renderIcon.js'
+import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js'
 import { debounce } from '@/utils/utils.js';
 
 const props = defineProps({ ...kunTextareaProps })
@@ -148,6 +205,7 @@ const {
   isFocused,
   internalValue,
   updateModel,
+  syncFromDom,
   validate,
   reset,
   resetValidation,
@@ -232,19 +290,38 @@ const debouncedUpdateModel = debounce((val: unknown) => {
 }, Number(props.debounceTime ?? 300))
 
 const handleFocus = () => {
+  // Por si el navegador rellenó sin eventos (autofill): el padre recibe el
+  // valor ahora.
+  syncFromDom()
   isFocused.value = true
   emits('update:focused', true)
 }
 
 const handleBlur = () => {
+  // Sincronizar antes de apagar el foco para que el label quede arriba si hay
+  // texto autocompletado.
+  syncFromDom()
   isFocused.value = false
   emits('update:focused', false)
+}
+
+// Chrome dispara `change` (pero no `input`) al autocompletar.
+const handleChange = () => {
+  syncFromDom()
+}
+
+// `animationstart` de `kun-autofill-*` (ver `style.css`): autofill de WebKit.
+const handleAnimationStart = (e: Event) => {
+  if (!isAutofillAnimation(e)) return
+  nextTick(() => {
+    syncFromDom()
+  })
 }
 
 const isActive = computed(() => isFocused.value || !!internalValue.value || props.dirty)
 const isSingleRow = computed(() => Number(props.rows) === 1)
 const labelPositionClass = computed(() => {
-  if (isActive.value || props.placeholder) return '-top-2.25 text-xs opacity-80'
+  if (isActive.value || props.placeholder) return 'top-[-2px] -translate-y-1/2 text-xs opacity-80'
   // Con 1 fila se centra verticalmente como KunTextField; con más filas se ancla arriba
   if (isSingleRow.value) return 'top-1/2 -translate-y-1/2 text-sm opacity-80'
   return 'top-3 text-sm opacity-80'
@@ -319,6 +396,52 @@ const textareaClasses = computed(() => [
   variantClass.value,
   densityClass.value,
 ])
+
+// Redondeo del fieldset (outlined): replica la lógica del textarea para que
+// el borde con notch herede `tile` / `rounded`.
+const fieldsetRoundedClass = computed(() => {
+  if (props.tile) return 'rounded-none'
+  if (typeof props.rounded === 'string' || typeof props.rounded === 'number') return `rounded-${props.rounded}`
+  return 'rounded'
+})
+
+// Clases del textarea en variante outlined: borde transparente propio (métricas),
+// fondo opcional, tipografía, densidad y foco. El borde visible lo dibuja el
+// fieldset overlay (hermano posterior en el DOM, pinta encima).
+const textareaOutlinedInnerClasses = computed(() => [
+  'block w-full resize-none transition-colors duration-150 leading-normal',
+  props.textColor || 'text-ui',
+  textAlignClass.value,
+  props.inputClass,
+  fieldsetRoundedClass.value,
+  {
+    'shadow-none': props.flat,
+    ...(props.bgColor ? { [props.bgColor as string]: true } : {}),
+    'text-ui-disabled': props.disabled,
+    'focus:outline-none': !props.disabled,
+    'resize-none': props.noResize || props.autoGrow,
+    'resize': !props.noResize && !props.autoGrow,
+  },
+  densityClass.value,
+])
+
+// Muesca del borde (outlined) + desplazamiento del label (ver `useKunFieldNotch`).
+// `roundedClass` es la clase resuelta del overlay (`fieldsetRoundedClass`).
+const { labelRef, overlayRef, notchMaskStyle, labelShiftStyle } = useKunFieldNotch(
+  {
+    isFloating: () => isLabelFloating.value,
+    hasLabel: () => props.label,
+    labelLeftClass: () => labelLeftClass.value,
+    roundedClass: () => fieldsetRoundedClass.value,
+  },
+  [() => props.variant]
+);
+const notchBorderClass = computed(() => hasError.value ? 'border-error' : isFocused.value ? 'border-ui-focus' : 'border-ui');
+// Glow de foco como drop-shadow sobre el overlay: sigue la forma pintada
+// (respeta la muesca y las curvas), a diferencia del box-shadow rectangular.
+const notchGlowStyle = computed(() => isFocused.value && !hasError.value
+  ? { filter: 'drop-shadow(0 0 1px var(--field-ring-focus))' }
+  : undefined);
 
 const labelSlotBindings = {
   label: props.label,

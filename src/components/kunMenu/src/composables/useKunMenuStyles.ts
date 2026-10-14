@@ -82,23 +82,71 @@ export function useKunMenuStyles(
         return loc === 'bottom' || loc === 'top';
     }
 
+    // El activador real para posicionar es la caja del input
+    // (`[data-kun-input-box]` dentro del parent) cuando existe: excluye el
+    // área de details y el menú queda pegado al borde del campo tanto hacia
+    // abajo como hacia arriba, sin importar `hideDetails`. Sin esa marca se
+    // usa el parent completo con la compensación legacy de 19px.
+    function resolveAnchorEl(): Element | null {
+        const parent = resolveParentEl();
+        if (parent instanceof HTMLElement) {
+            try {
+                const box = parent.querySelector('[data-kun-input-box]');
+                if (box instanceof HTMLElement) return box;
+            } catch {
+                // querySelector puede fallar en nodos exóticos: fallback al parent.
+            }
+        }
+        return parent;
+    }
+
+    function hasInputBoxAnchor(): boolean {
+        const parent = resolveParentEl();
+        if (!(parent instanceof HTMLElement)) return false;
+        try {
+            return parent.querySelector('[data-kun-input-box]') instanceof HTMLElement;
+        } catch {
+            return false;
+        }
+    }
+
+    // Compensación legacy solo cuando el ancla es el wrapper completo
+    // (incluye el área de details de ~20px). Con `data-kun-input-box` el
+    // rect ya excluye los details y el offset debe ser 0 en ambos lados:
+    // el flip nativo del anchor positioning no puede manejar un offset
+    // asimétrico (arriba quedaba solapado/despegado según `hideDetails`).
+    function detailsOffset(): number {
+        if (hasInputBoxAnchor()) return 0;
+        return props.hideDetails ? 0 : 19;
+    }
+
     function setAnchorName(): boolean {
-        const el = resolveParentEl();
+        const el = resolveAnchorEl();
         if (!(el instanceof HTMLElement)) return false;
+        // `anchor-name` es document-scoped y debe vivir en un solo elemento:
+        // limpiar el parent si el ancla real es el input-box interno.
+        const parent = resolveParentEl();
+        if (parent instanceof HTMLElement && parent !== el) {
+            parent.style.removeProperty('anchor-name');
+        }
         el.style.setProperty('anchor-name', anchorName);
         return true;
     }
 
     function clearAnchorName(): void {
-        const el = resolveParentEl();
-        if (el instanceof HTMLElement) el.style.removeProperty('anchor-name');
+        const parent = resolveParentEl();
+        if (parent instanceof HTMLElement) parent.style.removeProperty('anchor-name');
+        const anchor = resolveAnchorEl();
+        if (anchor instanceof HTMLElement && anchor !== parent) {
+            anchor.style.removeProperty('anchor-name');
+        }
     }
 
     // Espacio disponible sobre/debajo del activador (px, puede ser negativo).
     function spaceAround(rect: DOMRect): { below: number; above: number } {
         const viewportHeight = window.innerHeight;
         const margin = 8;
-        const pxHideDetails = props.hideDetails ? 0 : 19;
+        const pxHideDetails = detailsOffset();
         return {
             below: viewportHeight - rect.bottom + pxHideDetails - margin,
             above: rect.top - margin,
@@ -117,7 +165,7 @@ export function useKunMenuStyles(
     function buildAnchorStyle(): Record<string, string> {
         const viewportWidth = window.innerWidth;
         const margin = 8;
-        const pxHideDetails = props.hideDetails ? 0 : 19;
+        const pxHideDetails = detailsOffset();
         const { x: offsetX, y: offsetY } = parseMenuOffset(props.offset);
         const origin = (props.origin && props.origin !== 'auto')
             ? String(props.origin)
@@ -245,7 +293,8 @@ export function useKunMenuStyles(
     }
 
     function repositionMenu(attempt = 0): void {
-        const parentEl = resolveParentEl();
+        const anchorEl = resolveAnchorEl();
+        const parentEl = anchorEl ?? resolveParentEl();
         const menuEl = contentEl.value;
 
         if (!(parentEl instanceof HTMLElement) || !(menuEl instanceof HTMLElement)) {
@@ -294,7 +343,7 @@ export function useKunMenuStyles(
             const viewportHeight = window.innerHeight;
             const viewportWidth = window.innerWidth;
             const margin = 8;
-            const pxHideDetails = props.hideDetails ? 0 : 19;
+            const pxHideDetails = detailsOffset();
             // Altura REAL del contenido (sin cap): el menú ya viene limitado
             // por max-height, así que offsetHeight siempre "entraría" abajo y
             // nunca se detectaría que debe abrir hacia arriba. scrollHeight

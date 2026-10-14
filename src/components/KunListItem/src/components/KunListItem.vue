@@ -20,52 +20,26 @@
       @keydown.enter.prevent="(e: KeyboardEvent) => handleClick(e, navigate)"
       v-bind="$attrs"
     >
-      <!-- CONTENIDO -->
-      <div class="flex w-full items-center">
-        <!-- Prepend -->
-        <div v-if="hasPrepend || $slots.prepend" class="shrink-0 flex items-center gap-2 me-2">
-          <slot name="prepend">
-            <img v-if="prependAvatar" :src="prependAvatar" class="rounded-full" :class="prependClass" />
-
-            <!-- Permitir componente personalizado -->
-            <component
-              v-else-if="isComponent(prependIcon)"
-              :is="prependIcon"
-              :class="prependClass"
-            />
-            
-            <!-- Si es string, lo pasás a KunIcon -->
-            <KunIcon
-              v-else-if="typeof prependIcon === 'string'"
-              :icon="prependIcon"
-              :class="prependClass"
-            />
-          </slot>
-        </div>
-
-        <!-- Contenido central -->
-        <div class="flex flex-col min-w-0 flex-1" :class="contentClass" v-bind="otherAttrs">
-          <slot>
-            <slot name="title">
-              <div v-if="title" class="truncate" :class="titleClass">{{ title }}</div>
-            </slot>
-            <slot name="subtitle">
-              <div v-if="subtitle" class="truncate" :class="subtitleClass">
-                {{ subtitle }}
-              </div>
-            </slot>
-          </slot>
-        </div>
-
-        <!-- Append -->
-        <div v-if="hasAppend" class="shrink-0 flex items-center gap-2 ms-3">
-          <slot name="append">
-            <img v-if="appendAvatar" :src="appendAvatar" class="w-8 h-8 rounded-full" />
-            <component v-if="isComponent(appendIcon)" :is="appendIcon" class="w-5 h-5" />
-            <i v-else-if="appendIcon" :class="appendClass" class="text-xl leading-none" />
-          </slot>
-        </div>
-      </div>
+      <KunListItemInner
+        :prepend-icon="prependIcon"
+        :prepend-avatar="prependAvatar"
+        :prepend-class="prependClass"
+        :append-icon="appendIcon"
+        :append-avatar="appendAvatar"
+        :append-class="appendClass"
+        :title="title"
+        :title-class="titleClass"
+        :subtitle="subtitle"
+        :subtitle-class="subtitleClass"
+        :content-class="contentClass"
+        :other-attrs="otherAttrs"
+      >
+        <template v-if="$slots.prepend" #prepend><slot name="prepend" /></template>
+        <template v-if="$slots.default" #default><slot /></template>
+        <template v-if="$slots.title" #title><slot name="title" /></template>
+        <template v-if="$slots.subtitle" #subtitle><slot name="subtitle" /></template>
+        <template v-if="$slots.append" #append><slot name="append" /></template>
+      </KunListItemInner>
     </component>
   </RouterLink>
 
@@ -84,58 +58,32 @@
     @keydown.enter.prevent="handleClick"
     v-bind="$attrs"
   >
-    <!-- CONTENIDO -->
-    <div class="flex w-full items-center">
-      <!-- Prepend -->
-      <div v-if="hasPrepend || $slots.prepend" class="shrink-0 flex items-center gap-2 me-2">
-        <slot name="prepend">
-          <img v-if="prependAvatar" :src="prependAvatar" class="rounded-full" :class="prependClass" />
-
-          <!-- Permitir componente personalizado -->
-          <component
-            v-else-if="isComponent(prependIcon)"
-            :is="prependIcon"
-            :class="prependClass"
-          />
-          
-          <!-- Si es string, lo pasás a KunIcon -->
-          <KunIcon
-            v-else-if="typeof prependIcon === 'string'"
-            :icon="prependIcon"
-            :class="prependClass"
-          />
-        </slot>
-      </div>
-
-      <!-- Contenido central -->
-      <div class="flex flex-col min-w-0 flex-1" :class="contentClass" v-bind="otherAttrs">
-        <slot>
-          <slot name="title">
-            <div v-if="title" class="truncate" :class="titleClass">{{ title }}</div>
-          </slot>
-          <slot name="subtitle">
-            <div v-if="subtitle" class="truncate" :class="subtitleClass">
-              {{ subtitle }}
-            </div>
-          </slot>
-        </slot>
-      </div>
-
-      <!-- Append -->
-      <div v-if="hasAppend" class="shrink-0 flex items-center gap-2 ms-3">
-        <slot name="append">
-          <img v-if="appendAvatar" :src="appendAvatar" class="w-8 h-8 rounded-full" />
-          <component v-if="isComponent(appendIcon)" :is="appendIcon" class="w-5 h-5" />
-          <i v-else-if="appendIcon" :class="appendClass" class="text-xl leading-none" />
-        </slot>
-      </div>
-    </div>
+    <KunListItemInner
+      :prepend-icon="prependIcon"
+      :prepend-avatar="prependAvatar"
+      :prepend-class="prependClass"
+      :append-icon="appendIcon"
+      :append-avatar="appendAvatar"
+      :append-class="appendClass"
+      :title="title"
+      :title-class="titleClass"
+      :subtitle="subtitle"
+      :subtitle-class="subtitleClass"
+      :content-class="contentClass"
+      :other-attrs="otherAttrs"
+    >
+      <template v-if="$slots.prepend" #prepend><slot name="prepend" /></template>
+      <template v-if="$slots.default" #default><slot /></template>
+      <template v-if="$slots.title" #title><slot name="title" /></template>
+      <template v-if="$slots.subtitle" #subtitle><slot name="subtitle" /></template>
+      <template v-if="$slots.append" #append><slot name="append" /></template>
+    </KunListItemInner>
   </component>
 </template>
 
 <script setup lang="ts">
 import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs, useId, type Ref, type ComponentPublicInstance } from 'vue'
-import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
+import KunListItemInner from './KunListItemInner.vue';
 import { RouterLink } from 'vue-router'
 import { kunListItemProps } from '../composables/kunListItemProps.js'
 
@@ -145,7 +93,7 @@ interface KunListItemContext {
 }
 
 const attrs = useAttrs();
-const contentClass = computed(() => attrs.class)
+const contentClass = computed(() => attrs.class || undefined)
 const otherAttrs = computed(() => {
   const { class: _class, ...rest } = attrs
   return rest
@@ -169,9 +117,6 @@ onBeforeUnmount(() => {
   if (registerRef) registerRef(null)
 })
 
-const isComponent = (val: unknown): boolean => typeof val === 'object' || typeof val === 'function';
-const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar));
-const hasAppend = computed(() => !!(props.appendIcon || props.appendAvatar));
 const isItemSelected = computed(() => listContext?.isSelected?.(props.value) ?? false);
 const isActive = computed(() => props.active);
 const isLink = computed(() => !!props.to);

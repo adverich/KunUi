@@ -13,9 +13,9 @@
       <!-- Leading slot (icon/avatar) -->
       <div :class="[uiClasses.icon, iconContainerClass]">
         <slot name="leading" :ui="ui">
-          <component
+          <KunIcon
             v-if="resolvedIcon"
-            :is="resolvedIcon"
+            :icon="resolvedIcon"
             :class="[iconClass, colorClasses.icon]"
           />
         </slot>
@@ -93,7 +93,7 @@
           aria-label="Cerrar notificación"
         >
           <slot name="close" :ui="ui">
-            <component :is="resolvedCloseIcon" :class="closeIconClass" />
+            <KunIcon :icon="resolvedCloseIcon" :class="closeIconClass" />
           </slot>
         </button>
       </div>
@@ -118,6 +118,7 @@ import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { kunToastProps } from '../composables/kunToastProps.js'
 import type { ToastAction } from '../composables/useToast.js'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
+import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import IconClose from '../../../../icons/IconClose.vue'
 import IconCheck from '../../../../icons/IconCheck.vue'
 import IconAsterisk from '../../../../icons/IconAsterisk.vue'

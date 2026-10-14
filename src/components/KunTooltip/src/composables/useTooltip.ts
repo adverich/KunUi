@@ -1,5 +1,10 @@
 import { ref, computed, type Ref, type ComputedRef } from 'vue'
 
+/**
+ * @deprecated Huérfano desde la migración JS→TS: `KunTooltip.vue` usa
+ * `useTooltipPosition` (posición por ancla + timers propios). No importar
+ * en código nuevo; se conserva solo por compatibilidad y será eliminado.
+ */
 export interface KunTooltipPropsLike {
     location?: unknown;
     disabled?: boolean;

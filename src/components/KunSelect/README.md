@@ -45,8 +45,8 @@ import { KunSelect } from 'adverich-kun-ui'
 | `required` | `Boolean` | `false` | Marca el campo como requerido (asterisco). |
 | `disabled` | `Boolean` | `false` | Deshabilita el campo. |
 | `readonly` | `Boolean` | `false` | Solo lectura (no abre el menú). |
-| `height` | `any` | `'h-[500px]'` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
-| `maxHeight` | `String \| Number` | `-` | Altura máxima del menú. |
+| `height` | `string \| number \| null` | `'h-[500px]'` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
+| `maxHeight` | `string \| number \| null \| undefined` | `-` | Altura máxima del menú. |
 | `density` | `KunTextFieldDensity` | `'default'` | Densidad del campo (se reenvía al KunTextField).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `zIndex` | `String` | `'z-250'` | Z-index del menú. |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |

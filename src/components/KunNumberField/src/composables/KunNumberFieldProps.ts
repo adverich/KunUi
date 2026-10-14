@@ -39,8 +39,8 @@ export const KunNumberFieldProps = {
   labelLeft: { type: String as PropType<string | null>, default: null },
   /** Offset izquierdo flotando. */
   floatingLabelLeft: { type: String, default: 'left-2' },
-  /** Posición superior flotando. */
-  floatingLabelTop: { type: String, default: '-top-2' },
+  /** Posición superior flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). */
+  floatingLabelTop: { type: String, default: 'top-[-2px]' },
   /** Clase libre para el label. */
   labelClass: { type: String, default: '' },
   /** Marca el campo como tocado (flota el label). */

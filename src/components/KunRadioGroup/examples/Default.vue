@@ -28,8 +28,8 @@ const label = ref('Fruta favorita')
 const name = ref('frutas')
 const color = ref('')
 const baseColor = ref('')
-const trueIcon = ref('mdi-radiobox-marked')
-const falseIcon = ref('mdi-radiobox-blank')
+const trueIcon = ref('$radioboxMarked')
+const falseIcon = ref('$radioboxBlank')
 
 const direction = ref<KunRadioGroupDirection>('vertical')
 const directionOptions = ref([

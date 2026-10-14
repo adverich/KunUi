@@ -310,11 +310,13 @@ export function useSelect(
   function removeItem(item: unknown): void {
     if (props.disabled || props.readonly) return;
     if (!isArray(modelValue.value)) return;
-    const arr = modelValue.value as unknown[];
+    const arr = [...(modelValue.value as unknown[])];
     const keyToRemove = extractValueKey(item);
     const index = arr.findIndex((current: unknown) => extractValueKey(current) === keyToRemove);
     if (index === -1) return;
     arr.splice(index, 1);
+    // Reasignar (no mutar in-place): `defineModel` solo emite `update:modelValue` al asignar.
+    modelValue.value = arr;
     selectedItem.value = findItemByValue(modelValue.value);
   }
 

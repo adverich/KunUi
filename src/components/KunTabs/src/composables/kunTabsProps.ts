@@ -38,10 +38,10 @@ export const kunTabsProps = {
   hideSlider: Boolean,
   /** Muestra flechas de scroll. */
   showArrows: Boolean,
-  /** Ícono de flecha siguiente. */
-  nextIcon: { type: String, default: 'ri-arrow-right-s-line' },
-  /** Ícono de flecha anterior. */
-  prevIcon: { type: String, default: 'ri-arrow-left-s-line' },
+  /** Ícono de flecha siguiente. Acepta alias `$` del set bundleado, componente o clase CSS. */
+  nextIcon: { type: [String, Object, Function], default: '$menuDownOutline' },
+  /** Ícono de flecha anterior. Acepta alias `$` del set bundleado, componente o clase CSS. */
+  prevIcon: { type: [String, Object, Function], default: '$menuUpOutline' },
   /** Altura de la barra. */
   height: [String, Number],
   /** Selección múltiple. */

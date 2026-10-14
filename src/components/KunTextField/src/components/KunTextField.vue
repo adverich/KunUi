@@ -9,21 +9,32 @@
           </slot>
         </div>
 
-      <div class="flex flex-row items-center w-full border relative" :class="[bgInput, rounded, containerDensity,
-        inputFocused ? 'border-ui-focus shadow-ui-focus' : borderColor,
-        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text', 
+      <div data-kun-input-box class="flex flex-row items-center w-full border border-transparent relative" :class="[bgInput, rounded, containerDensity,
+        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
         hasError ? 'bg-ui-error-soft' : ''
       ]">
+        <!-- Borde nativo completo (respeta cualquier `rounded`, pill incluido)
+             con la muesca del label recortada vía mask: hueco real en cualquier
+             fondo y sin fieldset/legend (idéntico en todos los navegadores). -->
+        <div
+          aria-hidden="true"
+          data-kun-notch="KunTextField"
+          ref="overlayRef"
+          class="absolute inset-0 pointer-events-none border"
+          :class="[rounded, notchBorderClass]"
+          :style="[notchMaskStyle, notchGlowStyle]"
+        />
         <!-- Label centrado contra el contenedor del input (no contra el wrapper con details) -->
-        <label v-if="label" :for="uid" :class="[labelColorClass, labelLeftClass, labelClass,
+        <label ref="labelRef" v-if="label" :for="uid" :style="labelShiftStyle" :class="[labelColorClass, labelLeftClass, labelClass,
           'absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10 px-1',
           isFloating
-            ? [floatingLabelTop, floatingLabelSize, floatingLabelOpacity, 'translate-y-0']
+            ? [floatingLabelTop, floatingLabelSize, floatingLabelOpacity, '-translate-y-1/2']
             : ['top-1/2 -translate-y-1/2', labelSize, labelOpacity]
         ]">
           {{ label }}
         </label>
 
+        <div class="flex flex-row items-center w-full h-full flex-1 min-w-0">
         <div v-if="prefix" class="ml-2 shrink-0">{{ prefix }}</div>
 
         <div v-if="hasPrependInner" :class="prependInnerClass"
@@ -43,7 +54,7 @@
           class="min-w-12 flex-1 bg-transparent focus:outline-none leading-normal" :aria-invalid="hasError ? 'true' : 'false'"
           :class="[inputDensity, inputTextSizeClass, inputWeightClass, textColor, placeholderColor, placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           :aria-describedby="hasError ? `error-${uid}` : undefined" 
-          @input="handleInput" @blur="handleBlur" @focus="focusInput" 
+          @input="handleInput" @change="handleChange" @animationstart="handleAnimationStart" @blur="handleBlur" @focus="focusInput" 
           @click.stop="emits('handleClick')" 
           @keydown="handleKeyDown" @keyup="emits('keyUp', $event)" 
         />
@@ -64,6 +75,7 @@
           </slot>
         </div>
         <div v-if="suffix" class="mr-2 shrink-0">{{ suffix }}</div>
+        </div>
       </div>
 
       <!-- Append externo (fuera del borde) -->
@@ -99,6 +111,7 @@ import { useId, useSlots, computed, ref, nextTick } from 'vue';
 import { icons } from '@/icons'
 import inputProps from '../composables/KunTextFieldProps.js';
 import useKunTextField from '../composables/useKunTextFieldComposable.js';
+import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 defineOptions({
@@ -125,6 +138,8 @@ const {
   validationError,
   hasError,
   handleInput,
+  handleChange,
+  handleAnimationStart,
   handleBlur,
   focusInput,
   validate,
@@ -198,6 +213,23 @@ const labelOpacity = computed(() => props.labelOpacity);
 const floatingLabelOpacity = computed(() => props.floatingLabelOpacity);
 const floatingLabelTop = computed(() => props.floatingLabelTop);
 const labelClass = computed(() => props.labelClass);
+
+// Muesca del borde + desplazamiento del label (ver `useKunFieldNotch`).
+const { labelRef, overlayRef, notchMaskStyle, labelShiftStyle } = useKunFieldNotch(
+  {
+    isFloating: () => isFloating.value,
+    hasLabel: () => props.label,
+    labelLeftClass: () => labelLeftClass.value,
+    roundedClass: () => props.rounded,
+  },
+  [floatingLabelSize, labelSize, labelClass]
+);
+const notchBorderClass = computed(() => inputFocused.value ? 'border-ui-focus' : (props.borderColor as string));
+// Glow de foco como drop-shadow sobre el overlay: sigue la forma pintada
+// (respeta la muesca y las curvas), a diferencia del box-shadow rectangular.
+const notchGlowStyle = computed(() => inputFocused.value
+  ? { filter: 'drop-shadow(0 0 1px var(--field-ring-focus))' }
+  : undefined);
 
 const showPass = ref(false);
 const passIcon = computed(() => showPass.value ? icons.eyeOffOutline : icons.eyeOutline);

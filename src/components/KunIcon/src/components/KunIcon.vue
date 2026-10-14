@@ -2,6 +2,7 @@
   <span
     class="flex items-center"
     :class="[color, normalizedSize, cursorClass, disabled ? 'opacity-50' : '']"
+    :style="sizeStyle"
     @click="handleClick"
      v-bind="$attrs"
   >
@@ -9,7 +10,7 @@
     <slot v-if="$slots.default" />
 
     <!-- Si el icono es un componente, lo renderiza -->
-    <component v-else-if="isComponent" :is="resolvedIcon" :class="[color, normalizedSize, contentClass]" />
+    <component v-else-if="isComponent" :is="resolvedIcon" :class="[color, normalizedSize, contentClass]" :style="sizeStyle" />
 
     <!-- Si es una string, la interpreta como clase o SVG raw (dependiendo del consumidor) -->
     <span v-else 
@@ -41,8 +42,17 @@ const resolvedIcon = computed(() => {
   if (Array.isArray(props.icon)) return props.icon[0];
   if (typeof props.icon === 'string' && props.icon.startsWith('$')) {
     const key = props.icon.slice(1);
-    // Aliases del consumidor primero; si no, el set bundleado (`$star`, ...).
-    return props.aliases[key] || (bundledIcons as Record<string, unknown>)[key] || '';
+    // Aliases del consumidor primero; si no, el set bundleado (`$star`, `$menuUpOutline`, ...).
+    const resolved = props.aliases[key] || (bundledIcons as Record<string, unknown>)[key];
+    if (resolved) return resolved;
+    // Fallback digno: warn en dev + placeholder visible en vez de span vacío.
+    if (import.meta.env?.DEV) {
+      console.warn(
+        `[KunIcon] alias no resuelto: "$${key}". Claves disponibles:`,
+        Object.keys(bundledIcons).sort(),
+      );
+    }
+    return (bundledIcons as Record<string, unknown>)['info'] || '';
   }
   return props.icon;
 });
@@ -55,10 +65,20 @@ const isComponent = computed(() =>
 const normalizedSize = computed(() => {
   const rawSize: unknown = Array.isArray(props.icon) ? props.icon[1] : props.size;
   if (!rawSize) return 'text-base';
-  if (typeof rawSize === 'number' || /^\d+$/.test(String(rawSize))) {
-    return `text-[${String(rawSize)}px]`;
+  // Numérico → clase base + `sizeStyle` inline (Tailwind no genera `text-[Npx]` dinámico).
+  if (typeof rawSize === 'number' || (typeof rawSize === 'string' && /^\d+$/.test(rawSize))) {
+    return 'text-base';
   }
   return rawSize as string;
+});
+
+/** `font-size` inline cuando `size` (o `[icono, tamaño]`) es numérico. */
+const sizeStyle = computed(() => {
+  const rawSize: unknown = Array.isArray(props.icon) ? props.icon[1] : props.size;
+  if (typeof rawSize === 'number' || (typeof rawSize === 'string' && /^\d+$/.test(rawSize))) {
+    return { fontSize: `${String(rawSize)}px` };
+  }
+  return undefined;
 });
 
 const cursorClass = computed(() => {
