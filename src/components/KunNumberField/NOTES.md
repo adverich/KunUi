@@ -50,3 +50,15 @@ sigue recto.
   text-center
 />
 ```
+
+## `hideZero` (default `true`) con fallback automático
+
+El **v-model nunca cambia**: el vacío se normaliza a `0` al blurear y los
+cálculos en tiempo real siguen operando sobre `0`. Solo cambia el **display**:
+en reposo, el cero se muestra vacío (`inputValue = ''`) para dejar ver el
+`placeholder` o el label en reposo.
+
+Fallback: si no hay nada que mostrar (sin `placeholder` y sin label en
+reposo, o con `dirty` que flota el label al borde), se muestra el `0`
+formateado para no dejar una caja fantasma. Con `hideZero: false` siempre
+se muestra el `0` formateado (comportamiento histórico).

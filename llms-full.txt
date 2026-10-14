@@ -1,6 +1,6 @@
 # KunUI — Full Documentation
 
-> Complete reference for AI agents. Generated from source by `scripts/generate-docs.ts` (v0.1.666). Start with `llms.txt` for the index; use `registry.json` for machine-readable data.
+> Complete reference for AI agents. Generated from source by `scripts/generate-docs.ts` (v0.1.667). Start with `llms.txt` for the index; use `registry.json` for machine-readable data.
 
 <!-- component: KunAlert -->
 
@@ -2835,6 +2835,7 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `useGrouping` | `Boolean` | `true` | Agrupa miles al mostrar. |
 | `precision` | `Number \| String` | `2` | Decimales de formato y edición. |
 | `formatMode` | `KunNumberFieldFormatMode` | `'natural'` | Modo de entrada: 'natural' (libre) \| 'bank' (estricto, cursor controlado).<br/>Valores · Values: `natural` `bank` |
+| `hideZero` | `Boolean` | `true` | Oculta el cero en reposo y muestra el placeholder/label en su lugar (el v-model sigue siendo `0`). Sin placeholder ni label en reposo (o con `dirty`), muestra el `0` formateado (fallback automático). |
 
 ## Eventos · Events
 
@@ -2916,6 +2917,18 @@ sigue recto.
   text-center
 />
 ```
+
+## `hideZero` (default `true`) con fallback automático
+
+El **v-model nunca cambia**: el vacío se normaliza a `0` al blurear y los
+cálculos en tiempo real siguen operando sobre `0`. Solo cambia el **display**:
+en reposo, el cero se muestra vacío (`inputValue = ''`) para dejar ver el
+`placeholder` o el label en reposo.
+
+Fallback: si no hay nada que mostrar (sin `placeholder` y sin label en
+reposo, o con `dirty` que flota el label al borde), se muestra el `0`
+formateado para no dejar una caja fantasma. Con `hideZero: false` siempre
+se muestra el `0` formateado (comportamiento histórico).
 
 ---
 

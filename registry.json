@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.666",
+  "version": "0.1.667",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -6566,6 +6566,14 @@
             "bank"
           ],
           "description": "Modo de entrada: 'natural' (libre) | 'bank' (estricto, cursor controlado).",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
+        },
+        {
+          "name": "hideZero",
+          "type": "Boolean",
+          "default": "true",
+          "values": [],
+          "description": "Oculta el cero en reposo y muestra el placeholder/label en su lugar (el v-model sigue siendo `0`). Sin placeholder ni label en reposo (o con `dirty`), muestra el `0` formateado (fallback automático).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
         }
       ],

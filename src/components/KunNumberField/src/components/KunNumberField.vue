@@ -103,8 +103,8 @@
           pattern="[0-9]+([\.,][0-9]+)?"
         />
 
-        <!-- Clearable -->
-        <div v-if="clearable && inputValue != null" class="px-2">
+        <!-- Clearable (oculto con display vacío: evita la ✕ sobre el placeholder de hideZero) -->
+        <div v-if="clearable && inputValue != null && inputValue !== ''" class="px-2">
           <KunBtn
             @click="onClear"
             rounded="rounded-full"

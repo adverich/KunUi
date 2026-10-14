@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import KunNumberField from '../src/components/KunNumberField.vue'
 import type { KunNumberFieldDensity, KunNumberFieldControlVariant, KunNumberFieldFormatMode } from '../src/composables/KunNumberFieldProps.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
+import KunBtn from '../../KunBtn/src/components/KunBtn.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 
@@ -67,6 +68,7 @@ const stepProp = computed(() => (stepRaw.value === '' ? undefined : Number(stepR
 const useGrouping = ref(true)
 const textCenter = ref(false)
 const clearable = ref(true)
+const hideZero = ref(true)
 const disabled = ref(false)
 const readonly = ref(false)
 const noArrows = ref(false)
@@ -177,6 +179,7 @@ function logEvent(name: string, detail: unknown): void {
         :use-grouping="useGrouping"
         :text-center="textCenter"
         :clearable="clearable"
+        :hide-zero="hideZero"
         :disabled="disabled"
         :readonly="readonly"
         :no-arrows="noArrows"
@@ -233,6 +236,11 @@ function logEvent(name: string, detail: unknown): void {
       <div class="rounded-lg bg-surface p-3 font-mono text-sm">
         <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
         <div>{{ JSON.stringify(value) }} <span class="text-ui-muted">({{ typeof value }})</span></div>
+        <div class="mt-2 flex flex-wrap gap-2">
+          <KunBtn size="sm" @click="value = 0">Poner 0</KunBtn>
+          <KunBtn size="sm" @click="value = null">Poner null</KunBtn>
+          <KunBtn size="sm" @click="value = 1234.5">Poner 1234,5</KunBtn>
+        </div>
       </div>
 
       <div class="rounded-lg bg-surface p-3 text-sm">
@@ -359,6 +367,7 @@ function logEvent(name: string, detail: unknown): void {
         <KunSwitch v-model="useGrouping" label="Grouping" />
         <KunSwitch v-model="textCenter" label="Centrado" />
         <KunSwitch v-model="clearable" label="Clearable" />
+        <KunSwitch v-model="hideZero" label="Hide zero (vacío en 0)" />
         <KunSwitch v-model="hideDetails" label="Sin details" />
         <KunSwitch v-model="disabled" label="Disabled" />
         <KunSwitch v-model="readonly" label="Readonly" />

@@ -174,4 +174,6 @@ export const KunNumberFieldProps = {
     default: 'natural',
     validator: (v: unknown) => ['natural', 'bank'].includes(v as string),
   },
+  /** Oculta el cero en reposo y muestra el placeholder/label en su lugar (el v-model sigue siendo `0`). Sin placeholder ni label en reposo (o con `dirty`), muestra el `0` formateado (fallback automático). */
+  hideZero: { type: Boolean, default: true },
 };

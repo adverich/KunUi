@@ -16,6 +16,10 @@ export interface KunNumberFieldPropsLike {
     debounce?: unknown;
     rules?: unknown;
     validateOnBlur?: unknown;
+    hideZero?: unknown;
+    placeholder?: unknown;
+    label?: unknown;
+    dirty?: unknown;
 }
 
 export type KunNumberFieldEmits = (event: 'update:modelValue' | 'input' | 'focus' | 'blur', value?: unknown) => void;
@@ -48,6 +52,30 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
 
     function escapeRegExp(s: string): string {
         return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // hideZero con fallback automático: el cero se muestra vacío (placeholder/
+    // label) solo cuando hay algo que ocupe el campo en reposo. Sin placeholder
+    // y sin label en reposo (o con `dirty`, que flota el label al borde), la
+    // caja quedaría fantasma y se muestra el 0 formateado. El v-model no cambia.
+    function isEmptyModel(v: unknown): boolean {
+        return v === null || v === undefined || (typeof v === 'string' && v.trim() === '');
+    }
+
+    function isZeroModel(v: unknown): boolean {
+        if (isEmptyModel(v)) return false;
+        const n = Number(v);
+        return !isNaN(n) && n === 0;
+    }
+
+    function isBlankDisplay(v: unknown): boolean {
+        return isEmptyModel(v) || isZeroModel(v);
+    }
+
+    function shouldHideZero(): boolean {
+        if (!props.hideZero) return false;
+        if (String(props.placeholder ?? '') !== '') return true;
+        return String(props.label ?? '') !== '' && !props.dirty;
     }
 
     // Validación interna por reglas: la primera que falle fija el mensaje.
@@ -297,8 +325,14 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
 
         num = nf.clamp(num, props.min, props.max);
 
-        // Formatear determinísticamente con todos los decimales según precision
-        inputValue.value = formatNumberForDisplay(num, Number(props.precision), false);
+        // Con hideZero el display queda vacío (placeholder/label) pero el modelo
+        // sigue siendo 0 para no romper cálculos en tiempo real.
+        if (shouldHideZero() && num === 0) {
+            inputValue.value = '';
+        } else {
+            // Formatear determinísticamente con todos los decimales según precision
+            inputValue.value = formatNumberForDisplay(num, Number(props.precision), false);
+        }
         runRules(num);
         emits('update:modelValue', num);
         emits('blur');
@@ -387,7 +421,10 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         const clamped = nf.clamp(finalValue, props.min, props.max);
         rawNumberString = nf.toRawNumberString(clamped, Number(props.precision));
         rawNumberString = ensureMinLength(rawNumberString);
-        inputValue.value = formatNumberForDisplay(clamped, Number(props.precision), false);
+        // Con hideZero el display queda vacío pero el modelo sigue siendo 0.
+        inputValue.value = (shouldHideZero() && clamped === 0)
+            ? ''
+            : formatNumberForDisplay(clamped, Number(props.precision), false);
         runRules(clamped);
         emits('update:modelValue', clamped);
         emits('blur');
@@ -540,7 +577,8 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
     // WATCH: sincroniza modelValue → inputValue
     // ----------------------------
     watch(
-        [() => props.modelValue, () => props.precision, () => props.formatMode],
+        [() => props.modelValue, () => props.precision, () => props.formatMode,
+            () => props.hideZero, () => props.placeholder, () => props.label, () => props.dirty],
         ([newVal, newPrecision, mode]: unknown[]) => {
             if (mode !== 'bank') {
                 if (isActive.value) {
@@ -552,15 +590,24 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
                         inputValue.value = formatNumberForDisplay(num, Number(newPrecision), true, false);
                     }
                 } else {
-                    // 👇 con miles y ceros completos
-                    inputValue.value = formatNumberForDisplay(Number(newVal ?? 0), Number(newPrecision), false, true);
+                    // En reposo: con hideZero (y fallback permitido) el cero o el
+                    // vacío se muestra sin texto para dejar ver placeholder/label.
+                    // Sin nada que mostrar, cae al 0 formateado (fallback).
+                    if (shouldHideZero() && isBlankDisplay(newVal)) {
+                        inputValue.value = '';
+                    } else {
+                        // 👇 con miles y ceros completos
+                        inputValue.value = formatNumberForDisplay(Number(newVal ?? 0), Number(newPrecision), false, true);
+                    }
                 }
                 return;
             }
 
             if (newVal == null || isNaN(Number(newVal))) {
-                inputValue.value = formatNumberForDisplay(0, Number(newPrecision), false);
                 rawNumberString = '0'.repeat(Number(newPrecision) + 1);
+                inputValue.value = (shouldHideZero() && isEmptyModel(newVal))
+                    ? ''
+                    : formatNumberForDisplay(0, Number(newPrecision), false);
             } else {
                 const num = Number(newVal);
                 const clamped = nf.clamp(num, props.min, props.max);
@@ -568,7 +615,9 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
                 if (rawNumberString.length < Number(newPrecision) + 1)
                     rawNumberString = rawNumberString.padStart(Number(newPrecision) + 1, '0');
 
-                inputValue.value = formatNumberForDisplay(clamped, Number(newPrecision), false);
+                inputValue.value = (shouldHideZero() && clamped === 0)
+                    ? ''
+                    : formatNumberForDisplay(clamped, Number(newPrecision), false);
             }
         },
         { immediate: true }
