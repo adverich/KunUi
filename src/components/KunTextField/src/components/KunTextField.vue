@@ -9,7 +9,7 @@
           </slot>
         </div>
 
-      <div class="flex flex-row items-center w-full border border-transparent relative" :class="[bgInput, rounded, containerDensity,
+      <div data-kun-input-box class="flex flex-row items-center w-full border border-transparent relative" :class="[bgInput, rounded, containerDensity,
         disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
         hasError ? 'bg-ui-error-soft' : ''
       ]">
