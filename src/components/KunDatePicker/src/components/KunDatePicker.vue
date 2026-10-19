@@ -907,7 +907,7 @@ function isOutOfRange(date: Date): boolean {
 <style scoped>
 .custom-scrollbar::-webkit-scrollbar { width: 5px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: 20px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background-color: var(--kun-border); border-radius: 20px; }
 .scale-95 { transform: scale(0.95); }
 .scale-100 { transform: scale(1); }
 </style>

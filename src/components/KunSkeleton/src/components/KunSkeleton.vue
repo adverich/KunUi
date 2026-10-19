@@ -76,7 +76,7 @@ const skeletonStyle = computed(() => {
   isolation: isolate;
   /* Brillo adaptativo: superficie elevada sobre el fondo base.
      En claro es blanco sobre gris; en oscuro es elevado sobre hover. */
-  --kun-skeleton-sheen: var(--surface-raised);
+  --kun-skeleton-sheen: var(--kun-bg-elevated);
 }
 
 .kun-skeleton--shimmer::after,

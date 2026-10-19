@@ -14,7 +14,7 @@ const widthRaw = ref('5')
 const sizeProp = computed(() => (sizeRaw.value === '' ? 24 : Number(sizeRaw.value)))
 const widthProp = computed(() => (widthRaw.value === '' ? 4 : Number(widthRaw.value)))
 
-const gradient = ref('conic-gradient(from 0deg, var(--surface-raised), var(--primary))')
+const gradient = ref('conic-gradient(from 0deg, var(--kun-bg-elevated), var(--kun-primary))')
 </script>
 
 <template>
