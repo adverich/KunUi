@@ -73,13 +73,23 @@ export function useKunMenuStyles(
         }
     }
 
-    // El motor anchor cubre el eje vertical (bottom/top). `location`
-    // left/right sigue por el path JS.
+    // El motor anchor cubre el eje vertical (bottom/top) solo cuando el
+    // origen horizontal alinea el borde izquierdo. Los orígenes `right` y
+    // `center` usan `translate` para alinear el borde derecho/centro; el
+    // motor nativo evalúa el flip-inline sobre la caja SIN ese translate y
+    // termina aplicando el desplazamiento dos veces (el menú sale muy a la
+    // izquierda del activador). Esos orígenes siguen por el path JS, que
+    // además clampea contra el viewport. `location` left/right también usa JS.
     function useAnchorMode(): boolean {
         if (props.anchor === false) return false;
         if (!anchorSupported.value) return false;
         const loc = props.location ?? 'bottom';
-        return loc === 'bottom' || loc === 'top';
+        if (loc !== 'bottom' && loc !== 'top') return false;
+        const origin = (props.origin && props.origin !== 'auto')
+            ? String(props.origin)
+            : defaultOriginFromLocation(props.location);
+        const [, horizontalOrigin] = origin.split(' ');
+        return horizontalOrigin !== 'right' && horizontalOrigin !== 'center';
     }
 
     // El activador real para posicionar es la caja del input

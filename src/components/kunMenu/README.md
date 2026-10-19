@@ -106,6 +106,13 @@ la prop `anchor` es `true` (default), el menú se ancla de forma nativa:
 - `location: 'left' | 'right'` y navegadores sin soporte usan el path JS
   (`fixed` + `getBoundingClientRect` + scroll-tracking). `:anchor="false"`
   fuerza el path JS (kill-switch determinista).
+- **Orígenes horizontales `right` y `center` no usan el motor nativo.** El
+  path nativo alinea el borde derecho/centro con `translate: -100%/-50%`, pero
+  el fallback `flip-inline` evalúa la caja sin ese translate: en un viewport
+  angosto (ancla cerca del borde derecho) el navegador cree que desborda,
+  voltea el eje y vuelve a aplicar el translate, dejando el menú cientos de px
+  a la izquierda del activador. Esos orígenes van por el path JS (que clampea
+  al viewport). El motor nativo queda para `left`/`auto`.
 - La detección es solo-cliente (`onMounted`); en SSR el menú nace cerrado
   con el estilo oculto, sin mismatch de hidratación.
 
