@@ -1,21 +1,21 @@
 <template>
   <div ref="rootRef" class="relative w-full">
-    <label v-if="label" class="mb-1 block text-sm font-medium text-ui">{{ label }}</label>
+    <label v-if="label" class="mb-1 block text-sm font-medium text-default">{{ label }}</label>
 
     <button
       ref="triggerRef"
       type="button"
-      class="flex w-full items-center gap-3 rounded-lg border border-ui bg-field-background px-3 py-2 text-left text-ui transition-colors hover:border-ui-focus focus:outline-none focus:ring-2 focus:ring-ui-focus disabled:cursor-not-allowed disabled:opacity-60"
+      class="flex w-full items-center gap-3 rounded-md ring ring-inset ring-accented bg-default px-3 py-2 text-left text-default transition-colors hover:ring-primary focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
       :disabled="disabled"
       :aria-expanded="isOpen"
       aria-haspopup="dialog"
       @click="isOpen = !isOpen"
     >
-      <span class="checkerboard h-7 w-7 shrink-0 overflow-hidden rounded-md border border-ui-subtle">
+      <span class="checkerboard h-7 w-7 shrink-0 overflow-hidden rounded-md border border-muted">
         <span class="block h-full w-full" :style="{ backgroundColor: selectedColor }" />
       </span>
       <span class="min-w-0 flex-1 truncate font-mono text-sm">{{ displayValue }}</span>
-      <svg class="h-4 w-4 shrink-0 text-ui-muted" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <svg class="h-4 w-4 shrink-0 text-muted" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.09 1.04l-4.25 4.5a.75.75 0 01-1.09 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
       </svg>
     </button>
@@ -24,31 +24,31 @@
       <div
         v-if="isOpen"
         ref="panelRef"
-        class="fixed z-250 w-90 max-w-[calc(100vw-16px)] overflow-y-auto rounded-xl border border-ui bg-ui-surface-raised p-4 shadow-xl"
-        :style="popoverStyle"
+        class="fixed w-90 max-w-[calc(100vw-16px)] overflow-y-auto rounded-lg ring ring-default bg-default p-4 shadow-xl"
+        :style="[popoverStyle, zIndexStyle('overlay')]"
         role="dialog"
         aria-label="Selector de color"
       >
       <div v-if="showPreview" class="mb-4 grid grid-cols-2 gap-3">
         <div>
-          <span class="mb-1 block text-xs text-ui-muted">Original</span>
-          <div class="checkerboard overflow-hidden rounded-lg border border-ui-subtle p-1">
+          <span class="mb-1 block text-xs text-muted">Original</span>
+          <div class="checkerboard overflow-hidden rounded-lg border border-muted p-1">
             <div class="h-10 rounded-md" :style="{ backgroundColor: resetColor }" />
           </div>
-          <span class="mt-1 block truncate font-mono text-xs text-ui-muted">{{ resetColor }}</span>
+          <span class="mt-1 block truncate font-mono text-xs text-muted">{{ resetColor }}</span>
         </div>
         <div>
-          <span class="mb-1 block text-xs text-ui-muted">Seleccionado</span>
-          <div class="checkerboard overflow-hidden rounded-lg border border-ui-subtle p-1">
+          <span class="mb-1 block text-xs text-muted">Seleccionado</span>
+          <div class="checkerboard overflow-hidden rounded-lg border border-muted p-1">
             <div class="h-10 rounded-md" :style="{ backgroundColor: selectedColor }" />
           </div>
-          <span class="mt-1 block truncate font-mono text-xs text-ui-muted">{{ displayValue }}</span>
+          <span class="mt-1 block truncate font-mono text-xs text-muted">{{ displayValue }}</span>
         </div>
       </div>
 
       <div class="mb-3 flex items-center gap-3">
         <input
-          class="h-11 w-14 cursor-pointer rounded border border-ui bg-transparent p-0.5 disabled:cursor-not-allowed"
+          class="h-11 w-14 cursor-pointer rounded-md border border-default bg-transparent p-0.5 disabled:cursor-not-allowed"
           type="color"
           :value="hexColor"
           :disabled="disabled || isTransparent"
@@ -56,7 +56,7 @@
           @input="updateHex(($event.target as HTMLInputElement).value)"
         >
         <input
-          class="min-w-0 flex-1 rounded-lg border border-ui bg-field-background px-3 py-2 font-mono text-sm text-ui outline-none focus:border-ui-focus focus:ring-1 focus:ring-ui-focus"
+          class="min-w-0 flex-1 rounded-md ring ring-inset ring-accented bg-default px-3 py-2 font-mono text-sm text-default outline-none focus:ring-primary"
           :value="formattedValue"
           :placeholder="placeholder"
           :disabled="disabled || isTransparent"
@@ -67,7 +67,7 @@
         <select
           v-if="colorType === 'all'"
           v-model="selectedFormat"
-          class="cursor-pointer rounded-lg border border-ui bg-field-background px-2 py-2 font-mono text-sm text-ui outline-none focus:border-ui-focus focus:ring-1 focus:ring-ui-focus"
+          class="cursor-pointer rounded-md ring ring-inset ring-accented bg-default px-2 py-2 font-mono text-sm text-default outline-none focus:ring-primary"
           aria-label="Formato de color"
         >
           <option value="hex">HEX</option>
@@ -76,17 +76,17 @@
         </select>
       </div>
 
-      <div class="mb-4 flex items-center gap-2 text-sm text-ui">
+      <div class="mb-4 flex items-center gap-2 text-sm text-default">
         <input id="transparent-checkbox" class="cursor-pointer disabled:cursor-not-allowed" type="checkbox" :checked="isTransparent" :disabled="disabled || !allowTransparent" @change="toggleTransparency(($event.target as HTMLInputElement).checked)">
         <label for="transparent-checkbox" class="cursor-pointer select-none">Transparente</label>
       </div>
 
       <div class="mb-4" :class="{ 'opacity-50': isTransparent }">
-        <div class="mb-1 flex justify-between text-xs text-ui-muted">
+        <div class="mb-1 flex justify-between text-xs text-muted">
           <span>Opacidad</span><span>{{ alphaPercent }}%</span>
         </div>
         <input
-          class="w-full cursor-pointer accent-ui-primary disabled:cursor-not-allowed"
+          class="w-full cursor-pointer accent-primary disabled:cursor-not-allowed"
           type="range"
           min="0"
           max="100"
@@ -97,9 +97,9 @@
         >
       </div>
 
-      <div class="flex justify-end gap-2 border-t border-ui-subtle pt-3">
-        <button type="button" class="rounded-md px-3 py-1.5 text-sm text-ui hover:bg-ui-hover disabled:opacity-50" :disabled="disabled" @click="isOpen = false">Cerrar</button>
-        <button v-if="resettable" type="button" class="rounded-md px-3 py-1.5 text-sm text-ui hover:bg-ui-hover disabled:opacity-50" :disabled="disabled" @click="reset">Restablecer</button>
+      <div class="flex justify-end gap-2 border-t border-muted pt-3">
+        <button type="button" class="rounded-md px-3 py-1.5 text-sm text-default hover:bg-accented disabled:opacity-50" :disabled="disabled" @click="isOpen = false">Cerrar</button>
+        <button v-if="resettable" type="button" class="rounded-md px-3 py-1.5 text-sm text-default hover:bg-accented disabled:opacity-50" :disabled="disabled" @click="reset">Restablecer</button>
       </div>
       </div>
     </Teleport>
@@ -109,6 +109,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { kunColorPickerProps } from '../composables/kunColorPickerProps.js'
+import { zIndexStyle } from '@/theme/kunZIndex.js'
 
 const props = defineProps(kunColorPickerProps)
 const emit = defineEmits(['update:modelValue', 'change', 'reset', 'open', 'close'])

@@ -1,6 +1,7 @@
 import { computed, type ComputedRef } from 'vue'
 import type { ExtractPropTypes } from 'vue'
 import type { kunChipProps } from './kunChipProps.js'
+import { kunVariantClasses, resolveKunColor, resolveKunVariant } from '../../../../theme/kunVariants.js'
 
 type KunChipProps = ExtractPropTypes<typeof kunChipProps>;
 type KunChipEmit = (event: 'update:modelValue' | 'click:close', value: unknown) => void;
@@ -50,19 +51,8 @@ export function useChip(props: KunChipProps, emit: KunChipEmit) {
             base.push('cursor-pointer')
         }
 
-        switch (props.variant) {
-            case 'flat':
-                base.push(`${props.color} ${props.textColor} shadow-none`)
-                break
-            case 'outlined':
-                base.push(`border border-current ${props.textColor} bg-transparent hover:bg-ui-hover`)
-                break
-            case 'pill':
-                base.push(`${props.color} ${props.textColor} rounded-full`)
-                break
-            default:
-                base.push(`${props.color} ${props.textColor} rounded-md shadow`)
-        }
+        base.push(kunVariantClasses(resolveKunColor(props.color ?? null), resolveKunVariant(props.variant ?? null)))
+        base.push('rounded-full')
 
         return base
     })

@@ -29,8 +29,8 @@ import { KunSwitch } from 'adverich-kun-ui'
 | `labelPosition` | `KunSwitchLabelPosition` | `'right'` | Posición de la etiqueta: 'top' \| 'bottom' \| 'left' \| 'right'.<br/>Valores · Values: `top` `bottom` `left` `right` |
 | `disabled` | `Boolean` | `-` | Deshabilita el switch. |
 | `onColor` | `String` | `'bg-success'` | Color del track en estado activo. |
-| `offColor` | `String` | `'bg-surface-light'` | Color del track en estado inactivo. |
-| `iconColor` | `String` | `'bg-ui-surface-raised'` | Color del thumb. |
+| `offColor` | `String` | `'bg-accented'` | Color del track en estado inactivo. |
+| `iconColor` | `String` | `'bg-inverted'` | Color del thumb. |
 | `inset` | `Boolean` | `-` | Thumb hundido en el track. |
 | `hideDetails` | `Boolean` | `false` | Oculta el área de detalles. |
 | `size` | `KunSwitchSize` | `'md'` | Tamaño: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'.<br/>Valores · Values: `xxs` `xs` `sm` `md` `lg` `xl` `xxl` |
@@ -44,6 +44,16 @@ import { KunSwitch } from 'adverich-kun-ui'
 - `#on-icon`
 - `#off-icon`
 - `#details`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- `offColor` pasa a **`bg-accented`** (antes `bg-muted`): el track inactivo
+  quedaba invisible en dark porque `--kun-bg-muted == --kun-bg-elevated ==
+  --kun-border == neutral-800`. `bg-accented` (neutral-700) contrasta tanto sobre
+  `bg-default` como sobre `bg-elevated`/`bg-muted`.
+- `onColor` (`bg-success`) y `iconColor` (thumb, `bg-inverted`) no cambian.
 
 ---
 

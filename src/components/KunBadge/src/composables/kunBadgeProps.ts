@@ -1,4 +1,5 @@
 import type { PropType } from 'vue';
+import { isKunColor, type KunColor } from '../../../../theme/kunVariants.js';
 
 export type KunBadgePosition =
   | 'top left' | 'top center' | 'top right'
@@ -14,16 +15,24 @@ export const KUN_BADGE_POSITIONS: KunBadgePosition[] = [
 export const kunBadgeProps = {
   /** Texto o número a mostrar dentro del badge. */
   text: { type: [String, Number], default: '' },
-  /** Color de fondo del badge. */
-  bgColor: { type: String, default: 'bg-error' },
-  /** Color del texto. */
-  textColor: { type: String, default: 'text-black dark:text-white' },
+  /** Color semántico del badge. */
+  color: {
+    type: String as PropType<KunColor>,
+    default: 'error' as KunColor,
+    validator: (v: unknown) => isKunColor(v)
+  },
   /** Tamaño del texto. */
   textSize: { type: String, default: 'text-xs' },
   /** Peso del texto. */
   fontWeight: { type: String, default: 'font-bold' },
-  /** Redondeo del badge. */
-  rounded: { type: String, default: 'rounded-full' },
+  /** Redondeo: 'full' | 'none'. `null` = `rounded-sm` (redondeo propio de badge). */
+  rounded: {
+    type: String as PropType<'full' | 'none' | null>,
+    default: null,
+    validator: (v: unknown) => v === null || ['full', 'none'].includes(v as string)
+  },
+  /** Forma píldora (`rounded-full`). Por defecto el badge es `rounded-sm`. */
+  pill: { type: Boolean, default: false },
   /** Modo punto (sin texto, solo indicador). */
   dot: { type: Boolean, default: false },
   /** Visibilidad del badge. */

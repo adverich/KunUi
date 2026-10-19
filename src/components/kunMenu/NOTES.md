@@ -20,11 +20,16 @@ la prop `anchor` es `true` (default), el menú se ancla de forma nativa:
 - Al abrir se registra `anchor-name: --kun-menu-<id>` en el activador
   (`parentRef` o slot `activator`); se remueve en `onUnmounted`.
 - El estilo usa `position-anchor` + `anchor()`/`anchor-size()` con
-  `position-try-fallbacks: flip-block flip-inline` (flip arriba/abajo
-  nativo). El navegador sigue al ancla en el compositor: **cero lag al
-  scrollear** (el menú sale de vista junto con su campo; nunca flota
-  despegado). `position-visibility: anchors-visible` queda como mejora
-  progresiva para anclas inválidas.
+  `position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline`.
+  Las opciones van **separadas por coma**: `flip-block flip-inline`
+  (sin coma) es un único tactic que voltea ambos ejes a la vez, y con el
+  ancla pegado a una esquina el resultado se descarta y el borde nunca se
+  corrige (menú recortado). Con opciones separadas cada eje se intenta de
+  forma independiente (borde derecho → se alinea a la derecha; borde
+  inferior → abre arriba). El navegador sigue al ancla en el compositor:
+  **cero lag al scrollear** (el menú sale de vista junto con su campo;
+  nunca flota despegado). `position-visibility: anchors-visible` queda
+  como mejora progresiva para anclas inválidas.
 - En modo anchor `repositionMenu` solo refresca `smartMaxHeight` (cap =
   máximo entre espacio superior e inferior, porque el navegador elige el
   lado con flip; el lado flipeado no debe nacer recortado).
@@ -33,3 +38,10 @@ la prop `anchor` es `true` (default), el menú se ancla de forma nativa:
   fuerza el path JS (kill-switch determinista).
 - La detección es solo-cliente (`onMounted`); en SSR el menú nace cerrado
   con el estilo oculto, sin mismatch de hidratación.
+
+## Bordes y radio
+
+- Panel `rounded-md` (antes `rounded-b`: redondeaba solo abajo y no seguía la
+  escala global `--kun-radius`).
+- Superficie flotante: `bg-default` + `ring ring-default` (antes `bg-elevated` +
+  `border border-default`, invisible en dark porque `--kun-border == --kun-bg-elevated`).

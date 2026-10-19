@@ -22,10 +22,13 @@
     "build:types": "vue-tsc -p tsconfig.json --emitDeclarationOnly --outDir dist",
     "typecheck": "vue-tsc -p tsconfig.json --noEmit",
     "generate:barrel": "node scripts/generate-barrel.ts",
+    "generate:icons": "node scripts/generate-icons.ts",
     "generate:docs": "node scripts/generate-docs.ts",
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@iconify-json/lucide": "^1.2.145",
+    "@iconify/vue": "^5.0.3",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.6.5",
     "@vitejs/plugin-vue": "^6.0.8",
@@ -38,6 +41,9 @@
     "vite-plugin-vue-devtools": "^8.2.1",
     "vue-router": "^5.2.0",
     "vue-tsc": "^3.3.12"
+  },
+  "dependencies": {
+    "@iconify/vue": "^5.0.0"
   },
   "peerDependencies": {
     "tailwindcss": "^4.1.8",
@@ -62,6 +68,7 @@
       "require": "./dist/index.js"
     },
     "./dist/adverich-kun-ui.css": "./dist/adverich-kun-ui.css",
+    "./theme.css": "./dist/theme.css",
     "./components/*": "./dist/components/*",
     "./components": "./dist/components/index.js",
     "./registry.json": "./registry.json",

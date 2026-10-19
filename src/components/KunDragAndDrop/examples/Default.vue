@@ -14,7 +14,7 @@ const items = ref([
 <template>
   <div class="p-4 max-w-md space-y-3">
     <h2 class="text-lg font-medium">Lista sortable</h2>
-    <p class="text-sm text-ui-muted">Arrastrá los ítems para reordenar (data-first).</p>
+    <p class="text-sm text-muted">Arrastrá los ítems para reordenar (data-first).</p>
     <KunDragAndDrop v-model="items" />
     <pre class="text-xs opacity-70 overflow-auto">{{ items.map((i) => i.title).join(' → ') }}</pre>
   </div>

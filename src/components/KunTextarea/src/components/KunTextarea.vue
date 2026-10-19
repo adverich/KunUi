@@ -42,7 +42,7 @@
           ref="overlayRef"
           class="absolute inset-0 pointer-events-none border bg-transparent transition-colors duration-150"
           :class="[fieldsetRoundedClass, notchBorderClass]"
-          :style="[notchMaskStyle, notchGlowStyle]"
+          :style="notchMaskStyle"
         />
         <slot name="label" :for="uid" v-bind="labelSlotBindings">
           <label
@@ -103,7 +103,7 @@
         @keydown.enter="handleJsonEnter"
         @click="$emit('click:control', $event)"
         @mousedown="$emit('mousedown:control', $event)"
-        class="bg-field-background"
+        class="bg-muted"
         :class="[textareaClasses]"
         style="width: 100%; box-sizing: border-box;"
         :style="autoGrow ? 'overflow-y: hidden;' : 'overflow-y: auto;'"
@@ -116,7 +116,7 @@
         :class="clearIconClasses"
       >
         <slot name="clear" v-bind="clearSlotBindings">
-          <button type="button" @click="handleClear" class="text-ui-muted hover:text-ui" v-if="clearIcon">
+          <button type="button" @click="handleClear" class="text-muted hover:text-default" v-if="clearIcon">
             <component :is="renderIconSlot(clearIcon)" />
           </button>
         </slot>
@@ -143,7 +143,7 @@
       <!-- Loader -->
       <div v-if="loading" class="mt-1">
         <slot name="loader" :color="loadingColor" :isActive="true">
-          <div class="h-1 w-full bg-field-background rounded overflow-hidden">
+          <div class="h-1 w-full bg-muted rounded-md overflow-hidden">
             <div
               class="h-full transition-all duration-300"
               :class="[loadingColor]"
@@ -157,7 +157,7 @@
       <div
         v-if="!hideDetails || (hideDetails === 'auto' && (displayedMessages.length || hint))"
         class="text-xs mt-1 space-y-1"
-        :class="{ 'text-ui-error': hasError, 'text-ui-muted': !hasError }"
+        :class="{ 'text-error': hasError, 'text-muted': !hasError }"
       >
         <slot name="details">
           <template v-if="hasError">
@@ -176,7 +176,7 @@
       </div>
 
       <!-- Counter -->
-      <div v-if="counterVisible" class="text-xs text-right mt-1 text-ui-disabled">
+      <div v-if="counterVisible" class="text-xs text-right mt-1 text-muted">
         <slot name="counter" :counter="valueLength" :max="counterMax" :value="valueLength">
           {{ valueLength }}<span v-if="counterMax"> / {{ counterMax }}</span>
         </slot>
@@ -343,16 +343,15 @@ const clearIconClasses = computed(() =>
 )
 
 const variantClass = computed(() => {
-  const bg = props.bgColor ? '' : props.variant === 'filled' ? 'bg-field-background' : ''
   switch (props.variant) {
     case 'filled':
-      return [bg, 'border border-transparent']
+      return ['bg-default', 'border border-accented']
     case 'outlined':
-      return 'border border-ui bg-transparent'
+      return 'border border-accented bg-transparent'
     case 'underlined':
-      return 'border-b border-ui bg-transparent rounded-none'
+      return 'border-b border-accented bg-transparent rounded-none'
     case 'solo':
-      return [bg || 'bg-ui-surface-raised', 'shadow-md border-transparent']
+      return ['bg-elevated', 'shadow-md ring ring-inset ring-accented']
     default:
       return ''
   }
@@ -374,22 +373,17 @@ const textAlignClass = computed(() => {
 
 const textareaClasses = computed(() => [
   'block w-full resize-none transition-colors duration-150 leading-normal',
-  props.textColor || 'text-ui',
+  'text-default',
   textAlignClass.value,
   props.inputClass,
+  fieldsetRoundedClass.value,
   {
-    'rounded': !props.tile,
-    'rounded-none': props.tile,
-    ...(typeof props.rounded === 'string' || typeof props.rounded === 'number'
-      ? { [`rounded-${props.rounded}`]: true }
-      : {}),
     'shadow-md': props.variant === 'solo' && !props.flat,
     'shadow-none': props.flat,
-    ...(props.bgColor ? { [props.bgColor as string]: true } : {}),
-    'text-ui-disabled bg-surface': props.disabled,
+    'text-disabled bg-muted': props.disabled,
     'focus:outline-none focus:ring-1': !props.disabled,
-    [`${props.focusRingColor}`]: props.focusRingColor && !props.disabled && !hasError.value,
-    'border-error ring-ui-focus': hasError.value,
+    'ring-primary/25': !props.disabled && !hasError.value,
+    'border-error ring-error/25': hasError.value,
     'resize-none': props.noResize || props.autoGrow,
     'resize': !props.noResize && !props.autoGrow,
   },
@@ -401,8 +395,7 @@ const textareaClasses = computed(() => [
 // el borde con notch herede `tile` / `rounded`.
 const fieldsetRoundedClass = computed(() => {
   if (props.tile) return 'rounded-none'
-  if (typeof props.rounded === 'string' || typeof props.rounded === 'number') return `rounded-${props.rounded}`
-  return 'rounded'
+  return props.rounded || 'rounded-md'
 })
 
 // Clases del textarea en variante outlined: borde transparente propio (métricas),
@@ -410,14 +403,13 @@ const fieldsetRoundedClass = computed(() => {
 // fieldset overlay (hermano posterior en el DOM, pinta encima).
 const textareaOutlinedInnerClasses = computed(() => [
   'block w-full resize-none transition-colors duration-150 leading-normal',
-  props.textColor || 'text-ui',
+  'text-default',
   textAlignClass.value,
   props.inputClass,
   fieldsetRoundedClass.value,
   {
     'shadow-none': props.flat,
-    ...(props.bgColor ? { [props.bgColor as string]: true } : {}),
-    'text-ui-disabled': props.disabled,
+    'text-disabled': props.disabled,
     'focus:outline-none': !props.disabled,
     'resize-none': props.noResize || props.autoGrow,
     'resize': !props.noResize && !props.autoGrow,
@@ -436,12 +428,8 @@ const { labelRef, overlayRef, notchMaskStyle, labelShiftStyle } = useKunFieldNot
   },
   [() => props.variant]
 );
-const notchBorderClass = computed(() => hasError.value ? 'border-error' : isFocused.value ? 'border-ui-focus' : 'border-ui');
-// Glow de foco como drop-shadow sobre el overlay: sigue la forma pintada
-// (respeta la muesca y las curvas), a diferencia del box-shadow rectangular.
-const notchGlowStyle = computed(() => isFocused.value && !hasError.value
-  ? { filter: 'drop-shadow(0 0 1px var(--field-ring-focus))' }
-  : undefined);
+const notchBorderClass = computed(() => hasError.value ? 'border-error' : isFocused.value ? 'border-primary' : 'border-accented');
+const notchGlowStyle = computed(() => undefined);
 
 const labelSlotBindings = {
   label: props.label,

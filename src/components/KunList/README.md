@@ -27,8 +27,6 @@ import { KunList } from 'adverich-kun-ui'
 | `dense` | `Boolean` | `-` | Espaciado compacto entre ítems. |
 | `selectable` | `Boolean` | `false` | Habilita selección de ítems (v-model `selected`). |
 | `selectionMode` | `KunListSelectionMode` | `'single'` | Modo de selección (requiere `selectable`).<br/>Valores · Values: `single` `multiple` |
-| `bgList` | `String` | `'bg-transparent'` | Color de fondo del `<ul>`. |
-| `borderColor` | `String` | `'border-ui'` | Color de borde del `<ul>`. |
 | `fontSize` | `String` | `'text-base'` | Tamaño de fuente de la lista (clase Tailwind). |
 
 ## Modelos · Models
@@ -49,6 +47,15 @@ import { KunList } from 'adverich-kun-ui'
 
 - `focusWithKey()`
 - `focus()`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- El listado anidado (`sub`) marca el lado inicial con `border-s-2 border-primary`
+  (antes `border-default`: sobre el fondo de página el acento no se percibía).
+  Sigue siendo un trazo lógico (RTL correcto).
+- `nav` mantiene `p-2 rounded-md`.
 
 ---
 

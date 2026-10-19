@@ -6,11 +6,6 @@ export const kunListItemTitleProps = {
     type: [String, Number] as PropType<string | number | null>,
     default: null
   },
-  /** Color del texto. */
-  textColor: {
-    type: String,
-    default: 'text-ui'
-  },
   /** Tamaño del texto. */
   fontSize: {
     type: String,

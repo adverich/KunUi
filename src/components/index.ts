@@ -47,7 +47,6 @@ export { default as KunListItemTitle } from './KunListItemTitle/src/components/K
 export { default as KunListSubheader } from './KunListSubheader/src/components/KunListSubheader.vue';
 export { default as KunLoaderCircular } from './KunLoaderCircular/src/components/KunLoaderCircular.vue';
 export { default as KunMenu } from './KunMenu/src/components/KunMenu.vue';
-export { default as KunModalFooter } from './KunModalFooter/src/components/KunModalFooter.vue';
 export { default as KunNumberField } from './KunNumberField/src/components/KunNumberField.vue';
 export { default as KunRadio } from './KunRadio/src/components/KunRadio.vue';
 export { default as KunRadioGroup } from './KunRadioGroup/src/components/KunRadioGroup.vue';
@@ -114,8 +113,6 @@ export type * from './KunListItemTitle/src/composables/kunListItemTitleProps.js'
 export type * from './KunListSubheader/src/composables/kunListSubheaderProps.js';
 export type * from './KunLoaderCircular/src/composables/kunLoaderCircularProps.js';
 export type * from './KunMenu/src/composables/kunMenuProps.js';
-export type * from './KunModalFooter/src/composables/kunModalFooterProps.js';
-export type * from './KunModalFooter/src/composables/kunMultipleModalFooterProps.js';
 export type * from './KunNumberField/src/composables/KunNumberFieldProps.js';
 export type * from './KunRadio/src/composables/kunRadioProps.js';
 export type * from './KunRadioGroup/src/composables/kunRadioGroupProps.js';

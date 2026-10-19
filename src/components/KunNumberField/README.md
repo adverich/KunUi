@@ -25,8 +25,6 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `modelValue` | `number \| string \| null` | `null` | Valor numérico (v-model). `null` = vacío (también lo emite `onClear`). |
 | `placeholder` | `String \| Number` | `''` | Placeholder. Si existe, el label flota siempre. |
 | `label` | `String` | `''` | Etiqueta flotante (mismo sistema que KunTextField). |
-| `labelColor` | `String` | `'text-ui'` | Color del label en reposo. |
-| `floatingLabelColor` | `string \| null` | `null` | Color del label flotando (null = usa `labelColor`). |
 | `labelSize` | `String` | `'text-sm'` | Tamaño del label en reposo. |
 | `floatingLabelSize` | `String` | `'text-xs'` | Tamaño del label flotando. |
 | `labelOpacity` | `String` | `'opacity-60'` | Opacidad del label en reposo. |
@@ -44,15 +42,11 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `appendInnerIcon` | `string \| Record<string, any> \| Function \| unknown[] \| null` | `null` | Ícono interno al final. |
 | `prependInnerClass` | `String` | `-` | Clase del contenedor del ícono interno inicial. |
 | `appendInnerClass` | `String` | `-` | Clase del contenedor del ícono interno final. |
-| `rounded` | `String` | `'rounded'` | Redondeo del contenedor. |
-| `borderColor` | `String` | `'border-ui'` | Color del borde. |
-| `textColor` | `String` | `'text-ui'` | Color del texto del valor. |
+| `rounded` | `String` | `'rounded-md'` | Redondeo del contenedor (clase de escala, `rounded-md` por defecto). |
 | `inputTextSize` | `string \| null` | `null` | Tamaño del texto del valor (null = 'text-sm'). |
 | `inputWeight` | `string \| null` | `null` | Peso del texto del valor (null = hereda). |
-| `placeholderColor` | `String` | `'placeholder-ui'` | Color del placeholder. |
 | `placeholderTextSize` | `string \| null` | `null` | Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). |
 | `inputStyle` | `String` | `''` | Clase libre para el input. |
-| `bgInput` | `String` | `'bg-field-background'` | Color de fondo del contenedor. |
 | `textCenter` | `Boolean` | `false` | Centra el texto del valor. |
 | `controlVariant` | `KunNumberFieldControlVariant` | `'default'` | Variante de botones de incremento: 'default' \| 'stacked' \| 'split'.<br/>Valores · Values: `default` `stacked` `split` |
 | `noArrows` | `Boolean` | `false` | Oculta los botones ▲▼ (quedan `onIncrement`/`onDecrement` por slot). |
@@ -180,6 +174,16 @@ Fallback: si no hay nada que mostrar (sin `placeholder` y sin label en
 reposo, o con `dirty` que flota el label al borde), se muestra el `0`
 formateado para no dejar una caja fantasma. Con `hideZero: false` siempre
 se muestra el `0` formateado (comportamiento histórico).
+
+## Bordes y radio
+
+- Default `'rounded-md'` (antes `'rounded'` pelado, 4px fijos).
+- El `<input>` ya no lleva un `rounded` pelado redundante: el radio lo aplica la
+  prop del contenedor.
+- Lados lógicos: `border-e` / `border-s` y `rounded-s/e-[inherit]` en los botones
+  split (antes `border-l/r` físicos).
+- Contorno por rol: contenedor `bg-default` y notch `border-accented` (antes
+  `bg-muted` + `border-default`, invisible en dark).
 
 ---
 

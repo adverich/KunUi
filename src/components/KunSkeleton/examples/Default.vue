@@ -29,7 +29,7 @@ const height = ref('1rem')
 const rounded = ref('md')
 const durationRaw = ref('1600')
 const durationProp = computed(() => (durationRaw.value === '' ? 1600 : Number(durationRaw.value)))
-const colorFrom = ref('bg-ui-hover')
+const colorFrom = ref('bg-accented')
 </script>
 
 <template>
@@ -38,7 +38,7 @@ const colorFrom = ref('bg-ui-hover')
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunSkeleton</h2>
 
-      <div class="rounded-xl border border-ui p-3">
+      <div class="rounded-lg border border-default p-3">
         <KunSkeleton
           :loading="loading"
           :variant="variant"
@@ -53,20 +53,20 @@ const colorFrom = ref('bg-ui-hover')
             <div class="h-10 w-10 rounded-full bg-success/30" />
             <div>
               <p class="text-sm font-medium">Contenido real</p>
-              <p class="text-xs text-ui-muted">Visible cuando loading=false</p>
+              <p class="text-xs text-muted">Visible cuando loading=false</p>
             </div>
           </div>
         </KunSkeleton>
       </div>
 
-      <p class="font-mono text-xs text-ui-muted">
+      <p class="font-mono text-xs text-muted">
         loading={{ loading }} variant={{ variant }} animation={{ animation }}
       </p>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunSwitch v-model="loading" label="Loading" />

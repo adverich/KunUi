@@ -54,7 +54,6 @@ const transitionOptions = ref([
 // ------------------------------------------------------------------
 // Controles del playground: strings directos
 // ------------------------------------------------------------------
-const bgColor = ref('bg-menu')
 const label = ref('Menú contextual')
 
 // ------------------------------------------------------------------
@@ -67,7 +66,6 @@ const minHeightRaw = ref('')
 const heightRaw = ref('')
 const maxHeightRaw = ref('')
 const offsetRaw = ref('')
-const zIndexRaw = ref('')
 const widthProp = computed(() => (widthRaw.value === '' ? undefined : widthRaw.value))
 const minWidthProp = computed(() => (minWidthRaw.value === '' ? undefined : minWidthRaw.value))
 const maxWidthProp = computed(() => (maxWidthRaw.value === '' ? undefined : maxWidthRaw.value))
@@ -75,7 +73,6 @@ const minHeightProp = computed(() => (minHeightRaw.value === '' ? undefined : mi
 const heightProp = computed(() => (heightRaw.value === '' ? undefined : heightRaw.value))
 const maxHeightProp = computed(() => (maxHeightRaw.value === '' ? undefined : maxHeightRaw.value))
 const offsetProp = computed(() => (offsetRaw.value === '' ? undefined : offsetRaw.value))
-const zIndexProp = computed(() => (zIndexRaw.value === '' ? undefined : zIndexRaw.value))
 
 // attach: Boolean | String | Object (Teleport). Vacío = undefined (body);
 // 'true' = true (sin Teleport, inline); otro texto = selector.
@@ -140,7 +137,6 @@ function handleSelect(item: string): void {
         :location="location"
         :origin="origin"
         :transition="transition"
-        :bg-color="bgColor"
         :label="label"
         :width="widthProp"
         :min-width="minWidthProp"
@@ -149,7 +145,6 @@ function handleSelect(item: string): void {
         :height="heightProp"
         :max-height="maxHeightProp"
         :offset="offsetProp"
-        :z-index="zIndexProp"
         :attach="attachProp"
         :open-delay="openDelayProp"
         :close-delay="closeDelayProp"
@@ -173,33 +168,33 @@ function handleSelect(item: string): void {
         </template>
 
         <div class="py-1 min-w-44">
-          <button type="button" class="w-full text-left px-4 py-2 text-sm hover:bg-surface" @click="handleSelect('Opción 1')">Opción 1</button>
-          <button type="button" class="w-full text-left px-4 py-2 text-sm hover:bg-surface" @click="handleSelect('Opción 2')">Opción 2</button>
-          <button type="button" class="w-full text-left px-4 py-2 text-sm hover:bg-surface" @click="handleSelect('Opción 3')">Opción 3</button>
-          <button type="button" class="w-full text-left px-4 py-2 text-sm hover:bg-surface" @click="handleSelect('Opción 4')">Opción 4</button>
+          <button type="button" class="w-full text-left px-4 py-2 text-sm hover:bg-muted" @click="handleSelect('Opción 1')">Opción 1</button>
+          <button type="button" class="w-full text-left px-4 py-2 text-sm hover:bg-muted" @click="handleSelect('Opción 2')">Opción 2</button>
+          <button type="button" class="w-full text-left px-4 py-2 text-sm hover:bg-muted" @click="handleSelect('Opción 3')">Opción 3</button>
+          <button type="button" class="w-full text-left px-4 py-2 text-sm hover:bg-muted" @click="handleSelect('Opción 4')">Opción 4</button>
         </div>
       </KunMenu>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
-        <div>{{ JSON.stringify(open) }} <span class="text-ui-muted">({{ typeof open }})</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
+        <div>{{ JSON.stringify(open) }} <span class="text-muted">({{ typeof open }})</span></div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Interactuá con el menú para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Interactuá con el menú para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el demo) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunSelect
@@ -227,7 +222,6 @@ function handleSelect(item: string): void {
           density="compact"
         />
         <KunTextField v-model="label" label="Label" density="compact" />
-        <KunTextField v-model="bgColor" label="Bg color" density="compact" />
 
         <KunTextField v-model="widthRaw" label="Width (vacío = default)" density="compact" />
         <KunTextField v-model="minWidthRaw" label="Min width (vacío = sin límite)" density="compact" />
@@ -236,7 +230,6 @@ function handleSelect(item: string): void {
         <KunTextField v-model="heightRaw" label="Height (vacío = auto)" density="compact" />
         <KunTextField v-model="maxHeightRaw" label="Max height (vacío = auto)" density="compact" />
         <KunTextField v-model="offsetRaw" label="Offset (vacío = 0)" density="compact" />
-        <KunTextField v-model="zIndexRaw" label="Z-index (vacío = default)" density="compact" />
         <KunTextField v-model="attachRaw" label="Attach (vacío = body, 'true' = inline)" density="compact" />
         <KunTextField v-model="openDelayRaw" label="Open delay (ms)" density="compact" inputmode="numeric" />
         <KunTextField v-model="closeDelayRaw" label="Close delay (ms)" density="compact" inputmode="numeric" />

@@ -6,11 +6,11 @@
         class="grid sticky top-0 z-10"
         :style="`grid-template-columns: repeat(${columns.length + 1}, minmax(120px, 1fr))`"
       >
-        <div class="px-2 py-1 font-bold border-b">{{ relationTitle }}</div>
+        <div class="px-2 py-1 font-bold border-b border-default">{{ relationTitle }}</div>
         <div
           v-for="col in columns"
           :key="(col[columnKey as string] as string)"
-          class="px-2 py-1 font-bold text-center border-b"
+          class="px-2 py-1 font-bold text-center border-b border-default"
         >
           {{ getNestedValue(col, columnLabel) }}
         </div>
@@ -21,20 +21,20 @@
       <KunVirtualScroller :items="rows" :estimatedItemHeight="36" class="w-full">
         <template #default="{ item: row }">
           <div
-            class="grid items-center hover:bg-ui-hover"
+            class="grid items-center hover:bg-accented"
             :style="`grid-template-columns: repeat(${columns.length + 1}, minmax(120px, 1fr))`"
           >
-            <div class="px-2 py-1 border-b font-medium text-lg">
+            <div class="px-2 py-1 border-b border-default font-medium text-lg">
               {{ getNestedValue(row as MatrixRow, rowLabel) }}
             </div>
             <div
               v-for="col in columns"
               :key="(col[columnKey as string] as string)"
-              class="flex justify-center items-center px-2 py-1 border-b h-full"
+              class="flex justify-center items-center px-2 py-1 border-b border-default h-full"
             >
               <KunCheckbox
                 :modelValue="hasRelation(row as MatrixRow, col)"
-                :color="hasRelation(row as MatrixRow, col) ? 'text-success' : ''"
+                :color="hasRelation(row as MatrixRow, col) ? 'bg-success text-inverted' : ''"
                 @update:modelValue="checked => onCheckboxChange(row as MatrixRow, col, checked as boolean)"
                 size="lg"
                 :label="''"

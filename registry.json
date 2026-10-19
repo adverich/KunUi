@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.667",
+  "version": "0.1.668",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -61,41 +61,25 @@
         {
           "name": "iconSize",
           "type": "String",
-          "default": "'text-2xl'",
+          "default": "'size-6'",
           "values": [],
-          "description": "Tamaño del ícono (clase Tailwind de texto).",
+          "description": "Tamaño del ícono (clase Tailwind, `size-6`).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAlert\\src\\composables\\kunAlertProps.ts"
         },
         {
-          "name": "iconBgColor",
-          "type": "String",
-          "default": "'bg-error'",
+          "name": "color",
+          "type": "KunColor",
+          "default": "'error' as KunColor",
           "values": [],
-          "description": "Color de fondo del contenedor del ícono.",
+          "description": "Color semántico de la alerta.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAlert\\src\\composables\\kunAlertProps.ts"
         },
         {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-error'",
+          "name": "variant",
+          "type": "KunVariant",
+          "default": "'solid' as KunVariant",
           "values": [],
-          "description": "Color de fondo de la alerta.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAlert\\src\\composables\\kunAlertProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui-inverse'",
-          "values": [],
-          "description": "Color del texto.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAlert\\src\\composables\\kunAlertProps.ts"
-        },
-        {
-          "name": "borderColor",
-          "type": "String",
-          "default": "''",
-          "values": [],
-          "description": "Color del borde (vacío = sin borde visible).",
+          "description": "Variante visual: 'solid' | 'outline' | 'soft' | 'subtle' | 'ghost' | 'link'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAlert\\src\\composables\\kunAlertProps.ts"
         },
         {
@@ -120,14 +104,6 @@
           "default": "false",
           "values": [],
           "description": "Muestra botón de cierre.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAlert\\src\\composables\\kunAlertProps.ts"
-        },
-        {
-          "name": "zIndex",
-          "type": "String | Number",
-          "default": "2500",
-          "values": [],
-          "description": "Z-index del contenedor flotante.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAlert\\src\\composables\\kunAlertProps.ts"
         },
         {
@@ -217,14 +193,6 @@
       "description_en": "Top application bar with title, sections and drawer button.",
       "props": [
         {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-transparent'",
-          "values": [],
-          "description": "Color de fondo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
-        },
-        {
           "name": "title",
           "type": "String",
           "default": "-",
@@ -306,17 +274,9 @@
         {
           "name": "bordered",
           "type": "Boolean",
-          "default": "false",
+          "default": "true",
           "values": [],
-          "description": "Muestra borde inferior (usa `borderColor`).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
-        },
-        {
-          "name": "borderColor",
-          "type": "String",
-          "default": "'border-b border-ui'",
-          "values": [],
-          "description": "Clases del borde inferior.",
+          "description": "Muestra borde inferior (`border-b border-default`). Por defecto `true` (igual que el header de Nuxt UI).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
         },
         {
@@ -336,11 +296,19 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
         },
         {
-          "name": "buttonBg",
-          "type": "String",
-          "default": "'bg-button-disabled opacity-75'",
+          "name": "buttonColor",
+          "type": "KunColor | null",
+          "default": "null",
           "values": [],
-          "description": "Fondo del botón del drawer.",
+          "description": "Color del botón del drawer. `null` delega al theme global.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
+        },
+        {
+          "name": "buttonVariant",
+          "type": "KunVariant | null",
+          "default": "null",
+          "values": [],
+          "description": "Variante del botón del drawer. `null` delega al theme global.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
         },
         {
@@ -357,14 +325,6 @@
           "default": "'flex items-center gap-2 justify-end ml-auto'",
           "values": [],
           "description": "Clase de la sección derecha (slot `right`).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
-        },
-        {
-          "name": "zIndex",
-          "type": "String",
-          "default": "'z-1000'",
-          "values": [],
-          "description": "Z-index.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
         },
         {
@@ -667,11 +627,11 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
         },
         {
-          "name": "btnCreateBg",
-          "type": "String",
-          "default": "\"bg-success\"",
+          "name": "btnCreateColor",
+          "type": "KunColor",
+          "default": "'success'",
           "values": [],
-          "description": "Color del botón crear.",
+          "description": "Color semántico del botón crear.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
         },
         {
@@ -763,14 +723,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
         },
         {
-          "name": "zIndex",
-          "type": "String",
-          "default": "\"z-250\"",
-          "values": [],
-          "description": "Z-index del menú.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
-        },
-        {
           "name": "hideDetails",
           "type": "Boolean",
           "default": "true",
@@ -797,7 +749,7 @@
         {
           "name": "iconColor",
           "type": "String",
-          "default": "'text-ui-primary'",
+          "default": "'text-primary'",
           "values": [],
           "description": "Color del ícono desplegar.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
@@ -805,7 +757,7 @@
         {
           "name": "requiredIconColor",
           "type": "String",
-          "default": "'text-ui-primary'",
+          "default": "'text-error'",
           "values": [],
           "description": "Color del asterisco de requerido.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
@@ -813,41 +765,9 @@
         {
           "name": "emptyTextClass",
           "type": "String",
-          "default": "'text-ui-muted'",
+          "default": "'text-muted'",
           "values": [],
           "description": "Clase del texto \"sin elementos\".",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
-        },
-        {
-          "name": "bgMenuColor",
-          "type": "String",
-          "default": "\"bg-menu\"",
-          "values": [],
-          "description": "Color de fondo del menú.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
-        },
-        {
-          "name": "bgItemListColor",
-          "type": "String",
-          "default": "\"bg-transparent\"",
-          "values": [],
-          "description": "Color de fondo de cada opción.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
-        },
-        {
-          "name": "selectedItemListColor",
-          "type": "String",
-          "default": "\"bg-ui-selection text-ui-selection\"",
-          "values": [],
-          "description": "Clase de la opción seleccionada.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
-        },
-        {
-          "name": "hoverItemListColor",
-          "type": "String",
-          "default": "\"hover:bg-ui-selection-hover\"",
-          "values": [],
-          "description": "Clase hover de cada opción.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAutocomplete\\src\\composables\\KunAutocompleteProps.ts"
         },
         {
@@ -935,7 +855,7 @@
           "type": "String | Number | Boolean",
           "default": "-",
           "values": [],
-          "description": "Radio de borde (true = circular).",
+          "description": "Radio de borde: por defecto `rounded-full`; `false`/`'none'` → `rounded-none`; escala (`'md'`, `'lg'`, ...) → `rounded-<valor>`.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAvatar\\src\\composables\\kunAvatarProps.ts"
         },
         {
@@ -1046,19 +966,11 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBadge\\src\\composables\\kunBadgeProps.ts"
         },
         {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-error'",
+          "name": "color",
+          "type": "KunColor",
+          "default": "'error' as KunColor",
           "values": [],
-          "description": "Color de fondo del badge.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBadge\\src\\composables\\kunBadgeProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-black dark:text-white'",
-          "values": [],
-          "description": "Color del texto.",
+          "description": "Color semántico del badge.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBadge\\src\\composables\\kunBadgeProps.ts"
         },
         {
@@ -1079,10 +991,18 @@
         },
         {
           "name": "rounded",
-          "type": "String",
-          "default": "'rounded-full'",
+          "type": "'full' | 'none' | null",
+          "default": "null",
           "values": [],
-          "description": "Redondeo del badge.",
+          "description": "Redondeo: 'full' | 'none'. `null` = `rounded-sm` (redondeo propio de badge).",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBadge\\src\\composables\\kunBadgeProps.ts"
+        },
+        {
+          "name": "pill",
+          "type": "Boolean",
+          "default": "false",
+          "values": [],
+          "description": "Forma píldora (`rounded-full`). Por defecto el badge es `rounded-sm`.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBadge\\src\\composables\\kunBadgeProps.ts"
         },
         {
@@ -1158,15 +1078,7 @@
           "name": "size",
           "type": "KunBtnSize",
           "default": "'md'",
-          "values": [
-            "xxs",
-            "xs",
-            "sm",
-            "md",
-            "lg",
-            "xl",
-            "xxl"
-          ],
+          "values": [],
           "description": "Tamaño: 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
         },
@@ -1188,10 +1100,10 @@
         },
         {
           "name": "rounded",
-          "type": "String",
-          "default": "'rounded-lg'",
+          "type": "KunBtnRounded | null | undefined",
+          "default": "null",
           "values": [],
-          "description": "Redondeo de bordes.",
+          "description": "Redondeo propio: 'full' | 'none'. `undefined` hereda la escala global.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
         },
         {
@@ -1203,18 +1115,19 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
         },
         {
+          "name": "color",
+          "type": "KunColor | null",
+          "default": "null",
+          "values": [],
+          "description": "Color semántico: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'. `null` delega al theme global.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
+        },
+        {
           "name": "variant",
-          "type": "KunBtnVariant",
-          "default": "'default'",
-          "values": [
-            "default",
-            "tonal",
-            "plain",
-            "outlined",
-            "soft",
-            "text"
-          ],
-          "description": "Variante visual: 'default' | 'tonal' | 'plain' | 'outlined' | 'soft' | 'text'.",
+          "type": "KunVariant | null",
+          "default": "null",
+          "values": [],
+          "description": "Variante visual: 'solid' | 'outline' | 'soft' | 'subtle' | 'ghost' | 'link'. `null` delega al theme global.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
         },
         {
@@ -1231,22 +1144,6 @@
           "default": "-",
           "values": [],
           "description": "Muestra loader y bloquea interacción.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
-        },
-        {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-button'",
-          "values": [],
-          "description": "Color de fondo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del texto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
         },
         {
@@ -1286,7 +1183,7 @@
           "type": "Boolean",
           "default": "-",
           "values": [],
-          "description": "Anillo de foco accesible.",
+          "description": "Anillo de foco accesible extra (además del outline del sistema).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
         },
         {
@@ -1319,14 +1216,6 @@
           "default": "null",
           "values": [],
           "description": "Tamaño del ícono (sobrescribe el calculado por `size`).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
-        },
-        {
-          "name": "focusColor",
-          "type": "string | null",
-          "default": "null",
-          "values": [],
-          "description": "Color extra en estado de foco.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
         }
       ],
@@ -1393,22 +1282,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCard\\src\\composables\\kunCardProps.ts"
         },
         {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del texto.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCard\\src\\composables\\kunCardProps.ts"
-        },
-        {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-transparent'",
-          "values": [],
-          "description": "Color de fondo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCard\\src\\composables\\kunCardProps.ts"
-        },
-        {
           "name": "flat",
           "type": "Boolean",
           "default": "false",
@@ -1429,15 +1302,7 @@
           "type": "Boolean",
           "default": "false",
           "values": [],
-          "description": "Con borde (usa `outlineColor`).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCard\\src\\composables\\kunCardProps.ts"
-        },
-        {
-          "name": "outlineColor",
-          "type": "String",
-          "default": "'border-ui'",
-          "values": [],
-          "description": "Color del borde en modo `outlined`.",
+          "description": "Con borde (`border border-default`). Redundante con `variant=\"outlined\"`.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCard\\src\\composables\\kunCardProps.ts"
         },
         {
@@ -1788,7 +1653,7 @@
         {
           "name": "color",
           "type": "String",
-          "default": "'text-ui-muted'",
+          "default": "'text-muted'",
           "values": [],
           "description": "Color del texto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCardSubtitle\\src\\composables\\kunCardSubtitleProps.ts"
@@ -1825,7 +1690,7 @@
         {
           "name": "color",
           "type": "String",
-          "default": "'text-ui'",
+          "default": "'text-default'",
           "values": [],
           "description": "Color del texto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCardText\\src\\composables\\kunCardTextProps.ts"
@@ -1905,22 +1770,6 @@
           "default": "-",
           "values": [],
           "description": "Contenido al final (componente o icono).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCardTitle\\src\\composables\\kunCardTitleProps.ts"
-        },
-        {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-transparent'",
-          "values": [],
-          "description": "Color de fondo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCardTitle\\src\\composables\\kunCardTitleProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del texto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunCardTitle\\src\\composables\\kunCardTitleProps.ts"
         },
         {
@@ -2835,26 +2684,26 @@
         },
         {
           "name": "color",
-          "type": "String",
-          "default": "'bg-button'",
+          "type": "KunColor | null",
+          "default": "null",
           "values": [],
-          "description": "Color de fondo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunChip\\src\\composables\\kunChipProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del texto.",
+          "description": "Color semántico. `null` delega al theme global.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunChip\\src\\composables\\kunChipProps.ts"
         },
         {
           "name": "variant",
-          "type": "KunChipVariant",
-          "default": "'default' as KunChipVariant",
+          "type": "KunVariant | null",
+          "default": "null",
           "values": [],
-          "description": "Variante visual: 'default' | 'outlined' | 'flat' | 'pill'.",
+          "description": "Variante visual: 'solid' | 'outline' | 'soft' | 'subtle' | 'ghost' | 'link'. `null` delega al theme global.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunChip\\src\\composables\\kunChipProps.ts"
+        },
+        {
+          "name": "pill",
+          "type": "Boolean",
+          "default": "false",
+          "values": [],
+          "description": "Reservado. El chip es siempre `rounded-full` (forma píldora), sin efecto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunChip\\src\\composables\\kunChipProps.ts"
         },
         {
@@ -3586,14 +3435,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunDialog\\src\\composables\\kunDialogProps.ts"
         },
         {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-surface-dark'",
-          "values": [],
-          "description": "Color de fondo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunDialog\\src\\composables\\kunDialogProps.ts"
-        },
-        {
           "name": "minHeight",
           "type": "String",
           "default": "'h-fit'",
@@ -3663,14 +3504,6 @@
           "default": "-",
           "values": [],
           "description": "Clase extra del contenido.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunDialog\\src\\composables\\kunDialogContentProps.ts"
-        },
-        {
-          "name": "bgColor",
-          "type": "String",
-          "default": "-",
-          "values": [],
-          "description": "Color de fondo del diálogo.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunDialog\\src\\composables\\kunDialogContentProps.ts"
         },
         {
@@ -4105,18 +3938,10 @@
         },
         {
           "name": "border",
-          "type": "Boolean | String | Number",
-          "default": "-",
+          "type": "Boolean",
+          "default": "true",
           "values": [],
-          "description": "Borde (boolean o clase de color).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunDrawer\\src\\composables\\kunDrawerProps.ts"
-        },
-        {
-          "name": "color",
-          "type": "String",
-          "default": "-",
-          "values": [],
-          "description": "Color de fondo.",
+          "description": "Borde del lado interior (`border-e/s/t/b border-default`); flotante → `ring ring-default`. Por defecto `true`.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunDrawer\\src\\composables\\kunDrawerProps.ts"
         },
         {
@@ -4192,10 +4017,10 @@
         },
         {
           "name": "rounded",
-          "type": "Boolean | String | Number",
+          "type": "Boolean",
           "default": "-",
           "values": [],
-          "description": "Redondeo de bordes.",
+          "description": "Redondeo lateral según el lado (`rounded-e-lg` / `rounded-s-lg`).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunDrawer\\src\\composables\\kunDrawerProps.ts"
         },
         {
@@ -4526,9 +4351,9 @@
         {
           "name": "iconSize",
           "type": "String",
-          "default": "'text-base'",
+          "default": "'size-4'",
           "values": [],
-          "description": "Tamaño de los íconos.",
+          "description": "Tamaño de los íconos (clase Tailwind, `size-4`).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunFileInput\\src\\composables\\kunFileInputProps.ts"
         },
         {
@@ -4642,15 +4467,15 @@
     },
     {
       "name": "KunIcon",
-      "description_es": "Ícono SVG del set KunUI.",
-      "description_en": "SVG icon from the KunUI set.",
+      "description_es": "Ícono desde Iconify (alias `$nombre`, colección `lucide` offline), clase, SVG o componente.",
+      "description_en": "Icon from Iconify (`$alias`, offline `lucide` collection), class, SVG or component.",
       "props": [
         {
           "name": "icon",
           "type": "KunIconInput",
           "default": "-",
           "values": [],
-          "description": "Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente o `[icono, tamaño]`.",
+          "description": "Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente, nombre Iconify (`i-mdi-home`, `mdi:home`) o `[icono, tamaño]`.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunIcon\\src\\composables\\kunIconProps.ts"
         },
         {
@@ -4658,23 +4483,15 @@
           "type": "Record<string, unknown>",
           "default": "(): Record<string",
           "values": [],
-          "description": "Aliases `$nombre` → icono/clase/componente. Pisan el set bundleado (`$star`, ...).",
+          "description": "Aliases `$nombre` → icono/clase/componente. Máxima prioridad: pisan a `kunConfig.icons` y al set bundleado (`$star`, ...).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunIcon\\src\\composables\\kunIconProps.ts"
         },
         {
           "name": "size",
-          "type": "String",
-          "default": "'text-md'",
+          "type": "string | number",
+          "default": "''",
           "values": [],
-          "description": "Tamaño (clase de texto o número → px).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunIcon\\src\\composables\\kunIconProps.ts"
-        },
-        {
-          "name": "color",
-          "type": "String",
-          "default": "'text-font-color'",
-          "values": [],
-          "description": "Color del ícono.",
+          "description": "Tamaño: clase Tailwind (`size-5`, `text-xl`) o número → px (ancho/alto). Vacío = hereda el contexto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunIcon\\src\\composables\\kunIconProps.ts"
         },
         {
@@ -4847,22 +4664,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunList\\src\\composables\\kunListProps.ts"
         },
         {
-          "name": "bgList",
-          "type": "String",
-          "default": "'bg-transparent'",
-          "values": [],
-          "description": "Color de fondo del `<ul>`.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunList\\src\\composables\\kunListProps.ts"
-        },
-        {
-          "name": "borderColor",
-          "type": "String",
-          "default": "'border-ui'",
-          "values": [],
-          "description": "Color de borde del `<ul>`.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunList\\src\\composables\\kunListProps.ts"
-        },
-        {
           "name": "fontSize",
           "type": "String",
           "default": "'text-base'",
@@ -4975,14 +4776,6 @@
           "values": [],
           "description": "Texto alternativo.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListImg\\src\\composables\\kunListImgProps.ts"
-        },
-        {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-surface'",
-          "values": [],
-          "description": "Color de fondo mientras carga.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListImg\\src\\composables\\kunListImgProps.ts"
         }
       ],
       "emits": [],
@@ -5052,14 +4845,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
         },
         {
-          "name": "activeClass",
-          "type": "String",
-          "default": "'bg-surface-light'",
-          "values": [],
-          "description": "Clase cuando está activo o seleccionado.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
-        },
-        {
           "name": "selectable",
           "type": "Boolean",
           "default": "false",
@@ -5096,10 +4881,10 @@
         },
         {
           "name": "rounded",
-          "type": "Boolean | String",
+          "type": "Boolean",
           "default": "true",
           "values": [],
-          "description": "Redondeo (true = default, string = clase).",
+          "description": "Redondeo de escala (`rounded-md`). `tile` lo anula.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
         },
         {
@@ -5116,30 +4901,6 @@
           "default": "true",
           "values": [],
           "description": "Efecto ripple al hacer click.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
-        },
-        {
-          "name": "bgItems",
-          "type": "String",
-          "default": "'bg-transparent'",
-          "values": [],
-          "description": "Color de fondo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del texto.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
-        },
-        {
-          "name": "hoverBg",
-          "type": "String",
-          "default": "'hover:bg-surface-light'",
-          "values": [],
-          "description": "Fondo al pasar el mouse (solo si `selectable`).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
         },
         {
@@ -5233,7 +4994,7 @@
         {
           "name": "subtitleClass",
           "type": "String",
-          "default": "'text-sm text-ui-muted'",
+          "default": "'text-sm text-muted'",
           "values": [],
           "description": "Clase del subtítulo.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItem\\src\\composables\\kunListItemProps.ts"
@@ -5279,14 +5040,6 @@
           "default": "null",
           "values": [],
           "description": "Texto de la acción.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemAction\\src\\composables\\kunListItemActionProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del texto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemAction\\src\\composables\\kunListItemActionProps.ts"
         },
         {
@@ -5340,26 +5093,10 @@
         },
         {
           "name": "rounded",
-          "type": "String",
-          "default": "'rounded-full'",
+          "type": "'full' | 'none' | null",
+          "default": "null",
           "values": [],
-          "description": "Redondeo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemAvatar\\src\\composables\\kunListItemAvatarProps.ts"
-        },
-        {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-surface-light'",
-          "values": [],
-          "description": "Color de fondo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemAvatar\\src\\composables\\kunListItemAvatarProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui-inverse'",
-          "values": [],
-          "description": "Color del texto.",
+          "description": "Redondeo: 'full' | 'none'. `null` = circular (propio de avatar).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemAvatar\\src\\composables\\kunListItemAvatarProps.ts"
         },
         {
@@ -5389,14 +5126,6 @@
           "default": "null",
           "values": [],
           "description": "Texto del subtítulo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemSubtitle\\src\\composables\\kunListItemSubtitleProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui-muted'",
-          "values": [],
-          "description": "Color del texto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemSubtitle\\src\\composables\\kunListItemSubtitleProps.ts"
         },
         {
@@ -5445,14 +5174,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemText\\src\\composables\\kunListItemTextProps.ts"
         },
         {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui-muted'",
-          "values": [],
-          "description": "Color del texto.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemText\\src\\composables\\kunListItemTextProps.ts"
-        },
-        {
           "name": "fontWeight",
           "type": "String",
           "default": "'font-medium'",
@@ -5479,14 +5200,6 @@
           "default": "null",
           "values": [],
           "description": "Título a mostrar.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemTitle\\src\\composables\\kunListItemTitleProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del texto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemTitle\\src\\composables\\kunListItemTitleProps.ts"
         },
         {
@@ -5532,14 +5245,6 @@
           "default": "'text-xs'",
           "values": [],
           "description": "Tamaño del texto.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListSubheader\\src\\composables\\kunListSubheaderProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui-muted'",
-          "values": [],
-          "description": "Color del texto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListSubheader\\src\\composables\\kunListSubheaderProps.ts"
         },
         {
@@ -5612,14 +5317,6 @@
           "default": "-",
           "values": [],
           "description": "Clase extra del contenido.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunMenu\\src\\composables\\kunMenuProps.ts"
-        },
-        {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-menu'",
-          "values": [],
-          "description": "Color de fondo.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunMenu\\src\\composables\\kunMenuProps.ts"
         },
         {
@@ -5844,14 +5541,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunMenu\\src\\composables\\kunMenuProps.ts"
         },
         {
-          "name": "zIndex",
-          "type": "String | Number",
-          "default": "-",
-          "values": [],
-          "description": "Z-index del contenido.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunMenu\\src\\composables\\kunMenuProps.ts"
-        },
-        {
           "name": "submenu",
           "type": "Boolean",
           "default": "-",
@@ -5905,133 +5594,6 @@
       "models": []
     },
     {
-      "name": "KunModalFooter",
-      "description_es": "Pie de modal/diálogo con acciones.",
-      "description_en": "Modal/dialog footer with actions.",
-      "props": [
-        {
-          "name": "modelValue",
-          "type": "Boolean",
-          "default": "-",
-          "values": [],
-          "description": "Visibilidad del mensaje (v-model, requerido).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunModalFooterProps.ts"
-        },
-        {
-          "name": "id",
-          "type": "String | Number",
-          "default": "-",
-          "values": [],
-          "description": "Id del mensaje (se emite en `removeMessage`).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunModalFooterProps.ts"
-        },
-        {
-          "name": "message",
-          "type": "String",
-          "default": "\"Mensaje predeterminado\"",
-          "values": [],
-          "description": "Texto del mensaje.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunModalFooterProps.ts"
-        },
-        {
-          "name": "color",
-          "type": "KunModalFooterColor",
-          "default": "\"green\"",
-          "values": [
-            "blue",
-            "green",
-            "red",
-            "yellow",
-            "gray",
-            "orange"
-          ],
-          "description": "Color temático ('green' | 'blue' | 'red' | ...).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunModalFooterProps.ts"
-        },
-        {
-          "name": "width",
-          "type": "String",
-          "default": "\"300px\"",
-          "values": [],
-          "description": "Ancho del contenedor.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunModalFooterProps.ts"
-        },
-        {
-          "name": "height",
-          "type": "String",
-          "default": "\"auto\"",
-          "values": [],
-          "description": "Altura del contenedor ('auto' = contenido).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunModalFooterProps.ts"
-        },
-        {
-          "name": "isFixed",
-          "type": "Boolean",
-          "default": "false",
-          "values": [],
-          "description": "Posicionamiento fijo en viewport.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunModalFooterProps.ts"
-        },
-        {
-          "name": "messages",
-          "type": "Array",
-          "default": "() => []",
-          "values": [],
-          "description": "Lista de mensajes `{ id, text, color }` a mostrar apilados.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunMultipleModalFooterProps.ts"
-        },
-        {
-          "name": "position",
-          "type": "KunMultipleModalFooterPosition",
-          "default": "\"bottom-right\"",
-          "values": [
-            "bottom-left",
-            "bottom-right",
-            "bottom-center",
-            "top-left",
-            "top-right",
-            "top-center"
-          ],
-          "description": "Esquina del viewport donde se apilan.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunMultipleModalFooterProps.ts"
-        },
-        {
-          "name": "stackDirection",
-          "type": "KunMultipleModalFooterStackDirection",
-          "default": "\"bottom-to-top\"",
-          "values": [
-            "bottom-to-top",
-            "top-to-bottom"
-          ],
-          "description": "Dirección de apilado: 'bottom-to-top' | 'top-to-bottom'.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunMultipleModalFooterProps.ts"
-        },
-        {
-          "name": "width",
-          "type": "String",
-          "default": "\"300px\"",
-          "values": [],
-          "description": "Ancho de cada mensaje.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunMultipleModalFooterProps.ts"
-        },
-        {
-          "name": "height",
-          "type": "String",
-          "default": "\"auto\"",
-          "values": [],
-          "description": "Altura de cada mensaje ('auto' = contenido).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunModalFooter\\src\\composables\\kunMultipleModalFooterProps.ts"
-        }
-      ],
-      "emits": [
-        "update:modelValue",
-        "removeMessage"
-      ],
-      "slots": [],
-      "expose": [],
-      "models": []
-    },
-    {
       "name": "KunNumberField",
       "description_es": "Campo numérico con formato localizado (modos natural/bank).",
       "description_en": "Localized numeric input (natural/bank modes).",
@@ -6058,22 +5620,6 @@
           "default": "''",
           "values": [],
           "description": "Etiqueta flotante (mismo sistema que KunTextField).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
-        },
-        {
-          "name": "labelColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del label en reposo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
-        },
-        {
-          "name": "floatingLabelColor",
-          "type": "string | null",
-          "default": "null",
-          "values": [],
-          "description": "Color del label flotando (null = usa `labelColor`).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
         },
         {
@@ -6215,25 +5761,9 @@
         {
           "name": "rounded",
           "type": "String",
-          "default": "'rounded'",
+          "default": "'rounded-md'",
           "values": [],
-          "description": "Redondeo del contenedor.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
-        },
-        {
-          "name": "borderColor",
-          "type": "String",
-          "default": "'border-ui'",
-          "values": [],
-          "description": "Color del borde.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del texto del valor.",
+          "description": "Redondeo del contenedor (clase de escala, `rounded-md` por defecto).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
         },
         {
@@ -6253,14 +5783,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
         },
         {
-          "name": "placeholderColor",
-          "type": "String",
-          "default": "'placeholder-ui'",
-          "values": [],
-          "description": "Color del placeholder.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
-        },
-        {
           "name": "placeholderTextSize",
           "type": "string | null",
           "default": "null",
@@ -6274,14 +5796,6 @@
           "default": "''",
           "values": [],
           "description": "Clase libre para el input.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
-        },
-        {
-          "name": "bgInput",
-          "type": "String",
-          "default": "'bg-field-background'",
-          "values": [],
-          "description": "Color de fondo del contenedor.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
         },
         {
@@ -7124,11 +6638,11 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
         },
         {
-          "name": "btnCreateBg",
-          "type": "String",
-          "default": "'bg-success'",
+          "name": "btnCreateColor",
+          "type": "KunColor",
+          "default": "'success'",
           "values": [],
-          "description": "Color del botón crear.",
+          "description": "Color semántico del botón crear.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
         },
         {
@@ -7200,14 +6714,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
         },
         {
-          "name": "zIndex",
-          "type": "String",
-          "default": "'z-250'",
-          "values": [],
-          "description": "Z-index del menú.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
-        },
-        {
           "name": "hideDetails",
           "type": "Boolean",
           "default": "true",
@@ -7234,7 +6740,7 @@
         {
           "name": "iconColor",
           "type": "String",
-          "default": "'text-ui-primary'",
+          "default": "'text-primary'",
           "values": [],
           "description": "Color del ícono desplegar.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
@@ -7242,7 +6748,7 @@
         {
           "name": "requiredIconColor",
           "type": "String",
-          "default": "'text-ui-primary'",
+          "default": "'text-error'",
           "values": [],
           "description": "Color del asterisco de requerido.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
@@ -7250,41 +6756,9 @@
         {
           "name": "emptyTextClass",
           "type": "String",
-          "default": "'text-ui-muted'",
+          "default": "'text-muted'",
           "values": [],
           "description": "Clase del texto \"sin elementos\".",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
-        },
-        {
-          "name": "bgMenuColor",
-          "type": "String",
-          "default": "'bg-menu'",
-          "values": [],
-          "description": "Color de fondo del menú.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
-        },
-        {
-          "name": "bgItemListColor",
-          "type": "String",
-          "default": "'bg-transparent'",
-          "values": [],
-          "description": "Color de fondo de cada opción.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
-        },
-        {
-          "name": "selectedItemListColor",
-          "type": "String",
-          "default": "'bg-ui-selection text-ui-selection'",
-          "values": [],
-          "description": "Clase de la opción seleccionada.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
-        },
-        {
-          "name": "hoverItemListColor",
-          "type": "String",
-          "default": "'hover:bg-ui-selection-hover'",
-          "values": [],
-          "description": "Clase hover de cada opción.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSelect\\src\\composables\\KunSelectProps.ts"
         },
         {
@@ -7397,7 +6871,7 @@
         {
           "name": "colorFrom",
           "type": "String",
-          "default": "\"bg-ui-hover\"",
+          "default": "\"bg-muted\"",
           "values": [],
           "description": "Clase de fondo base del placeholder.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
@@ -7405,7 +6879,7 @@
         {
           "name": "colorTo",
           "type": "String",
-          "default": "\"bg-ui-hover\"",
+          "default": "\"bg-accented\"",
           "values": [],
           "description": "Reservado para compatibilidad. Actualmente sin efecto (el brillo deriva de la superficie elevada).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSkeleton\\src\\composables\\kunSkeletonProps.ts"
@@ -7725,7 +7199,7 @@
         {
           "name": "offColor",
           "type": "String",
-          "default": "'bg-surface-light'",
+          "default": "'bg-accented'",
           "values": [],
           "description": "Color del track en estado inactivo.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSwitch\\src\\composables\\kunSwitchProps.ts"
@@ -7733,7 +7207,7 @@
         {
           "name": "iconColor",
           "type": "String",
-          "default": "'bg-ui-surface-raised'",
+          "default": "'bg-inverted'",
           "values": [],
           "description": "Color del thumb.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunSwitch\\src\\composables\\kunSwitchProps.ts"
@@ -8086,7 +7560,7 @@
         {
           "name": "selectedClass",
           "type": "String",
-          "default": "'bg-ui-selection text-ui-selection'",
+          "default": "'bg-accented text-default'",
           "values": [],
           "description": "Clase de filas seleccionadas.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTable\\src\\composables\\KunTableProps.ts"
@@ -8454,7 +7928,7 @@
         {
           "name": "border",
           "type": "String",
-          "default": "'border border-ui'",
+          "default": "'border border-default'",
           "values": [],
           "description": "Borde de la tarjeta.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTable\\src\\composables\\kunTableIteratorProps.ts"
@@ -8965,27 +8439,11 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabsProps.ts"
         },
         {
-          "name": "bgColor",
-          "type": "String",
-          "default": "''",
-          "values": [],
-          "description": "Color de fondo de la barra.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabsProps.ts"
-        },
-        {
-          "name": "color",
-          "type": "String",
-          "default": "-",
-          "values": [],
-          "description": "Color de los tabs (reservado, sin efecto).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabsProps.ts"
-        },
-        {
           "name": "sliderColor",
           "type": "String",
           "default": "'bg-primary'",
           "values": [],
-          "description": "Color del slider indicador.",
+          "description": "Color del slider indicador (clase `bg-*` del theme).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabsProps.ts"
         },
         {
@@ -9135,7 +8593,7 @@
         {
           "name": "baseColor",
           "type": "String",
-          "default": "'text-ui-muted'",
+          "default": "'text-muted'",
           "values": [],
           "description": "Color cuando no está seleccionado.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTabs\\src\\composables\\kunTabProps.ts"
@@ -9281,22 +8739,6 @@
           "default": "-",
           "values": [],
           "description": "Clase extra del textarea.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
-        },
-        {
-          "name": "bgColor",
-          "type": "String",
-          "default": "-",
-          "values": [],
-          "description": "Color de fondo (se usa si la variante no lo define).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "-",
-          "values": [],
-          "description": "Color del texto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
         },
         {
@@ -9598,10 +9040,10 @@
         },
         {
           "name": "rounded",
-          "type": "String | Number",
-          "default": "-",
+          "type": "String",
+          "default": "'rounded-md'",
           "values": [],
-          "description": "Redondeo (string/number = clase `rounded-<valor>`).",
+          "description": "Redondeo (clase de escala, `rounded-md` por defecto).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
         },
         {
@@ -9613,27 +9055,11 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
         },
         {
-          "name": "color",
-          "type": "String",
-          "default": "-",
-          "values": [],
-          "description": "Color de acento (foco).",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
-        },
-        {
-          "name": "focusRingColor",
-          "type": "String",
-          "default": "'ring-ui-focus'",
-          "values": [],
-          "description": "Color del anillo de foco.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
-        },
-        {
           "name": "loadingColor",
           "type": "String",
           "default": "-",
           "values": [],
-          "description": "Color de la barra de carga.",
+          "description": "Color de la barra de carga (clase `bg-*` del theme).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextarea\\src\\composables\\kunTextareaProps.ts"
         },
         {
@@ -9790,41 +9216,9 @@
         {
           "name": "rounded",
           "type": "String",
-          "default": "'rounded'",
+          "default": "'rounded-md'",
           "values": [],
-          "description": "Redondeo del contenedor.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
-        },
-        {
-          "name": "borderColor",
-          "type": "String",
-          "default": "'border-ui'",
-          "values": [],
-          "description": "Color del borde.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
-        },
-        {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del texto del valor.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
-        },
-        {
-          "name": "labelColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del label en reposo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
-        },
-        {
-          "name": "floatingLabelColor",
-          "type": "string | null",
-          "default": "null",
-          "values": [],
-          "description": "Color del label flotando (null = usa `labelColor`).",
+          "description": "Redondeo del contenedor (clase de escala, `rounded-md` por defecto).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
         },
         {
@@ -9892,14 +9286,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
         },
         {
-          "name": "placeholderColor",
-          "type": "String",
-          "default": "'placeholder-ui'",
-          "values": [],
-          "description": "Color del placeholder.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
-        },
-        {
           "name": "inputTextSize",
           "type": "string | null",
           "default": "null",
@@ -9921,14 +9307,6 @@
           "default": "null",
           "values": [],
           "description": "Tamaño del placeholder ('text-lg' o 'placeholder:text-lg').",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
-        },
-        {
-          "name": "bgInput",
-          "type": "String",
-          "default": "'bg-field-background'",
-          "values": [],
-          "description": "Color de fondo del contenedor.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
         },
         {
@@ -10194,6 +9572,14 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToastProps.ts"
         },
         {
+          "name": "avatar",
+          "type": "String",
+          "default": "''",
+          "values": [],
+          "description": "URL de imagen para el avatar (tiene prioridad visual sobre `icon`). Ignorado si el slot `#leading` está presente.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToastProps.ts"
+        },
+        {
           "name": "icon",
           "type": "string | Record<string, any> | Function | unknown[] | boolean | null",
           "default": "null",
@@ -10232,7 +9618,7 @@
           "type": "number | null",
           "default": "null",
           "values": [],
-          "description": "Duración en ms (0 = sin auto-dismiss, null = global del Toaster).",
+          "description": "Duración en ms (0 = sin auto-dismiss; null = duración global del Toaster).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToastProps.ts"
         },
         {
@@ -10292,6 +9678,14 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToastProps.ts"
         },
         {
+          "name": "remainingTime",
+          "type": "Number",
+          "default": "0",
+          "values": [],
+          "description": "Estado interno: ms restantes del auto-dismiss; de aquí se deriva la barra de progreso (gestionado por KunToaster). No pasar manualmente.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToastProps.ts"
+        },
+        {
           "name": "ui",
           "type": "Record<string, string>",
           "default": "() => ({\n      root: '',\n      wrapper: '',\n      title: '',\n      descriptio...",
@@ -10311,7 +9705,7 @@
             "bottom-center",
             "bottom-right"
           ],
-          "description": "Posición del toaster en el viewport",
+          "description": "Posición de los toasts en el viewport.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToasterProps.ts"
         },
         {
@@ -10319,7 +9713,7 @@
           "type": "Number",
           "default": "5000",
           "values": [],
-          "description": "Duración global por defecto en ms",
+          "description": "Duración global por defecto (ms) para toasts creados sin `duration` propio. Reactiva: reconfigura el sistema en caliente.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToasterProps.ts"
         },
         {
@@ -10327,23 +9721,31 @@
           "type": "Number",
           "default": "5",
           "values": [],
-          "description": "Máximo número de toasts visibles simultáneamente",
+          "description": "Máximo de toasts retenidos simultáneamente. Reactiva.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToasterProps.ts"
         },
         {
           "name": "expand",
           "type": "Boolean",
-          "default": "false",
+          "default": "true",
           "values": [],
-          "description": "Modo expandible (stacked)",
+          "description": "Muestra todos los toasts apilados. Si es `false`, se colapsa al más nuevo y se expande al hacer hover (patrón Nuxt UI).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToasterProps.ts"
         },
         {
-          "name": "zIndex",
-          "type": "String | Number",
-          "default": "3000",
+          "name": "progress",
+          "type": "Boolean",
+          "default": "true",
           "values": [],
-          "description": "Z-index del contenedor",
+          "description": "Valor por defecto de la barra de progreso para toasts creados sin `progress` propio. Reactiva.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToasterProps.ts"
+        },
+        {
+          "name": "portal",
+          "type": "boolean | string | HTMLElement",
+          "default": "true",
+          "values": [],
+          "description": "Renderiza los toasts en un portal. `true` = `<body>`, `false` = en su lugar, o un selector/HTMLElement destino.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToasterProps.ts"
         },
         {
@@ -10351,7 +9753,7 @@
           "type": "String",
           "default": "''",
           "values": [],
-          "description": "Clase personalizada del contenedor",
+          "description": "Clase personalizada del contenedor.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToast\\src\\composables\\kunToasterProps.ts"
         }
       ],
@@ -10384,14 +9786,6 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToolbar\\src\\composables\\kunToolbarProps.ts"
         },
         {
-          "name": "bgColor",
-          "type": "String",
-          "default": "-",
-          "values": [],
-          "description": "Color de fondo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToolbar\\src\\composables\\kunToolbarProps.ts"
-        },
-        {
           "name": "titlePosition",
           "type": "KunToolbarTitlePosition",
           "default": "'left'",
@@ -10406,17 +9800,9 @@
         {
           "name": "bordered",
           "type": "Boolean",
-          "default": "false",
+          "default": "true",
           "values": [],
-          "description": "Muestra borde inferior.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToolbar\\src\\composables\\kunToolbarProps.ts"
-        },
-        {
-          "name": "borderColor",
-          "type": "String",
-          "default": "-",
-          "values": [],
-          "description": "Color del borde.",
+          "description": "Muestra borde inferior (`border-b border-default`). Por defecto `true`.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToolbar\\src\\composables\\kunToolbarProps.ts"
         },
         {
@@ -10498,10 +9884,10 @@
         },
         {
           "name": "rounded",
-          "type": "String | Boolean",
+          "type": "Boolean",
           "default": "-",
           "values": [],
-          "description": "Redondeo (true = default).",
+          "description": "Redondeo (`rounded-lg`). `tile` lo anula.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunToolbar\\src\\composables\\kunToolbarProps.ts"
         },
         {
@@ -10700,27 +10086,11 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTooltip\\src\\composables\\kunTooltipProps.ts"
         },
         {
-          "name": "textColor",
-          "type": "String",
-          "default": "'text-ui'",
-          "values": [],
-          "description": "Color del texto.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTooltip\\src\\composables\\kunTooltipProps.ts"
-        },
-        {
-          "name": "bgColor",
-          "type": "String",
-          "default": "'bg-surface-dark'",
-          "values": [],
-          "description": "Color de fondo.",
-          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTooltip\\src\\composables\\kunTooltipProps.ts"
-        },
-        {
           "name": "rounded",
           "type": "String",
-          "default": "'rounded'",
+          "default": "'rounded-sm'",
           "values": [],
-          "description": "Redondeo.",
+          "description": "Redondeo (clase de escala, `rounded-sm` por defecto).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTooltip\\src\\composables\\kunTooltipProps.ts"
         },
         {

@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :class="[
-        'absolute z-10 px-1 text-ui transition-all duration-200 ease-in-out pointer-events-none select-none',
+        'absolute z-10 px-1 text-default transition-all duration-200 ease-in-out pointer-events-none select-none',
         labelLeftClass,
         isLabelActive ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80',
       ]"
@@ -12,14 +12,14 @@
     </label>
 
     <div
-      class="flex items-center gap-2 rounded px-3 py-2 cursor-pointer transition"
+      class="flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer transition"
       :class="[
-        variant === 'outlined' ? 'border border-ui' :
-        variant === 'solo' ? 'border-ui shadow-inner' :
-        'bg-surface border border-ui',
-        disabled ? 'border-ui cursor-not-allowed' : 'hover:border-ui-primary',
-        error || validationErrors.length || externalErrorList.length ? 'border-error' : '',
-        isFocused ? 'ring-2 ring-ui-focus' : '',
+        variant === 'outlined' ? 'bg-default ring ring-inset ring-accented' :
+        variant === 'solo' ? 'bg-elevated shadow-inner ring ring-inset ring-accented' :
+        'bg-default ring ring-inset ring-accented',
+        disabled ? 'cursor-not-allowed' : 'hover:ring-primary',
+        error || validationErrors.length || externalErrorList.length ? 'ring-error' : '',
+        isFocused ? 'ring-2 ring-primary/25' : '',
       ]"
       v-bind="$attrs" 
       @click="() => inputRef?.click()"
@@ -50,10 +50,10 @@
       <div class="flex-1 truncate">
         <slot name="selection" :fileNames="fileNames" :totalBytes="totalBytes" :totalBytesReadable="totalBytesReadable">
           <span v-if="chips && fileNames.length" class="flex flex-wrap gap-1">
-            <span v-for="(name, i) in fileNames" :key="i" class="inline-flex max-w-full items-center truncate rounded bg-ui-selection px-2 py-0.5 text-xs">{{ name }}</span>
+            <span v-for="(name, i) in fileNames" :key="i" class="inline-flex max-w-full items-center truncate rounded-sm bg-accented px-2 py-0.5 text-xs">{{ name }}</span>
           </span>
           <span v-else-if="fileNames.length">{{ fileNames.join(', ') }}</span>
-          <span v-else class="text-ui-disabled">Seleccionar archivo</span>
+          <span v-else class="text-disabled">Seleccionar archivo</span>
         </slot>
       </div>
 
@@ -72,23 +72,23 @@
       <button
         v-if="clearable && fileNames.length"
         @click.stop="clearFiles"
-        class="cursor-pointer text-ui-muted hover:text-ui-error"
+        class="cursor-pointer text-muted hover:text-error"
       >
-        <KunIcon :icon="clearIcon || icons.close" :size="iconSize" :disabled="disabled" />
+        <KunIcon :icon="clearIcon || '$close'" :size="iconSize" :disabled="disabled" />
       </button>
     </div>
 
     <div v-if="(hint && (persistentHint || isFocused)) || validationErrors.length || externalErrorList.length" class="mt-1 text-sm">
-      <div v-if="validationErrors.length || externalErrorList.length" class="text-ui-error">
+      <div v-if="validationErrors.length || externalErrorList.length" class="text-error">
         <div v-for="(msg, i) in validationErrors" :key="i">{{ msg }}</div>
         <div v-for="(msg, i) in externalErrorList" :key="`ext-${i}`">{{ msg }}</div>
       </div>
-      <div v-else-if="hint && (persistentHint || isFocused)" class="text-ui-muted">
+      <div v-else-if="hint && (persistentHint || isFocused)" class="text-muted">
         {{ hint }}
       </div>
     </div>
 
-    <div v-if="counter" class="mt-1 text-xs text-ui-disabled text-right">
+    <div v-if="counter" class="mt-1 text-xs text-disabled text-right">
       {{ counterString ?? `${fileNames.length} archivo(s)` }}
       <span v-if="showSize"> — {{ counterSizeString ?? totalBytesReadable }}</span>
     </div>
@@ -97,7 +97,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, useSlots, type Ref, type ComputedRef } from 'vue'
-import { icons } from '@/icons/index.js'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { kunFileInputProps } from '../composables/kunFileInputProps.js'
 

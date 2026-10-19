@@ -45,17 +45,23 @@ export interface KunFieldNotchApi {
 }
 
 // Desplazamiento: 2px por escalón de la escala, desde `rounded-none`.
+// Alineada a la escala real de Tailwind v4 + bridge KunUI (`--kun-radius: .25rem`):
+// none=0 · sm=1×4px · md=1.5×=6px · lg=2×=8px · xl=3×=12px · 2xl=4×=16px ·
+// 3xl=6×=24px · full. `rounded` pelado NO se usa (equivale a 0.25rem = sm).
 const ROUNDED_SHIFT_PX = 2;
-const ROUNDED_SCALE: string[] = ['rounded-none', 'rounded-sm', 'rounded', 'rounded-md', 'rounded-lg', 'rounded-xl', 'rounded-2xl', 'rounded-3xl', 'rounded-full'];
-// Radios estándar en px (Tailwind, raíz 16px) para el fallback por medición.
-const ROUNDED_STEPS_PX = [0, 2, 4, 6, 8, 12, 16, 24];
+const ROUNDED_SCALE: string[] = ['rounded-none', 'rounded-sm', 'rounded-md', 'rounded-lg', 'rounded-xl', 'rounded-2xl', 'rounded-3xl', 'rounded-full'];
+// Radios estándar en px (Tailwind v4, raíz 16px) por índice de `ROUNDED_SCALE`
+// (índice 7 = `rounded-full`, se resuelve por medición/pill, no por paso).
+const ROUNDED_STEPS_PX = [0, 4, 6, 8, 12, 16, 24];
 
 // Índice de `rounded` en la escala. Clases no listadas (p. ej.
 // `rounded-[10px]` o radios por esquina): fallback al radio superior
 // izquierdo medido → paso estándar más cercano (un radio que desborda la
 // caja se comporta como pill → último escalón).
 function roundedStepIndex(roundedClass: string | undefined, overlay: HTMLDivElement | null): number {
-  const direct = ROUNDED_SCALE.indexOf((roundedClass || '').trim());
+  // Compat: `rounded` pelado (0.25rem) == escalón `rounded-sm`.
+  const normalized = (roundedClass || '').trim();
+  const direct = ROUNDED_SCALE.indexOf(normalized === 'rounded' ? 'rounded-sm' : normalized);
   if (direct >= 0) return direct;
   if (!overlay || typeof getComputedStyle === 'undefined') return 0;
   const first = ((getComputedStyle(overlay).borderTopLeftRadius || '0px').trim().split(/[\s,]+/)[0]) || '0px';

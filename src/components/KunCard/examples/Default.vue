@@ -57,11 +57,8 @@ const elevationOptions = ref([
 ])
 
 // ------------------------------------------------------------------
-// Texto / color / tag
+// Tag
 // ------------------------------------------------------------------
-const textColor = ref('text-ui')
-const bgColor = ref('bg-white')
-const outlineColor = ref('border-ui')
 const tag = ref('div')
 
 // ------------------------------------------------------------------
@@ -133,12 +130,9 @@ function logEvent(name: string, detail: unknown): void {
         :title-size="titleSize || null"
         :subtitle="subtitle || null"
         :text="text || null"
-        :text-color="textColor"
-        :bg-color="bgColor"
         :flat="flat"
         :rounded="rounded"
         :outlined="outlined"
-        :outline-color="outlineColor"
         :elevation="elevation"
         :to="toProp"
         :href="hrefProp"
@@ -169,14 +163,14 @@ function logEvent(name: string, detail: unknown): void {
         <template #actions>
           <button
             type="button"
-            class="px-3 py-1.5 text-sm rounded border border-ui"
+            class="px-3 py-1.5 text-sm rounded-lg border border-default"
             @click="logEvent('action', 'Cancelar')"
           >
             Cancelar
           </button>
           <button
             type="button"
-            class="px-3 py-1.5 text-sm rounded bg-primary text-white"
+            class="px-3 py-1.5 text-sm rounded-md bg-primary text-white"
             @click="logEvent('action', 'Aceptar')"
           >
             Aceptar
@@ -184,29 +178,29 @@ function logEvent(name: string, detail: unknown): void {
         </template>
       </KunCard>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">Estado en crudo</div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">Estado en crudo</div>
         <div>{{ JSON.stringify({ title, variant, density, loading, scrollable }) }}</div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Hacé click en la tarjeta o en sus acciones para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Hacé click en la tarjeta o en sus acciones para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra la tarjeta) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Contenido</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Contenido</p>
         <KunTextField v-model="title" label="Title (vacío = null)" density="compact" />
         <KunTextField v-model="subtitle" label="Subtitle (vacío = null)" density="compact" />
         <KunTextField v-model="text" label="Text (vacío = null)" density="compact" />
@@ -214,7 +208,7 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="image" label="Image URL" density="compact" />
         <KunSwitch v-model="showImage" label="Mostrar imagen" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Variante y densidad</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Variante y densidad</p>
         <KunSelect
           v-model="variant"
           v-model:items="variantOptions"
@@ -248,13 +242,10 @@ function logEvent(name: string, detail: unknown): void {
           density="compact"
         />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Colores y tag</p>
-        <KunTextField v-model="textColor" label="Text color" density="compact" />
-        <KunTextField v-model="bgColor" label="Background color" density="compact" />
-        <KunTextField v-model="outlineColor" label="Outline color" density="compact" />
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Tag</p>
         <KunTextField v-model="tag" label="Tag" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Medidas (vacío = null)</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Medidas (vacío = null)</p>
         <KunTextField v-model="height" label="Height (ej. 240px)" density="compact" />
         <KunTextField v-model="width" label="Width (ej. 320px)" density="compact" />
         <KunTextField v-model="maxHeight" label="Max height" density="compact" />
@@ -263,18 +254,18 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="minWidth" label="Min width" density="compact" />
         <KunTextField v-model="position" label="Position (clase Tailwind)" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Header: iconos y avatares</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Header: iconos y avatares</p>
         <KunTextField v-model="prependIcon" label="Prepend icon (vacío = null)" density="compact" />
         <KunTextField v-model="appendIcon" label="Append icon (vacío = null)" density="compact" />
         <KunTextField v-model="prependAvatar" label="Prepend avatar URL" density="compact" />
         <KunTextField v-model="appendAvatar" label="Append avatar URL" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Enlace</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Enlace</p>
         <KunTextField v-model="toRaw" label="To (vacío = sin ruta)" density="compact" />
         <KunTextField v-model="hrefRaw" label="Href (vacío = sin URL)" density="compact" />
         <KunSwitch v-model="replace" label="Replace (solo con to)" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Estado</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Estado</p>
         <KunSwitch v-model="flat" label="Flat (sin sombra)" />
         <KunSwitch v-model="outlined" label="Outlined" />
         <KunSwitch v-model="disabled" label="Disabled" />

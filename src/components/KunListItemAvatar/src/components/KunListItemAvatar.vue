@@ -1,7 +1,7 @@
 <template>
   <div
     class="kun-list-item-avatar"
-    :class="[sizeClass, rounded, bgColor, textColor, fontWeight]"
+    :class="[sizeClass, rounded === 'none' ? 'rounded-none' : 'rounded-full', 'bg-muted text-default', fontWeight]"
     v-bind="$attrs"
   >
     <slot>

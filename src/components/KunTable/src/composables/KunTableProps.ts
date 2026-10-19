@@ -113,7 +113,7 @@ export default () => ({
     /** Clase de las celdas (string o `(item) => clase`). */
     tdClass: { type: [String, Function] as PropType<string | ((item: TableItem) => string)>, default: '' },
     /** Clase de filas seleccionadas. */
-    selectedClass: { type: String, default: 'bg-ui-selection text-ui-selection' },
+    selectedClass: { type: String, default: 'bg-accented text-default' },
     /** Clase de filas alternas. */
     stripedClass: { type: String, default: '' },
     /** Clase del `<tfoot>`. */

@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { kunBadgeProps } from '../composables/kunBadgeProps.js'
+import { kunVariantClasses } from '../../../../theme/kunVariants.js'
 
 const props = defineProps(kunBadgeProps);
 
@@ -22,11 +23,12 @@ defineOptions({ inheritAttrs: false })
 
 const computedClass = computed(() => [
   'px-2 py-1 min-w-[20px] min-h-[20px] flex items-center justify-center',
-  props.bgColor,
-  props.textColor,
+  kunVariantClasses(props.color, 'solid'),
+  props.rounded === 'none'
+    ? 'rounded-none'
+    : props.pill || props.rounded === 'full' ? 'rounded-full' : 'rounded-sm',
   props.textSize,
   props.fontWeight,
-  props.rounded,
   props.cursor
 ].filter(Boolean))
 

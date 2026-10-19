@@ -178,11 +178,15 @@ export function useKunMenuStyles(
             opacity: '1',
             pointerEvents: 'auto',
             transform: 'scale(1)',
-            zIndex: '99999',
+            zIndex: 'var(--kun-z-overlay)',
             maxWidth: `${viewportWidth - margin * 2}px`,
-            // Flip nativo arriba/abajo + clamp horizontal; auto-hide si el
-            // ancla sale del viewport (mata el menú flotando despegado).
-            'position-try-fallbacks': 'flip-block flip-inline',
+            // Flip nativo independiente por eje: opciones SEPARADAS por coma
+            // (espacio = un único tactic que voltea ambos ejes a la vez y, con
+            // el ancla en una esquina, se descarta y nunca corrige el borde).
+            // 1) flip arriba/abajo solo  2) flip izq/der solo  3) ambos.
+            // `anchors-visible` auto-oculta si el ancla sale del viewport (mata
+            // el menú flotando despegado).
+            'position-try-fallbacks': 'flip-block, flip-inline, flip-block flip-inline',
             'position-visibility': 'anchors-visible',
         };
 

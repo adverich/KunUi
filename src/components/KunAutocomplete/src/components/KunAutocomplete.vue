@@ -2,7 +2,7 @@
   <div class="w-full h-fit" ref="parentRef">
     <KunTextField v-model="search" v-bind="textFieldProps" :label="label" :disabled="disabled" :readonly="readonly" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
       :input-text-size="resolvedInputTextSize"
-      autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
+      autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-md rounded-b-none' : 'rounded-md'"
       @blur="textFieldBlur" @keyDown="textKeyDown" @keyDown.enter.prevent="handleEnter"
       :placeholder="props.multiple && isArray(modelValue) && (modelValue as unknown[]).length ? '' : placeholder"
       :error="!!internalError" :error-messages="internalError"
@@ -15,14 +15,13 @@
           @click="!disabled && toggleMenu()"
         >
           <template v-for="(item, idx) in (modelValue as unknown[])" :key="typeof item === 'object' && item !== null ? ((item as any).id ?? (item as any).name ?? idx) : ((item as string) ?? idx)">
-            <KunChip v-show="idx < visibleCount" :data-chip="idx" size="small" variant="pill" class="shrink-0">
+            <KunChip v-show="idx < visibleCount" :data-chip="idx" size="small" pill class="shrink-0">
               <div class="flex items-center">
                 {{ getArrayText(item) }}
                 <KunIcon
-                  color="error"
                   :icon="icons.close"
-                  size="small"
-                  class="ml-1"
+                  size="size-4"
+                  class="ml-1 text-error"
                   @click.stop="removeItem(item)"
                 />
               </div>
@@ -31,7 +30,7 @@
           <KunChip
             v-if="hiddenCount > 0"
             size="small"
-            variant="pill"
+            pill
             class="shrink-0"
             :title="hiddenNames"
           >
@@ -41,19 +40,19 @@
       </template>
 
       <template v-if="hasIcons" v-slot:append-inner>
-        <KunIcon v-if="clearable && modelValue" @click="clearSelection" size="small" color="error" :icon="icons.close"
-          class="mr-1 mt-1" />
-        <KunIcon :color="iconColor" size="large" class="cursor-pointer"
+        <KunIcon v-if="clearable && modelValue" @click="clearSelection" size="size-4" :icon="icons.close"
+          class="mr-1 mt-1 text-error" />
+        <KunIcon :class="[iconColor, 'cursor-pointer']" size="size-5"
           :icon="menuModel ? icons.menuUpOutline : icons.menuDownOutline" @click.stop="openMenu" />
-        <KunIcon v-if="required" :color="requiredIconColor" size="x-small" class="mb-4" :icon="icons.asterisk" />
+        <KunIcon v-if="required" :class="[requiredIconColor, 'mb-4']" size="size-3" :icon="icons.asterisk" />
       </template>
 
-      <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :z-index="zIndex"
-        :parent-ref="(parentRef as any)" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor"
+      <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent"
+        :parent-ref="(parentRef as any)" :origin="menuOrigin" @handleEscape="handleEscape"
         :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight ?? undefined" :hide-details="hideDetails"
       >
-        <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b bg-select-background">
-          <KunBtn ref="createBtnRef" @click="createItem" @keydown="handleCreateBtnKeydown" :bgColor="btnCreateBg" :class="btnCreateClass" >
+        <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b border-muted bg-muted">
+          <KunBtn ref="createBtnRef" @click="createItem" @keydown="handleCreateBtnKeydown" :color="btnCreateColor" :class="btnCreateClass" >
             {{ btnCreateText }}
           </KunBtn>
         </div>
@@ -63,8 +62,7 @@
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="sp">
             <template v-if="!(sp as any).empty && ((sp as any).item !== undefined && (sp as any).item !== null)">
               <KunListItem :value="(sp as any).item" :key="`kun-list-${(sp as any).index + 1}`" :id="`kun-item-${(sp as any).index + 1}`" :disabled="checkDisabled((sp as any).item)"
-              :bg-items="bgItemListColor" :hover-bg="hoverItemListColor" :activeClass="selectedItemListColor"
-              :density="density" :selectable="true" :active="isItemSelected((sp as any).item)" rounded="none">
+              :density="density" :selectable="true" :active="isItemSelected((sp as any).item)" :rounded="false">
                 <KunListItemTitle class="text-wrap" :font-size="itemFontSize">
                   {{ itemToString((sp as any).item, itemTitle ?? textArr, 'hasDefault') }}
                 </KunListItemTitle>

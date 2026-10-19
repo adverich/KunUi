@@ -10,7 +10,7 @@
             :aria-label="$attrs['aria-label'] || label || 'Abrir calendario'"
             :aria-expanded="isOpen"
             aria-haspopup="dialog"
-            variant="plain"
+            variant="ghost"
             size="md"
             @click="togglePopover"
         />
@@ -35,7 +35,7 @@
             hide-details
         >
             <template #append-inner>
-                <div class="cursor-pointer text-ui-muted hover:text-ui transition-colors" @click.stop="togglePopover">
+                <div class="cursor-pointer text-muted hover:text-default transition-colors" @click.stop="togglePopover">
                     <svg v-if="mode === 'time'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -59,22 +59,22 @@
                 <div
                     v-if="isOpen"
                     ref="popoverRef"
-                    class="fixed shadow-2xl rounded-xl border border-ui bg-ui-surface-raised text-ui flex flex-col font-sans select-none overflow-hidden"
+                    class="fixed shadow-2xl rounded-lg ring ring-default bg-default text-default flex flex-col font-sans select-none overflow-hidden"
                     :class="[dialogClass]"
                     :style="[popoverStyle, dimensionsStyle]"
                     @click.stop
                 >
                     <!-- Header (Month/Year Navigation) -->
-                    <div v-if="mode !== 'time'" class="px-2 py-3 flex items-center justify-between border-b border-ui-subtle bg-ui-surface-subtle flex-shrink-0">
-                        <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-ui-hover transition-colors text-ui-muted focus:outline-none focus:ring-2 ring-ui-focus" @click="changeMonth(-1)">
+                    <div v-if="mode !== 'time'" class="px-2 py-3 flex items-center justify-between border-b border-muted bg-muted flex-shrink-0">
+                        <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-accented transition-colors text-muted focus:outline-none focus:ring-2 ring-primary/25" @click="changeMonth(-1)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                             </svg>
                         </button>
-                        <div class="font-semibold text-ui cursor-pointer hover:bg-ui-hover px-3 py-1 rounded transition-colors text-center" @click="toggleViewMode">
+                        <div class="font-semibold text-default cursor-pointer hover:bg-accented px-3 py-1 rounded-md transition-colors text-center" @click="toggleViewMode">
                             {{ currentMonthName }} {{ currentYear }}
                         </div>
-                        <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-ui-hover transition-colors text-ui-muted focus:outline-none focus:ring-2 ring-ui-focus" @click="changeMonth(1)">
+                        <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-accented transition-colors text-muted focus:outline-none focus:ring-2 ring-primary/25" @click="changeMonth(1)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                             </svg>
@@ -86,7 +86,7 @@
                         <!-- Days View -->
                         <div v-if="viewMode === 'days'">
                             <div class="grid grid-cols-7 mb-2 text-center">
-                                <span v-for="day in weekDays" :key="day" class="text-[0.7rem] font-bold text-ui-muted uppercase tracking-widest">
+                                <span v-for="day in weekDays" :key="day" class="text-[0.7rem] font-bold text-muted uppercase tracking-widest">
                                     {{ day }}
                                 </span>
                             </div>
@@ -105,8 +105,8 @@
                         <!-- Years View -->
                         <div v-else-if="viewMode === 'years'" class="grid grid-cols-3 gap-2">
                             <div v-for="year in yearList" :key="year"
-                                class="p-2 text-center rounded-lg hover:bg-ui-hover cursor-pointer transition-colors text-sm border border-transparent"
-                                :class="{'bg-ui-selection text-ui-primary border-ui-primary font-bold': year === currentYear}"
+                                class="p-2 text-center rounded-md hover:bg-accented cursor-pointer transition-colors text-sm border border-transparent"
+                                :class="{'bg-accented text-primary border-primary font-bold': year === currentYear}"
                                 @click="selectYear(year)"
                             >
                                 {{ year }}
@@ -116,8 +116,8 @@
                         <!-- Months View -->
                         <div v-else-if="viewMode === 'months'" class="grid grid-cols-3 gap-2">
                             <div v-for="(month, index) in monthNames" :key="index"
-                                class="p-2 text-center rounded-lg hover:bg-ui-hover cursor-pointer transition-colors text-sm border border-transparent"
-                                :class="{'bg-ui-selection text-ui-primary border-ui-primary font-bold': index === currentMonth}"
+                                class="p-2 text-center rounded-md hover:bg-accented cursor-pointer transition-colors text-sm border border-transparent"
+                                :class="{'bg-accented text-primary border-primary font-bold': index === currentMonth}"
                                 @click="selectMonth(index)"
                             >
                                 {{ month }}
@@ -126,10 +126,10 @@
                     </div>
 
                     <!-- Time Picker -->
-                    <div v-if="shouldShowTime" class="border-t border-ui-subtle p-3 bg-ui-surface-subtle grid gap-2 text-center flex-shrink-0" :class="[enableSeconds ? 'grid-cols-3' : 'grid-cols-2']">
+                    <div v-if="shouldShowTime" class="border-t border-muted p-3 bg-muted grid gap-2 text-center flex-shrink-0" :class="[enableSeconds ? 'grid-cols-3' : 'grid-cols-2']">
                         <div class="flex flex-col items-center gap-1">
                             <div class="py-3" v-if="mode === 'time'">
-                                <KunBtn @click="adjustTime('hours', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
+                                <KunBtn @click="adjustTime('hours', 1)" icon="$arrowUp" size="xs" rounded="full" />
                             </div>
                             <KunNumberField 
                                 v-bind="timeFieldProps"
@@ -142,15 +142,15 @@
                                 noArrows hide-details
                                 density="compact"
                                 placeholder="00"
-                                bg-input="bg-ui-surface-raised"
+                                bg-input="bg-elevated"
                             />
                             <div class="py-3" v-if="mode === 'time'">
-                                <KunBtn @click="adjustTime('hours', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
+                                <KunBtn @click="adjustTime('hours', -1)" icon="$arrowDown" size="xs" rounded="full" />
                             </div>
                         </div>
                         <div class="flex flex-col items-center gap-1">
                             <div class="py-3" v-if="mode === 'time'">
-                                <KunBtn @click="adjustTime('minutes', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
+                                <KunBtn @click="adjustTime('minutes', 1)" icon="$arrowUp" size="xs" rounded="full" />
                             </div>
                             <KunNumberField 
                                 v-bind="timeFieldProps"
@@ -163,15 +163,15 @@
                                 noArrows hide-details
                                 density="compact"
                                 placeholder="00"
-                                bg-input="bg-ui-surface-raised"
+                                bg-input="bg-elevated"
                             />
                             <div class="py-3" v-if="mode === 'time'">
-                                <KunBtn @click="adjustTime('minutes', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
+                                <KunBtn @click="adjustTime('minutes', -1)" icon="$arrowDown" size="xs" rounded="full" />
                             </div>
                         </div>
                         <div v-if="enableSeconds" class="flex flex-col items-center gap-1">
                             <div class="py-3" v-if="mode === 'time'">
-                                <KunBtn @click="adjustTime('seconds', 1)" :icon="arrowUp" size="xs" rounded="rounded-full" />
+                                <KunBtn @click="adjustTime('seconds', 1)" icon="$arrowUp" size="xs" rounded="full" />
                             </div>
                             <KunNumberField 
                                 v-bind="timeFieldProps"
@@ -184,18 +184,18 @@
                                 noArrows hide-details
                                 density="compact"
                                 placeholder="00"
-                                bg-input="bg-ui-surface-raised"
+                                bg-input="bg-elevated"
                             />
                             <div class="py-3" v-if="mode === 'time'">
-                                <KunBtn @click="adjustTime('seconds', -1)" :icon="arrowDown" size="xs" rounded="rounded-full" />
+                                <KunBtn @click="adjustTime('seconds', -1)" icon="$arrowDown" size="xs" rounded="full" />
                             </div>
                         </div>
                     </div>
 
                     <!-- Actions Footer -->
-                    <div v-if="!autoApply" class="p-3 border-t border-ui-subtle flex justify-end gap-2 bg-ui-surface-raised flex-shrink-0">
+                    <div v-if="!autoApply" class="p-3 border-t border-muted flex justify-end gap-2 bg-elevated flex-shrink-0">
                             <KunBtn @click="closePopover" size="xs">Cancelar</KunBtn>
-                            <KunBtn @click="applySelection" size="xs" bgColor="bg-success">Aplicar</KunBtn>
+                            <KunBtn @click="applySelection" size="xs" color="success">Aplicar</KunBtn>
                     </div>
 
                 </div>
@@ -210,11 +210,8 @@ import KunTextField from '../../../KunTextField/src/components/KunTextField.vue'
 import KunNumberField from '../../../KunNumberField/src/components/KunNumberField.vue';
 import { usePosition } from '../composables/usePosition.js';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
+import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
 import { kunDatePickerProps } from '../composables/kunDatePickerProps.js'
-
-import arrowUp from '@/icons/IconArrowUp.vue'
-import arrowDown from '@/icons/IconArrowDown.vue'
-import IconCalendarOutline from '@/icons/IconCalendarOutline.vue'
 
 defineOptions({ inheritAttrs: false })
 
@@ -228,7 +225,7 @@ const slots = useSlots()
 const triggerIcon = (_props: unknown) => {
   const nodes = slots.icon?.();
   if (nodes && nodes.length) return nodes.length === 1 ? nodes[0] : h('span', nodes);
-  return h(IconCalendarOutline);
+  return h(KunIcon, { icon: '$calendarOutline' });
 };
 
 const emit = defineEmits(['update:modelValue', 'change', 'close', 'open']);
@@ -876,14 +873,14 @@ function dayClasses(dayObj: CalendarDay): string {
     }
 
     const base = 'flex items-center justify-center font-medium text-sm z-10'; 
-    const text = !isCurrentMonth ? 'text-ui-disabled' : 'text-ui';
+    const text = !isCurrentMonth ? 'text-disabled' : 'text-default';
 
-    if (isOutOfRange(date)) return `${base} text-ui-disabled opacity-40 cursor-not-allowed`;
-    if (isSelected) return `${base} bg-ui-primary text-ui-inverse shadow-md hover:bg-ui-primary rounded-full`;
-    if (inRange) return `${base} bg-ui-selection text-ui-selection rounded-none`;
+    if (isOutOfRange(date)) return `${base} text-disabled opacity-40 cursor-not-allowed`;
+    if (isSelected) return `${base} bg-primary text-inverted shadow-md hover:bg-primary/75 rounded-full`;
+    if (inRange) return `${base} bg-accented text-default rounded-none`;
     
-    const hover = 'hover:bg-ui-hover';
-    const todayBorder = isToday ? 'border border-ui-primary text-ui-primary font-bold' : '';
+    const hover = 'hover:bg-accented';
+    const todayBorder = isToday ? 'border border-primary text-primary font-bold' : '';
     return `${base} ${text} ${hover} ${todayBorder}`;
 }
 

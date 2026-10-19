@@ -24,9 +24,7 @@ import { KunListItemAvatar } from 'adverich-kun-ui'
 |---|---|---|---|
 | `text` | `string \| number \| null` | `null` | Texto (iniciales) del avatar. |
 | `size` | `KunListItemAvatarSize` | `'md'` | Tamaño predefinido.<br/>Valores · Values: `sm` `md` `lg` |
-| `rounded` | `String` | `'rounded-full'` | Redondeo. |
-| `bgColor` | `String` | `'bg-surface-light'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui-inverse'` | Color del texto. |
+| `rounded` | `'full' \| 'none' \| null` | `null` | Redondeo: 'full' \| 'none'. `null` = circular (propio de avatar). |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |
 
 ## Slots

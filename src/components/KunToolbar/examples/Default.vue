@@ -21,7 +21,6 @@ const titleMaxWidth = ref('max-w-3/4')
 // ------------------------------------------------------------------
 // Estilo
 // ------------------------------------------------------------------
-const bgColor = ref('bg-surface')
 const density = ref<KunToolbarDensity>('default')
 const densityOptions = ref([
   { id: 'default', name: 'default (64px)' },
@@ -37,13 +36,7 @@ const heightProp = computed<string | number | undefined>(() => {
   const n = Number(heightRaw.value)
   return Number.isNaN(n) ? heightRaw.value : n
 })
-const roundedRaw = ref('')
-const roundedProp = computed<string | boolean | undefined>(() => {
-  if (roundedRaw.value === '') return undefined
-  if (roundedRaw.value === 'true') return true
-  if (roundedRaw.value === 'false') return false
-  return roundedRaw.value
-})
+const rounded = ref(false)
 const tag = ref('header')
 const theme = ref('')
 const tile = ref(false)
@@ -55,7 +48,6 @@ const absolute = ref(false)
 // Borde
 // ------------------------------------------------------------------
 const bordered = ref(false)
-const borderColor = ref('')
 
 // ------------------------------------------------------------------
 // Extensión / colapso
@@ -98,16 +90,15 @@ const useImageSlot = ref(false)
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunToolbar</h2>
 
-      <div class="overflow-hidden rounded-xl border border-ui">
+      <div class="overflow-hidden rounded-lg border border-default">
         <KunToolbar
           :title="title || undefined"
           :title-position="titlePosition"
           :title-max-width="titleMaxWidth"
-          :bg-color="bgColor || undefined"
           :density="density"
           :elevation="elevationProp"
           :height="heightProp"
-          :rounded="roundedProp"
+          :rounded="rounded"
           :tag="tag"
           :theme="theme || undefined"
           :tile="tile"
@@ -115,7 +106,6 @@ const useImageSlot = ref(false)
           :floating="floating"
           :absolute="absolute"
           :bordered="bordered"
-          :border-color="borderColor || undefined"
           :extended="extended"
           :collapse="collapse"
           :extension-height="extensionHeightProp"
@@ -124,7 +114,7 @@ const useImageSlot = ref(false)
           :right-section-class="rightSectionClass"
         >
           <template v-if="showPrepend" #prepend>
-            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-field-background text-sm">☰</span>
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-sm">☰</span>
           </template>
 
           <template v-if="useTitleSlot" #title>
@@ -132,21 +122,21 @@ const useImageSlot = ref(false)
           </template>
 
           <template v-if="showDefault">
-            <nav class="hidden items-center gap-1 text-sm text-ui-muted md:flex">
+            <nav class="hidden items-center gap-1 text-sm text-muted md:flex">
               <span>Inicio</span>
               <span>/</span>
-              <span class="text-ui">Panel</span>
+              <span class="text-default">Panel</span>
             </nav>
           </template>
 
           <template v-if="showItems" #items>
-            <button type="button" class="rounded bg-field-background px-2 py-1 text-xs">Nuevo</button>
-            <button type="button" class="rounded bg-field-background px-2 py-1 text-xs">Filtros</button>
+            <button type="button" class="rounded-md bg-muted px-2 py-1 text-xs">Nuevo</button>
+            <button type="button" class="rounded-md bg-muted px-2 py-1 text-xs">Filtros</button>
           </template>
 
           <template v-if="showAppend" #append>
-            <button type="button" class="rounded bg-primary px-2 py-1 text-xs text-white">Guardar</button>
-            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-field-background text-xs">AD</span>
+            <button type="button" class="rounded-md bg-primary px-2 py-1 text-xs text-inverted">Guardar</button>
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs">AD</span>
           </template>
 
           <template v-if="useImageSlot" #image>
@@ -156,31 +146,31 @@ const useImageSlot = ref(false)
           <template v-if="showExtension" #extension>
             <div class="flex items-center gap-4 px-2 pb-2 text-sm">
               <span class="border-b-2 border-primary font-medium">Resumen</span>
-              <span class="text-ui-muted">Actividad</span>
-              <span class="text-ui-muted">Ajustes</span>
+              <span class="text-muted">Actividad</span>
+              <span class="text-muted">Ajustes</span>
             </div>
           </template>
         </KunToolbar>
       </div>
 
-      <p class="text-xs text-ui-muted">
+      <p class="text-xs text-muted">
         Nota: con la prop <code>image</code> y sin slot <code>#image</code>, el toolbar renderiza un
         <code>&lt;img&gt;</code> fallback a sangre completa. La fila de extensión es visible si
         (<code>extended</code> o slot <code>#extension</code>) y no <code>collapse</code>.
       </p>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">props en crudo</div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">props en crudo</div>
         <div>{{ JSON.stringify(title || null) }} · {{ titlePosition }} · {{ density }} · ext={{ extensionHeightProp }}</div>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Título</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Título</p>
         <KunTextField v-model="title" label="Title (vacío = sin título)" density="compact" />
         <KunSelect
           v-model="titlePosition"
@@ -192,8 +182,7 @@ const useImageSlot = ref(false)
         />
         <KunTextField v-model="titleMaxWidth" label="Title max width" density="compact" class="col-span-2" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Estilo</p>
-        <KunTextField v-model="bgColor" label="Bg color (vacío = transparent)" density="compact" />
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Estilo</p>
         <KunSelect
           v-model="density"
           v-model:items="densityOptions"
@@ -204,7 +193,7 @@ const useImageSlot = ref(false)
         />
         <KunTextField v-model="elevationRaw" label="Elevation (vacío = sin clase)" density="compact" />
         <KunTextField v-model="heightRaw" label="Height (vacío = por densidad)" density="compact" inputmode="decimal" />
-        <KunTextField v-model="roundedRaw" label="Rounded (true/false/clase, vacío = nada)" density="compact" />
+        <KunSwitch v-model="rounded" label="Rounded" />
         <KunTextField v-model="tag" label="Tag" density="compact" />
         <KunTextField v-model="theme" label="Theme (vacío = sin hook theme-*)" density="compact" class="col-span-2" />
         <KunSwitch v-model="tile" label="Tile (sin redondeo)" />
@@ -212,23 +201,22 @@ const useImageSlot = ref(false)
         <KunSwitch v-model="floating" label="Floating" />
         <KunSwitch v-model="absolute" label="Absolute" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Borde</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Borde</p>
         <KunSwitch v-model="bordered" label="Bordered" />
-        <KunTextField v-model="borderColor" label="Border color (vacío = sin clase)" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Extensión</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Extensión</p>
         <KunSwitch v-model="extended" label="Extended" />
         <KunSwitch v-model="collapse" label="Collapse (solo extensión)" />
         <KunTextField v-model="extensionHeightRaw" label="Extension height px (vacío = 48)" density="compact" inputmode="decimal" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Imagen</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Imagen</p>
         <KunTextField v-model="image" label="Image URL (vacío = sin imagen)" density="compact" class="col-span-2" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Secciones</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Secciones</p>
         <KunTextField v-model="leftSectionClass" label="Left section class" density="compact" class="col-span-2" />
         <KunTextField v-model="rightSectionClass" label="Right section class" density="compact" class="col-span-2" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Slots demo</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Slots demo</p>
         <KunSwitch v-model="showPrepend" label="#prepend" />
         <KunSwitch v-model="useTitleSlot" label="#title (reemplaza prop)" />
         <KunSwitch v-model="showDefault" label="default (centro)" />

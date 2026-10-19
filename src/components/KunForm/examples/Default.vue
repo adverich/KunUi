@@ -94,7 +94,7 @@ function logEvent(name: string, detail: unknown): void {
         :padding="padding"
         :max-width="maxWidth"
         :validate-on="validateOn"
-        class="rounded-xl border border-ui"
+        class="rounded-lg border border-default"
         @submit="logEvent('submit', `válido, nombre=${name || '—'} email=${email || '—'}`)"
         @update:model-value="logEvent('update:modelValue', String($event))"
       >
@@ -117,27 +117,27 @@ function logEvent(name: string, detail: unknown): void {
         <div class="flex flex-wrap gap-2">
           <button
             type="submit"
-            class="rounded-lg bg-surface px-3 py-2 text-sm font-semibold border border-ui hover:opacity-80"
+            class="rounded-lg bg-muted px-3 py-2 text-sm font-semibold ring ring-accented hover:opacity-80"
           >
             Enviar (submit)
           </button>
           <button
             type="button"
-            class="rounded-lg px-3 py-2 text-sm border border-ui hover:opacity-80"
+            class="rounded-lg px-3 py-2 text-sm border border-default hover:opacity-80"
             @click="doValidate"
           >
             Validar
           </button>
           <button
             type="button"
-            class="rounded-lg px-3 py-2 text-sm border border-ui hover:opacity-80"
+            class="rounded-lg px-3 py-2 text-sm border border-default hover:opacity-80"
             @click="doReset"
           >
             Reset
           </button>
           <button
             type="button"
-            class="rounded-lg px-3 py-2 text-sm border border-ui hover:opacity-80"
+            class="rounded-lg px-3 py-2 text-sm border border-default hover:opacity-80"
             @click="doResetValidation"
           >
             Limpiar validación
@@ -145,8 +145,8 @@ function logEvent(name: string, detail: unknown): void {
         </div>
       </KunForm>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-2">Validez agregada (v-model)</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-2">Validez agregada (v-model)</div>
         <div class="flex flex-wrap items-center gap-3">
           <KunSwitch :model-value="isValid" label="Válido" disabled />
           <span class="font-mono text-xs">
@@ -159,21 +159,21 @@ function logEvent(name: string, detail: unknown): void {
         </div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Enviá o validá el formulario para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Enviá o validá el formulario para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el form) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="gap" label="Gap" density="compact" />
@@ -190,7 +190,7 @@ function logEvent(name: string, detail: unknown): void {
         />
       </div>
 
-      <p class="text-xs text-ui-muted">
+      <p class="text-xs text-muted">
         <span class="font-mono">modelValue</span> (Boolean, validez agregada) se demuestra vía
         <span class="font-mono">v-model</span> en el panel de validez, no como control:
         es una salida de <span class="font-mono">validate()</span>, no una entrada de configuración.

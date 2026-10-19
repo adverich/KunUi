@@ -27,6 +27,30 @@ const rootDir = path.resolve(__dirname, '..');
 const componentsDir = path.join(rootDir, 'src', 'components');
 const pkg = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf-8')) as { version: string };
 
+/** Espera síncrona (Atomics) sin bloquear un hilo por completo. */
+function sleepSync(ms: number): void {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
+/**
+ * `fs.writeFileSync` con reintentos. En Windows, filtros como Defender o el
+ * indexador pueden bloquear momentáneamente un archivo recién escrito y
+ * devolver `UNKNOWN` (errno -4094); reintentar lo resuelve.
+ */
+function writeText(file: string, content: string): void {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 8; attempt++) {
+    try {
+      fs.writeFileSync(file, content, 'utf-8');
+      return;
+    } catch (error) {
+      lastError = error;
+      sleepSync(50 * (attempt + 1));
+    }
+  }
+  throw lastError;
+}
+
 // ---------------------------------------------------------------------------
 // Descripciones breves por componente (ES + EN). Una línea cada una.
 // ---------------------------------------------------------------------------
@@ -63,7 +87,7 @@ const BLURBS: Record<string, { es: string; en: string }> = {
   KunDrawer: { es: 'Panel lateral de navegación con swipe.', en: 'Swipeable side navigation drawer.' },
   KunFileInput: { es: 'Selector de archivos simple/múltiple con chips.', en: 'Single/multiple file input with chips.' },
   KunForm: { es: 'Contenedor de formulario con validación agregada.', en: 'Form container with aggregate validation.' },
-  KunIcon: { es: 'Ícono SVG del set KunUI.', en: 'SVG icon from the KunUI set.' },
+  KunIcon: { es: 'Ícono desde Iconify (alias `$nombre`, colección `lucide` offline), clase, SVG o componente.', en: 'Icon from Iconify (`$alias`, offline `lucide` collection), class, SVG or component.' },
   KunInfiniteScroll: { es: 'Scroll infinito con carga por umbral.', en: 'Infinite scroll with threshold loading.' },
   KunList: { es: 'Lista con selección, navegación por teclado y grupos.', en: 'List with selection, keyboard navigation and groups.' },
   KunListGroup: { es: 'Grupo colapsable dentro de KunList.', en: 'Collapsible group inside KunList.' },
@@ -77,7 +101,6 @@ const BLURBS: Record<string, { es: string; en: string }> = {
   KunListSubheader: { es: 'Subencabezado para grupos de lista.', en: 'Subheader for list groups.' },
   KunLoaderCircular: { es: 'Indicador de carga circular.', en: 'Circular loading indicator.' },
   KunMenu: { es: 'Menú desplegable anclado a un activador.', en: 'Dropdown menu anchored to an activator.' },
-  KunModalFooter: { es: 'Pie de modal/diálogo con acciones.', en: 'Modal/dialog footer with actions.' },
   KunNumberField: { es: 'Campo numérico con formato localizado (modos natural/bank).', en: 'Localized numeric input (natural/bank modes).' },
   KunRadio: { es: 'Botón de radio individual (usar con KunRadioGroup).', en: 'Single radio button (use with KunRadioGroup).' },
   KunRadioGroup: { es: 'Grupo de botones de radio con v-model.', en: 'Radio button group with v-model.' },
@@ -602,7 +625,7 @@ function main(): void {
 
     const readme = buildReadme(doc, notes);
     readmes.set(name, readme);
-    fs.writeFileSync(path.join(componentsDir, name, 'README.md'), readme, 'utf-8');
+    writeText(path.join(componentsDir, name, 'README.md'), readme);
   }
   console.log(`✓ READMEs (${docs.length} componentes)`);
 
@@ -612,12 +635,12 @@ function main(): void {
     generatedBy: 'scripts/generate-docs.ts',
     components: docs,
   };
-  fs.writeFileSync(path.join(rootDir, 'registry.json'), `${JSON.stringify(registry, null, 2)}\n`, 'utf-8');
+  writeText(path.join(rootDir, 'registry.json'), `${JSON.stringify(registry, null, 2)}\n`);
   console.log('✓ registry.json');
 
-  fs.writeFileSync(path.join(rootDir, 'llms.txt'), buildLlmsTxt(docs), 'utf-8');
+  writeText(path.join(rootDir, 'llms.txt'), buildLlmsTxt(docs));
   console.log('✓ llms.txt');
-  fs.writeFileSync(path.join(rootDir, 'llms-full.txt'), buildLlmsFull(docs, readmes), 'utf-8');
+  writeText(path.join(rootDir, 'llms-full.txt'), buildLlmsFull(docs, readmes));
   console.log('✓ llms-full.txt');
 
   const emptyDesc = docs.filter((d) => !d.description_es).map((d) => d.name);

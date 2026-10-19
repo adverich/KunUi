@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import KunAutocomplete from '../src/components/KunAutocomplete.vue'
 import type { KunTextFieldDensity } from '../../KunTextField/src/composables/KunTextFieldProps.js'
 import type { KunMenuOrigin } from '../../KunMenu/src/composables/kunMenuProps.js'
+import type { KunColor } from '../../../theme/kunVariants.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
@@ -110,7 +111,12 @@ const searchableKeysProp = computed(() =>
 const placeholderText = ref('Seleccionar')
 const textNoItems = ref('No hay elementos')
 const btnCreateText = ref('Crear item')
-const btnCreateBg = ref('bg-success')
+const btnCreateColor = ref<KunColor>('success')
+const btnCreateColorOptions = ref([
+  { id: 'primary', name: 'primary' },
+  { id: 'success', name: 'success' },
+  { id: 'neutral', name: 'neutral' },
+])
 const btnCreateClass = ref('w-full')
 const maxHeightRaw = ref('')
 const maxHeightProp = computed<string | number | undefined>(() => {
@@ -119,14 +125,9 @@ const maxHeightProp = computed<string | number | undefined>(() => {
   const asNumber = Number(raw)
   return raw !== '' && !Number.isNaN(asNumber) && String(asNumber) === raw ? asNumber : raw
 })
-const zIndex = ref('z-250')
-const iconColor = ref('text-ui-primary')
-const requiredIconColor = ref('text-ui-primary')
-const emptyTextClass = ref('text-ui-muted')
-const bgMenuColor = ref('bg-menu')
-const bgItemListColor = ref('bg-transparent')
-const selectedItemListColor = ref('bg-ui-selection text-ui-selection')
-const hoverItemListColor = ref('hover:bg-ui-selection-hover')
+const iconColor = ref('text-primary')
+const requiredIconColor = ref('text-error')
+const emptyTextClass = ref('text-muted')
 const fontSize = ref('text-base')
 const itemFontSize = ref('text-base')
 const subtitleFontSize = ref('text-xs')
@@ -192,23 +193,18 @@ function logEvent(name: string, detail: unknown): void {
         :has-create-item="hasCreateItem"
         :start-emtpy="startEmtpy"
         :btn-create-class="btnCreateClass"
-        :btn-create-bg="btnCreateBg"
+        :btn-create-color="btnCreateColor"
         :btn-create-text="btnCreateText"
         :multiple="multiple"
         :required="required"
         :disabled="disabled"
         :max-height="maxHeightProp"
         :density="density"
-        :z-index="zIndex"
         :hide-details="hideDetails"
         :has-icons="hasIcons"
         :icon-color="iconColor"
         :required-icon-color="requiredIconColor"
         :empty-text-class="emptyTextClass"
-        :bg-menu-color="bgMenuColor"
-        :bg-item-list-color="bgItemListColor"
-        :selected-item-list-color="selectedItemListColor"
-        :hover-item-list-color="hoverItemListColor"
         :font-size="fontSize"
         :item-font-size="itemFontSize"
         :subtitle-font-size="subtitleFontSize"
@@ -222,29 +218,29 @@ function logEvent(name: string, detail: unknown): void {
         @notFound="logEvent('notFound', $event)"
       />
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
         <div class="break-all">{{ safeStringify(modelProxy) || 'null' }}</div>
-        <div class="text-ui-muted text-xs mt-1">
+        <div class="text-muted text-xs mt-1">
           modo: {{ multiple ? 'múltiple (array)' : 'simple' }} · {{ returnObject ? 'return-object' : 'por valor' }}
         </div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Interactuá con el campo para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Interactuá con el campo para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el field) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="label" label="Label" density="compact" />
@@ -273,20 +269,22 @@ function logEvent(name: string, detail: unknown): void {
           density="compact"
         />
 
-        <KunTextField v-model="zIndex" label="Z index" density="compact" />
         <KunTextField v-model="iconColor" label="Icon color" density="compact" />
         <KunTextField v-model="requiredIconColor" label="Required icon color" density="compact" />
         <KunTextField v-model="emptyTextClass" label="Empty text class" density="compact" />
-        <KunTextField v-model="bgMenuColor" label="Bg menu color" density="compact" />
-        <KunTextField v-model="bgItemListColor" label="Bg item color" density="compact" />
-        <KunTextField v-model="selectedItemListColor" label="Selected item class" density="compact" />
-        <KunTextField v-model="hoverItemListColor" label="Hover item class" density="compact" />
         <KunTextField v-model="fontSize" label="Font size (input)" density="compact" />
         <KunTextField v-model="itemFontSize" label="Item font size" density="compact" />
         <KunTextField v-model="subtitleFontSize" label="Subtitle font size" density="compact" />
 
         <KunTextField v-model="btnCreateText" label="Btn crear: texto" density="compact" />
-        <KunTextField v-model="btnCreateBg" label="Btn crear: bg" density="compact" />
+        <KunSelect
+          v-model="btnCreateColor"
+          v-model:items="btnCreateColorOptions"
+          label="Btn crear: color"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
         <KunTextField v-model="btnCreateClass" label="Btn crear: clase" density="compact" />
 
         <KunSwitch v-model="multiple" label="Múltiple" />

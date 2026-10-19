@@ -8,7 +8,7 @@ const visible: Ref<number[]> = ref([])
 const slides = ref(Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
   title: `Contenido ${i + 1}`,
-  bg: ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-amber-500', 'bg-purple-500', 'bg-pink-500'][i],
+  bg: ['bg-error', 'bg-info', 'bg-success', 'bg-warning', 'bg-secondary', 'bg-primary'][i],
 })))
 </script>
 
@@ -21,11 +21,11 @@ const slides = ref(Array.from({ length: 6 }, (_, i) => ({
     <KunCarouselSlide v-for="(s, i) in slides" :key="s.id">
       <div
         v-if="visible.includes(i)"
-        :class="['flex h-48 items-center justify-center rounded-xl text-xl font-bold text-white', s.bg]"
+        :class="['flex h-48 items-center justify-center rounded-lg text-xl font-bold text-inverted', s.bg]"
       >
         {{ s.title }}
       </div>
-      <div v-else class="flex h-48 animate-pulse items-center justify-center rounded-xl bg-surface-light text-sm opacity-70">
+      <div v-else class="flex h-48 animate-pulse items-center justify-center rounded-lg bg-muted text-sm opacity-70">
         Cargando…
       </div>
     </KunCarouselSlide>

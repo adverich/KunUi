@@ -29,16 +29,12 @@ import { KunListItem } from 'adverich-kun-ui'
 | `tag` | `String` | `'li'` | Tag del contenedor. |
 | `disabled` | `Boolean` | `-` | Deshabilita el ítem. |
 | `active` | `Boolean` | `-` | Marca el ítem como activo. |
-| `activeClass` | `String` | `'bg-surface-light'` | Clase cuando está activo o seleccionado. |
 | `selectable` | `Boolean` | `false` | Permite selección (emite toggle al contexto KunList). |
 | `variant` | `KunListItemVariant` | `'text'` | Variante visual.<br/>Valores · Values: `text` `outlined` `elevated` `tonal` `flat` `plain` |
 | `density` | `KunListItemDensity` | `'default'` | Densidad del padding vertical.<br/>Valores · Values: `default` `comfortable` `compact` |
-| `rounded` | `Boolean \| String` | `true` | Redondeo (true = default, string = clase). |
+| `rounded` | `Boolean` | `true` | Redondeo de escala (`rounded-md`). `tile` lo anula. |
 | `tile` | `Boolean` | `-` | Sin redondeo. |
 | `ripple` | `Boolean \| Object` | `true` | Efecto ripple al hacer click. |
-| `bgItems` | `String` | `'bg-transparent'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
-| `hoverBg` | `String` | `'hover:bg-surface-light'` | Fondo al pasar el mouse (solo si `selectable`). |
 | `noGutters` | `Boolean` | `-` | Sin padding horizontal. |
 | `itemPosition` | `String` | `'items-start'` | Alineación vertical del contenido. |
 | `prependIcon` | `String \| Object \| Function` | `-` | Ícono al inicio (string, componente o slot `prepend`). |
@@ -50,7 +46,7 @@ import { KunListItem } from 'adverich-kun-ui'
 | `title` | `String \| Number \| Boolean` | `-` | Título (alternativa al slot). |
 | `titleClass` | `String` | `'font-medium'` | Clase del título. |
 | `subtitle` | `String \| Number \| Boolean` | `-` | Subtítulo (alternativa al slot). |
-| `subtitleClass` | `String` | `'text-sm text-ui-muted'` | Clase del subtítulo. |
+| `subtitleClass` | `String` | `'text-sm text-muted'` | Clase del subtítulo. |
 | `containerClass` | `String \| Array \| Object` | `''` | Clase extra del contenedor. |
 | `id` | `String \| Number` | `-` | Id del ítem (se genera uno si se omite). |
 
@@ -65,6 +61,15 @@ import { KunListItem } from 'adverich-kun-ui'
 - `#title`
 - `#subtitle`
 - `#append`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- `variant="outlined"` pasa de `border border-default` a `ring ring-accented`
+  (patrón de ítem outlined de Nuxt UI). El `border-default` previo podía quedar
+  sobre fondos `bg-muted`/`bg-elevated` (mismo neutral-800 en dark ⇒ invisible).
+- `tonal` sigue `bg-muted`; `elevated`/`flat`/`plain` sin cambios.
 
 ---
 

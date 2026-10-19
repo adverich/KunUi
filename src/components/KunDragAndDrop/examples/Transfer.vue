@@ -13,15 +13,15 @@ const done = ref([{ id: 'd', title: 'Pickup mix-tape' }])
 <template>
   <div class="p-4 space-y-4">
     <h2 class="text-lg font-medium">Transfer entre listas</h2>
-    <p class="text-sm text-ui-muted">Mismo <code>group</code> permite mover ítems entre columnas.</p>
+    <p class="text-sm text-muted">Mismo <code>group</code> permite mover ítems entre columnas.</p>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
         <div class="text-sm font-medium mb-2">Todo</div>
-        <KunDragAndDrop v-model="todo" group="kanban" class="min-h-40 p-2 rounded-lg border border-surface" />
+        <KunDragAndDrop v-model="todo" group="kanban" class="min-h-40 p-2 rounded-lg border border-muted" />
       </div>
       <div>
         <div class="text-sm font-medium mb-2">Done</div>
-        <KunDragAndDrop v-model="done" group="kanban" class="min-h-40 p-2 rounded-lg border border-surface" />
+        <KunDragAndDrop v-model="done" group="kanban" class="min-h-40 p-2 rounded-lg border border-muted" />
       </div>
     </div>
   </div>

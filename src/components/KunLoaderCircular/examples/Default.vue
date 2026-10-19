@@ -23,7 +23,7 @@ const gradient = ref('conic-gradient(from 0deg, var(--surface-raised), var(--pri
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunLoaderCircular</h2>
 
-      <div class="flex min-h-40 items-center justify-center rounded-lg bg-surface p-6">
+      <div class="flex min-h-40 items-center justify-center rounded-lg bg-muted p-6">
         <KunLoaderCircular
           :fullscreen="fullscreen"
           :size="sizeProp"
@@ -31,14 +31,14 @@ const gradient = ref('conic-gradient(from 0deg, var(--surface-raised), var(--pri
           :gradient="gradient"
         />
       </div>
-      <p v-if="fullscreen" class="text-sm text-ui-muted">
+      <p v-if="fullscreen" class="text-sm text-muted">
         El overlay de pantalla completa está activo (teleport a body). Desactivalo con el switch.
       </p>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunSwitch v-model="fullscreen" label="Fullscreen" />

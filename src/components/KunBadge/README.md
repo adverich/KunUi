@@ -23,11 +23,11 @@ import { KunBadge } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `text` | `String \| Number` | `''` | Texto o número a mostrar dentro del badge. |
-| `bgColor` | `String` | `'bg-error'` | Color de fondo del badge. |
-| `textColor` | `String` | `'text-black dark:text-white'` | Color del texto. |
+| `color` | `KunColor` | `'error' as KunColor` | Color semántico del badge. |
 | `textSize` | `String` | `'text-xs'` | Tamaño del texto. |
 | `fontWeight` | `String` | `'font-bold'` | Peso del texto. |
-| `rounded` | `String` | `'rounded-full'` | Redondeo del badge. |
+| `rounded` | `'full' \| 'none' \| null` | `null` | Redondeo: 'full' \| 'none'. `null` = `rounded-sm` (redondeo propio de badge). |
+| `pill` | `Boolean` | `false` | Forma píldora (`rounded-full`). Por defecto el badge es `rounded-sm`. |
 | `dot` | `Boolean` | `false` | Modo punto (sin texto, solo indicador). |
 | `visible` | `Boolean` | `true` | Visibilidad del badge. |
 | `position` | `KunBadgePosition` | `'top right' as KunBadgePosition` | Posición relativa al contenido envuelto ("vertical horizontal"). |
@@ -38,6 +38,34 @@ import { KunBadge } from 'adverich-kun-ui'
 ## Slots
 
 - `#default`
+
+## Notas · Notes
+
+# KunBadge
+
+## Bordes y radio
+
+Vocabulario propio del badge (alineado con Nuxt UI):
+
+- Default: `rounded-sm`.
+- `pill` (prop nueva, `Boolean`) o `rounded="full"` → `rounded-full`.
+- `rounded="none"` → `rounded-none`.
+
+`rounded` dejó de aceptar clases Tailwind (p. ej. `'rounded-2xl'`): ahora es
+`'full' | 'none' | null` con `validator`. Es un cambio de API:
+
+- **Antes**: el badge era píldora por defecto (`rounded-full` fijo).
+- **Ahora**: píldora es opt-in.
+
+```vue
+<KunBadge pill color="error">Nuevo</KunBadge>
+```
+
+## Color
+
+`bgColor` / `textColor` se reemplazaron por `color`
+(`primary|secondary|success|info|warning|error|neutral`), resuelto con
+`kunVariantClasses` del theme global.
 
 ---
 

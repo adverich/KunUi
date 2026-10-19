@@ -60,7 +60,7 @@ import { KunTable } from 'adverich-kun-ui'
 | `trClass` | `String` | `''` | Clase de las filas. |
 | `thClass` | `String` | `''` | Clase de los headers. |
 | `tdClass` | `string \| ((item: TableItem) => string)` | `''` | Clase de las celdas (string o `(item) => clase`). |
-| `selectedClass` | `String` | `'bg-ui-selection text-ui-selection'` | Clase de filas seleccionadas. |
+| `selectedClass` | `String` | `'bg-accented text-default'` | Clase de filas seleccionadas. |
 | `stripedClass` | `String` | `''` | Clase de filas alternas. |
 | `tfootClass` | `String` | `''` | Clase del `<tfoot>`. |
 | `rowClass` | `String` | `''` | Clase adicional para filas. |
@@ -126,7 +126,7 @@ import { KunTable } from 'adverich-kun-ui'
 | `loading` | `Boolean \| Object` | `false` | Estado de carga de las acciones. |
 | `rowClass` | `String` | `-` | Clase del contenedor. |
 | `selectedClass` | `String` | `-` | Clase cuando está seleccionada. |
-| `border` | `String` | `'border border-ui'` | Borde de la tarjeta. |
+| `border` | `String` | `'border border-default'` | Borde de la tarjeta. |
 | `rounded` | `String` | `'rounded-sm'` | Redondeo de la tarjeta. |
 | `rowClassCondition` | `String \| Function` | `-` | Clase condicional por ítem (string o `(item) => clase\|false`). |
 | `customSlots` | `Object` | `-` | Celdas custom por columna (`item.<key>` → componente). |
@@ -284,7 +284,7 @@ const filters = [
   v-model:selected-items="seleccionados" :items-per-page="15"
 >
   <template #item.estado="{ value }">
-    <KunBadge :color="value === 'activo' ? 'bg-green-500' : 'bg-red-500'" :text="value" />
+    <KunBadge :color="value === 'activo' ? 'success' : 'error'" :text="value" />
   </template>
   <template #item.actions="{ item, loading }">
     <KunBtn icon="mdi-pencil" size="xs" :loading="loading" @click="editar(item)" />
@@ -294,6 +294,15 @@ const filters = [
   </template>
 </KunTable>
 ```
+
+## Bordes y radio
+
+- Wrapper `rounded-lg`; div de búsqueda y spans de acción `rounded-md` (antes
+  `rounded` pelado, que no escalaba con `--kun-radius`).
+- Superficies: wrapper `bg-default ring ring-default`; thead `bg-elevated`; filas
+  `bg-default` con separador `border-t border-default` y hover `bg-elevated/50`.
+  La caja de búsqueda es un control: `ring ring-inset ring-accented` (antes
+  `border border-default`, que sobre `bg-muted`/`bg-elevated` desaparecía en dark).
 
 ---
 

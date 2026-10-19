@@ -27,9 +27,9 @@ export const kunSkeletonProps = {
   /** Duración de la animación en ms. Se aplica a todas las animaciones. */
   duration: { type: Number, default: 1600 },
   /** Clase de fondo base del placeholder. */
-  colorFrom: { type: String, default: "bg-ui-hover" },
+  colorFrom: { type: String, default: "bg-muted" },
   /** Reservado para compatibilidad. Actualmente sin efecto (el brillo deriva de la superficie elevada). */
-  colorTo: { type: String, default: "bg-ui-hover" },
+  colorTo: { type: String, default: "bg-accented" },
   /** Reservado para repetir el placeholder. Actualmente sin efecto. */
   repeat: { type: Boolean, default: true },
   /** Clase extra del placeholder. */

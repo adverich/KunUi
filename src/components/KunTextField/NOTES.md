@@ -58,3 +58,14 @@ desborda la caja se comporta como pill → último escalón).
 - Nombre de slot = nombre del prop sin `Icon` (`prependIcon` → `#prepend`),
   más `#prepend-inner`, `#prepend-input-content`, `#default`,
   `#append-inner`, `#append`.
+
+## Bordes y radio
+
+- Default de `rounded`: `'rounded-md'` (antes `'rounded'` pelado, 4px fijos que no
+  seguían `--kun-radius`).
+- La escala de desplazamiento del label (`src/utils/useKunFieldNotch.ts`) se
+  alineó a los pasos reales de Tailwind: con `rounded-md` el label se mueve 4px
+  (antes 6px). Detalle en `docs/refactor/borders-radius.md`.
+- Contorno por rol: contenedor `bg-default` y notch `border-accented` (foco
+  `border-primary`, error `border-error`). Antes `bg-muted` + `border-default`,
+  invisible en dark (`--kun-border == --kun-bg-muted == neutral-800`).

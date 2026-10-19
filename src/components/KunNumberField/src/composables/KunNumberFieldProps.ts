@@ -23,10 +23,6 @@ export const KunNumberFieldProps = {
   placeholder: { type: [String, Number], default: '' },
   /** Etiqueta flotante (mismo sistema que KunTextField). */
   label: { type: String, default: '' },
-  /** Color del label en reposo. */
-  labelColor: { type: String, default: 'text-ui' },
-  /** Color del label flotando (null = usa `labelColor`). */
-  floatingLabelColor: { type: String as PropType<string | null>, default: null },
   /** Tamaño del label en reposo. */
   labelSize: { type: String, default: 'text-sm' },
   /** Tamaño del label flotando. */
@@ -65,24 +61,16 @@ export const KunNumberFieldProps = {
   appendInnerClass: String,
 
   // Estilo y diseño
-  /** Redondeo del contenedor. */
-  rounded: { type: String, default: 'rounded' },
-  /** Color del borde. */
-  borderColor: { type: String, default: 'border-ui' },
-  /** Color del texto del valor. */
-  textColor: { type: String, default: 'text-ui' },
+  /** Redondeo del contenedor (clase de escala, `rounded-md` por defecto). */
+  rounded: { type: String, default: 'rounded-md' },
   /** Tamaño del texto del valor (null = 'text-sm'). */
   inputTextSize: { type: String as PropType<string | null>, default: null },
   /** Peso del texto del valor (null = hereda). */
   inputWeight: { type: String as PropType<string | null>, default: null },
-  /** Color del placeholder. */
-  placeholderColor: { type: String, default: 'placeholder-ui' },
   /** Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). */
   placeholderTextSize: { type: String as PropType<string | null>, default: null },
   /** Clase libre para el input. */
   inputStyle: { type: String, default: '' },
-  /** Color de fondo del contenedor. */
-  bgInput: { type: String, default: 'bg-field-background' },
   /** Centra el texto del valor. */
   textCenter: { type: Boolean, default: false },
   /** Variante de botones de incremento: 'default' | 'stacked' | 'split'. */

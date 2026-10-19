@@ -6,14 +6,14 @@
       <KunListItem>
         <KunListItemText>Notificación por correo</KunListItemText>
         <KunListItemAction>
-          <input type="checkbox" checked class="form-checkbox text-blue-600" />
+          <input type="checkbox" checked class="form-checkbox text-primary" />
         </KunListItemAction>
       </KunListItem>
 
       <KunListItem>
         <KunListItemText>Modo oscuro</KunListItemText>
         <KunListItemAction>
-          <input type="checkbox" class="form-switch text-blue-600" />
+          <input type="checkbox" class="form-switch text-primary" />
         </KunListItemAction>
       </KunListItem>
 

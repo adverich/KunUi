@@ -10,8 +10,6 @@ const titleSize = ref('text-lg')
 const subtitle = ref('Subtítulo descriptivo')
 const prepend = ref('')
 const append = ref('')
-const bgColor = ref('bg-transparent')
-const textColor = ref('text-ui')
 const height = ref('auto')
 const width = ref('full')
 const dense = ref(false)
@@ -34,15 +32,13 @@ const roundedOptions = ref([
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunCardTitle</h2>
 
-      <p class="text-xs uppercase tracking-wide text-ui-muted">Vía props</p>
+      <p class="text-xs uppercase tracking-wide text-muted">Vía props</p>
       <KunCardTitle
         :title="title || null"
         :title-size="titleSize || null"
         :subtitle="subtitle || null"
         :prepend="prepend || undefined"
         :append="append || undefined"
-        :bg-color="bgColor"
-        :text-color="textColor"
         :dense="dense"
         :flat="flat"
         :rounded="rounded"
@@ -50,13 +46,11 @@ const roundedOptions = ref([
         :width="width"
       />
 
-      <p class="text-xs uppercase tracking-wide text-ui-muted">Vía slots</p>
+      <p class="text-xs uppercase tracking-wide text-muted">Vía slots</p>
       <KunCardTitle
         :title-size="titleSize || null"
         :prepend="prepend || undefined"
         :append="append || undefined"
-        :bg-color="bgColor"
-        :text-color="textColor"
         :dense="dense"
         :flat="flat"
         :rounded="rounded"
@@ -69,8 +63,8 @@ const roundedOptions = ref([
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="title" label="Title" density="compact" />
@@ -78,8 +72,6 @@ const roundedOptions = ref([
         <KunTextField v-model="subtitle" label="Subtitle" density="compact" />
         <KunTextField v-model="prepend" label="Prepend (vacío = oculto)" density="compact" />
         <KunTextField v-model="append" label="Append (vacío = oculto)" density="compact" />
-        <KunTextField v-model="bgColor" label="Background color" density="compact" />
-        <KunTextField v-model="textColor" label="Text color" density="compact" />
         <KunTextField v-model="height" label="Height" density="compact" />
         <KunTextField v-model="width" label="Width" density="compact" />
         <KunSelect

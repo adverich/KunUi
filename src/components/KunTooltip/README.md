@@ -31,9 +31,7 @@ import { KunTooltip } from 'adverich-kun-ui'
 | `disabled` | `Boolean` | `-` | Deshabilita el tooltip. |
 | `delay` | `Number \| String` | `0` | Retraso en ms antes de mostrar. |
 | `closeDelay` | `Number \| String` | `100` | Retraso en ms antes de ocultar. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
-| `bgColor` | `String` | `'bg-surface-dark'` | Color de fondo. |
-| `rounded` | `String` | `'rounded'` | Redondeo. |
+| `rounded` | `String` | `'rounded-sm'` | Redondeo (clase de escala, `rounded-sm` por defecto). |
 | `textSize` | `String` | `'text-sm'` | Tamaño del texto. |
 | `dist` | `Number \| Object` | `() => ({ x: 0, y: 8 })` | Offset extra `{ x, y }` o número (simétrico: aplica a `x` e `y`). |
 | `flip` | `Boolean` | `true` | Voltea al lado opuesto si no hay espacio. |
@@ -42,6 +40,17 @@ import { KunTooltip } from 'adverich-kun-ui'
 
 - `#activator`
 - `#default`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- Deja de ser `bg-inverted` (alto contraste): ahora `bg-default text-highlighted
+  ring ring-default`, igual que el `tooltip` de Nuxt UI. El borde del globo es
+  visible en light y dark.
+- El composable `useTooltip.ts` está **deprecado** y no lo usa el SFC (que emplea
+  `useTooltipPosition`); su `arrowClass` solo se actualizó por consistencia y no
+  renderiza flecha (el SFC no monta flecha).
 
 ---
 

@@ -14,20 +14,11 @@ export const kunListItemAvatarProps = {
     default: 'md',
     validator: (v: unknown) => ['sm', 'md', 'lg'].includes(v as string),
   },
-  /** Redondeo. */
+  /** Redondeo: 'full' | 'none'. `null` = circular (propio de avatar). */
   rounded: {
-    type: String,
-    default: 'rounded-full'
-  },
-  /** Color de fondo. */
-  bgColor: {
-    type: String,
-    default: 'bg-surface-light'
-  },
-  /** Color del texto. */
-  textColor: {
-    type: String,
-    default: 'text-ui-inverse'
+    type: String as PropType<'full' | 'none' | null>,
+    default: null,
+    validator: (v: unknown) => v === null || ['full', 'none'].includes(v as string)
   },
   /** Peso del texto. */
   fontWeight: {

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import KunChip from '../src/components/KunChip.vue'
-import type { KunChipVariant, KunChipDensity } from '../src/composables/kunChipProps.js'
+import type { KunChipDensity } from '../src/composables/kunChipProps.js'
+import type { KunColor, KunVariant } from '../../../theme/kunVariants.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
@@ -20,12 +21,14 @@ const text = ref('')
 // ------------------------------------------------------------------
 // Uniones cerradas -> KunSelect con refs tipadas
 // ------------------------------------------------------------------
-const variant = ref<KunChipVariant>('default')
+const variant = ref<KunVariant>('solid')
 const variantOptions = ref([
-  { id: 'default', name: 'default' },
-  { id: 'outlined', name: 'outlined' },
-  { id: 'flat', name: 'flat' },
-  { id: 'pill', name: 'pill' },
+  { id: 'solid', name: 'solid' },
+  { id: 'outline', name: 'outline' },
+  { id: 'soft', name: 'soft' },
+  { id: 'subtle', name: 'subtle' },
+  { id: 'ghost', name: 'ghost' },
+  { id: 'link', name: 'link' },
 ])
 
 const density = ref<KunChipDensity>('default')
@@ -36,11 +39,18 @@ const densityOptions = ref([
 ])
 
 // ------------------------------------------------------------------
-// Colores y etiqueta de cierre (String puro: directo)
+// Color semantico + etiqueta de cierre
 // ------------------------------------------------------------------
-const color = ref('bg-button')
-const textColor = ref('text-ui')
+const color = ref<KunColor>('primary')
+const colorOptions = ref([
+  { id: 'primary', name: 'primary' },
+  { id: 'secondary', name: 'secondary' },
+  { id: 'success', name: 'success' },
+  { id: 'error', name: 'error' },
+  { id: 'neutral', name: 'neutral' },
+])
 const closeLabel = ref('Cerrar')
+const pill = ref(false)
 
 // ------------------------------------------------------------------
 // Iconos y enlace (aceptan null: vacío = null)
@@ -92,9 +102,9 @@ function logEvent(name: string, detail: unknown): void {
           :label="label || null"
           :text="text || null"
           :color="color"
-          :text-color="textColor"
           :close-label="closeLabel"
           :variant="variant"
+          :pill="pill"
           :clickable="clickable"
           :closable="closable"
           :disabled="disabled"
@@ -112,41 +122,41 @@ function logEvent(name: string, detail: unknown): void {
         <button
           v-if="!visible"
           type="button"
-          class="px-3 py-1.5 text-sm rounded border border-ui"
+          class="px-3 py-1.5 text-sm rounded-lg border border-default"
           @click="visible = true; logEvent('reset', 'chip restaurado')"
         >
           Restablecer
         </button>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
-        <div>{{ JSON.stringify(visible) }} <span class="text-ui-muted">({{ typeof visible }})</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
+        <div>{{ JSON.stringify(visible) }} <span class="text-muted">({{ typeof visible }})</span></div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Interactuá con el chip para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Interactuá con el chip para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el chip) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Contenido</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Contenido</p>
         <KunTextField v-model="label" label="Label (vacío = null)" density="compact" />
         <KunTextField v-model="text" label="Text alias (vacío = null)" density="compact" />
         <KunTextField v-model="closeLabel" label="Close label" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Variante y densidad</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Variante y densidad</p>
         <KunSelect
           v-model="variant"
           v-model:items="variantOptions"
@@ -163,20 +173,27 @@ function logEvent(name: string, detail: unknown): void {
           item-title="name"
           density="compact"
         />
-        <KunTextField v-model="color" label="Color (fondo)" density="compact" />
-        <KunTextField v-model="textColor" label="Text color" density="compact" />
+        <KunSelect
+          v-model="color"
+          v-model:items="colorOptions"
+          label="Color"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSwitch v-model="pill" label="Pill (reservada, sin efecto)" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Iconos</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Iconos</p>
         <KunTextField v-model="prependIcon" label="Prepend icon (vacío = null)" density="compact" />
         <KunTextField v-model="appendIcon" label="Append icon (vacío = null)" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Enlace</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Enlace</p>
         <KunTextField v-model="toRaw" label="To (vacío = null)" density="compact" />
         <KunTextField v-model="hrefRaw" label="Href (vacío = null)" density="compact" />
         <KunTextField v-model="target" label="Target (vacío = null)" density="compact" />
         <KunSwitch v-model="replace" label="Replace (solo con to)" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Estado</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Estado</p>
         <KunSwitch v-model="clickable" label="Clickable" />
         <KunSwitch v-model="closable" label="Closable" />
         <KunSwitch v-model="disabled" label="Disabled" />

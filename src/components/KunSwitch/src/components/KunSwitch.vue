@@ -86,7 +86,7 @@ const currentSize = computed<KunSwitchSize>(() => sizeClasses[props.size as stri
     <!-- Vertical -->
     <template v-if="vertical">
       <label class="flex flex-col items-center gap-1 cursor-pointer">
-        <span v-if="label && labelPosition === 'top'" class="text-sm text-ui">
+        <span v-if="label && labelPosition === 'top'" class="text-sm text-default">
           {{ label }}
         </span>
 
@@ -116,7 +116,7 @@ const currentSize = computed<KunSwitchSize>(() => sizeClasses[props.size as stri
           </div>
         </div>
 
-        <span v-if="label && labelPosition === 'bottom'" class="text-sm text-ui">
+        <span v-if="label && labelPosition === 'bottom'" class="text-sm text-default">
           {{ label }}
         </span>
       </label>
@@ -154,14 +154,14 @@ const currentSize = computed<KunSwitchSize>(() => sizeClasses[props.size as stri
             </div>
         </div>
 
-        <div v-if="label" class="text-sm text-ui">
+        <div v-if="label" class="text-sm text-default">
           {{ label }}
         </div>
       </label>
     </template>
 
     <!-- Details -->
-    <div v-if="!hideDetails" class="text-xs text-ui-muted mt-1 ml-14" v-bind="$attrs">
+    <div v-if="!hideDetails" class="text-xs text-muted mt-1 ml-14" v-bind="$attrs">
       <slot name="details" />
     </div>
   </div>

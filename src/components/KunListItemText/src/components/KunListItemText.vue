@@ -2,7 +2,7 @@
   <span
     :class="[
       'truncate',
-      fontSize, textColor, fontWeight
+      fontSize, 'text-muted', fontWeight
     ]"
     v-bind="$attrs"
   >

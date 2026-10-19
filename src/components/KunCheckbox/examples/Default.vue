@@ -172,34 +172,34 @@ function logEvent(name: string, detail: unknown): void {
         @click:append="logEvent('click:append', '')"
       />
 
-      <div class="space-y-2 rounded-lg border border-ui p-3">
-        <div class="text-ui-muted text-xs">Grupo múltiple (array v-model compartido)</div>
+      <div class="space-y-2 rounded-lg border border-default p-3">
+        <div class="text-muted text-xs">Grupo múltiple (array v-model compartido)</div>
         <KunCheckbox v-model="groupValue" multiple value="opcion-1" label="Opción 1" />
         <KunCheckbox v-model="groupValue" multiple value="opcion-2" label="Opción 2" />
         <KunCheckbox v-model="groupValue" multiple value="opcion-3" label="Opción 3" />
         <div class="font-mono text-xs">{{ JSON.stringify(groupValue) }}</div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
-        <div>{{ JSON.stringify(value) }} <span class="text-ui-muted">({{ typeof value }})</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
+        <div>{{ JSON.stringify(value) }} <span class="text-muted">({{ typeof value }})</span></div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Interactuá con el checkbox para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Interactuá con el checkbox para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el checkbox) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="label" label="Label" density="compact" />

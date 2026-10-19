@@ -29,8 +29,8 @@ import { KunSkeleton } from 'adverich-kun-ui'
 | `rounded` | `String` | `"md"` | Redondeo. |
 | `animation` | `KunSkeletonAnimation` | `"shimmer"` | Animación: 'shimmer' (barrido con pausa) \| 'shimmer-vertical' (barrido vertical) \| 'wave' (oscilación continua) \| 'pulse' (pulso de opacidad) \| 'none' (estático).<br/>Valores · Values: `shimmer` `shimmer-vertical` `wave` `pulse` `none` |
 | `duration` | `Number` | `1600` | Duración de la animación en ms. Se aplica a todas las animaciones. |
-| `colorFrom` | `String` | `"bg-ui-hover"` | Clase de fondo base del placeholder. |
-| `colorTo` | `String` | `"bg-ui-hover"` | Reservado para compatibilidad. Actualmente sin efecto (el brillo deriva de la superficie elevada). |
+| `colorFrom` | `String` | `"bg-muted"` | Clase de fondo base del placeholder. |
+| `colorTo` | `String` | `"bg-accented"` | Reservado para compatibilidad. Actualmente sin efecto (el brillo deriva de la superficie elevada). |
 | `repeat` | `Boolean` | `true` | Reservado para repetir el placeholder. Actualmente sin efecto. |
 | `class` | `String \| Array \| Object` | `""` | Clase extra del placeholder. |
 

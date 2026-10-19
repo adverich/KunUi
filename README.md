@@ -111,10 +111,6 @@ import 'adverich-kun-ui/dist/adverich-kun-ui.css'
 - `KunSkeleton` - Skeleton loader
 - `KunLoaderCircular` - Loader circular
 
-### Utilidades
-- `KunModalFooter` - Pie de modal
-- `KunMultipleModalFooter` - Múltiples pies de modal
-
 ## Backgrounds utilitarios
 
 La librería ahora incluye fondos globales listos para usar en contenedores, shells o layouts, con nombres más descriptivos de la tonalidad NeoPos:

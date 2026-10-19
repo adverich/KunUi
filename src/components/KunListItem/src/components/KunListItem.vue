@@ -150,9 +150,9 @@ if (listContext && props.selectable && props.value !== null) {
 const baseItemClass = 'w-full flex transition duration-150 ease-in-out'
 const variantClass = computed(() => {
   switch (props.variant) {
-    case 'outlined': return 'border border-ui'
+    case 'outlined': return 'ring ring-accented'
     case 'elevated': return 'shadow-md'
-    case 'tonal': return 'bg-surface'
+    case 'tonal': return 'bg-muted'
     case 'flat': return 'bg-transparent'
     case 'plain': return ''
     default: return ''
@@ -168,25 +168,23 @@ const densityClass = computed(() => {
 const roundedClass = computed(() => {
   if (props.tile) return 'rounded-none'
   if (props.rounded === true) return 'rounded-md'
-  if (props.rounded === false) return ''
-  return `rounded-${props.rounded}`
+  return ''
 })
 const rippleClass = computed(() => props.ripple ? 'relative overflow-hidden' : '')
 
 const mergedItemClass = computed(() => {
   return [
     baseItemClass,
+    'bg-transparent text-default',
     variantClass.value,
     densityClass.value,
     roundedClass.value,
     rippleClass.value,
-    props.textColor,
     props.itemPosition,
-    props.bgItems,
     {
       'cursor-not-allowed opacity-50': props.disabled,
-      [`cursor-pointer ${props.hoverBg}`]: props.selectable && !props.disabled,
-      [props.activeClass]: isItemSelected.value || isActive.value,
+      'cursor-pointer hover:bg-elevated': props.selectable && !props.disabled,
+      'bg-accented text-default': isItemSelected.value || isActive.value,
       'px-4': !props.noGutters,
     },
     props.containerClass,

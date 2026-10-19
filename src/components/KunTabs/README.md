@@ -28,9 +28,7 @@ import { KunTabs } from 'adverich-kun-ui'
 | `items` | `Array` | `-` | Reservado para tabs por datos. Actualmente sin efecto (usar slots KunTab o items de KunTabWindow). |
 | `alignTabs` | `KunTabsAlignTabs` | `'start'` | Alineación de los tabs.<br/>Valores · Values: `start` `center` `end` `title` |
 | `direction` | `KunTabsDirection` | `'horizontal'` | Dirección del layout: 'horizontal' \| 'vertical'.<br/>Valores · Values: `horizontal` `vertical` |
-| `bgColor` | `String` | `''` | Color de fondo de la barra. |
-| `color` | `String` | `-` | Color de los tabs (reservado, sin efecto). |
-| `sliderColor` | `String` | `'bg-primary'` | Color del slider indicador. |
+| `sliderColor` | `String` | `'bg-primary'` | Color del slider indicador (clase `bg-*` del theme). |
 | `selectedClass` | `String` | `'text-primary font-medium'` | Clase del tab activo. |
 | `grow` | `Boolean` | `-` | Los tabs ocupan todo el ancho. |
 | `fixedTabs` | `Boolean` | `-` | Ancho fijo por tab, sin scroll (reservado, sin efecto). |
@@ -54,7 +52,7 @@ import { KunTabs } from 'adverich-kun-ui'
 | `disabled` | `Boolean` | `-` | Deshabilita el tab. |
 | `stacked` | `Boolean` | `-` | Ícono sobre el texto (layout vertical). |
 | `selectedClass` | `String` | `'text-primary font-medium'` | Clase cuando está seleccionado. |
-| `baseColor` | `String` | `'text-ui-muted'` | Color cuando no está seleccionado. |
+| `baseColor` | `String` | `'text-muted'` | Color cuando no está seleccionado. |
 | `colorClass` | `String` | `''` | Clase extra de color. |
 | `tag` | `String` | `'button'` | Tag del contenedor. |
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link). |

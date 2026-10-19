@@ -78,7 +78,7 @@ function logEvent(name: string, detail: unknown): void {
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunListItem</h2>
 
-      <ul class="space-y-1 rounded-lg bg-surface p-3">
+      <ul class="space-y-1 rounded-lg bg-muted p-3">
         <KunListItem
           value="demo"
           :title="title"
@@ -97,32 +97,32 @@ function logEvent(name: string, detail: unknown): void {
           :no-gutters="noGutters"
           @click="logEvent('click', title)"
         />
-        <KunListItem active active-class="bg-green-100 text-green-600">Elemento activo</KunListItem>
+        <KunListItem active>Elemento activo</KunListItem>
         <KunListItem disabled>Elemento deshabilitado</KunListItem>
       </ul>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Hacé clic en el ítem demo para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Hacé clic en el ítem demo para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Contenido</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Contenido</p>
         <KunTextField v-model="title" label="Title" density="compact" />
         <KunTextField v-model="subtitle" label="Subtitle" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Variante y densidad</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Variante y densidad</p>
         <KunSelect
           v-model="variant"
           v-model:items="variantOptions"
@@ -140,13 +140,13 @@ function logEvent(name: string, detail: unknown): void {
           density="compact"
         />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Iconos y avatares (vacío = sin icono)</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Iconos y avatares (vacío = sin icono)</p>
         <KunTextField v-model="prependIconRaw" label="Prepend icon ($alias, clase)" density="compact" />
         <KunTextField v-model="appendIconRaw" label="Append icon ($alias, clase)" density="compact" />
         <KunTextField v-model="prependAvatar" label="Prepend avatar URL" density="compact" />
         <KunTextField v-model="appendAvatar" label="Append avatar URL" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Estado</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Estado</p>
         <KunSwitch v-model="active" label="Active" />
         <KunSwitch v-model="selectable" label="Selectable" />
         <KunSwitch v-model="disabled" label="Disabled" />

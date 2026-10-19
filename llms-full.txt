@@ -1,6 +1,6 @@
 # KunUI — Full Documentation
 
-> Complete reference for AI agents. Generated from source by `scripts/generate-docs.ts` (v0.1.667). Start with `llms.txt` for the index; use `registry.json` for machine-readable data.
+> Complete reference for AI agents. Generated from source by `scripts/generate-docs.ts` (v0.1.668). Start with `llms.txt` for the index; use `registry.json` for machine-readable data.
 
 <!-- component: KunAlert -->
 
@@ -33,15 +33,12 @@ import { KunAlert } from 'adverich-kun-ui'
 | `message` | `String` | `-` | Mensaje descriptivo bajo el título. |
 | `position` | `KunAlertPosition` | `'br'` | Posición en pantalla: t(op)/c(enter)/b(ottom) + l(eft)/c(enter)/r(ight).<br/>Valores · Values: `tl` `tc` `tr` `cl` `cc` `cr` `bl` `bc` `br` |
 | `icon` | `string \| null` | `null` | Ícono a mostrar (clase o nombre con `$`). |
-| `iconSize` | `String` | `'text-2xl'` | Tamaño del ícono (clase Tailwind de texto). |
-| `iconBgColor` | `String` | `'bg-error'` | Color de fondo del contenedor del ícono. |
-| `bgColor` | `String` | `'bg-error'` | Color de fondo de la alerta. |
-| `textColor` | `String` | `'text-ui-inverse'` | Color del texto. |
-| `borderColor` | `String` | `''` | Color del borde (vacío = sin borde visible). |
+| `iconSize` | `String` | `'size-6'` | Tamaño del ícono (clase Tailwind, `size-6`). |
+| `color` | `KunColor` | `'error' as KunColor` | Color semántico de la alerta. |
+| `variant` | `KunVariant` | `'solid' as KunVariant` | Variante visual: 'solid' \| 'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'link'. |
 | `titleClass` | `String` | `'text-2xl font-bold'` | Clases del título. |
 | `messageClass` | `String` | `'text-base font-normal'` | Clases del mensaje. |
 | `closable` | `Boolean` | `false` | Muestra botón de cierre. |
-| `zIndex` | `String \| Number` | `2500` | Z-index del contenedor flotante. |
 | `transition` | `String` | `'transition-opacity duration-300 ease-in-out'` | Clases de transición de entrada/salida. |
 | `alertClass` | `String` | `'relative w-fit rounded-lg shadow-md'` | Clases del contenedor de la alerta. |
 | `paddingContainer` | `String` | `'p-2'` | Padding interno del contenedor. |
@@ -56,6 +53,38 @@ import { KunAlert } from 'adverich-kun-ui'
 
 - `update:modelValue`
 - `action`
+
+## Notas · Notes
+
+## Auto-cierre por `timeout`
+
+El temporizador es **reactivo**, no de montaje. Un `watch` sobre
+`[modelValue, timeout, persistent]` (con `immediate`) arma/cancela el `setTimeout`:
+
+- `modelValue` pasa a `true` → se arma el timer con `timeout` ms.
+- `modelValue` pasa a `false` (cierre por cruz, self-click, Esc o el propio timer)
+  → se cancela.
+- `timeout` o `persistent` cambian en vivo → se reinicia/limpia.
+- `onBeforeUnmount` → `clearTimeout` (sin emits fantasma).
+- `timeout: 0` o `persistent: true` → sin auto-cierre.
+
+Antes el timer se armaba en `onMounted`, es decir **una sola vez** al montar el
+componente. Como el componente suele quedar montado y solo se conmuta el
+`v-model`, el timer disparaba una vez (a veces con la alerta oculta) y nunca se
+re-armaba → el auto-cierre no volvía a funcionar.
+
+## Sin apilado (por diseño)
+
+Cada `KunAlert` teleporta su propio `div` `fixed` (`<Teleport to="body">`) en la
+posición elegida (`position` + `margin`). **No hay** manager, grupo, contenedor ni
+`useAlert` global: dos alertas visibles en la misma `position` se **superponen**
+(la última montada queda encima por orden de DOM). No es una regresión; siempre
+fue así. Para notificaciones apilables usar `KunToast` / `useToast`.
+
+## Capa z-index
+
+Se monta en la capa `notification` (`zIndexStyle('notification')`), la misma que
+`KunToaster`, por encima de `overlay` (menús/selects/modales) y `docked` (appbar).
 
 ---
 
@@ -90,7 +119,6 @@ import { KunAppbar } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `bgColor` | `String` | `'bg-transparent'` | Color de fondo. |
 | `title` | `String` | `-` | Título (texto). |
 | `titleImage` | `String` | `-` | URL de imagen/logo junto al título. |
 | `titleSize` | `String` | `'text-base'` | Tamaño del título (clase Tailwind). |
@@ -99,14 +127,13 @@ import { KunAppbar } from 'adverich-kun-ui'
 | `density` | `KunAppbarDensity` | `'default'` | Densidad visual.<br/>Valores · Values: `default` `comfortable` `compact` |
 | `height` | `String` | `-` | Altura (clase Tailwind). |
 | `elevation` | `KunAppbarElevation` | `'md'` | Elevación/sombra.<br/>Valores · Values: `sm` `md` `lg` `xl` `2xl` `none` |
-| `bordered` | `Boolean` | `false` | Muestra borde inferior (usa `borderColor`). |
-| `borderColor` | `String` | `'border-b border-ui'` | Clases del borde inferior. |
+| `bordered` | `Boolean` | `true` | Muestra borde inferior (`border-b border-default`). Por defecto `true` (igual que el header de Nuxt UI). |
 | `showDrawerButton` | `Boolean` | `true` | Muestra el botón para abrir/cerrar el drawer. |
 | `buttonClass` | `String` | `'px-2'` | Clase extra del botón del drawer. |
-| `buttonBg` | `String` | `'bg-button-disabled opacity-75'` | Fondo del botón del drawer. |
+| `buttonColor` | `KunColor \| null` | `null` | Color del botón del drawer. `null` delega al theme global. |
+| `buttonVariant` | `KunVariant \| null` | `null` | Variante del botón del drawer. `null` delega al theme global. |
 | `leftSectionClass` | `String` | `'flex items-center gap-2'` | Clase de la sección izquierda (slot `left`). |
 | `rightSectionClass` | `String` | `'flex items-center gap-2 justify-end ml-auto'` | Clase de la sección derecha (slot `right`). |
-| `zIndex` | `String` | `'z-1000'` | Z-index. |
 | `fixed` | `Boolean` | `false` | Fija arriba con `fixed top-0 left-0 right-0`. |
 | `sticky` | `Boolean` | `false` | Fija arriba con `sticky top-0`. |
 | `glass` | `Boolean` | `false` | Efecto cristal (`backdrop-blur-md`). |
@@ -130,6 +157,18 @@ import { KunAppbar } from 'adverich-kun-ui'
 ## Métodos expuestos · Exposed
 
 - `el()`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- Superficie `bg-default` (antes `bg-elevated`), como el `header` de Nuxt UI.
+- `bordered` pasa a **default `true`**: el header va siempre con
+  `border-b border-default`. Con `bg-default` el borde es visible en light y dark
+  (antes el borde quedaba sobre `bg-elevated`: en dark
+  `--kun-border == --kun-bg-elevated == neutral-800` ⇒ invisible).
+- `elevation` sigue opt-in; un header con sombra sobre `bg-default` puede verse
+  redundante (Nuxt no la usa).
 
 ---
 
@@ -223,7 +262,7 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 | `textNoItems` | `String` | `"No hay elementos"` | Texto cuando no hay ítems. |
 | `hasCreateItem` | `Boolean` | `false` | Muestra botón para crear un ítem (emite `createItem`). |
 | `btnCreateClass` | `String` | `"w-full"` | Clase del botón crear. |
-| `btnCreateBg` | `String` | `"bg-success"` | Color del botón crear. |
+| `btnCreateColor` | `KunColor` | `'success'` | Color semántico del botón crear. |
 | `btnCreateText` | `String` | `"Crear item"` | Texto del botón crear. |
 | `multiple` | `Boolean` | `false` | Selección múltiple (chips). |
 | `required` | `Boolean` | `false` | Marca el campo como requerido (asterisco). |
@@ -235,17 +274,12 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 | `itemFontSize` | `String` | `'text-base'` | Tamaño de fuente del título de cada opción (clase Tailwind). |
 | `subtitleFontSize` | `String` | `'text-xs'` | Tamaño de fuente del subtítulo de cada opción (clase Tailwind). |
 | `density` | `KunTextFieldDensity` | `"default"` | Densidad del campo (se reenvía al KunTextField). |
-| `zIndex` | `String` | `"z-250"` | Z-index del menú. |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |
 | `hasIcons` | `Boolean` | `true` | Muestra iconos de estado (limpiar/desplegar). |
 | `textFieldProps` | `Object` | `() => ({})` | Props visuales y atributos que se reenvían al KunTextField interno. |
-| `iconColor` | `String` | `'text-ui-primary'` | Color del ícono desplegar. |
-| `requiredIconColor` | `String` | `'text-ui-primary'` | Color del asterisco de requerido. |
-| `emptyTextClass` | `String` | `'text-ui-muted'` | Clase del texto "sin elementos". |
-| `bgMenuColor` | `String` | `"bg-menu"` | Color de fondo del menú. |
-| `bgItemListColor` | `String` | `"bg-transparent"` | Color de fondo de cada opción. |
-| `selectedItemListColor` | `String` | `"bg-ui-selection text-ui-selection"` | Clase de la opción seleccionada. |
-| `hoverItemListColor` | `String` | `"hover:bg-ui-selection-hover"` | Clase hover de cada opción. |
+| `iconColor` | `String` | `'text-primary'` | Color del ícono desplegar. |
+| `requiredIconColor` | `String` | `'text-error'` | Color del asterisco de requerido. |
+| `emptyTextClass` | `String` | `'text-muted'` | Clase del texto "sin elementos". |
 | `attach` | `Boolean` | `false` | Reservado (no se reenvía al KunMenu interno). Actualmente sin efecto. |
 | `rules` | `Array` | `() => []` | Reglas de validación: `(valor) => true \| string`. |
 
@@ -296,7 +330,7 @@ import { KunAvatar } from 'adverich-kun-ui'
 | `text` | `String` | `-` | Texto (iniciales) a mostrar si no hay imagen ni ícono. |
 | `alt` | `String` | `-` | Texto alternativo de la imagen. |
 | `size` | `string \| number` | `"default"` | Tamaño predefinido ('x-small' \| 'small' \| 'default' \| 'large' \| 'x-large') o px numéricos. |
-| `rounded` | `String \| Number \| Boolean` | `-` | Radio de borde (true = circular). |
+| `rounded` | `String \| Number \| Boolean` | `-` | Radio de borde: por defecto `rounded-full`; `false`/`'none'` → `rounded-none`; escala (`'md'`, `'lg'`, ...) → `rounded-<valor>`. |
 | `border` | `String \| Number \| Boolean` | `false` | Borde: se renderiza como `border border-<valor>`. |
 | `color` | `String` | `-` | Sufijo de color de fondo (`bg-<color>`). |
 | `density` | `KunAvatarDensity` | `"default"` | Densidad: escala el tamaño del avatar (comfortable −1 paso, compact −2 pasos).<br/>Valores · Values: `default` `comfortable` `compact` |
@@ -317,6 +351,29 @@ import { KunAvatar } from 'adverich-kun-ui'
 ## Slots
 
 - `#default`
+
+## Notas · Notes
+
+# KunAvatar
+
+## Bordes y radio
+
+`rounded` acepta `String | Number | Boolean` y se resuelve así:
+
+- `tile`, `false` o `'none'` → `rounded-none`.
+- string distinto de `'full'` (p. ej. `'md'`, `'lg'`) → `rounded-<valor>` (paso de
+  la escala global).
+- default (`undefined`) → `rounded-full`.
+
+Cambio respecto al comportamiento anterior:
+
+- **Antes**: cualquier `rounded` truthy (incluido `true`) forzaba `rounded-full`;
+  el default era `rounded` pelado (4px fijos que no seguían `--kun-radius`).
+- **Ahora**: el default es circular; `false` / `'none'` da cuadrado y un string da
+  el paso de escala pedido.
+
+Nota: en `KunToast` el `rounded` del `<KunAvatar>` es la prop booleana del avatar
+(el chrome de la tarjeta lo aporta el consumidor vía `ui.root`).
 
 ---
 
@@ -352,11 +409,11 @@ import { KunBadge } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `text` | `String \| Number` | `''` | Texto o número a mostrar dentro del badge. |
-| `bgColor` | `String` | `'bg-error'` | Color de fondo del badge. |
-| `textColor` | `String` | `'text-black dark:text-white'` | Color del texto. |
+| `color` | `KunColor` | `'error' as KunColor` | Color semántico del badge. |
 | `textSize` | `String` | `'text-xs'` | Tamaño del texto. |
 | `fontWeight` | `String` | `'font-bold'` | Peso del texto. |
-| `rounded` | `String` | `'rounded-full'` | Redondeo del badge. |
+| `rounded` | `'full' \| 'none' \| null` | `null` | Redondeo: 'full' \| 'none'. `null` = `rounded-sm` (redondeo propio de badge). |
+| `pill` | `Boolean` | `false` | Forma píldora (`rounded-full`). Por defecto el badge es `rounded-sm`. |
 | `dot` | `Boolean` | `false` | Modo punto (sin texto, solo indicador). |
 | `visible` | `Boolean` | `true` | Visibilidad del badge. |
 | `position` | `KunBadgePosition` | `'top right' as KunBadgePosition` | Posición relativa al contenido envuelto ("vertical horizontal"). |
@@ -367,6 +424,34 @@ import { KunBadge } from 'adverich-kun-ui'
 ## Slots
 
 - `#default`
+
+## Notas · Notes
+
+# KunBadge
+
+## Bordes y radio
+
+Vocabulario propio del badge (alineado con Nuxt UI):
+
+- Default: `rounded-sm`.
+- `pill` (prop nueva, `Boolean`) o `rounded="full"` → `rounded-full`.
+- `rounded="none"` → `rounded-none`.
+
+`rounded` dejó de aceptar clases Tailwind (p. ej. `'rounded-2xl'`): ahora es
+`'full' | 'none' | null` con `validator`. Es un cambio de API:
+
+- **Antes**: el badge era píldora por defecto (`rounded-full` fijo).
+- **Ahora**: píldora es opt-in.
+
+```vue
+<KunBadge pill color="error">Nuevo</KunBadge>
+```
+
+## Color
+
+`bgColor` / `textColor` se reemplazaron por `color`
+(`primary|secondary|success|info|warning|error|neutral`), resuelto con
+`kunVariantClasses` del theme global.
 
 ---
 
@@ -402,26 +487,24 @@ import { KunBtn } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `text` | `String` | `-` | Texto del botón (alternativa al slot default). |
-| `size` | `KunBtnSize` | `'md'` | Tamaño: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'.<br/>Valores · Values: `xxs` `xs` `sm` `md` `lg` `xl` `xxl` |
+| `size` | `KunBtnSize` | `'md'` | Tamaño: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'. |
 | `minWidth` | `String` | `'min-w-[3rem]'` | Ancho mínimo (clase Tailwind). Solo aplica si no hay ancho custom. |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |
-| `rounded` | `String` | `'rounded-lg'` | Redondeo de bordes. |
+| `rounded` | `KunBtnRounded \| null \| undefined` | `null` | Redondeo propio: 'full' \| 'none'. `undefined` hereda la escala global. |
 | `textAlign` | `String` | `'text-center'` | Alineación del texto. |
-| `variant` | `KunBtnVariant` | `'default'` | Variante visual: 'default' \| 'tonal' \| 'plain' \| 'outlined' \| 'soft' \| 'text'.<br/>Valores · Values: `default` `tonal` `plain` `outlined` `soft` `text` |
+| `color` | `KunColor \| null` | `null` | Color semántico: 'primary' \| 'secondary' \| 'success' \| 'info' \| 'warning' \| 'error' \| 'neutral'. `null` delega al theme global. |
+| `variant` | `KunVariant \| null` | `null` | Variante visual: 'solid' \| 'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'link'. `null` delega al theme global. |
 | `disabled` | `Boolean` | `-` | Deshabilita el botón (también cuando loading). |
 | `loading` | `Boolean` | `-` | Muestra loader y bloquea interacción. |
-| `bgColor` | `String` | `'bg-button'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link en vez de button). |
 | `href` | `String` | `-` | URL externa (renderiza <a> en vez de button). |
 | `replace` | `Boolean` | `-` | Navegación con replace (solo con `to`). |
 | `target` | `String` | `-` | Target del enlace (solo con `to`/`href`). |
-| `ring` | `Boolean` | `-` | Anillo de foco accesible. |
+| `ring` | `Boolean` | `-` | Anillo de foco accesible extra (además del outline del sistema). |
 | `icon` | `Boolean \| String \| Function \| Object \| Array` | `-` | Ícono central (solo visible si no hay `text` ni slot default). |
 | `prependIcon` | `String \| Function \| Object \| Array` | `-` | Ícono a la izquierda del contenido. |
 | `appendIcon` | `String \| Function \| Object \| Array` | `-` | Ícono a la derecha del contenido. |
 | `iconSize` | `string \| null` | `null` | Tamaño del ícono (sobrescribe el calculado por `size`). |
-| `focusColor` | `string \| null` | `null` | Color extra en estado de foco. |
 
 ## Eventos · Events
 
@@ -479,12 +562,9 @@ import { KunCard } from 'adverich-kun-ui'
 | `subtitle` | `string \| null` | `null` | Subtítulo (atajo). |
 | `subTitleSize` | `string \| null` | `null` | Reservado. Actualmente sin efecto (no se propaga a KunCardTitle). |
 | `text` | `string \| null` | `null` | Texto del cuerpo (atajo; equivale al slot default). |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
-| `bgColor` | `String` | `'bg-transparent'` | Color de fondo. |
 | `flat` | `Boolean` | `false` | Sin sombra. |
 | `rounded` | `KunCardRounded` | `true` | Redondeo: boolean o tamaño. |
-| `outlined` | `Boolean` | `false` | Con borde (usa `outlineColor`). |
-| `outlineColor` | `String` | `'border-ui'` | Color del borde en modo `outlined`. |
+| `outlined` | `Boolean` | `false` | Con borde (`border border-default`). Redundante con `variant="outlined"`. |
 | `elevation` | `KunCardElevation` | `1` | Nivel de sombra (0-5, como string o número).<br/>Valores · Values: `0` `1` `2` `3` `4` `5` `` |
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link). |
 | `href` | `String` | `-` | URL externa (renderiza <a>). |
@@ -518,6 +598,16 @@ import { KunCard } from 'adverich-kun-ui'
 - `#default`
 - `#append`
 - `#actions`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- Superficie `bg-default` (antes `bg-elevated`), como la `card` de Nuxt UI.
+- `outlined`/`variant="outlined"` pasa de `border border-default` a
+  `ring ring-default`: sobre `bg-elevated` el borde era invisible en dark
+  (`--kun-border == --kun-bg-elevated == neutral-800`).
+- `tonal` sigue `bg-muted`; `text` sigue `bg-transparent`.
 
 ---
 
@@ -637,7 +727,7 @@ import { KunCardSubtitle } from 'adverich-kun-ui'
 |---|---|---|---|
 | `subtitle` | `string \| number \| null` | `null` | Texto del subtítulo (alternativa al slot). |
 | `dense` | `Boolean` | `false` | Reduce el padding. |
-| `color` | `String` | `'text-ui-muted'` | Color del texto. |
+| `color` | `String` | `'text-muted'` | Color del texto. |
 | `fontWeight` | `String` | `'font-normal'` | Peso del texto. |
 
 ## Slots
@@ -678,7 +768,7 @@ import { KunCardText } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `text` | `string \| number \| null` | `null` | Texto del cuerpo (alternativa al slot). |
-| `color` | `String` | `'text-ui'` | Color del texto. |
+| `color` | `String` | `'text-default'` | Color del texto. |
 | `dense` | `Boolean` | `false` | Reduce el padding. |
 | `opacity` | `String` | `'opacity-100'` | Opacidad del texto. |
 | `tag` | `String` | `'div'` | Tag del contenedor. |
@@ -725,8 +815,6 @@ import { KunCardTitle } from 'adverich-kun-ui'
 | `subtitle` | `String` | `-` | Subtítulo (alternativa al slot). |
 | `prepend` | `String \| Object \| Function` | `-` | Contenido al inicio (componente o icono). |
 | `append` | `String \| Object \| Function` | `-` | Contenido al final (componente o icono). |
-| `bgColor` | `String` | `'bg-transparent'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
 | `dense` | `Boolean` | `false` | Reduce el padding. |
 | `flat` | `Boolean` | `false` | Sin sombra. |
 | `rounded` | `boolean \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `false` | Redondeo: boolean o tamaño. |
@@ -1052,6 +1140,31 @@ import { KunCheckbox } from 'adverich-kun-ui'
 
 - `validate()`
 
+## Notas · Notes
+
+## Control con caja (rediseño)
+
+Antes el estado estaba dibujado por el glifo (`lucide:square` /
+`square-check` / `square-minus`) y `color`/`baseColor` pintaban el **texto** del
+root.
+
+Ahora el control es una **caja** con el patrón de Nuxt UI:
+
+- contorno `ring-1 ring-inset ring-accented` sobre `bg-default`, `rounded-sm`;
+- activa/indeterminada: `bg-primary text-inverted` por defecto, salvo que el
+  consumidor pase `color` (clases libres, p. ej. `bg-success text-inverted`);
+- inactiva: `bg-default`, con `baseColor` opcional;
+- error: `ring-error`.
+
+Los glifos por defecto pasan a `lucide:check` (activo), `lucide:minus`
+(indeterminado) y **ninguno** (inactivo): el `square` propio ya no se dibuja
+(la caja lo reemplaza). `trueIcon`/`falseIcon`/`indeterminateIcon` siguen
+overrideando el glifo interior.
+
+Ruptura: el estado activo ya no hereda el color del texto como color de glifo;
+para colorear la caja pasar una clase de fondo en `color`
+(ej. `color="bg-success text-inverted"`, como en `KunRelationMatrix`).
+
 ---
 
 _Generado por · Generated by `scripts/generate-docs.ts`. No editar a mano · Do not edit by hand._
@@ -1089,9 +1202,9 @@ import { KunChip } from 'adverich-kun-ui'
 | `label` | `string \| null` | `null as string \| null` | Texto principal (alternativa al slot). |
 | `closeLabel` | `String` | `'Cerrar'` | Etiqueta accesible del botón cerrar. |
 | `text` | `string \| null` | `null as string \| null` | Texto secundario (alias de `label`). |
-| `color` | `String` | `'bg-button'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
-| `variant` | `KunChipVariant` | `'default' as KunChipVariant` | Variante visual: 'default' \| 'outlined' \| 'flat' \| 'pill'. |
+| `color` | `KunColor \| null` | `null` | Color semántico. `null` delega al theme global. |
+| `variant` | `KunVariant \| null` | `null` | Variante visual: 'solid' \| 'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'link'. `null` delega al theme global. |
+| `pill` | `Boolean` | `false` | Reservado. El chip es siempre `rounded-full` (forma píldora), sin efecto. |
 | `clickable` | `Boolean` | `true` | Clickable (cursor pointer y hover). |
 | `closable` | `Boolean` | `false` | Muestra botón de cierre (emite `update:modelValue` y `click:close`). |
 | `disabled` | `Boolean` | `false` | Deshabilita el chip. |
@@ -1114,6 +1227,25 @@ import { KunChip } from 'adverich-kun-ui'
 - `#default`
 - `#append`
 - `#close`
+
+## Notas · Notes
+
+# KunChip
+
+## Bordes y radio
+
+- El chip es **siempre** `rounded-full` (forma píldora), sin importar `variant`.
+- La variante `pill` ya no existe: el vocabulario de `variant` es el global
+  (`solid|outline|soft|subtle|ghost|link`).
+- La prop `pill` queda **reservada y sin efecto** (compat de API / documentación).
+
+Migración: `variant="pill"` → `variant="solid"` (o el que corresponda); el
+redondeo píldora ahora es implícito.
+
+## Color
+
+`color` + `textColor` se reemplazaron por `color`
+(`primary|secondary|...|neutral`) + `variant`, resueltos con `kunVariantClasses`.
 
 ---
 
@@ -1245,6 +1377,18 @@ import { KunColorPicker } from 'adverich-kun-ui'
 - `true()`
 - `close()`
 - `false()`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- El panel flotante pasa a `bg-default` + `ring ring-default` (antes
+  `bg-elevated` + `border border-default`, invisible en dark).
+- Trigger, input de valor y selector de formato son **controles**:
+  `bg-default` + `ring ring-inset ring-accented` (foco `ring-primary`). Antes
+  `bg-muted` + `border border-default`.
+- El tablero de previsualización interna (`checkerboard ... border-muted`) no
+  cambia: `--kun-border-muted` (neutral-700) sí contrasta.
 
 ---
 
@@ -1412,13 +1556,20 @@ import { KunDatePicker } from 'adverich-kun-ui'
 ## Modo solo-ícono
 
 Con `only-icon` el campo se reemplaza por un botón que abre el calendario.
-El slot `#icon` reemplaza `IconCalendarOutline` en el activador:
+El slot `#icon` reemplaza el ícono por defecto (`$calendarOutline`) en el activador:
 
 ```vue
 <KunDatePicker v-model="date" only-icon aria-label="Seleccionar fecha">
   <template #icon><MiIcono /></template>
 </KunDatePicker>
 ```
+
+## Bordes y superficies
+
+- El popover pasa a `bg-default` + `ring ring-default` (antes `bg-elevated` +
+  `border border-default`, invisible en dark).
+- Header, bloque de tiempo y footer usan `border-b`/`border-t border-muted`
+  (neutral-700), visibles sobre el panel `bg-default`.
 
 ---
 
@@ -1464,7 +1615,6 @@ import { KunDialog } from 'adverich-kun-ui'
 | `xPosition` | `KunDialogXPosition` | `'center'` | Posición horizontal.<br/>Valores · Values: `start` `center` `end` |
 | `yPosition` | `KunDialogYPosition` | `'center'` | Posición vertical.<br/>Valores · Values: `top` `center` `bottom` |
 | `contentClass` | `String` | `''` | Clase extra del contenido. |
-| `bgColor` | `String` | `'bg-surface-dark'` | Color de fondo. |
 | `minHeight` | `String` | `'h-fit'` | Altura mínima. |
 | `height` | `String` | `'h-fit'` | Altura. |
 | `maxHeight` | `String` | `'max-h-dvh'` | Altura máxima. |
@@ -1479,7 +1629,6 @@ import { KunDialog } from 'adverich-kun-ui'
 | `fullscreen` | `Boolean` | `-` | Pantalla completa. |
 | `scrollable` | `Boolean` | `-` | Contenido con scroll interno. |
 | `contentClass` | `String` | `-` | Clase extra del contenido. |
-| `bgColor` | `String` | `-` | Color de fondo del diálogo. |
 | `minWidth` | `String` | `-` | Ancho mínimo. |
 | `width` | `String` | `-` | Ancho. |
 | `maxWidth` | `String` | `-` | Ancho máximo. |
@@ -1499,6 +1648,14 @@ import { KunDialog } from 'adverich-kun-ui'
 ## Slots
 
 - `#default`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- `KunDialogContent` pasa a `bg-default` + `ring ring-default` (el ring solo en
+  modo no-`fullscreen`). Antes `bg-elevated` sin contorno: el modal no se
+  distinguía de la página en dark (`--kun-bg-elevated == neutral-800`).
 
 ---
 
@@ -1759,8 +1916,7 @@ import { KunDrawer } from 'adverich-kun-ui'
 |---|---|---|---|
 | `modelValue` | `Boolean` | `-` | Apertura del drawer (v-model). |
 | `absolute` | `Boolean` | `-` | Posicionamiento absoluto dentro del contenedor. |
-| `border` | `Boolean \| String \| Number` | `-` | Borde (boolean o clase de color). |
-| `color` | `String` | `-` | Color de fondo. |
+| `border` | `Boolean` | `true` | Borde del lado interior (`border-e/s/t/b border-default`); flotante → `ring ring-default`. Por defecto `true`. |
 | `elevation` | `String \| Number` | `-` | Nivel de sombra. |
 | `floating` | `Boolean` | `-` | Sin bordes ni fondo (flotante). |
 | `image` | `String` | `-` | URL de imagen de fondo. |
@@ -1769,7 +1925,7 @@ import { KunDrawer } from 'adverich-kun-ui'
 | `persistent` | `Boolean` | `-` | No cierra al hacer click fuera. |
 | `rail` | `Boolean` | `-` | Modo rail (colapsado a iconos). |
 | `railWidth` | `String` | `'w-[56px]'` | Ancho en modo rail. |
-| `rounded` | `Boolean \| String \| Number` | `-` | Redondeo de bordes. |
+| `rounded` | `Boolean` | `-` | Redondeo lateral según el lado (`rounded-e-lg` / `rounded-s-lg`). |
 | `scrim` | `Boolean \| String` | `true` | Muestra scrim (overlay) al abrir. |
 | `tag` | `String \| Object` | `'nav'` | Tag del contenedor. |
 | `temporary` | `Boolean` | `-` | Se cierra automáticamente al navegar o hacer click fuera. |
@@ -1800,6 +1956,19 @@ import { KunDrawer } from 'adverich-kun-ui'
 - `#prepend`
 - `#default`
 - `#append`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- Superficie `bg-default` (antes `bg-elevated`), como el `sidebar` de Nuxt UI.
+- `border` pasa a **default `true`** y es **consciente del lado**: `start`/`left`
+  → `border-e`, `end`/`right` → `border-s`, `top` → `border-b`, `bottom` →
+  `border-t` (todo `border-default`). Con `floating` el contorno es
+  `ring ring-default` (panel despegado). Antes un `border border-default`
+  completo, invisible en dark sobre `bg-elevated`.
+- Se eliminó el `border-none` del modo `floating` (ahora lo resuelve
+  `borderClass`).
 
 ---
 
@@ -1856,7 +2025,7 @@ import { KunFileInput } from 'adverich-kun-ui'
 | `prependInnerClass` | `String` | `-` | Clase del contenedor del ícono interno inicial. |
 | `appendInnerClass` | `String` | `-` | Clase del contenedor del ícono interno final. |
 | `clearIcon` | `String \| Object \| Function \| Array` | `-` | Ícono del botón limpiar. |
-| `iconSize` | `String` | `'text-base'` | Tamaño de los íconos. |
+| `iconSize` | `String` | `'size-4'` | Tamaño de los íconos (clase Tailwind, `size-4`). |
 | `variant` | `KunFileInputVariant` | `'filled'` | Variante visual del contenedor.<br/>Valores · Values: `filled` `outlined` `solo` |
 | `rules` | `Array` | `() => []` | Reglas de validación: `(valor) => true \| string`. |
 
@@ -1891,6 +2060,14 @@ import { KunFileInput } from 'adverich-kun-ui'
 
 Usa `inheritAttrs: false` y reenvía `$attrs` al contenedor interno: `@change`
 / `@click` e `id` / `aria-*` no se duplican en el DOM.
+
+## Bordes y radio
+
+- Contenedor `rounded-md`; chips con el nombre de archivo `rounded-sm`.
+- Contorno por rol: el control va sobre `bg-default` con `ring ring-inset ring-accented`
+  (variante `solo` → `bg-elevated` + ring). Antes `bg-muted` + `border border-default`,
+  que en dark quedaba invisible (`--kun-border == --kun-bg-muted == neutral-800`).
+  Foco `ring-2 ring-primary/25`; error `ring-error`.
 
 ---
 
@@ -1958,9 +2135,9 @@ Machine-readable: `registry.json` → `KunForm`.
 
 # KunIcon
 
-> SVG icon from the KunUI set.
+> Icon from Iconify (`$alias`, offline `lucide` collection), class, SVG or component.
 >
-> Ícono SVG del set KunUI.
+> Ícono desde Iconify (alias `$nombre`, colección `lucide` offline), clase, SVG o componente.
 
 ## Uso · Usage
 
@@ -1980,10 +2157,9 @@ import { KunIcon } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `icon` | `KunIconInput` | `-` | Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente o `[icono, tamaño]`. |
-| `aliases` | `Record<string, unknown>` | `(): Record<string` | Aliases `$nombre` → icono/clase/componente. Pisan el set bundleado (`$star`, ...). |
-| `size` | `String` | `'text-md'` | Tamaño (clase de texto o número → px). |
-| `color` | `String` | `'text-font-color'` | Color del ícono. |
+| `icon` | `KunIconInput` | `-` | Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente, nombre Iconify (`i-mdi-home`, `mdi:home`) o `[icono, tamaño]`. |
+| `aliases` | `Record<string, unknown>` | `(): Record<string` | Aliases `$nombre` → icono/clase/componente. Máxima prioridad: pisan a `kunConfig.icons` y al set bundleado (`$star`, ...). |
+| `size` | `string \| number` | `''` | Tamaño: clase Tailwind (`size-5`, `text-xl`) o número → px (ancho/alto). Vacío = hereda el contexto. |
 | `disabled` | `Boolean` | `false` | Atenúa el ícono y bloquea el click. |
 | `cursor` | `string \| null` | `null as string \| null` | Cursor (por defecto pointer, o not-allowed si disabled). |
 | `contentClass` | `String \| Array \| Object` | `-` | Clase extra del contenido del ícono. |
@@ -1995,6 +2171,74 @@ import { KunIcon } from 'adverich-kun-ui'
 ## Slots
 
 - `#default`
+
+## Notas · Notes
+
+## Íconos: `@iconify/vue` + colección `lucide`
+
+KunUI resuelve los íconos con [`@iconify/vue`](https://iconify.design/docs/icon-components/vue/),
+que viene como **dependencia de la librería**: no hay que instalar nada aparte.
+
+Formas aceptadas por la prop `icon`:
+
+- **Nombre Iconify**: `i-mdi-home` (prefijo `i-`) o `mdi:home` (`prefijo:nombre`).
+  Para colecciones con guion se usa `:` → `i-simple-icons:github` o `simple-icons:github`.
+- **Alias `$nombre`**: mapeado por la librería a un nombre Iconify (`$close`,
+  `$menuUpOutline`, `$search`, …). El mapa canónico es `kunIconAliases`.
+- **Clase CSS**, **SVG inline**, **componente Vue** o **slot** (como siempre).
+
+### Íconos propios: subconjunto `lucide` offline
+
+Los alias por defecto apuntan a `lucide`. La librería **empaqueta solo los
+íconos que usa** (`src/icons/lucide.generated.ts`, generado con
+`pnpm run generate:icons`) y los registra al cargar el runtime, así que los
+íconos internos **no dependen de la red**.
+
+El resto de nombres Iconify se cargan **on-demand** desde la API de Iconify.
+
+### Carga perezosa y precarga
+
+`@iconify/vue` se importa de forma perezosa (chunk aparte). `install()` lo
+**precalienta** (`preloadKunIcons()`) para que los íconos internos aparezcan en
+el primer render sin parpadeo. El chunk solo se descarga si se usa un nombre
+Iconify; nunca entra al bundle base.
+
+### Sobrescribir íconos (global o por instancia)
+
+Prioridad de resolución de un `$alias`:
+
+1. Prop `aliases` de la instancia (puede ser componente/SVG/clase/nombre).
+2. Config global `kunConfig.icons` (mismo nombre de alias → nombre Iconify).
+3. Mapa propio `kunIconAliases`.
+
+```ts
+import { kunConfig } from 'adverich-kun-ui'
+kunConfig.configure({ icons: { close: 'i-mdi-close', menuDownOutline: 'i-mdi-chevron-down' } })
+// o puntual:
+kunConfig.setIcon('close', 'i-mdi-close')
+```
+
+### Colecciones offline del consumidor
+
+Para servir colecciones propias sin red (o SSR), instalá el set y registralo:
+
+```bash
+pnpm add @iconify-json/lucide
+```
+
+```ts
+import { registerKunIcons } from 'adverich-kun-ui'
+import lucide from '@iconify-json/lucide/icons.json'
+import mdi from '@iconify-json/mdi/icons.json'
+await registerKunIcons([lucide, mdi])
+```
+
+### Color y tamaño
+
+`KunIcon` no tiene prop `color`: el ícono pinta con `currentColor` y hereda el
+color del contexto. La `class` del consumidor va al elemento del ícono, por eso
+`text-…` y `size-…` funcionan directo. `size` acepta clase Tailwind
+(`size-5`, `text-xl`) o número (`px`).
 
 ---
 
@@ -2085,8 +2329,6 @@ import { KunList } from 'adverich-kun-ui'
 | `dense` | `Boolean` | `-` | Espaciado compacto entre ítems. |
 | `selectable` | `Boolean` | `false` | Habilita selección de ítems (v-model `selected`). |
 | `selectionMode` | `KunListSelectionMode` | `'single'` | Modo de selección (requiere `selectable`).<br/>Valores · Values: `single` `multiple` |
-| `bgList` | `String` | `'bg-transparent'` | Color de fondo del `<ul>`. |
-| `borderColor` | `String` | `'border-ui'` | Color de borde del `<ul>`. |
 | `fontSize` | `String` | `'text-base'` | Tamaño de fuente de la lista (clase Tailwind). |
 
 ## Modelos · Models
@@ -2107,6 +2349,15 @@ import { KunList } from 'adverich-kun-ui'
 
 - `focusWithKey()`
 - `focus()`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- El listado anidado (`sub`) marca el lado inicial con `border-s-2 border-primary`
+  (antes `border-default`: sobre el fondo de página el acento no se percibía).
+  Sigue siendo un trazo lógico (RTL correcto).
+- `nav` mantiene `p-2 rounded-md`.
 
 ---
 
@@ -2192,7 +2443,6 @@ import { KunListImg } from 'adverich-kun-ui'
 |---|---|---|---|
 | `src` | `String` | `-` | URL de la imagen (requerido). |
 | `alt` | `String` | `''` | Texto alternativo. |
-| `bgColor` | `String` | `'bg-surface'` | Color de fondo mientras carga. |
 
 ---
 
@@ -2234,16 +2484,12 @@ import { KunListItem } from 'adverich-kun-ui'
 | `tag` | `String` | `'li'` | Tag del contenedor. |
 | `disabled` | `Boolean` | `-` | Deshabilita el ítem. |
 | `active` | `Boolean` | `-` | Marca el ítem como activo. |
-| `activeClass` | `String` | `'bg-surface-light'` | Clase cuando está activo o seleccionado. |
 | `selectable` | `Boolean` | `false` | Permite selección (emite toggle al contexto KunList). |
 | `variant` | `KunListItemVariant` | `'text'` | Variante visual.<br/>Valores · Values: `text` `outlined` `elevated` `tonal` `flat` `plain` |
 | `density` | `KunListItemDensity` | `'default'` | Densidad del padding vertical.<br/>Valores · Values: `default` `comfortable` `compact` |
-| `rounded` | `Boolean \| String` | `true` | Redondeo (true = default, string = clase). |
+| `rounded` | `Boolean` | `true` | Redondeo de escala (`rounded-md`). `tile` lo anula. |
 | `tile` | `Boolean` | `-` | Sin redondeo. |
 | `ripple` | `Boolean \| Object` | `true` | Efecto ripple al hacer click. |
-| `bgItems` | `String` | `'bg-transparent'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
-| `hoverBg` | `String` | `'hover:bg-surface-light'` | Fondo al pasar el mouse (solo si `selectable`). |
 | `noGutters` | `Boolean` | `-` | Sin padding horizontal. |
 | `itemPosition` | `String` | `'items-start'` | Alineación vertical del contenido. |
 | `prependIcon` | `String \| Object \| Function` | `-` | Ícono al inicio (string, componente o slot `prepend`). |
@@ -2255,7 +2501,7 @@ import { KunListItem } from 'adverich-kun-ui'
 | `title` | `String \| Number \| Boolean` | `-` | Título (alternativa al slot). |
 | `titleClass` | `String` | `'font-medium'` | Clase del título. |
 | `subtitle` | `String \| Number \| Boolean` | `-` | Subtítulo (alternativa al slot). |
-| `subtitleClass` | `String` | `'text-sm text-ui-muted'` | Clase del subtítulo. |
+| `subtitleClass` | `String` | `'text-sm text-muted'` | Clase del subtítulo. |
 | `containerClass` | `String \| Array \| Object` | `''` | Clase extra del contenedor. |
 | `id` | `String \| Number` | `-` | Id del ítem (se genera uno si se omite). |
 
@@ -2270,6 +2516,15 @@ import { KunListItem } from 'adverich-kun-ui'
 - `#title`
 - `#subtitle`
 - `#append`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- `variant="outlined"` pasa de `border border-default` a `ring ring-accented`
+  (patrón de ítem outlined de Nuxt UI). El `border-default` previo podía quedar
+  sobre fondos `bg-muted`/`bg-elevated` (mismo neutral-800 en dark ⇒ invisible).
+- `tonal` sigue `bg-muted`; `elevated`/`flat`/`plain` sin cambios.
 
 ---
 
@@ -2305,7 +2560,6 @@ import { KunListItemAction } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `text` | `string \| number \| null` | `null` | Texto de la acción. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
 | `fontSize` | `String` | `'text-sm'` | Tamaño del texto. |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |
 
@@ -2348,9 +2602,7 @@ import { KunListItemAvatar } from 'adverich-kun-ui'
 |---|---|---|---|
 | `text` | `string \| number \| null` | `null` | Texto (iniciales) del avatar. |
 | `size` | `KunListItemAvatarSize` | `'md'` | Tamaño predefinido.<br/>Valores · Values: `sm` `md` `lg` |
-| `rounded` | `String` | `'rounded-full'` | Redondeo. |
-| `bgColor` | `String` | `'bg-surface-light'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui-inverse'` | Color del texto. |
+| `rounded` | `'full' \| 'none' \| null` | `null` | Redondeo: 'full' \| 'none'. `null` = circular (propio de avatar). |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |
 
 ## Slots
@@ -2391,7 +2643,6 @@ import { KunListItemSubtitle } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `text` | `string \| number \| null` | `null` | Texto del subtítulo. |
-| `textColor` | `String` | `'text-ui-muted'` | Color del texto. |
 | `fontSize` | `String` | `'text-xs'` | Tamaño del texto. |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |
 
@@ -2434,7 +2685,6 @@ import { KunListItemText } from 'adverich-kun-ui'
 |---|---|---|---|
 | `text` | `string \| number \| null` | `null` | Texto a mostrar. |
 | `fontSize` | `String` | `'text-sm'` | Tamaño del texto. |
-| `textColor` | `String` | `'text-ui-muted'` | Color del texto. |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |
 
 ## Slots
@@ -2475,7 +2725,6 @@ import { KunListItemTitle } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `title` | `string \| number \| null` | `null` | Título a mostrar. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
 | `fontSize` | `String` | `'text-lg'` | Tamaño del texto. |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |
 
@@ -2518,7 +2767,6 @@ import { KunListSubheader } from 'adverich-kun-ui'
 |---|---|---|---|
 | `text` | `String \| Number` | `''` | Texto del subheader. |
 | `fontSize` | `String` | `'text-xs'` | Tamaño del texto. |
-| `textColor` | `String` | `'text-ui-muted'` | Color del texto. |
 | `fontWeight` | `String` | `'font-semibold'` | Peso del texto. |
 
 ## Slots
@@ -2597,7 +2845,6 @@ import { KunMenu } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `class` | `String \| Array \| Object` | `-` | Clase extra del contenido. |
-| `bgColor` | `String` | `'bg-menu'` | Color de fondo. |
 | `modelValue` | `Boolean` | `-` | Apertura (v-model). |
 | `activator` | `String \| Object` | `-` | Selector o elemento que dispara el menú (reservado, sin efecto; usar el slot `activator`). |
 | `activatorProps` | `Object` | `() => ({})` | Props que se pasan al activador (reservado, sin efecto; usar el slot `activator`). |
@@ -2624,7 +2871,6 @@ import { KunMenu } from 'adverich-kun-ui'
 | `origin` | `KunMenuOrigin` | `'auto'` | Origen de la animación ('auto' = según `location`). |
 | `transition` | `KunMenuTransition` | `'fade-scale'` | Animación de apertura/cierre.<br/>Valores · Values: `fade` `fade-scale` `slide-down` `slide-up` `slide-left` `slide-right` `none` |
 | `persistent` | `Boolean` | `-` | No cierra al hacer click fuera ni con Escape. |
-| `zIndex` | `String \| Number` | `-` | Z-index del contenido. |
 | `submenu` | `Boolean` | `-` | Comportamiento de submenú (reservado, sin efecto). |
 | `label` | `String` | `'Menú contextual'` | Etiqueta accesible del menú. |
 | `keyboardNavigation` | `Boolean` | `true` | Navegación con teclado (reservado, sin efecto). |
@@ -2666,11 +2912,16 @@ la prop `anchor` es `true` (default), el menú se ancla de forma nativa:
 - Al abrir se registra `anchor-name: --kun-menu-<id>` en el activador
   (`parentRef` o slot `activator`); se remueve en `onUnmounted`.
 - El estilo usa `position-anchor` + `anchor()`/`anchor-size()` con
-  `position-try-fallbacks: flip-block flip-inline` (flip arriba/abajo
-  nativo). El navegador sigue al ancla en el compositor: **cero lag al
-  scrollear** (el menú sale de vista junto con su campo; nunca flota
-  despegado). `position-visibility: anchors-visible` queda como mejora
-  progresiva para anclas inválidas.
+  `position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline`.
+  Las opciones van **separadas por coma**: `flip-block flip-inline`
+  (sin coma) es un único tactic que voltea ambos ejes a la vez, y con el
+  ancla pegado a una esquina el resultado se descarta y el borde nunca se
+  corrige (menú recortado). Con opciones separadas cada eje se intenta de
+  forma independiente (borde derecho → se alinea a la derecha; borde
+  inferior → abre arriba). El navegador sigue al ancla en el compositor:
+  **cero lag al scrollear** (el menú sale de vista junto con su campo;
+  nunca flota despegado). `position-visibility: anchors-visible` queda
+  como mejora progresiva para anclas inválidas.
 - En modo anchor `repositionMenu` solo refresca `smartMaxHeight` (cap =
   máximo entre espacio superior e inferior, porque el navegador elige el
   lado con flip; el lado flipeado no debe nacer recortado).
@@ -2680,69 +2931,18 @@ la prop `anchor` es `true` (default), el menú se ancla de forma nativa:
 - La detección es solo-cliente (`onMounted`); en SSR el menú nace cerrado
   con el estilo oculto, sin mismatch de hidratación.
 
+## Bordes y radio
+
+- Panel `rounded-md` (antes `rounded-b`: redondeaba solo abajo y no seguía la
+  escala global `--kun-radius`).
+- Superficie flotante: `bg-default` + `ring ring-default` (antes `bg-elevated` +
+  `border border-default`, invisible en dark porque `--kun-border == --kun-bg-elevated`).
+
 ---
 
 _Generado por · Generated by `scripts/generate-docs.ts`. No editar a mano · Do not edit by hand._
 
 Machine-readable: `registry.json` → `KunMenu`.
-
-
-<!-- component: KunModalFooter -->
-
-# KunModalFooter
-
-> Modal/dialog footer with actions.
->
-> Pie de modal/diálogo con acciones.
-
-## Uso · Usage
-
-```vue
-<script setup>
-import { KunModalFooter } from 'adverich-kun-ui'
-</script>
-
-<template>
-  <KunModalFooter />
-</template>
-```
-
-> Con `app.use(KunUI)` el componente queda registrado globalmente y no hace falta importarlo. · With `app.use(KunUI)` the component is globally registered, no import needed.
-
-## Props
-
-### `kunModalFooterProps.ts`
-
-| Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
-|---|---|---|---|
-| `modelValue` | `Boolean` | `-` | Visibilidad del mensaje (v-model, requerido). |
-| `id` | `String \| Number` | `-` | Id del mensaje (se emite en `removeMessage`). |
-| `message` | `String` | `"Mensaje predeterminado"` | Texto del mensaje. |
-| `color` | `KunModalFooterColor` | `"green"` | Color temático ('green' \| 'blue' \| 'red' \| ...).<br/>Valores · Values: `blue` `green` `red` `yellow` `gray` `orange` |
-| `width` | `String` | `"300px"` | Ancho del contenedor. |
-| `height` | `String` | `"auto"` | Altura del contenedor ('auto' = contenido). |
-| `isFixed` | `Boolean` | `false` | Posicionamiento fijo en viewport. |
-
-### `kunMultipleModalFooterProps.ts`
-
-| Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
-|---|---|---|---|
-| `messages` | `Array` | `() => []` | Lista de mensajes `{ id, text, color }` a mostrar apilados. |
-| `position` | `KunMultipleModalFooterPosition` | `"bottom-right"` | Esquina del viewport donde se apilan.<br/>Valores · Values: `bottom-left` `bottom-right` `bottom-center` `top-left` `top-right` `top-center` |
-| `stackDirection` | `KunMultipleModalFooterStackDirection` | `"bottom-to-top"` | Dirección de apilado: 'bottom-to-top' \| 'top-to-bottom'.<br/>Valores · Values: `bottom-to-top` `top-to-bottom` |
-| `width` | `String` | `"300px"` | Ancho de cada mensaje. |
-| `height` | `String` | `"auto"` | Altura de cada mensaje ('auto' = contenido). |
-
-## Eventos · Events
-
-- `update:modelValue`
-- `removeMessage`
-
----
-
-_Generado por · Generated by `scripts/generate-docs.ts`. No editar a mano · Do not edit by hand._
-
-Machine-readable: `registry.json` → `KunModalFooter`.
 
 
 <!-- component: KunNumberField -->
@@ -2774,8 +2974,6 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `modelValue` | `number \| string \| null` | `null` | Valor numérico (v-model). `null` = vacío (también lo emite `onClear`). |
 | `placeholder` | `String \| Number` | `''` | Placeholder. Si existe, el label flota siempre. |
 | `label` | `String` | `''` | Etiqueta flotante (mismo sistema que KunTextField). |
-| `labelColor` | `String` | `'text-ui'` | Color del label en reposo. |
-| `floatingLabelColor` | `string \| null` | `null` | Color del label flotando (null = usa `labelColor`). |
 | `labelSize` | `String` | `'text-sm'` | Tamaño del label en reposo. |
 | `floatingLabelSize` | `String` | `'text-xs'` | Tamaño del label flotando. |
 | `labelOpacity` | `String` | `'opacity-60'` | Opacidad del label en reposo. |
@@ -2793,15 +2991,11 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `appendInnerIcon` | `string \| Record<string, any> \| Function \| unknown[] \| null` | `null` | Ícono interno al final. |
 | `prependInnerClass` | `String` | `-` | Clase del contenedor del ícono interno inicial. |
 | `appendInnerClass` | `String` | `-` | Clase del contenedor del ícono interno final. |
-| `rounded` | `String` | `'rounded'` | Redondeo del contenedor. |
-| `borderColor` | `String` | `'border-ui'` | Color del borde. |
-| `textColor` | `String` | `'text-ui'` | Color del texto del valor. |
+| `rounded` | `String` | `'rounded-md'` | Redondeo del contenedor (clase de escala, `rounded-md` por defecto). |
 | `inputTextSize` | `string \| null` | `null` | Tamaño del texto del valor (null = 'text-sm'). |
 | `inputWeight` | `string \| null` | `null` | Peso del texto del valor (null = hereda). |
-| `placeholderColor` | `String` | `'placeholder-ui'` | Color del placeholder. |
 | `placeholderTextSize` | `string \| null` | `null` | Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). |
 | `inputStyle` | `String` | `''` | Clase libre para el input. |
-| `bgInput` | `String` | `'bg-field-background'` | Color de fondo del contenedor. |
 | `textCenter` | `Boolean` | `false` | Centra el texto del valor. |
 | `controlVariant` | `KunNumberFieldControlVariant` | `'default'` | Variante de botones de incremento: 'default' \| 'stacked' \| 'split'.<br/>Valores · Values: `default` `stacked` `split` |
 | `noArrows` | `Boolean` | `false` | Oculta los botones ▲▼ (quedan `onIncrement`/`onDecrement` por slot). |
@@ -2929,6 +3123,16 @@ Fallback: si no hay nada que mostrar (sin `placeholder` y sin label en
 reposo, o con `dirty` que flota el label al borde), se muestra el `0`
 formateado para no dejar una caja fantasma. Con `hideZero: false` siempre
 se muestra el `0` formateado (comportamiento histórico).
+
+## Bordes y radio
+
+- Default `'rounded-md'` (antes `'rounded'` pelado, 4px fijos).
+- El `<input>` ya no lleva un `rounded` pelado redundante: el radio lo aplica la
+  prop del contenedor.
+- Lados lógicos: `border-e` / `border-s` y `rounded-s/e-[inherit]` en los botones
+  split (antes `border-l/r` físicos).
+- Contorno por rol: contenedor `bg-default` y notch `border-accented` (antes
+  `bg-muted` + `border-default`, invisible en dark).
 
 ---
 
@@ -3174,7 +3378,7 @@ import { KunSelect } from 'adverich-kun-ui'
 | `textNoItems` | `String` | `'No hay elementos'` | Texto cuando no hay ítems. |
 | `hasCreateItem` | `Boolean` | `false` | Muestra botón para crear un ítem (emite `createItem`). |
 | `btnCreateClass` | `String` | `'w-full'` | Clase del botón crear. |
-| `btnCreateBg` | `String` | `'bg-success'` | Color del botón crear. |
+| `btnCreateColor` | `KunColor` | `'success'` | Color semántico del botón crear. |
 | `btnCreateText` | `String` | `'Crear item'` | Texto del botón crear. |
 | `multiple` | `Boolean` | `false` | Selección múltiple (chips). |
 | `required` | `Boolean` | `false` | Marca el campo como requerido (asterisco). |
@@ -3183,17 +3387,12 @@ import { KunSelect } from 'adverich-kun-ui'
 | `height` | `string \| number \| null` | `'h-[500px]'` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
 | `maxHeight` | `string \| number \| null \| undefined` | `-` | Altura máxima del menú. |
 | `density` | `KunTextFieldDensity` | `'default'` | Densidad del campo (se reenvía al KunTextField).<br/>Valores · Values: `default` `comfortable` `compact` |
-| `zIndex` | `String` | `'z-250'` | Z-index del menú. |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |
 | `hasIcons` | `Boolean` | `true` | Muestra iconos de estado (limpiar/desplegar). |
 | `textFieldProps` | `Object` | `() => ({})` | Props visuales y atributos que se reenvían al KunTextField interno. |
-| `iconColor` | `String` | `'text-ui-primary'` | Color del ícono desplegar. |
-| `requiredIconColor` | `String` | `'text-ui-primary'` | Color del asterisco de requerido. |
-| `emptyTextClass` | `String` | `'text-ui-muted'` | Clase del texto "sin elementos". |
-| `bgMenuColor` | `String` | `'bg-menu'` | Color de fondo del menú. |
-| `bgItemListColor` | `String` | `'bg-transparent'` | Color de fondo de cada opción. |
-| `selectedItemListColor` | `String` | `'bg-ui-selection text-ui-selection'` | Clase de la opción seleccionada. |
-| `hoverItemListColor` | `String` | `'hover:bg-ui-selection-hover'` | Clase hover de cada opción. |
+| `iconColor` | `String` | `'text-primary'` | Color del ícono desplegar. |
+| `requiredIconColor` | `String` | `'text-error'` | Color del asterisco de requerido. |
+| `emptyTextClass` | `String` | `'text-muted'` | Clase del texto "sin elementos". |
 | `attach` | `Boolean` | `false` | Reservado (no se reenvía al KunMenu interno). Actualmente sin efecto. |
 | `rules` | `Array` | `() => []` | Reglas de validación: `(valor) => true \| string`. |
 
@@ -3214,6 +3413,13 @@ import { KunSelect } from 'adverich-kun-ui'
 Mismo sistema de `item-value` / `item-title` / `returnObject` / `multiple`
 que `KunAutocomplete`, pero con campo `readonly`: click o Enter/Espacio
 abre el menú. Sin búsqueda ni filtrado.
+
+## Bordes y radio
+
+- Con el menú abierto el campo pasa a `rounded-md rounded-b-none` (antes
+  `rounded-t`, que dejaba los lados sin la escala global).
+- El ítem "crear" del menú separa con `border-b border-muted` (antes
+  `border-default`, invisible sobre `bg-muted` en dark).
 
 ---
 
@@ -3255,8 +3461,8 @@ import { KunSkeleton } from 'adverich-kun-ui'
 | `rounded` | `String` | `"md"` | Redondeo. |
 | `animation` | `KunSkeletonAnimation` | `"shimmer"` | Animación: 'shimmer' (barrido con pausa) \| 'shimmer-vertical' (barrido vertical) \| 'wave' (oscilación continua) \| 'pulse' (pulso de opacidad) \| 'none' (estático).<br/>Valores · Values: `shimmer` `shimmer-vertical` `wave` `pulse` `none` |
 | `duration` | `Number` | `1600` | Duración de la animación en ms. Se aplica a todas las animaciones. |
-| `colorFrom` | `String` | `"bg-ui-hover"` | Clase de fondo base del placeholder. |
-| `colorTo` | `String` | `"bg-ui-hover"` | Reservado para compatibilidad. Actualmente sin efecto (el brillo deriva de la superficie elevada). |
+| `colorFrom` | `String` | `"bg-muted"` | Clase de fondo base del placeholder. |
+| `colorTo` | `String` | `"bg-accented"` | Reservado para compatibilidad. Actualmente sin efecto (el brillo deriva de la superficie elevada). |
 | `repeat` | `Boolean` | `true` | Reservado para repetir el placeholder. Actualmente sin efecto. |
 | `class` | `String \| Array \| Object` | `""` | Clase extra del placeholder. |
 
@@ -3413,8 +3619,8 @@ import { KunSwitch } from 'adverich-kun-ui'
 | `labelPosition` | `KunSwitchLabelPosition` | `'right'` | Posición de la etiqueta: 'top' \| 'bottom' \| 'left' \| 'right'.<br/>Valores · Values: `top` `bottom` `left` `right` |
 | `disabled` | `Boolean` | `-` | Deshabilita el switch. |
 | `onColor` | `String` | `'bg-success'` | Color del track en estado activo. |
-| `offColor` | `String` | `'bg-surface-light'` | Color del track en estado inactivo. |
-| `iconColor` | `String` | `'bg-ui-surface-raised'` | Color del thumb. |
+| `offColor` | `String` | `'bg-accented'` | Color del track en estado inactivo. |
+| `iconColor` | `String` | `'bg-inverted'` | Color del thumb. |
 | `inset` | `Boolean` | `-` | Thumb hundido en el track. |
 | `hideDetails` | `Boolean` | `false` | Oculta el área de detalles. |
 | `size` | `KunSwitchSize` | `'md'` | Tamaño: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'.<br/>Valores · Values: `xxs` `xs` `sm` `md` `lg` `xl` `xxl` |
@@ -3428,6 +3634,16 @@ import { KunSwitch } from 'adverich-kun-ui'
 - `#on-icon`
 - `#off-icon`
 - `#details`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- `offColor` pasa a **`bg-accented`** (antes `bg-muted`): el track inactivo
+  quedaba invisible en dark porque `--kun-bg-muted == --kun-bg-elevated ==
+  --kun-border == neutral-800`. `bg-accented` (neutral-700) contrasta tanto sobre
+  `bg-default` como sobre `bg-elevated`/`bg-muted`.
+- `onColor` (`bg-success`) y `iconColor` (thumb, `bg-inverted`) no cambian.
 
 ---
 
@@ -3500,7 +3716,7 @@ import { KunTable } from 'adverich-kun-ui'
 | `trClass` | `String` | `''` | Clase de las filas. |
 | `thClass` | `String` | `''` | Clase de los headers. |
 | `tdClass` | `string \| ((item: TableItem) => string)` | `''` | Clase de las celdas (string o `(item) => clase`). |
-| `selectedClass` | `String` | `'bg-ui-selection text-ui-selection'` | Clase de filas seleccionadas. |
+| `selectedClass` | `String` | `'bg-accented text-default'` | Clase de filas seleccionadas. |
 | `stripedClass` | `String` | `''` | Clase de filas alternas. |
 | `tfootClass` | `String` | `''` | Clase del `<tfoot>`. |
 | `rowClass` | `String` | `''` | Clase adicional para filas. |
@@ -3566,7 +3782,7 @@ import { KunTable } from 'adverich-kun-ui'
 | `loading` | `Boolean \| Object` | `false` | Estado de carga de las acciones. |
 | `rowClass` | `String` | `-` | Clase del contenedor. |
 | `selectedClass` | `String` | `-` | Clase cuando está seleccionada. |
-| `border` | `String` | `'border border-ui'` | Borde de la tarjeta. |
+| `border` | `String` | `'border border-default'` | Borde de la tarjeta. |
 | `rounded` | `String` | `'rounded-sm'` | Redondeo de la tarjeta. |
 | `rowClassCondition` | `String \| Function` | `-` | Clase condicional por ítem (string o `(item) => clase\|false`). |
 | `customSlots` | `Object` | `-` | Celdas custom por columna (`item.<key>` → componente). |
@@ -3724,7 +3940,7 @@ const filters = [
   v-model:selected-items="seleccionados" :items-per-page="15"
 >
   <template #item.estado="{ value }">
-    <KunBadge :color="value === 'activo' ? 'bg-green-500' : 'bg-red-500'" :text="value" />
+    <KunBadge :color="value === 'activo' ? 'success' : 'error'" :text="value" />
   </template>
   <template #item.actions="{ item, loading }">
     <KunBtn icon="mdi-pencil" size="xs" :loading="loading" @click="editar(item)" />
@@ -3734,6 +3950,15 @@ const filters = [
   </template>
 </KunTable>
 ```
+
+## Bordes y radio
+
+- Wrapper `rounded-lg`; div de búsqueda y spans de acción `rounded-md` (antes
+  `rounded` pelado, que no escalaba con `--kun-radius`).
+- Superficies: wrapper `bg-default ring ring-default`; thead `bg-elevated`; filas
+  `bg-default` con separador `border-t border-default` y hover `bg-elevated/50`.
+  La caja de búsqueda es un control: `ring ring-inset ring-accented` (antes
+  `border border-default`, que sobre `bg-muted`/`bg-elevated` desaparecía en dark).
 
 ---
 
@@ -3838,9 +4063,7 @@ import { KunTabs } from 'adverich-kun-ui'
 | `items` | `Array` | `-` | Reservado para tabs por datos. Actualmente sin efecto (usar slots KunTab o items de KunTabWindow). |
 | `alignTabs` | `KunTabsAlignTabs` | `'start'` | Alineación de los tabs.<br/>Valores · Values: `start` `center` `end` `title` |
 | `direction` | `KunTabsDirection` | `'horizontal'` | Dirección del layout: 'horizontal' \| 'vertical'.<br/>Valores · Values: `horizontal` `vertical` |
-| `bgColor` | `String` | `''` | Color de fondo de la barra. |
-| `color` | `String` | `-` | Color de los tabs (reservado, sin efecto). |
-| `sliderColor` | `String` | `'bg-primary'` | Color del slider indicador. |
+| `sliderColor` | `String` | `'bg-primary'` | Color del slider indicador (clase `bg-*` del theme). |
 | `selectedClass` | `String` | `'text-primary font-medium'` | Clase del tab activo. |
 | `grow` | `Boolean` | `-` | Los tabs ocupan todo el ancho. |
 | `fixedTabs` | `Boolean` | `-` | Ancho fijo por tab, sin scroll (reservado, sin efecto). |
@@ -3864,7 +4087,7 @@ import { KunTabs } from 'adverich-kun-ui'
 | `disabled` | `Boolean` | `-` | Deshabilita el tab. |
 | `stacked` | `Boolean` | `-` | Ícono sobre el texto (layout vertical). |
 | `selectedClass` | `String` | `'text-primary font-medium'` | Clase cuando está seleccionado. |
-| `baseColor` | `String` | `'text-ui-muted'` | Color cuando no está seleccionado. |
+| `baseColor` | `String` | `'text-muted'` | Color cuando no está seleccionado. |
 | `colorClass` | `String` | `''` | Clase extra de color. |
 | `tag` | `String` | `'button'` | Tag del contenedor. |
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link). |
@@ -3928,8 +4151,6 @@ import { KunTextarea } from 'adverich-kun-ui'
 | `hint` | `String` | `-` | Texto de ayuda. |
 | `persistentHint` | `Boolean` | `false` | Muestra el hint siempre. |
 | `class` | `String` | `-` | Clase extra del textarea. |
-| `bgColor` | `String` | `-` | Color de fondo (se usa si la variante no lo define). |
-| `textColor` | `String` | `-` | Color del texto. |
 | `textAlign` | `KunTextareaTextAlign` | `'left'` | Alineación del texto.<br/>Valores · Values: `left` `center` `right` |
 | `formatModel` | `KunTextareaFormatModel` | `'auto'` | Formato del modelo: 'auto' (detecta JSON) \| 'json' \| 'plain'.<br/>Valores · Values: `auto` `json` `plain` |
 | `loading` | `Boolean` | `-` | Muestra barra de carga superior. |
@@ -3965,11 +4186,9 @@ import { KunTextarea } from 'adverich-kun-ui'
 | `inputClass` | `String \| Array` | `-` | Clase extra del textarea. |
 | `wrapperClass` | `String \| Array` | `-` | Clase extra del contenedor. |
 | `tile` | `Boolean` | `-` | Sin redondeo. |
-| `rounded` | `String \| Number` | `-` | Redondeo (string/number = clase `rounded-<valor>`). |
+| `rounded` | `String` | `'rounded-md'` | Redondeo (clase de escala, `rounded-md` por defecto). |
 | `flat` | `Boolean` | `-` | Sin sombra. |
-| `color` | `String` | `-` | Color de acento (foco). |
-| `focusRingColor` | `String` | `'ring-ui-focus'` | Color del anillo de foco. |
-| `loadingColor` | `String` | `-` | Color de la barra de carga. |
+| `loadingColor` | `String` | `-` | Color de la barra de carga (clase `bg-*` del theme). |
 | `clearIcon` | `Boolean` | `-` | Muestra el botón limpiar (requiere `clearable` con valor). |
 | `debounceTime` | `Number` | `300` | Debounce en ms para emitir el modelo. |
 
@@ -4019,6 +4238,16 @@ sobre la caja real del label (medida por JS + `ResizeObserver`). Hueco real
 en cualquier fondo, sin `fieldset`/`legend`. El label flotante se desplaza
 2px por escalón de `rounded`.
 
+## Bordes y radio
+
+- Default de `rounded`: `'rounded-md'` (antes `'rounded'` pelado).
+- `textareaClasses` y el borde del fieldset derivan ahora de
+  `fieldsetRoundedClass`, sin claves `rounded` / `rounded-none` paralelas.
+- La barra de carga interna usa `rounded-md`.
+- Contorno por rol: `filled` → `bg-default border-accented`; `outlined`/`underlined`
+  → `border-accented`; `solo` → `bg-elevated ring ring-inset ring-accented`; notch
+  `border-accented` (fin del hack `dark:border-muted`).
+
 ---
 
 _Generado por · Generated by `scripts/generate-docs.ts`. No editar a mano · Do not edit by hand._
@@ -4064,11 +4293,7 @@ import { KunTextField } from 'adverich-kun-ui'
 | `appendInnerIcon` | `string \| Record<string, any> \| Function \| unknown[] \| null` | `null` | Ícono interno al final. |
 | `prependInnerClass` | `String` | `-` | Clase del contenedor del ícono interno inicial. |
 | `appendInnerClass` | `String` | `-` | Clase del contenedor del ícono interno final. |
-| `rounded` | `String` | `'rounded'` | Redondeo del contenedor. |
-| `borderColor` | `String` | `'border-ui'` | Color del borde. |
-| `textColor` | `String` | `'text-ui'` | Color del texto del valor. |
-| `labelColor` | `String` | `'text-ui'` | Color del label en reposo. |
-| `floatingLabelColor` | `string \| null` | `null` | Color del label flotando (null = usa `labelColor`). |
+| `rounded` | `String` | `'rounded-md'` | Redondeo del contenedor (clase de escala, `rounded-md` por defecto). |
 | `labelSize` | `String` | `'text-sm'` | Tamaño del label en reposo. |
 | `floatingLabelSize` | `String` | `'text-xs'` | Tamaño del label flotando. |
 | `labelOpacity` | `String` | `'opacity-60'` | Opacidad del label en reposo. |
@@ -4077,11 +4302,9 @@ import { KunTextField } from 'adverich-kun-ui'
 | `floatingLabelLeft` | `String` | `'left-2'` | Offset izquierdo del label flotando. |
 | `floatingLabelTop` | `String` | `'top-[-2px]'` | Posición superior del label flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). |
 | `labelClass` | `String` | `''` | Clase libre para el label. |
-| `placeholderColor` | `String` | `'placeholder-ui'` | Color del placeholder. |
 | `inputTextSize` | `string \| null` | `null` | Tamaño del texto del valor (null = 'text-sm'). |
 | `inputWeight` | `string \| null` | `null` | Peso del texto del valor (null = hereda). |
 | `placeholderTextSize` | `string \| null` | `null` | Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). |
-| `bgInput` | `String` | `'bg-field-background'` | Color de fondo del contenedor. |
 | `inputStyle` | `String` | `''` | Clase libre para el input. |
 | `textCenter` | `Boolean` | `false` | Centra el texto del valor. |
 | `density` | `KunTextFieldDensity` | `'default'` | Densidad del padding y alturas.<br/>Valores · Values: `default` `comfortable` `compact` |
@@ -4200,6 +4423,17 @@ desborda la caja se comporta como pill → último escalón).
   más `#prepend-inner`, `#prepend-input-content`, `#default`,
   `#append-inner`, `#append`.
 
+## Bordes y radio
+
+- Default de `rounded`: `'rounded-md'` (antes `'rounded'` pelado, 4px fijos que no
+  seguían `--kun-radius`).
+- La escala de desplazamiento del label (`src/utils/useKunFieldNotch.ts`) se
+  alineó a los pasos reales de Tailwind: con `rounded-md` el label se mueve 4px
+  (antes 6px). Detalle en `docs/refactor/borders-radius.md`.
+- Contorno por rol: contenedor `bg-default` y notch `border-accented` (foco
+  `border-primary`, error `border-error`). Antes `bg-muted` + `border-default`,
+  invisible en dark (`--kun-border == --kun-bg-muted == neutral-800`).
+
 ---
 
 _Generado por · Generated by `scripts/generate-docs.ts`. No editar a mano · Do not edit by hand._
@@ -4238,10 +4472,11 @@ import { KunToast } from 'adverich-kun-ui'
 | `toastId` | `string \| number \| null` | `null` | Id único (lo genera KunToaster si se omite; `useToast().add()` acepta `id` o `toastId`). |
 | `title` | `String \| Object \| Function` | `''` | Título (string o VNode). |
 | `description` | `String \| Object \| Function` | `''` | Descripción (string o VNode). |
+| `avatar` | `String` | `''` | URL de imagen para el avatar (tiene prioridad visual sobre `icon`). Ignorado si el slot `#leading` está presente. |
 | `icon` | `string \| Record<string, any> \| Function \| unknown[] \| boolean \| null` | `null` | Ícono principal (null = según `color`). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`. |
 | `color` | `KunToastColor` | `'primary'` | Variante de color.<br/>Valores · Values: `primary` `success` `error` `warning` `info` `neutral` |
 | `orientation` | `KunToastOrientation` | `'vertical'` | Layout: acciones abajo ('vertical') o al costado ('horizontal').<br/>Valores · Values: `vertical` `horizontal` |
-| `duration` | `number \| null` | `null` | Duración en ms (0 = sin auto-dismiss, null = global del Toaster). |
+| `duration` | `number \| null` | `null` | Duración en ms (0 = sin auto-dismiss; null = duración global del Toaster). |
 | `progress` | `Boolean` | `true` | Barra de progreso del timeout. |
 | `progressColor` | `string \| null` | `null` | Color de la barra de progreso (null = según `color`). |
 | `closable` | `Boolean` | `true` | Botón de cierre. |
@@ -4249,6 +4484,7 @@ import { KunToast } from 'adverich-kun-ui'
 | `actions` | `ToastAction[]` | `() => [] as ToastAction[]` | Botones de acción `{ label, icon, variant, onClick, closeOnClick }`. |
 | `isPaused` | `Boolean` | `false` | Estado interno: pausa el auto-dismiss (gestionado por KunToaster). No pasar manualmente. |
 | `isPulsing` | `Boolean` | `false` | Estado interno: aplica `animate-pulse` al aparecer/actualizar (gestionado por useToast). No pasar manualmente. |
+| `remainingTime` | `Number` | `0` | Estado interno: ms restantes del auto-dismiss; de aquí se deriva la barra de progreso (gestionado por KunToaster). No pasar manualmente. |
 | `ui` | `Record<string, string>` | `() => ({
       root: '',
       wrapper: '',
@@ -4259,12 +4495,13 @@ import { KunToast } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `position` | `KunToasterPosition` | `'bottom-right'` | Posición del toaster en el viewport<br/>Valores · Values: `top-left` `top-center` `top-right` `bottom-left` `bottom-center` `bottom-right` |
-| `duration` | `Number` | `5000` | Duración global por defecto en ms |
-| `max` | `Number` | `5` | Máximo número de toasts visibles simultáneamente |
-| `expand` | `Boolean` | `false` | Modo expandible (stacked) |
-| `zIndex` | `String \| Number` | `3000` | Z-index del contenedor |
-| `containerClass` | `String` | `''` | Clase personalizada del contenedor |
+| `position` | `KunToasterPosition` | `'bottom-right'` | Posición de los toasts en el viewport.<br/>Valores · Values: `top-left` `top-center` `top-right` `bottom-left` `bottom-center` `bottom-right` |
+| `duration` | `Number` | `5000` | Duración global por defecto (ms) para toasts creados sin `duration` propio. Reactiva: reconfigura el sistema en caliente. |
+| `max` | `Number` | `5` | Máximo de toasts retenidos simultáneamente. Reactiva. |
+| `expand` | `Boolean` | `true` | Muestra todos los toasts apilados. Si es `false`, se colapsa al más nuevo y se expande al hacer hover (patrón Nuxt UI). |
+| `progress` | `Boolean` | `true` | Valor por defecto de la barra de progreso para toasts creados sin `progress` propio. Reactiva. |
+| `portal` | `boolean \| string \| HTMLElement` | `true` | Renderiza los toasts en un portal. `true` = `<body>`, `false` = en su lugar, o un selector/HTMLElement destino. |
+| `containerClass` | `String` | `''` | Clase personalizada del contenedor. |
 
 ## Eventos · Events
 
@@ -4282,31 +4519,79 @@ import { KunToast } from 'adverich-kun-ui'
 
 ## Notas · Notes
 
-## Flujo programático (inspirado en Nuxt UI)
+## Flujo programático (patrón Nuxt UI)
 
 ```ts
+import { useToast } from 'adverich-kun-ui'
 const toast = useToast()
+
 toast.add({ title: 'Éxito', description: 'OK', color: 'success' })
 toast.add({
   title: 'Archivo eliminado', color: 'warning',
-  actions: [{ label: 'Deshacer', variant: 'text', onClick: () => {} }]
+  avatar: 'https://…/me.png',
+  actions: [{ label: 'Deshacer', variant: 'ghost', onClick: () => {} }],
+  onClick: (t) => console.log('click', t.id),
 })
-const t = toast.add({ title: 'Cargando…', duration: 0 }) // sin auto-dismiss
+const t = toast.add({ title: 'Cargando…', duration: 0 }) // duration 0 = persistente
 toast.update(t.id, { title: '¡Completado!', color: 'success' })
 toast.remove(id)
 toast.clear()
 ```
 
+## Estado global (por qué funciona en cualquier parte)
+
+`useToast()` devuelve un **singleton a nivel de módulo** (`getKunToast()`), NO un
+`provide/inject` local de `<KunToaster>`. Así el flujo programático funciona en
+cualquier componente de la app, sin que `<KunToaster>` sea ancestro.
+
+- Si existe un `provideKunToast(system)` ancestro (uso avanzado/scoped), se usa ese.
+- `app.use(KunUI)` también provee el sistema global (`KUN_TOAST_KEY`).
+- `<KunToaster>` **consume** el sistema (ya no lo crea ni lo provee): solo renderiza.
+
 ## Montar KunToaster (una vez en App.vue)
 
 ```vue
-<template>
-  <div id="app">
-    <RouterView />
-    <KunToaster position="bottom-right" :duration="5000" :max="5" />
-  </div>
-</template>
+<KunToaster position="bottom-right" :duration="5000" :max="5" :expand="true" :progress="true" />
 ```
+
+## Temporizador, hover y progreso
+
+- Un único reloj en el sistema descuenta `remainingTime` cada 50 ms. La barra de
+  progreso de `KunToast` se **deriva** de `remainingTime` (ya no hay un segundo
+  timer en el componente) → sin desincronización.
+- `@mouseenter`/`@focusin` sobre el **toaster** → `pauseAll()`; `@mouseleave`/`@focusout`
+  → `resumeAll()`. Congela el temporizador de **todos** los toasts a la vez (patrón
+  Reka/Nuxt), para poder leer cada mensaje. Es a nivel de viewport, no por toast.
+- Hover y focus se trackean por separado y solo se reanuda cuando **ambos** cesan.
+  Cerrar un toast con la cruz dispara `focusout` (el botón se elimina del DOM): sin
+  esta separación se reanudaba aunque el puntero siguiera encima. Además, `mouseleave`
+  se re-verifica con `elementFromPoint` en el siguiente frame por si el disparo es
+  espurio (toast eliminado bajo el puntero).
+- `duration: 0` = persistente (no descuenta y no pausa su barra).
+
+## Props relevantes
+
+- `KunToaster`: `position`, `duration`, `max`, `expand`, `progress`, `portal`
+  (`true` = `<body>`, `false` = in situ, o selector/`HTMLElement`), `containerClass`.
+  `duration`/`max`/`progress` son **reactivos** (reconfiguran el sistema en caliente).
+- `KunToast`: `title`, `description`, `avatar`, `icon`, `color`, `orientation`,
+  `duration`, `progress`, `progressColor`, `closable`, `closeIcon`, `actions`,
+  `type`, `ui`. Internos (no pasar a mano): `isPaused`, `isPulsing`, `remainingTime`.
+
+## Diferencia con Nuxt UI
+
+Nuxt usa Reka `ToastProvider` y un apilado colapsado por medición de altura.
+KunUI no depende de Reka: mantiene la implementación propia. `expand: false`
+colapsa al toast **más nuevo** y expande al hover (aproximación sin medición, en
+lugar del "peek" apilado de Nuxt).
+
+## Bordes y radio
+
+- El lado de color va en **lógico**: `border-s-4` (antes `border-l-4`), correcto en RTL.
+- Botón de cierre `rounded-md`; barra de progreso `rounded-b-[inherit]` (hereda el
+  radio del contenedor).
+- El chrome de la tarjeta (bg, sombra, radio, borde) **no** es de la librería: lo
+  define el consumidor vía `ui.root` (ver `kunToastProps.ts`).
 
 ---
 
@@ -4344,10 +4629,8 @@ import { KunToolbar } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `absolute` | `Boolean` | `-` | Posicionamiento absoluto. |
-| `bgColor` | `String` | `-` | Color de fondo. |
 | `titlePosition` | `KunToolbarTitlePosition` | `'left'` | Posición del título.<br/>Valores · Values: `left` `center` `right` |
-| `bordered` | `Boolean` | `false` | Muestra borde inferior. |
-| `borderColor` | `String` | `-` | Color del borde. |
+| `bordered` | `Boolean` | `true` | Muestra borde inferior (`border-b border-default`). Por defecto `true`. |
 | `collapse` | `Boolean` | `-` | Colapsa el toolbar (solo extensión). |
 | `density` | `KunToolbarDensity` | `'default'` | Densidad del padding.<br/>Valores · Values: `default` `prominent` `comfortable` `compact` |
 | `elevation` | `String \| Number` | `-` | Nivel de sombra. |
@@ -4357,7 +4640,7 @@ import { KunToolbar } from 'adverich-kun-ui'
 | `floating` | `Boolean` | `-` | Flotante sobre el contenido. |
 | `height` | `String \| Number` | `-` | Altura del toolbar. |
 | `image` | `String` | `-` | URL de imagen de fondo. |
-| `rounded` | `String \| Boolean` | `-` | Redondeo (true = default). |
+| `rounded` | `Boolean` | `-` | Redondeo (`rounded-lg`). `tile` lo anula. |
 | `tag` | `String` | `'header'` | Tag del contenedor. |
 | `theme` | `String` | `-` | Tema de color (hook de clase `theme-<valor>` para CSS del consumidor). |
 | `tile` | `Boolean` | `-` | Sin redondeo. |
@@ -4389,6 +4672,18 @@ import { KunToolbar } from 'adverich-kun-ui'
 - `#items`
 - `#append`
 - `#extension`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- `bordered` pasa a **default `true`** (`border-b border-default`), como el
+  `dashboard-toolbar` de Nuxt UI.
+- Sigue con `bg-transparent`: el borde es visible mientras el fondo detrás sea
+  `bg-default` (página o appbar). Sobre un contenedor `bg-muted`/`bg-elevated`
+  usar `border-muted` explícito.
+- `KunToolbarItems` variante `outlined`: `ring ring-accented` (antes
+  `border border-default`).
 
 ---
 
@@ -4432,9 +4727,7 @@ import { KunTooltip } from 'adverich-kun-ui'
 | `disabled` | `Boolean` | `-` | Deshabilita el tooltip. |
 | `delay` | `Number \| String` | `0` | Retraso en ms antes de mostrar. |
 | `closeDelay` | `Number \| String` | `100` | Retraso en ms antes de ocultar. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
-| `bgColor` | `String` | `'bg-surface-dark'` | Color de fondo. |
-| `rounded` | `String` | `'rounded'` | Redondeo. |
+| `rounded` | `String` | `'rounded-sm'` | Redondeo (clase de escala, `rounded-sm` por defecto). |
 | `textSize` | `String` | `'text-sm'` | Tamaño del texto. |
 | `dist` | `Number \| Object` | `() => ({ x: 0, y: 8 })` | Offset extra `{ x, y }` o número (simétrico: aplica a `x` e `y`). |
 | `flip` | `Boolean` | `true` | Voltea al lado opuesto si no hay espacio. |
@@ -4443,6 +4736,17 @@ import { KunTooltip } from 'adverich-kun-ui'
 
 - `#activator`
 - `#default`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- Deja de ser `bg-inverted` (alto contraste): ahora `bg-default text-highlighted
+  ring ring-default`, igual que el `tooltip` de Nuxt UI. El borde del globo es
+  visible en light y dark.
+- El composable `useTooltip.ts` está **deprecado** y no lo usa el SFC (que emplea
+  `useTooltipPosition`); su `arrowClass` solo se actualizó por consistencia y no
+  renderiza flecha (el SFC no monta flecha).
 
 ---
 

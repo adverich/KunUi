@@ -15,7 +15,7 @@ const groupValue = ref<string | number | boolean | Record<string, unknown> | nul
 // ------------------------------------------------------------------
 const label = ref('Opción individual')
 const color = ref('text-primary')
-const baseColor = ref('text-ui-muted')
+const baseColor = ref('text-muted')
 const name = ref('kun-radio-demo')
 const idRaw = ref('')
 const trueIconRaw = ref('')
@@ -59,7 +59,7 @@ function logEvent(name: string, detail: unknown): void {
 
       <div class="space-y-4">
         <div class="space-y-2">
-          <p class="text-xs font-medium uppercase tracking-wide text-ui-muted">Individual</p>
+          <p class="text-xs font-medium uppercase tracking-wide text-muted">Individual</p>
           <KunRadio
             v-model="singleValue"
             value="single"
@@ -81,7 +81,7 @@ function logEvent(name: string, detail: unknown): void {
           />
           <button
             type="button"
-            class="text-xs text-ui-muted underline underline-offset-2 hover:text-ui"
+            class="text-xs text-muted underline underline-offset-2 hover:text-default"
             @click="singleValue = null"
           >
             Limpiar (null)
@@ -89,7 +89,7 @@ function logEvent(name: string, detail: unknown): void {
         </div>
 
         <div class="space-y-2">
-          <p class="text-xs font-medium uppercase tracking-wide text-ui-muted">Grupo (mismo v-model)</p>
+          <p class="text-xs font-medium uppercase tracking-wide text-muted">Grupo (mismo v-model)</p>
           <div class="flex flex-col gap-2">
             <KunRadio
               v-model="groupValue"
@@ -142,7 +142,7 @@ function logEvent(name: string, detail: unknown): void {
           </div>
           <button
             type="button"
-            class="text-xs text-ui-muted underline underline-offset-2 hover:text-ui"
+            class="text-xs text-muted underline underline-offset-2 hover:text-default"
             @click="groupValue = null"
           >
             Limpiar (null)
@@ -150,27 +150,27 @@ function logEvent(name: string, detail: unknown): void {
         </div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm space-y-1">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
-        <div>single: {{ JSON.stringify(singleValue) }} <span class="text-ui-muted">({{ String(singleValue === null ? 'null' : typeof singleValue) }})</span></div>
-        <div>group: {{ JSON.stringify(groupValue) }} <span class="text-ui-muted">({{ String(groupValue === null ? 'null' : typeof groupValue) }})</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm space-y-1">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
+        <div>single: {{ JSON.stringify(singleValue) }} <span class="text-muted">({{ String(singleValue === null ? 'null' : typeof singleValue) }})</span></div>
+        <div>group: {{ JSON.stringify(groupValue) }} <span class="text-muted">({{ String(groupValue === null ? 'null' : typeof groupValue) }})</span></div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Interactuá con los radios para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Interactuá con los radios para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el demo) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="label" label="Label (individual)" density="compact" />

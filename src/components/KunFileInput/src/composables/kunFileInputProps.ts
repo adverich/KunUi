@@ -50,10 +50,10 @@ export const kunFileInputProps = {
   appendInnerClass: String,
   /** Ícono del botón limpiar. */
   clearIcon: [String, Object, Function, Array],
-  /** Tamaño de los íconos. */
+  /** Tamaño de los íconos (clase Tailwind, `size-4`). */
   iconSize: {
     type: String,
-    default: 'text-base',
+    default: 'size-4',
   },
   /** Variante visual del contenedor. */
   variant: {

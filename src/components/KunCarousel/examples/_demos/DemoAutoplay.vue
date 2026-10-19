@@ -6,9 +6,9 @@ import KunCarouselSlide from '../../../KunCarouselSlide/src/components/KunCarous
 const carouselRef: Ref<InstanceType<typeof KunCarousel> | null> = ref(null)
 
 const slides = ref([
-  { id: 1, title: 'Promo 1', bg: 'bg-red-500' },
-  { id: 2, title: 'Promo 2', bg: 'bg-blue-500' },
-  { id: 3, title: 'Promo 3', bg: 'bg-green-500' },
+  { id: 1, title: 'Promo 1', bg: 'bg-error' },
+  { id: 2, title: 'Promo 2', bg: 'bg-info' },
+  { id: 3, title: 'Promo 3', bg: 'bg-success' },
 ])
 
 function toggle(): void {
@@ -28,14 +28,14 @@ function toggle(): void {
       arrows-position="bottom"
     >
       <KunCarouselSlide v-for="s in slides" :key="s.id">
-        <div :class="['flex h-56 items-center justify-center rounded-xl text-2xl font-bold text-white', s.bg]">
+        <div :class="['flex h-56 items-center justify-center rounded-lg text-2xl font-bold text-inverted', s.bg]">
           {{ s.title }}
         </div>
       </KunCarouselSlide>
     </KunCarousel>
     <button
       type="button"
-      class="rounded-lg border border-surface bg-surface-light px-4 py-2 text-sm"
+      class="rounded-lg border border-muted bg-muted px-4 py-2 text-sm"
       @click="toggle"
     >
       Play / Stop (API programática)

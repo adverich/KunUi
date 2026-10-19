@@ -27,7 +27,7 @@ import { KunAvatar } from 'adverich-kun-ui'
 | `text` | `String` | `-` | Texto (iniciales) a mostrar si no hay imagen ni ícono. |
 | `alt` | `String` | `-` | Texto alternativo de la imagen. |
 | `size` | `string \| number` | `"default"` | Tamaño predefinido ('x-small' \| 'small' \| 'default' \| 'large' \| 'x-large') o px numéricos. |
-| `rounded` | `String \| Number \| Boolean` | `-` | Radio de borde (true = circular). |
+| `rounded` | `String \| Number \| Boolean` | `-` | Radio de borde: por defecto `rounded-full`; `false`/`'none'` → `rounded-none`; escala (`'md'`, `'lg'`, ...) → `rounded-<valor>`. |
 | `border` | `String \| Number \| Boolean` | `false` | Borde: se renderiza como `border border-<valor>`. |
 | `color` | `String` | `-` | Sufijo de color de fondo (`bg-<color>`). |
 | `density` | `KunAvatarDensity` | `"default"` | Densidad: escala el tamaño del avatar (comfortable −1 paso, compact −2 pasos).<br/>Valores · Values: `default` `comfortable` `compact` |
@@ -48,6 +48,29 @@ import { KunAvatar } from 'adverich-kun-ui'
 ## Slots
 
 - `#default`
+
+## Notas · Notes
+
+# KunAvatar
+
+## Bordes y radio
+
+`rounded` acepta `String | Number | Boolean` y se resuelve así:
+
+- `tile`, `false` o `'none'` → `rounded-none`.
+- string distinto de `'full'` (p. ej. `'md'`, `'lg'`) → `rounded-<valor>` (paso de
+  la escala global).
+- default (`undefined`) → `rounded-full`.
+
+Cambio respecto al comportamiento anterior:
+
+- **Antes**: cualquier `rounded` truthy (incluido `true`) forzaba `rounded-full`;
+  el default era `rounded` pelado (4px fijos que no seguían `--kun-radius`).
+- **Ahora**: el default es circular; `false` / `'none'` da cuadrado y un string da
+  el paso de escala pedido.
+
+Nota: en `KunToast` el `rounded` del `<KunAvatar>` es la prop booleana del avatar
+(el chrome de la tarjeta lo aporta el consumidor vía `ui.root`).
 
 ---
 

@@ -4,6 +4,7 @@
       <div
         v-if="modelValue"
         :class="mergedDialogClass"
+        :style="zIndexStyle('overlay')"
         v-bind="$attrs"
       >
         <KunDialogOverlay
@@ -30,7 +31,6 @@
             :min-height="minHeight"
             :height="height"
             :max-height="maxHeight"
-            :bg-color="bgColor"
             :content-class="contentClass"
           >
             <slot />
@@ -46,11 +46,12 @@ import { watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
 import KunDialogOverlay from './KunDialogOverlay.vue'
 import KunDialogContent from './KunDialogContent.vue'
 import { kunDialogProps } from '../composables/kunDialogProps.js'
+import { zIndexStyle } from '@/theme/kunZIndex.js'
 
 const props = defineProps(kunDialogProps)
 
 const emits = defineEmits(['update:modelValue']);
-const baseDialogClass = "fixed inset-0 z-250 flex";
+const baseDialogClass = "fixed inset-0 flex";
 const xPositionClass = 'justify-' + props.xPosition;
 const yPositionClass = 'items-' + props.yPosition;
 const ySpacing = props.yPosition === 'top' ? 'pt-15' : props.yPosition === 'bottom' ? 'pb-15' : '';

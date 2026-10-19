@@ -59,6 +59,7 @@ import { RouterLink } from 'vue-router'
 import KunLoaderCircular from '@/components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 import { kunBtnProps } from '../composables/kunBtnProps.js'
+import { kunVariantClasses, resolveKunColor, resolveKunVariant, type KunColor } from '../../../../theme/kunVariants.js'
 
 const slots = useSlots()
 const attrs = useAttrs()
@@ -76,6 +77,16 @@ const componentTag = computed(() => {
   return 'button'
 })
 
+const resolvedColor = computed<KunColor>(() => resolveKunColor(props.color ?? null))
+const resolvedVariant = computed(() => resolveKunVariant(props.variant ?? null))
+
+/** Redondeo: 'full' | 'none' propios, o `rounded-md` (escala global). */
+const roundedClass = computed(() => {
+  if (props.rounded === 'full') return 'rounded-full'
+  if (props.rounded === 'none') return 'rounded-none'
+  return 'rounded-md'
+})
+
 const renderIcon = (icon: unknown) => {
   if (!icon || icon === false) return null;
   if (icon === true && !props.icon) return null;
@@ -83,7 +94,6 @@ const renderIcon = (icon: unknown) => {
   return h(KunIcon, {
     icon,
     size: resolvedIconSize.value,
-    color: props.textColor ?? 'text-font-color',
     disabled: props.disabled,
   });
 };
@@ -124,31 +134,18 @@ const buttonSize = (size: unknown) => {
 const resolvedIconSize = computed(() => {
   if (props.iconSize) return props.iconSize
   switch (props.size) {
-    case 'xxs': return 'text-xs'
-    case 'xs':  return 'text-xs'
-    case 'sm':  return 'text-sm'
-    case 'md':  return 'text-base'
-    case 'lg':  return 'text-lg'
-    case 'xl':  return 'text-xl'
-    case 'xxl': return 'text-2xl'
-    default:    return 'text-base'
+    case 'xxs': return 'size-3'
+    case 'xs':  return 'size-3.5'
+    case 'sm':  return 'size-3.5'
+    case 'md':  return 'size-4'
+    case 'lg':  return 'size-4.5'
+    case 'xl':  return 'size-5'
+    case 'xxl': return 'size-6'
+    default:    return 'size-4'
   }
 })
 
-const variantClasses = computed(() => {
-  const bg = props.bgColor
-  const text = props.textColor
-
-  switch (props.variant) {
-    case 'default': return `${bg} ${text} shadow hover:brightness-95`
-    case 'tonal':   return `${bg} ${text} shadow-sm hover:shadow-md`
-    case 'soft':    return `${bg} ${text} hover:bg-opacity-30 shadow-sm`
-    case 'outlined':return `bg-transparent ${text} border ${bg} border-opacity-40 hover:bg-ui-hover`
-    case 'plain':   return `bg-transparent ${text} hover:bg-ui-hover active:bg-ui-hover`
-    case 'text':    return `${bg} ${text} hover:bg-opacity-10 active:bg-ui-hover`
-    default:        return `${bg} ${text}`
-  }
-})
+const variantClasses = computed(() => kunVariantClasses(resolvedColor.value, resolvedVariant.value))
 
 const hasText = computed(() => !!props.text)
 
@@ -172,7 +169,7 @@ const computedClass = computed(() => {
     'inline-flex items-center justify-center break-keep transition-all whitespace-nowrap',
     !isIconOnly.value ? buttonSize(props.size) : '',
     props.fontWeight,
-    props.rounded,
+    roundedClass.value,
     props.textAlign,
     variantClasses.value,
     'relative'
@@ -202,7 +199,6 @@ const computedClass = computed(() => {
       'active:scale-[.98]',
       'transition duration-100 ease-in-out',
       'cursor-pointer',
-      props.focusColor ? `${props.focusColor}` : '',
     );
   } else {
     base.push('pointer-events-none');

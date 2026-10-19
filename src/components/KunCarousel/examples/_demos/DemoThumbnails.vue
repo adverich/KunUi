@@ -10,14 +10,14 @@ const thumbsRef: Ref<CarouselInstance | null> = ref(null)
 const selected = ref(0)
 
 const slides = ref([
-  { id: 1, title: 'Montaña', bg: 'bg-slate-500' },
+  { id: 1, title: 'Montaña', bg: 'bg-muted' },
   { id: 2, title: 'Océano', bg: 'bg-sky-600' },
   { id: 3, title: 'Bosque', bg: 'bg-emerald-600' },
-  { id: 4, title: 'Desierto', bg: 'bg-amber-500' },
-  { id: 5, title: 'Volcán', bg: 'bg-red-600' },
+  { id: 4, title: 'Desierto', bg: 'bg-warning' },
+  { id: 5, title: 'Volcán', bg: 'bg-error' },
   { id: 6, title: 'Glaciar', bg: 'bg-cyan-500' },
   { id: 7, title: 'Selva', bg: 'bg-lime-600' },
-  { id: 8, title: 'Ciudad', bg: 'bg-purple-600' },
+  { id: 8, title: 'Ciudad', bg: 'bg-secondary' },
 ])
 
 function goToSlide(i: number): void {
@@ -35,7 +35,7 @@ function onMainSelect(_: unknown, i: number): void {
   <div class="space-y-3">
     <KunCarousel ref="mainRef" v-model="selected" align="center" :show-dots="false" @select="onMainSelect">
       <KunCarouselSlide v-for="s in slides" :key="s.id">
-        <div :class="['flex h-56 items-center justify-center rounded-xl text-2xl font-bold text-white', s.bg]">
+        <div :class="['flex h-56 items-center justify-center rounded-lg text-2xl font-bold text-inverted', s.bg]">
           {{ s.title }}
         </div>
       </KunCarouselSlide>
@@ -55,7 +55,7 @@ function onMainSelect(_: unknown, i: number): void {
         <button
           type="button"
           :class="[
-            'flex h-16 w-full cursor-pointer items-center justify-center rounded-lg text-sm font-bold text-white transition',
+            'flex h-16 w-full cursor-pointer items-center justify-center rounded-lg text-sm font-bold text-inverted transition',
             s.bg,
             i !== selected ? 'opacity-50 hover:opacity-90' : '',
           ]"

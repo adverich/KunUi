@@ -4,8 +4,8 @@
     <td v-if="showExpand" class="print:hidden" :class="mergedTdClass">
       <slot v-if="$slots.expandIcon" name="expand-icon" :item="item" :index="index" />
 
-      <KunBtn v-else @click="emits('toggle-expand', item)" rounded="rounded-full" size="xxs" bgColor="bg-transparent">
-        <KunIcon :icon="isExpanded ? icons.minus : icons.plus" :color="isExpanded ? 'text-error' : 'text-success'" />
+      <KunBtn v-else @click="emits('toggle-expand', item)" rounded="full" size="xxs" variant="ghost" color="neutral">
+        <KunIcon :icon="isExpanded ? '$minus' : '$plus'" :class="isExpanded ? 'text-error' : 'text-success'" />
       </KunBtn>
     </td>
 
@@ -82,7 +82,6 @@ import { getValue, formatValue } from '@/utils/tableFormatters.js';
 import { kunTableRowProps } from '../composables/kunTableRowProps.js';
 import KunBtn from '@/components/KunBtn/src/components/KunBtn.vue';
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
-import { icons } from '@/icons/index.js'
 import type { TableItem } from '../composables/useRowKey.js';
 
 const props = defineProps(kunTableRowProps)
@@ -91,7 +90,7 @@ const emits = defineEmits(['toggle-expand', 'toggle-select', 'row-click']);
 
 // --- Gestión de Estilos de Celda y Fila ---
 
-const baseTdClass = 'px-1 py-2 whitespace-normal word-break text-sm text-ui';
+const baseTdClass = 'px-1 py-2 whitespace-normal word-break text-sm text-default';
 const mergedTdClass = computed(() => props.tdClass || baseTdClass);
 
 // Resuelve clases condicionales dinámicas (ej: filas rojas si stock < 0)
@@ -103,7 +102,7 @@ function resolveTdClass(item: TableItem | undefined, index: number | undefined):
   return (result as string)?.trim() || '';
 }
 
-const baseRowClass = 'hover:bg-ui-selection-hover border-t border-ui';
+const baseRowClass = 'hover:bg-elevated/50 border-t border-default';
 const rowClass = computed(() => props.rowClass || baseRowClass);
 
 const actionsAlignClass = computed(() => {
@@ -114,7 +113,7 @@ const actionsAlignClass = computed(() => {
   }
   return alignMap[props.actionsAlign as string] || 'text-center'
 });
-const baseTrClass = 'bg-surface';
+const baseTrClass = 'bg-default';
 const trClass = computed(() => props.trClass || baseTrClass);
 const conditionalRowClass = computed(() => resolveTdClass(props.item, props.index));
 

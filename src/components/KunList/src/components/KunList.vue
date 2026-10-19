@@ -7,13 +7,11 @@
     @keydown="onKeydown"
     @select="e => emit('click:select', (e as CustomEvent).detail)"
     :class="[
-      bgList,
-      borderColor,
       fontSize,
       {
         'space-y-1': !dense,
         'space-y-0.5': dense,
-        'pl-4 border-l-2': sub,
+        'ps-4 border-s-2 border-primary': sub,
         'p-2 rounded-md': nav,
       },
     ]"

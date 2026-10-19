@@ -5,7 +5,7 @@
     :aria-label="label"
     :aria-disabled="disabled ? 'true' : 'false'"
     :class="[
-      'inline-flex items-center justify-center select-none text-ui-muted px-1',
+      'inline-flex items-center justify-center select-none text-muted px-1',
       sizeClass,
       disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-grab active:cursor-grabbing',
       wrapperClass,

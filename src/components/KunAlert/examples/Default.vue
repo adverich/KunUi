@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import KunAlert from '../src/components/KunAlert.vue'
 import type { KunAlertPosition } from '../src/composables/kunAlertProps.js'
+import type { KunColor, KunVariant } from '../../../theme/kunVariants.js'
 import KunBtn from '../../KunBtn/src/components/KunBtn.vue'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
@@ -9,16 +10,12 @@ import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 
 // ------------------------------------------------------------------
 // Visibilidad: la alerta solo se renderiza con v-model en true.
-// (El auto-cierre por timeout corre una vez al montar; para
-//  volver a verla se usa el botón Mostrar.)
+// El auto-cierre por timeout se re-arma cada vez que se muestra.
 // ------------------------------------------------------------------
 const visible = ref(false)
 
 function showAlert(): void {
-  visible.value = false
-  requestAnimationFrame(() => {
-    visible.value = true
-  })
+  visible.value = true
 }
 
 // ------------------------------------------------------------------
@@ -41,11 +38,22 @@ const positionOptions = ref([
 ])
 
 const icon = ref('')
-const iconSize = ref('text-2xl')
-const iconBgColor = ref('bg-error')
-const bgColor = ref('bg-error')
-const textColor = ref('text-ui-inverse')
-const borderColor = ref('')
+const iconSize = ref('size-6')
+const color = ref<KunColor>('error')
+const colorOptions = ref([
+  { id: 'primary', name: 'primary' },
+  { id: 'success', name: 'success' },
+  { id: 'warning', name: 'warning' },
+  { id: 'error', name: 'error' },
+  { id: 'neutral', name: 'neutral' },
+])
+const variant = ref<KunVariant>('solid')
+const variantOptions = ref([
+  { id: 'solid', name: 'solid' },
+  { id: 'outline', name: 'outline' },
+  { id: 'soft', name: 'soft' },
+  { id: 'subtle', name: 'subtle' },
+])
 const titleClass = ref('text-2xl font-bold')
 const messageClass = ref('text-base font-normal')
 const transition = ref('transition-opacity duration-300 ease-in-out')
@@ -59,8 +67,6 @@ const closable = ref(true)
 const fullscreen = ref(false)
 const persistent = ref(false)
 
-const zIndexRaw = ref('2500')
-const zIndexProp = computed(() => (zIndexRaw.value === '' ? 2500 : Number(zIndexRaw.value)))
 const timeoutRaw = ref('2500')
 const timeoutProp = computed(() => (timeoutRaw.value === '' ? 2500 : Number(timeoutRaw.value)))
 
@@ -90,7 +96,7 @@ function logEvent(name: string, detail: unknown): void {
 
       <div class="flex items-center gap-3">
         <KunBtn @click="showAlert">Mostrar alerta</KunBtn>
-        <p class="text-xs text-ui-muted">La alerta solo se renderiza con v-model en true (se auto-cierra por timeout).</p>
+        <p class="text-xs text-muted">La alerta solo se renderiza con v-model en true (se auto-cierra por timeout).</p>
       </div>
 
       <KunAlert
@@ -100,14 +106,11 @@ function logEvent(name: string, detail: unknown): void {
         :position="position"
         :icon="icon || ''"
         :icon-size="iconSize"
-        :icon-bg-color="iconBgColor"
-        :bg-color="bgColor"
-        :text-color="textColor"
-        :border-color="borderColor"
+        :color="color"
+        :variant="variant"
         :title-class="titleClass"
         :message-class="messageClass"
         :closable="closable"
-        :z-index="zIndexProp"
         :transition="transition"
         :alert-class="alertClass"
         :padding-container="paddingContainer"
@@ -121,26 +124,26 @@ function logEvent(name: string, detail: unknown): void {
         @action="logEvent('action', '')"
       />
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">visible (v-model)</div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">visible (v-model)</div>
         <div>{{ JSON.stringify(visible) }}</div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Mostrá la alerta o cerrala para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Mostrá la alerta o cerrala para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra la vista previa) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="title" label="Title" density="compact" />
@@ -156,10 +159,22 @@ function logEvent(name: string, detail: unknown): void {
         />
         <KunTextField v-model="icon" label="Icon (vacío = sin icono)" density="compact" />
         <KunTextField v-model="iconSize" label="Icon size" density="compact" />
-        <KunTextField v-model="iconBgColor" label="Icon bg color" density="compact" />
-        <KunTextField v-model="bgColor" label="Background" density="compact" />
-        <KunTextField v-model="textColor" label="Text color" density="compact" />
-        <KunTextField v-model="borderColor" label="Border color (vacío = sin borde)" density="compact" />
+        <KunSelect
+          v-model="color"
+          v-model:items="colorOptions"
+          label="Color"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="variant"
+          v-model:items="variantOptions"
+          label="Variant"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
         <KunTextField v-model="titleClass" label="Title class" density="compact" />
         <KunTextField v-model="messageClass" label="Message class" density="compact" />
         <KunTextField v-model="transition" label="Transition" density="compact" />
@@ -168,7 +183,6 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="margin" label="Margin" density="compact" />
         <KunTextField v-model="persistentLabel" label="Persistent label" density="compact" />
         <KunTextField v-model="actionLabel" label="Action label (vacío = sin acción)" density="compact" />
-        <KunTextField v-model="zIndexRaw" label="Z-index" density="compact" inputmode="decimal" />
         <KunTextField v-model="timeoutRaw" label="Timeout (ms)" density="compact" inputmode="decimal" />
 
         <KunSwitch v-model="closable" label="Closable" />

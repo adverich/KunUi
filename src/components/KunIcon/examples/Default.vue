@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, h } from 'vue'
 import KunIcon from '../src/components/KunIcon.vue'
-import { icons } from '../../../icons/index.js'
+import { kunIconAliases } from '../../../icons/index.js'
+import { kunConfig } from '../../../config/kunConfig.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
-import IconStar from '../../../icons/IconStar.vue'
 
 // ------------------------------------------------------------------
-// Icono seleccionado (grilla + texto libre: `$alias`, clase, SVG,
-// componente). Vacío = usa el primero del set.
+// Icono seleccionado (grilla de alias + texto libre: `$alias`, clase,
+// SVG, componente o nombre Iconify). Vacío = usa el primero del set.
 // ------------------------------------------------------------------
-const iconKeys = ref(Object.keys(icons).sort())
+const aliasKeys = ref(Object.keys(kunIconAliases).sort())
 const iconRaw = ref('$star')
 const iconProp = computed(() => (iconRaw.value === '' ? '$star' : iconRaw.value))
 
@@ -21,21 +21,35 @@ function pickIcon(key: string): void {
 // ------------------------------------------------------------------
 // Controles del playground
 // ------------------------------------------------------------------
-const size = ref('text-4xl')
-const color = ref('')
+const size = ref('size-9')
+const colorClass = ref('')
 const cursor = ref('')
 const contentClass = ref('')
 const disabled = ref(false)
 
-// Aliases custom: pisan el set bundleado (demo con `star`).
+// Aliases custom por instancia: pisan el mapa global (demo con `star`).
 const customAliases = {
   star: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><circle cx='12' cy='12' r='10'/></svg>",
 }
 const useCustomAliases = ref(false)
 const aliasesProp = computed(() => (useCustomAliases.value ? customAliases : undefined))
 
+// Override global vía `kunConfig.icons` (demo: `star` → `lucide:heart`).
+const overrideStar = ref(false)
+watch(overrideStar, (on) => {
+  kunConfig.setIcons({ star: on ? 'lucide:heart' : kunIconAliases.star })
+})
+
 const svgSample =
   "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.2l7.1-.6z'/></svg>"
+
+// Componente demo (para `:is`).
+const DemoComponent = {
+  render: () =>
+    h('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24', fill: 'currentColor' }, [
+      h('circle', { cx: '12', cy: '12', r: '10' }),
+    ]),
+}
 
 // ------------------------------------------------------------------
 // Log de eventos en vivo
@@ -61,11 +75,11 @@ function logEvent(name: string, detail: unknown): void {
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunIcon</h2>
 
-      <div class="flex items-center gap-4 rounded-lg bg-surface p-4">
+      <div class="flex items-center gap-4 rounded-lg bg-muted p-4">
         <KunIcon
           :icon="iconProp"
           :size="size"
-          :color="color || undefined"
+          :class="colorClass || undefined"
           :cursor="cursor || null"
           :content-class="contentClass || undefined"
           :disabled="disabled"
@@ -74,62 +88,66 @@ function logEvent(name: string, detail: unknown): void {
         />
         <div class="min-w-0 text-sm">
           <div class="font-medium">Demo interactiva</div>
-          <p class="text-ui-muted text-xs">Clic en la grilla o escribí: `$alias`, clase CSS, SVG inline o componente.</p>
+          <p class="text-muted text-xs">Clic en la grilla o escribí: `$alias`, clase CSS, SVG inline, componente o nombre Iconify (`i-mdi-home`, `lucide:rocket`).</p>
           <div class="font-mono text-xs mt-1 break-all">{{ iconProp }}</div>
         </div>
       </div>
 
-      <div class="rounded-lg border border-ui p-3">
-        <div class="text-ui-muted text-xs mb-2">Set bundleado (clic para usar) — {{ iconKeys.length }} iconos</div>
+      <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Alias de la librería (clic para usar) — {{ aliasKeys.length }}</div>
         <div class="grid grid-cols-6 sm:grid-cols-8 gap-1">
           <button
-            v-for="key in iconKeys"
+            v-for="key in aliasKeys"
             :key="key"
             type="button"
-            :title="`$${key}`"
-            class="flex flex-col items-center gap-1 rounded p-2 hover:bg-ui-hover cursor-pointer"
-            :class="iconProp === `$${key}` ? 'bg-ui-selection' : ''"
+            :title="`$${key} → ${kunIconAliases[key]}`"
+            class="flex flex-col items-center gap-1 rounded-md p-2 hover:bg-accented cursor-pointer"
+            :class="iconProp === `$${key}` ? 'bg-accented' : ''"
             @click="pickIcon(key)"
           >
-            <KunIcon :icon="`$${key}`" size="text-xl" />
-            <span class="text-[10px] text-ui-muted leading-none truncate max-w-full">{{ key }}</span>
+            <KunIcon :icon="`$${key}`" size="size-5" />
+            <span class="text-[10px] text-muted leading-none truncate max-w-full">{{ key }}</span>
           </button>
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface p-3 text-sm">
-        <span class="text-ui-muted text-xs w-full">Otras formas (estáticas)</span>
-        <span class="flex items-center gap-2"><KunIcon :icon="svgSample" size="text-xl" /> SVG inline</span>
-        <span class="flex items-center gap-2"><KunIcon :icon="IconStar" size="text-xl" /> Componente</span>
-        <span class="flex items-center gap-2"><KunIcon size="text-xl">★</KunIcon> Slot</span>
-        <span class="flex items-center gap-2"><KunIcon icon="$alias-inexistente" size="text-xl" /> Alias roto → warn + placeholder</span>
+      <div class="flex flex-wrap items-center gap-4 rounded-lg bg-muted p-3 text-sm">
+        <span class="text-muted text-xs w-full">Otras formas (estáticas)</span>
+        <span class="flex items-center gap-2"><KunIcon :icon="svgSample" size="size-5" /> SVG inline</span>
+        <span class="flex items-center gap-2"><KunIcon :icon="DemoComponent" size="size-5" /> Componente</span>
+        <span class="flex items-center gap-2"><KunIcon size="size-5">★</KunIcon> Slot</span>
+        <span class="flex items-center gap-2"><KunIcon icon="$alias-inexistente" size="size-5" /> Alias roto → warn + fallback</span>
+        <span class="flex items-center gap-2"><KunIcon icon="i-mdi-home" size="size-5" /> Iconify (<code>i-mdi-home</code>)</span>
+        <span class="flex items-center gap-2"><KunIcon icon="lucide:rocket" size="size-5" /> Iconify (<code>lucide:rocket</code>)</span>
+        <span class="flex items-center gap-2 text-error"><KunIcon size="size-5">●</KunIcon> Hereda color (<code>class="text-error"</code>)</span>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Hacé clic en el icono demo para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Hacé clic en el icono demo para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra la vista previa) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
-        <KunTextField v-model="iconRaw" label="Icon ($alias, clase, SVG)" density="compact" />
-        <KunTextField v-model="size" label="Size" density="compact" />
-        <KunTextField v-model="color" label="Color (vacío = default)" density="compact" />
+        <KunTextField v-model="iconRaw" label="Icon ($alias, clase, SVG, Iconify)" density="compact" />
+        <KunTextField v-model="size" label="Size (clase: size-9)" density="compact" />
+        <KunTextField v-model="colorClass" label="Class (text-error …)" density="compact" />
         <KunTextField v-model="cursor" label="Cursor (vacío = auto)" density="compact" />
         <KunTextField v-model="contentClass" label="Content class" density="compact" />
 
         <KunSwitch v-model="disabled" label="Disabled" />
         <KunSwitch v-model="useCustomAliases" label="Aliases custom (star→círculo)" />
+        <KunSwitch v-model="overrideStar" label="Override global (star→lucide:heart)" />
       </div>
     </div>
   </div>

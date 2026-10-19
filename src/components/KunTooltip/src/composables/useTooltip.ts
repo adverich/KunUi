@@ -28,12 +28,15 @@ export function useTooltip(props: KunTooltipPropsLike) {
         }
     })
 
+    // La flecha es un cuadrado rotado 45°: `border-l`/`border-t` aquí son
+    // aristas **geométricas** ligadas al `location` físico (top|bottom|left|right),
+    // no lados lógicos de texto. Se mantienen físicas a propósito (sin RTL).
     const arrowClass = computed(() => {
         switch (props.location) {
-            case 'top': return 'border-b border-l border-ui'
-            case 'bottom': return 'border-t border-l border-ui'
-            case 'left': return 'border-r border-t border-ui'
-            case 'right': return 'border-l border-t border-ui'
+            case 'top': return 'border-b border-l border-default bg-default'
+            case 'bottom': return 'border-t border-l border-default bg-default'
+            case 'left': return 'border-r border-t border-default bg-default'
+            case 'right': return 'border-l border-t border-default bg-default'
             default: return ''
         }
     })

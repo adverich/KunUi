@@ -1,6 +1,7 @@
 import type { PropType } from 'vue';
 import type { KunMenuOrigin } from '../../../KunMenu/src/composables/kunMenuProps.js';
 import type { KunTextFieldDensity } from '../../../KunTextField/src/composables/KunTextFieldProps.js';
+import { isKunColor, type KunColor } from '../../../../theme/kunVariants.js';
 
 export const KunSelectProps = {
   /** Etiqueta del campo. */
@@ -83,8 +84,12 @@ export const KunSelectProps = {
   hasCreateItem: { type: Boolean, default: false },
   /** Clase del botón crear. */
   btnCreateClass: { type: String, default: 'w-full' },
-  /** Color del botón crear. */
-  btnCreateBg: { type: String, default: 'bg-success' },
+  /** Color semántico del botón crear. */
+  btnCreateColor: {
+    type: String as PropType<KunColor>,
+    default: 'success',
+    validator: (v: unknown) => isKunColor(v)
+  },
   /** Texto del botón crear. */
   btnCreateText: { type: String, default: 'Crear item' },
 
@@ -120,8 +125,6 @@ export const KunSelectProps = {
     default: 'default',
     validator: (v: unknown) => ['default', 'comfortable', 'compact'].includes(v as string),
   },
-  /** Z-index del menú. */
-  zIndex: { type: String, default: 'z-250' },
   /** Oculta el área de detalles. */
   hideDetails: {
     type: Boolean,
@@ -135,19 +138,11 @@ export const KunSelectProps = {
   /** Props visuales y atributos que se reenvían al KunTextField interno. */
   textFieldProps: { type: Object, default: () => ({}) },
   /** Color del ícono desplegar. */
-  iconColor: { type: String, default: 'text-ui-primary' },
+  iconColor: { type: String, default: 'text-primary' },
   /** Color del asterisco de requerido. */
-  requiredIconColor: { type: String, default: 'text-ui-primary' },
+  requiredIconColor: { type: String, default: 'text-error' },
   /** Clase del texto "sin elementos". */
-  emptyTextClass: { type: String, default: 'text-ui-muted' },
-  /** Color de fondo del menú. */
-  bgMenuColor: { type: String, default: 'bg-menu' },
-  /** Color de fondo de cada opción. */
-  bgItemListColor: { type: String, default: 'bg-transparent' },
-  /** Clase de la opción seleccionada. */
-  selectedItemListColor: { type: String, default: 'bg-ui-selection text-ui-selection' },
-  /** Clase hover de cada opción. */
-  hoverItemListColor: { type: String, default: 'hover:bg-ui-selection-hover' },
+  emptyTextClass: { type: String, default: 'text-muted' },
   /** Reservado (no se reenvía al KunMenu interno). Actualmente sin efecto. */
   attach: {
     type: Boolean,

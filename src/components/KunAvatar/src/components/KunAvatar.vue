@@ -5,7 +5,7 @@
     @mouseover="$emit('hover', $event)" @contextmenu="$emit('contextmenu', $event)" @focus="$emit('focus', $event)">
     <img v-if="props.image" :src="props.image" :alt="props.alt" :class="computedImageClasses" />
     <span v-else-if="props.icon" :class="computedIconClasses">
-      <KunIcon v-if="useKunIcon" :icon="(props.icon as any)" size="text-xl" />
+      <KunIcon v-if="useKunIcon" :icon="(props.icon as any)" size="size-5" />
       <template v-else>{{ props.icon }}</template>
     </span>
     <span v-else-if="props.text" :class="computedTextClasses">{{ props.text }}</span>
@@ -74,7 +74,7 @@ const useKunIcon = computed(() => {
 const bgClass = computed(() => {
   if (props.variant === 'outlined' || props.variant === 'text') return 'bg-transparent';
   if (props.color) return `bg-${props.color}`;
-  return hasBackgroundClass.value ? '' : 'bg-ui-surface-subtle';
+  return hasBackgroundClass.value ? '' : 'bg-muted';
 });
 
 const variantClasses = computed(() => {
@@ -90,7 +90,11 @@ const variantClasses = computed(() => {
 const computedClasses = computed(() => [
   "relative flex items-center justify-center overflow-hidden cursor-pointer transition-all",
   numericSize.value ? "" : namedSizeClass.value,
-  props.rounded ? "rounded-full" : props.tile ? "rounded-none" : "rounded",
+  props.tile || props.rounded === false || props.rounded === 'none'
+    ? "rounded-none"
+    : typeof props.rounded === "string" && props.rounded !== "full"
+      ? `rounded-${props.rounded}`
+      : "rounded-full",
   props.border ? `border border-${props.border}` : "",
   bgClass.value,
   variantClasses.value,
@@ -105,7 +109,7 @@ const computedImageClasses = computed(() => [
 ]);
 
 const computedIconClasses = computed(() => [
-  "absolute text-ui-inverse text-xl",
+  "absolute text-inverted text-xl",
 ]);
 
 const computedTextClasses = computed(() => [

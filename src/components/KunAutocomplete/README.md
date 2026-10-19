@@ -42,7 +42,7 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 | `textNoItems` | `String` | `"No hay elementos"` | Texto cuando no hay ítems. |
 | `hasCreateItem` | `Boolean` | `false` | Muestra botón para crear un ítem (emite `createItem`). |
 | `btnCreateClass` | `String` | `"w-full"` | Clase del botón crear. |
-| `btnCreateBg` | `String` | `"bg-success"` | Color del botón crear. |
+| `btnCreateColor` | `KunColor` | `'success'` | Color semántico del botón crear. |
 | `btnCreateText` | `String` | `"Crear item"` | Texto del botón crear. |
 | `multiple` | `Boolean` | `false` | Selección múltiple (chips). |
 | `required` | `Boolean` | `false` | Marca el campo como requerido (asterisco). |
@@ -54,17 +54,12 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 | `itemFontSize` | `String` | `'text-base'` | Tamaño de fuente del título de cada opción (clase Tailwind). |
 | `subtitleFontSize` | `String` | `'text-xs'` | Tamaño de fuente del subtítulo de cada opción (clase Tailwind). |
 | `density` | `KunTextFieldDensity` | `"default"` | Densidad del campo (se reenvía al KunTextField). |
-| `zIndex` | `String` | `"z-250"` | Z-index del menú. |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |
 | `hasIcons` | `Boolean` | `true` | Muestra iconos de estado (limpiar/desplegar). |
 | `textFieldProps` | `Object` | `() => ({})` | Props visuales y atributos que se reenvían al KunTextField interno. |
-| `iconColor` | `String` | `'text-ui-primary'` | Color del ícono desplegar. |
-| `requiredIconColor` | `String` | `'text-ui-primary'` | Color del asterisco de requerido. |
-| `emptyTextClass` | `String` | `'text-ui-muted'` | Clase del texto "sin elementos". |
-| `bgMenuColor` | `String` | `"bg-menu"` | Color de fondo del menú. |
-| `bgItemListColor` | `String` | `"bg-transparent"` | Color de fondo de cada opción. |
-| `selectedItemListColor` | `String` | `"bg-ui-selection text-ui-selection"` | Clase de la opción seleccionada. |
-| `hoverItemListColor` | `String` | `"hover:bg-ui-selection-hover"` | Clase hover de cada opción. |
+| `iconColor` | `String` | `'text-primary'` | Color del ícono desplegar. |
+| `requiredIconColor` | `String` | `'text-error'` | Color del asterisco de requerido. |
+| `emptyTextClass` | `String` | `'text-muted'` | Clase del texto "sin elementos". |
 | `attach` | `Boolean` | `false` | Reservado (no se reenvía al KunMenu interno). Actualmente sin efecto. |
 | `rules` | `Array` | `() => []` | Reglas de validación: `(valor) => true \| string`. |
 

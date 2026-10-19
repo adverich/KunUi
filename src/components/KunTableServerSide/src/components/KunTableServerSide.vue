@@ -7,7 +7,7 @@
   >
     <div
       v-if="searchable || filterable || $slots.prependHeader || $slots.prependSearch || $slots.appendSearch"
-      class="p-2 bg-surface print:hidden flex w-full justify-between"
+      class="p-2 bg-muted print:hidden flex w-full justify-between"
       :class="{ 'pointer-events-none opacity-60': loading }"
     >
       <div class="w-full flex items-center" v-if="showSearchBtn || !isMobile">
@@ -19,7 +19,7 @@
         <span
           v-if="selectedItems.length"
           @click="clearSelection"
-          class="bg-ui-selection hover:bg-ui-primary rounded cursor-pointer px-2 ml-2"
+          class="bg-accented hover:bg-primary rounded-md cursor-pointer px-2 ml-2"
         >
           Anular selección
         </span>
@@ -32,14 +32,14 @@
           class="h-fit"
           v-if="filterable && filters.length"
           @click="modalFilter = true"
-          rounded="rounded-full"
+          rounded="full"
           size="xs"
-          bgColor="bg-success"
+          color="success"
         >
-          <KunIcon class="h-fit" :icon="IconFilter" size="text-lg" />
+          <KunIcon class="h-fit" icon="$filter" size="size-4.5" />
         </KunBtn>
 
-        <div v-if="searchable" class="rounded flex mx-2" :class="[searchClass]">
+        <div v-if="searchable" class="rounded-md flex mx-2" :class="[searchClass]">
           <input
             v-model="searchQuery"
             v-show="showSearch"
@@ -51,14 +51,14 @@
             @focus="hideIconSearch"
             @blur="showIconSearch"
           />
-          <KunIcon :icon="IconSearch" @click="handleSearchFocus" v-show="showSearchBtn" />
+          <KunIcon icon="$search" @click="handleSearchFocus" v-show="showSearchBtn" />
         </div>
 
         <slot name="appendSearch" />
       </div>
     </div>
 
-    <div class="relative flex-1 overflow-auto bg-surface">
+    <div class="relative flex-1 overflow-auto bg-muted">
       <table :class="mergedTableClass" v-if="rows.length">
         <template v-if="$slots.colgroup && !isMobile">
           <colgroup><slot name="colgroup" v-bind="slotProps" /></colgroup>
@@ -154,10 +154,10 @@
 
       <div
         v-if="loading && rows.length"
-        class="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-ui-overlay print:hidden"
+        class="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-overlay print:hidden"
       >
         <KunLoaderCircular :size="40" :width="4" />
-        <span class="text-sm text-ui">{{ loadingText }}</span>
+        <span class="text-sm text-default">{{ loadingText }}</span>
       </div>
     </div>
 
@@ -197,8 +197,6 @@ import { isMobile } from '@/utils/_platform';
 import { debounce } from '@/utils/utils.js';
 
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
-import IconFilter from '../../../../icons/IconFilter.vue';
-import IconSearch from '../../../../icons/IconSearch.vue';
 import KunTableHeaders from '../../../KunTable/src/components/KunTableHeaders.vue';
 import KunTableFooter from '../../../KunTable/src/components/KunTableFooter.vue';
 import KunTableRows from '../../../KunTable/src/components/KunTableRows.vue';
@@ -509,7 +507,7 @@ const slotProps = computed(() => ({
   pagination: pagination.value,
 }));
 
-const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col border border-ui rounded';
+const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col ring ring-default bg-default rounded-lg';
 const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
 
 const baseTableClass = 'table-auto w-full h-fit text-sm text-left';
@@ -519,7 +517,7 @@ onMounted(() => showIconSearch());
 const searchRef: Ref<HTMLInputElement | null> = ref(null);
 const showSearch = ref(true);
 const showSearchBtn = ref(false);
-const searchClass = ref('w-full border max-w-sm');
+const searchClass = ref('w-full ring ring-inset ring-accented max-w-sm');
 const searchPositionClass = computed(() => {
   const positionMap: Record<string, string> = {
     start: 'justify-start',
@@ -551,7 +549,7 @@ function showIconSearch() {
 
 function hideIconSearch() {
   if (!isMobile.value) return;
-  searchClass.value = 'w-full border';
+  searchClass.value = 'w-full ring ring-inset ring-accented';
   showSearchBtn.value = false;
   showSearch.value = true;
   emits('focusOnSearch', true);

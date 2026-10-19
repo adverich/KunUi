@@ -1,4 +1,5 @@
 import type { PropType } from 'vue';
+import { isKunColor, isKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js';
 
 export type KunAppbarTitlePosition = 'left' | 'center' | 'right';
 export type KunAppbarTransition = 'fade-slide' | 'fade' | 'scale';
@@ -6,8 +7,6 @@ export type KunAppbarDensity = 'default' | 'comfortable' | 'compact';
 export type KunAppbarElevation = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'none';
 
 export const kunAppbarProps = {
-  /** Color de fondo. */
-  bgColor: { type: String, default: 'bg-transparent' },
   /** Título (texto). */
   title: String,
   /** URL de imagen/logo junto al título. */
@@ -36,22 +35,28 @@ export const kunAppbarProps = {
     default: 'md',
     validator: (v: unknown) => ['sm', 'md', 'lg', 'xl', '2xl', 'none'].includes(v as string)
   },
-  /** Muestra borde inferior (usa `borderColor`). */
-  bordered: { type: Boolean, default: false },
-  /** Clases del borde inferior. */
-  borderColor: { type: String, default: 'border-b border-ui' },
+  /** Muestra borde inferior (`border-b border-default`). Por defecto `true` (igual que el header de Nuxt UI). */
+  bordered: { type: Boolean, default: true },
   /** Muestra el botón para abrir/cerrar el drawer. */
   showDrawerButton: { type: Boolean, default: true },
   /** Clase extra del botón del drawer. */
   buttonClass: { type: String, default: 'px-2' },
-  /** Fondo del botón del drawer. */
-  buttonBg: { type: String, default: 'bg-button-disabled opacity-75' },
+  /** Color del botón del drawer. `null` delega al theme global. */
+  buttonColor: {
+    type: String as PropType<KunColor | null>,
+    default: null,
+    validator: (v: unknown) => v === null || isKunColor(v)
+  },
+  /** Variante del botón del drawer. `null` delega al theme global. */
+  buttonVariant: {
+    type: String as PropType<KunVariant | null>,
+    default: null,
+    validator: (v: unknown) => v === null || isKunVariant(v)
+  },
   /** Clase de la sección izquierda (slot `left`). */
   leftSectionClass: { type: String, default: 'flex items-center gap-2' },
   /** Clase de la sección derecha (slot `right`). */
   rightSectionClass: { type: String, default: 'flex items-center gap-2 justify-end ml-auto' },
-  /** Z-index. */
-  zIndex: { type: String, default: 'z-1000' },
   /** Fija arriba con `fixed top-0 left-0 right-0`. */
   fixed: { type: Boolean, default: false },
   /** Fija arriba con `sticky top-0`. */

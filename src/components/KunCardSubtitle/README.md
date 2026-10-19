@@ -24,7 +24,7 @@ import { KunCardSubtitle } from 'adverich-kun-ui'
 |---|---|---|---|
 | `subtitle` | `string \| number \| null` | `null` | Texto del subtítulo (alternativa al slot). |
 | `dense` | `Boolean` | `false` | Reduce el padding. |
-| `color` | `String` | `'text-ui-muted'` | Color del texto. |
+| `color` | `String` | `'text-muted'` | Color del texto. |
 | `fontWeight` | `String` | `'font-normal'` | Peso del texto. |
 
 ## Slots

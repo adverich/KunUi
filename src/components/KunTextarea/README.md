@@ -27,8 +27,6 @@ import { KunTextarea } from 'adverich-kun-ui'
 | `hint` | `String` | `-` | Texto de ayuda. |
 | `persistentHint` | `Boolean` | `false` | Muestra el hint siempre. |
 | `class` | `String` | `-` | Clase extra del textarea. |
-| `bgColor` | `String` | `-` | Color de fondo (se usa si la variante no lo define). |
-| `textColor` | `String` | `-` | Color del texto. |
 | `textAlign` | `KunTextareaTextAlign` | `'left'` | Alineación del texto.<br/>Valores · Values: `left` `center` `right` |
 | `formatModel` | `KunTextareaFormatModel` | `'auto'` | Formato del modelo: 'auto' (detecta JSON) \| 'json' \| 'plain'.<br/>Valores · Values: `auto` `json` `plain` |
 | `loading` | `Boolean` | `-` | Muestra barra de carga superior. |
@@ -64,11 +62,9 @@ import { KunTextarea } from 'adverich-kun-ui'
 | `inputClass` | `String \| Array` | `-` | Clase extra del textarea. |
 | `wrapperClass` | `String \| Array` | `-` | Clase extra del contenedor. |
 | `tile` | `Boolean` | `-` | Sin redondeo. |
-| `rounded` | `String \| Number` | `-` | Redondeo (string/number = clase `rounded-<valor>`). |
+| `rounded` | `String` | `'rounded-md'` | Redondeo (clase de escala, `rounded-md` por defecto). |
 | `flat` | `Boolean` | `-` | Sin sombra. |
-| `color` | `String` | `-` | Color de acento (foco). |
-| `focusRingColor` | `String` | `'ring-ui-focus'` | Color del anillo de foco. |
-| `loadingColor` | `String` | `-` | Color de la barra de carga. |
+| `loadingColor` | `String` | `-` | Color de la barra de carga (clase `bg-*` del theme). |
 | `clearIcon` | `Boolean` | `-` | Muestra el botón limpiar (requiere `clearable` con valor). |
 | `debounceTime` | `Number` | `300` | Debounce en ms para emitir el modelo. |
 
@@ -117,6 +113,16 @@ borde nativo completo (respeta cualquier `rounded`, pill incluida;
 sobre la caja real del label (medida por JS + `ResizeObserver`). Hueco real
 en cualquier fondo, sin `fieldset`/`legend`. El label flotante se desplaza
 2px por escalón de `rounded`.
+
+## Bordes y radio
+
+- Default de `rounded`: `'rounded-md'` (antes `'rounded'` pelado).
+- `textareaClasses` y el borde del fieldset derivan ahora de
+  `fieldsetRoundedClass`, sin claves `rounded` / `rounded-none` paralelas.
+- La barra de carga interna usa `rounded-md`.
+- Contorno por rol: `filled` → `bg-default border-accented`; `outlined`/`underlined`
+  → `border-accented`; `solo` → `bg-elevated ring ring-inset ring-accented`; notch
+  `border-accented` (fin del hack `dark:border-muted`).
 
 ---
 

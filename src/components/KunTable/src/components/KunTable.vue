@@ -3,7 +3,7 @@
     <!-- Barra de búsqueda -->
     <div
       v-if="searchable || filterable || $slots.prependHeader || $slots.prependSearch || $slots.appendSearch"
-      class="p-2 bg-surface print:hidden flex w-full justify-between"
+      class="p-2 bg-muted print:hidden flex w-full justify-between"
     >
       <div class="w-full flex items-center" v-if="showSearchBtn || !isMobile">
         <slot name="prependHeader" />
@@ -13,12 +13,12 @@
         <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
         <template v-if="paginatedItems.length !== filteredItems.length">
           <span v-if="allSelected && !allFilteredSelected" @click="selectCompleteAll"
-            class="bg-secondary hover:bg-ui-primary rounded cursor-pointer px-2 ml-2"
+            class="bg-secondary hover:bg-primary rounded-md cursor-pointer px-2 ml-2"
           >
             Seleccionar todos los {{ filteredItems.length }} registros
           </span>
           <span v-if="allFilteredSelected" @click="clearSelection" 
-            class="bg-secondary hover:bg-ui-primary rounded cursor-pointer px-2 ml-2"
+            class="bg-secondary hover:bg-primary rounded-md cursor-pointer px-2 ml-2"
           >
             Anular selección
           </span>
@@ -28,11 +28,11 @@
       <div class="min-w-1/3 flex h-full items-center" :class="[searchPositionClass]">
         <slot name="prependSearch" />
 
-        <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="rounded-full" size="xs" bgColor="bg-success">
-          <KunIcon class="h-fit" :icon="IconFilter" size="text-lg" />
+        <KunBtn class="h-fit" v-if="filterable && filters.length" @click="modalFilter = true" rounded="full" size="xs" color="success">
+          <KunIcon class="h-fit" icon="$filter" size="size-4.5" />
         </KunBtn>
 
-        <div v-if="searchable" class="rounded flex mx-2" :class="[searchClass]">
+        <div v-if="searchable" class="rounded-md flex mx-2" :class="[searchClass]">
           <input
             v-model="searchQuery"
             v-show="showSearch"
@@ -44,14 +44,14 @@
             @focus="hideIconSearch"
             @blur="showIconSearch"
           />
-          <KunIcon :icon="IconSearch" @click="handleSearchFocus" v-show="showSearchBtn"/>
+          <KunIcon icon="$search" @click="handleSearchFocus" v-show="showSearchBtn"/>
         </div>
 
         <slot name="appendSearch" />
       </div>
     </div>
 
-    <div class="flex-1 overflow-auto bg-surface">
+    <div class="flex-1 overflow-auto bg-muted">
       <table :class="mergedTableClass" v-if="paginatedItems.length">
         <template v-if="$slots.colgroup && !isMobile">
           <colgroup><slot name="colgroup" v-bind="slotProps" /></colgroup>
@@ -179,8 +179,6 @@ import { isMobile, mdAndUp } from '@/utils/_platform';
 
 // Componentes UI internos y externos
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
-import IconFilter from '../../../../icons/IconFilter.vue';
-import IconSearch from '../../../../icons/IconSearch.vue';
 import KunTableHeaders from './KunTableHeaders.vue';
 import KunTableFooter from './KunTableFooter.vue';
 import KunTableRows from './KunTableRows.vue';
@@ -311,7 +309,7 @@ const slotProps = computed(() => ({
 }));
 
 // --- Estilos ---
-const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col border border-ui rounded';
+const baseWrapperClass = 'overflow-hidden h-full w-full flex flex-col ring ring-default bg-default rounded-lg';
 const mergedWrapperClass = [baseWrapperClass, wrapperClass.value];
 
 const baseTableClass = 'table-auto w-full h-fit text-sm text-left';
@@ -345,12 +343,12 @@ function showIconSearch(){
 
 function hideIconSearch(){
   if(!isMobile.value) return;
-  searchClass.value = "w-full border";
+  searchClass.value = "w-full ring ring-inset ring-accented";
   showSearchBtn.value = false;
   showSearch.value = true;
   emits('focusOnSearch', true);
 }
-const searchClass = ref("w-full border max-w-sm");
+const searchClass = ref("w-full ring ring-inset ring-accented max-w-sm");
 const searchPositionClass = computed(() => {
   const positionMap: Record<string, string> = {
     start: 'justify-start',

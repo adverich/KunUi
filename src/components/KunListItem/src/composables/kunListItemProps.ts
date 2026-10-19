@@ -19,26 +19,18 @@ export const kunListItemProps = {
   disabled: Boolean,
   /** Marca el ítem como activo. */
   active: Boolean,
-  /** Clase cuando está activo o seleccionado. */
-  activeClass: { type: String, default: 'bg-surface-light' },
   /** Permite selección (emite toggle al contexto KunList). */
   selectable: { type: Boolean, default: false },
   /** Variante visual. */
   variant: { type: String as PropType<KunListItemVariant>, default: 'text', validator: (v: unknown) => ['text', 'outlined', 'elevated', 'tonal', 'flat', 'plain'].includes(v as string) },
   /** Densidad del padding vertical. */
   density: { type: String as PropType<KunListItemDensity>, default: 'default', validator: (v: unknown) => ['default', 'comfortable', 'compact'].includes(v as string) },
-  /** Redondeo (true = default, string = clase). */
-  rounded: { type: [Boolean, String], default: true },
+  /** Redondeo de escala (`rounded-md`). `tile` lo anula. */
+  rounded: { type: Boolean, default: true },
   /** Sin redondeo. */
   tile: Boolean,
   /** Efecto ripple al hacer click. */
   ripple: { type: [Boolean, Object], default: true },
-  /** Color de fondo. */
-  bgItems: { type: String, default: 'bg-transparent' },
-  /** Color del texto. */
-  textColor: { type: String, default: 'text-ui' },
-  /** Fondo al pasar el mouse (solo si `selectable`). */
-  hoverBg: { type: String, default: 'hover:bg-surface-light' },
   /** Sin padding horizontal. */
   noGutters: Boolean,
   /** Alineación vertical del contenido. */
@@ -62,7 +54,7 @@ export const kunListItemProps = {
   /** Subtítulo (alternativa al slot). */
   subtitle: [String, Number, Boolean],
   /** Clase del subtítulo. */
-  subtitleClass: { type: String, default: 'text-sm text-ui-muted' },
+  subtitleClass: { type: String, default: 'text-sm text-muted' },
   /** Clase extra del contenedor. */
   containerClass: { type: [String, Array, Object], default: '' },
   /** Id del ítem (se genera uno si se omite). */

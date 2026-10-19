@@ -30,8 +30,6 @@ watch(selectionMode, (mode) => {
   selected.value = mode === 'multiple' ? [] : null
 })
 
-const bgList = ref('bg-surface')
-const borderColor = ref('border-ui')
 const fontSize = ref('text-base')
 </script>
 
@@ -48,8 +46,6 @@ const fontSize = ref('text-base')
         :dense="dense"
         :selectable="selectable"
         :selection-mode="selectionMode"
-        :bg-list="bgList"
-        :border-color="borderColor"
         :font-size="fontSize"
       >
         <KunListItem value="ada" title="Ada Lovelace" subtitle="Ingeniera" selectable />
@@ -58,15 +54,15 @@ const fontSize = ref('text-base')
         <KunListItem value="dijkstra" title="Edsger Dijkstra" subtitle="Informático" selectable />
       </KunList>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model:selected en crudo</div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model:selected en crudo</div>
         <div>{{ JSON.stringify(selected) }}</div>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunSwitch v-model="nav" label="Nav" />
@@ -82,8 +78,6 @@ const fontSize = ref('text-base')
           density="compact"
           class="col-span-2"
         />
-        <KunTextField v-model="bgList" label="Background list" density="compact" />
-        <KunTextField v-model="borderColor" label="Border color" density="compact" />
         <KunTextField v-model="fontSize" label="Font size" density="compact" />
       </div>
     </div>

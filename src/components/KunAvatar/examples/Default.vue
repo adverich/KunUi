@@ -11,7 +11,7 @@ import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 // (size acepta strings libres y números; rounded se mapea abajo).
 // ------------------------------------------------------------------
 type KunAvatarSize = 'x-small' | 'small' | 'default' | 'large' | 'x-large'
-type RoundedMode = 'default' | 'circular' | 'off'
+type RoundedMode = 'default' | 'circular' | 'off' | 'lg'
 
 // ------------------------------------------------------------------
 // Controles del playground (strings crudos -> computed undefined)
@@ -61,12 +61,19 @@ const densityOptions = ref([
 
 const roundedMode = ref<RoundedMode>('default')
 const roundedOptions = ref([
-  { id: 'default', name: 'default (undefined)' },
+  { id: 'default', name: 'default (rounded-full)' },
   { id: 'circular', name: 'circular (true)' },
   { id: 'off', name: 'off (false)' },
+  { id: 'lg', name: 'lg (escala)' },
 ])
 const roundedProp = computed((): string | number | boolean | undefined =>
-  roundedMode.value === 'circular' ? true : roundedMode.value === 'off' ? false : undefined,
+  roundedMode.value === 'circular'
+    ? true
+    : roundedMode.value === 'off'
+      ? false
+      : roundedMode.value === 'lg'
+        ? 'lg'
+        : undefined,
 )
 
 const end = ref(false)
@@ -133,7 +140,7 @@ function logEvent(name: string, detail: unknown): void {
         />
         <div class="min-w-0 text-sm">
           <div class="font-medium">Demo interactiva</div>
-          <p class="text-ui-muted text-xs">Prioridad: imagen &gt; icono &gt; texto &gt; slot.</p>
+          <p class="text-muted text-xs">Prioridad: imagen &gt; icono &gt; texto &gt; slot.</p>
         </div>
       </div>
 
@@ -143,29 +150,29 @@ function logEvent(name: string, detail: unknown): void {
         <KunAvatar :icon="demoSvgIcon" size="small" />
         <KunAvatar text="JD" size="small" />
         <KunAvatar size="small">S</KunAvatar>
-        <span class="text-xs text-ui-muted">imagen · icono (texto) · icono (SVG) · texto · slot</span>
+        <span class="text-xs text-muted">imagen · icono (texto) · icono (SVG) · texto · slot</span>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Fallback activo: {{ activeFallback }}</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Fallback activo: {{ activeFallback }}</div>
         <div class="font-mono text-xs">size={{ JSON.stringify(size) }} density={{ JSON.stringify(density) }} rounded={{ JSON.stringify(roundedProp) }}</div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Hacé click o hover sobre el avatar para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Hacé click o hover sobre el avatar para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el avatar) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="imageRaw" label="Image src (vacío = sin imagen)" density="compact" />

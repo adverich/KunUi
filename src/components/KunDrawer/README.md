@@ -24,8 +24,7 @@ import { KunDrawer } from 'adverich-kun-ui'
 |---|---|---|---|
 | `modelValue` | `Boolean` | `-` | Apertura del drawer (v-model). |
 | `absolute` | `Boolean` | `-` | Posicionamiento absoluto dentro del contenedor. |
-| `border` | `Boolean \| String \| Number` | `-` | Borde (boolean o clase de color). |
-| `color` | `String` | `-` | Color de fondo. |
+| `border` | `Boolean` | `true` | Borde del lado interior (`border-e/s/t/b border-default`); flotante → `ring ring-default`. Por defecto `true`. |
 | `elevation` | `String \| Number` | `-` | Nivel de sombra. |
 | `floating` | `Boolean` | `-` | Sin bordes ni fondo (flotante). |
 | `image` | `String` | `-` | URL de imagen de fondo. |
@@ -34,7 +33,7 @@ import { KunDrawer } from 'adverich-kun-ui'
 | `persistent` | `Boolean` | `-` | No cierra al hacer click fuera. |
 | `rail` | `Boolean` | `-` | Modo rail (colapsado a iconos). |
 | `railWidth` | `String` | `'w-[56px]'` | Ancho en modo rail. |
-| `rounded` | `Boolean \| String \| Number` | `-` | Redondeo de bordes. |
+| `rounded` | `Boolean` | `-` | Redondeo lateral según el lado (`rounded-e-lg` / `rounded-s-lg`). |
 | `scrim` | `Boolean \| String` | `true` | Muestra scrim (overlay) al abrir. |
 | `tag` | `String \| Object` | `'nav'` | Tag del contenedor. |
 | `temporary` | `Boolean` | `-` | Se cierra automáticamente al navegar o hacer click fuera. |
@@ -65,6 +64,19 @@ import { KunDrawer } from 'adverich-kun-ui'
 - `#prepend`
 - `#default`
 - `#append`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- Superficie `bg-default` (antes `bg-elevated`), como el `sidebar` de Nuxt UI.
+- `border` pasa a **default `true`** y es **consciente del lado**: `start`/`left`
+  → `border-e`, `end`/`right` → `border-s`, `top` → `border-b`, `bottom` →
+  `border-t` (todo `border-default`). Con `floating` el contorno es
+  `ring ring-default` (panel despegado). Antes un `border border-default`
+  completo, invisible en dark sobre `bg-elevated`.
+- Se eliminó el `border-none` del modo `floating` (ahora lo resuelve
+  `borderClass`).
 
 ---
 

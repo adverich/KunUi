@@ -25,10 +25,8 @@ import { KunToolbar } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `absolute` | `Boolean` | `-` | Posicionamiento absoluto. |
-| `bgColor` | `String` | `-` | Color de fondo. |
 | `titlePosition` | `KunToolbarTitlePosition` | `'left'` | Posición del título.<br/>Valores · Values: `left` `center` `right` |
-| `bordered` | `Boolean` | `false` | Muestra borde inferior. |
-| `borderColor` | `String` | `-` | Color del borde. |
+| `bordered` | `Boolean` | `true` | Muestra borde inferior (`border-b border-default`). Por defecto `true`. |
 | `collapse` | `Boolean` | `-` | Colapsa el toolbar (solo extensión). |
 | `density` | `KunToolbarDensity` | `'default'` | Densidad del padding.<br/>Valores · Values: `default` `prominent` `comfortable` `compact` |
 | `elevation` | `String \| Number` | `-` | Nivel de sombra. |
@@ -38,7 +36,7 @@ import { KunToolbar } from 'adverich-kun-ui'
 | `floating` | `Boolean` | `-` | Flotante sobre el contenido. |
 | `height` | `String \| Number` | `-` | Altura del toolbar. |
 | `image` | `String` | `-` | URL de imagen de fondo. |
-| `rounded` | `String \| Boolean` | `-` | Redondeo (true = default). |
+| `rounded` | `Boolean` | `-` | Redondeo (`rounded-lg`). `tile` lo anula. |
 | `tag` | `String` | `'header'` | Tag del contenedor. |
 | `theme` | `String` | `-` | Tema de color (hook de clase `theme-<valor>` para CSS del consumidor). |
 | `tile` | `Boolean` | `-` | Sin redondeo. |
@@ -70,6 +68,18 @@ import { KunToolbar } from 'adverich-kun-ui'
 - `#items`
 - `#append`
 - `#extension`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- `bordered` pasa a **default `true`** (`border-b border-default`), como el
+  `dashboard-toolbar` de Nuxt UI.
+- Sigue con `bg-transparent`: el borde es visible mientras el fondo detrás sea
+  `bg-default` (página o appbar). Sobre un contenedor `bg-muted`/`bg-elevated`
+  usar `border-muted` explícito.
+- `KunToolbarItems` variante `outlined`: `ring ring-accented` (antes
+  `border border-default`).
 
 ---
 

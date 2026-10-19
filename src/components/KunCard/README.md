@@ -27,12 +27,9 @@ import { KunCard } from 'adverich-kun-ui'
 | `subtitle` | `string \| null` | `null` | Subtítulo (atajo). |
 | `subTitleSize` | `string \| null` | `null` | Reservado. Actualmente sin efecto (no se propaga a KunCardTitle). |
 | `text` | `string \| null` | `null` | Texto del cuerpo (atajo; equivale al slot default). |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
-| `bgColor` | `String` | `'bg-transparent'` | Color de fondo. |
 | `flat` | `Boolean` | `false` | Sin sombra. |
 | `rounded` | `KunCardRounded` | `true` | Redondeo: boolean o tamaño. |
-| `outlined` | `Boolean` | `false` | Con borde (usa `outlineColor`). |
-| `outlineColor` | `String` | `'border-ui'` | Color del borde en modo `outlined`. |
+| `outlined` | `Boolean` | `false` | Con borde (`border border-default`). Redundante con `variant="outlined"`. |
 | `elevation` | `KunCardElevation` | `1` | Nivel de sombra (0-5, como string o número).<br/>Valores · Values: `0` `1` `2` `3` `4` `5` `` |
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link). |
 | `href` | `String` | `-` | URL externa (renderiza <a>). |
@@ -66,6 +63,16 @@ import { KunCard } from 'adverich-kun-ui'
 - `#default`
 - `#append`
 - `#actions`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- Superficie `bg-default` (antes `bg-elevated`), como la `card` de Nuxt UI.
+- `outlined`/`variant="outlined"` pasa de `border border-default` a
+  `ring ring-default`: sobre `bg-elevated` el borde era invisible en dark
+  (`--kun-border == --kun-bg-elevated == neutral-800`).
+- `tonal` sigue `bg-muted`; `text` sigue `bg-transparent`.
 
 ---
 

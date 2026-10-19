@@ -9,9 +9,9 @@
           </slot>
         </div>
 
-      <div data-kun-input-box class="flex flex-row items-center w-full border border-transparent relative" :class="[bgInput, rounded, containerDensity,
+      <div data-kun-input-box class="flex flex-row items-center w-full border border-transparent relative" :class="['bg-default', rounded, containerDensity,
         disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
-        hasError ? 'bg-ui-error-soft' : ''
+        hasError ? 'bg-error/10' : ''
       ]">
         <!-- Borde nativo completo (respeta cualquier `rounded`, pill incluido)
              con la muesca del label recortada vía mask: hueco real en cualquier
@@ -22,7 +22,7 @@
           ref="overlayRef"
           class="absolute inset-0 pointer-events-none border"
           :class="[rounded, notchBorderClass]"
-          :style="[notchMaskStyle, notchGlowStyle]"
+          :style="notchMaskStyle"
         />
         <!-- Label centrado contra el contenedor del input (no contra el wrapper con details) -->
         <label ref="labelRef" v-if="label" :for="uid" :style="labelShiftStyle" :class="[labelColorClass, labelLeftClass, labelClass,
@@ -52,7 +52,7 @@
           :readonly="readonly" :inputmode="(inputmode as any)" :minlength="(minlength as number)" :maxlength="(maxlength as number)"
           :pattern="(pattern as string)" :spellcheck="(spellcheck as any)"
           class="min-w-12 flex-1 bg-transparent focus:outline-none leading-normal" :aria-invalid="hasError ? 'true' : 'false'"
-          :class="[inputDensity, inputTextSizeClass, inputWeightClass, textColor, placeholderColor, placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
+          :class="[inputDensity, inputTextSizeClass, inputWeightClass, 'text-default placeholder:text-muted', placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           :aria-describedby="hasError ? `error-${uid}` : undefined" 
           @input="handleInput" @change="handleChange" @animationstart="handleAnimationStart" @blur="handleBlur" @focus="focusInput" 
           @click.stop="emits('handleClick')" 
@@ -60,8 +60,8 @@
         />
 
         <!-- Clearable -->
-         <KunIcon v-if="clearable && inputValue" @click="clearInput" size="small" color="error" :icon="icons.close"
-          class="mr-1 shrink-0" :class="textColor" :disabled="disabled || readonly" />
+         <KunIcon v-if="clearable && inputValue" @click="clearInput" size="size-4" :icon="icons.close"
+          class="mr-1 shrink-0 text-error" :disabled="disabled || readonly" />
       
         <slot />
       
@@ -88,17 +88,17 @@
 
       <div v-if="!hideDetails" class="h-[1.25rem]">
         <!-- Error -->
-        <div v-if="hasError" :id="`error-${uid}`" class="text-ui-error text-sm text-center">
+        <div v-if="hasError" :id="`error-${uid}`" class="text-error text-sm text-center">
           {{ validationError || errorMessage }}
         </div>
-  
+
         <!-- Hint -->
-        <div v-else-if="hint && (persistentHint || inputFocused)" class="text-xs text-center">
+        <div v-else-if="hint && (persistentHint || inputFocused)" class="text-xs text-center text-muted">
           {{ hint }}
         </div>
-  
+
         <!-- Counter -->
-        <div v-if="counter && maxlength" class="text-xs text-right">
+        <div v-if="counter && maxlength" class="text-xs text-right text-muted">
           {{ inputValue?.length || 0 }} / {{ maxlength }}
         </div>
       </div>
@@ -204,9 +204,10 @@ const labelLeftClass = computed(() => {
   return 'left-2';
 });
 
-const labelColorClass = computed(() =>
-  isFloating.value ? (props.floatingLabelColor || props.labelColor) : props.labelColor
-);
+const labelColorClass = computed(() => {
+  if (hasError.value) return 'text-error';
+  return isFloating.value ? 'text-primary' : 'text-muted';
+});
 const labelSize = computed(() => props.labelSize);
 const floatingLabelSize = computed(() => props.floatingLabelSize);
 const labelOpacity = computed(() => props.labelOpacity);
@@ -224,12 +225,11 @@ const { labelRef, overlayRef, notchMaskStyle, labelShiftStyle } = useKunFieldNot
   },
   [floatingLabelSize, labelSize, labelClass]
 );
-const notchBorderClass = computed(() => inputFocused.value ? 'border-ui-focus' : (props.borderColor as string));
-// Glow de foco como drop-shadow sobre el overlay: sigue la forma pintada
-// (respeta la muesca y las curvas), a diferencia del box-shadow rectangular.
-const notchGlowStyle = computed(() => inputFocused.value
-  ? { filter: 'drop-shadow(0 0 1px var(--field-ring-focus))' }
-  : undefined);
+const notchBorderClass = computed(() => {
+  if (hasError.value) return 'border-error';
+  return inputFocused.value ? 'border-primary' : 'border-accented';
+});
+
 
 const showPass = ref(false);
 const passIcon = computed(() => showPass.value ? icons.eyeOffOutline : icons.eyeOutline);

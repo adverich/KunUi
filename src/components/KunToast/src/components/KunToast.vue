@@ -13,8 +13,15 @@
       <!-- Leading slot (icon/avatar) -->
       <div :class="[uiClasses.icon, iconContainerClass]">
         <slot name="leading" :ui="ui">
+          <KunAvatar
+            v-if="avatar"
+            :image="avatar"
+            :size="20"
+            rounded
+            :class="colorClasses.icon"
+          />
           <KunIcon
-            v-if="resolvedIcon"
+            v-else-if="resolvedIcon"
             :icon="resolvedIcon"
             :class="[iconClass, colorClasses.icon]"
           />
@@ -56,7 +63,7 @@
               :key="idx"
               :text="action.label || action.text"
               :icon="action.icon"
-              :variant="action.variant || 'text'"
+              :variant="action.variant || 'ghost'"
               :size="action.size || 'xs'"
               :color="action.color"
               @click.stop="onActionClick(action, $event)"
@@ -77,7 +84,7 @@
               :key="idx"
               :text="action.label || action.text"
               :icon="action.icon"
-              :variant="action.variant || 'text'"
+              :variant="action.variant || 'ghost'"
               :size="action.size || 'xs'"
               :color="action.color"
               @click.stop="onActionClick(action, $event)"
@@ -114,25 +121,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed } from 'vue'
 import { kunToastProps } from '../composables/kunToastProps.js'
 import type { ToastAction } from '../composables/useToast.js'
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
-import IconClose from '../../../../icons/IconClose.vue'
-import IconCheck from '../../../../icons/IconCheck.vue'
-import IconAsterisk from '../../../../icons/IconAsterisk.vue'
+import KunAvatar from '../../../KunAvatar/src/components/KunAvatar.vue'
 
 const props = defineProps(kunToastProps)
 const emit = defineEmits(['close', 'pause', 'resume'])
 
 // Iconos por defecto según color
 const defaultIcons: Record<string, unknown> = {
-  success: IconCheck,
-  error: IconClose,
-  warning: IconAsterisk,
-  info: IconAsterisk,
-  primary: IconAsterisk,
+  success: '$check',
+  error: '$close',
+  warning: '$asterisk',
+  info: '$asterisk',
+  primary: '$asterisk',
   neutral: null
 }
 
@@ -143,7 +148,7 @@ const resolvedIcon = computed(() => {
 
 const resolvedCloseIcon = computed(() => {
   if (props.closeIcon) return props.closeIcon
-  return IconClose
+  return '$close'
 })
 
 // Helpers
@@ -170,28 +175,28 @@ const uiClasses = computed(() => ({
 const colorClasses = computed(() => {
   const colorMap: Record<string, { root: string; icon: string }> = {
     primary: {
-      root: 'border-l-4 border-primary',
+      root: 'border-s-4 border-primary',
       icon: 'text-primary'
     },
     success: {
-      root: 'border-l-4 border-success',
+      root: 'border-s-4 border-success',
       icon: 'text-success'
     },
     error: {
-      root: 'border-l-4 border-error',
+      root: 'border-s-4 border-error',
       icon: 'text-error'
     },
     warning: {
-      root: 'border-l-4 border-warning',
+      root: 'border-s-4 border-warning',
       icon: 'text-warning'
     },
     info: {
-      root: 'border-l-4 border-primary',
+      root: 'border-s-4 border-primary',
       icon: 'text-primary'
     },
     neutral: {
-      root: 'border-l-4 border-surface',
-      icon: 'text-ui-muted'
+      root: 'border-s-4 border-muted',
+      icon: 'text-muted'
     }
   }
   return colorMap[props.color as string] || colorMap.primary
@@ -209,8 +214,8 @@ const wrapperClasses = 'flex gap-3 p-4'
 const iconContainerClass = 'flex-shrink-0'
 const iconClass = 'w-5 h-5'
 
-const titleClass = 'text-sm font-semibold text-ui'
-const descriptionClass = 'text-sm text-ui-muted mt-1'
+const titleClass = 'text-sm font-semibold text-default'
+const descriptionClass = 'text-sm text-muted mt-1'
 
 const actionsClass = 'flex gap-2 mt-2'
 const rightActionsClass = computed(() => {
@@ -219,12 +224,12 @@ const rightActionsClass = computed(() => {
     : 'flex items-start gap-2 flex-shrink-0'
 })
 
-const closeButtonClass = 'p-1 rounded hover:bg-ui-hover transition-colors cursor-pointer text-ui-muted'
+const closeButtonClass = 'p-1 rounded-md hover:bg-accented transition-colors cursor-pointer text-muted'
 const closeIconClass = 'w-4 h-4'
 
 // Progress bar
-const progressContainerClass = 'h-1 w-full bg-ui-surface-subtle rounded-b'
-const progressBarClass = 'h-full rounded-b transition-all duration-100 ease-linear'
+const progressContainerClass = 'h-1 w-full bg-muted rounded-b-[inherit]'
+const progressBarClass = 'h-full rounded-b-[inherit] transition-all duration-100 ease-linear'
 const progressColorClass = computed(() => {
   if (props.progressColor) return props.progressColor
   const colorMap: Record<string, string> = {
@@ -233,37 +238,18 @@ const progressColorClass = computed(() => {
     error: 'bg-error',
     warning: 'bg-warning',
     info: 'bg-primary',
-    neutral: 'bg-ui-hover'
+    neutral: 'bg-accented'
   }
   return colorMap[props.color as string] || colorMap.primary
 })
 
-// Animación de progreso
-let progressInterval: ReturnType<typeof setInterval> | null = null
-const progressWidth = ref(100)
-
-onMounted(() => {
-  if ((props.duration as number) > 0 && props.progress) {
-    const step = 50
-    const decrement = (step / (props.duration as number)) * 100
-    progressWidth.value = 100
-
-    progressInterval = setInterval(() => {
-      if (!props.isPaused) {
-        progressWidth.value -= decrement
-        if (progressWidth.value <= 0) {
-          progressWidth.value = 0
-          if (progressInterval) clearInterval(progressInterval)
-        }
-      }
-    }, step)
-  }
-})
-
-onBeforeUnmount(() => {
-  if (progressInterval) {
-    clearInterval(progressInterval)
-  }
+// Barra de progreso derivada de `remainingTime` (única fuente: el reloj del
+// sistema de toasts). Sin intervalos propios → pausa/reanudación exactas.
+const progressWidth = computed(() => {
+  const duration = props.duration as number
+  if (!props.progress || !duration || duration <= 0) return 100
+  if (!props.remainingTime) return 100
+  return Math.max(0, Math.min(100, (props.remainingTime / duration) * 100))
 })
 
 // Pausa/Resume

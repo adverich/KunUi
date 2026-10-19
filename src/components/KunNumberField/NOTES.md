@@ -62,3 +62,13 @@ Fallback: si no hay nada que mostrar (sin `placeholder` y sin label en
 reposo, o con `dirty` que flota el label al borde), se muestra el `0`
 formateado para no dejar una caja fantasma. Con `hideZero: false` siempre
 se muestra el `0` formateado (comportamiento histórico).
+
+## Bordes y radio
+
+- Default `'rounded-md'` (antes `'rounded'` pelado, 4px fijos).
+- El `<input>` ya no lleva un `rounded` pelado redundante: el radio lo aplica la
+  prop del contenedor.
+- Lados lógicos: `border-e` / `border-s` y `rounded-s/e-[inherit]` en los botones
+  split (antes `border-l/r` físicos).
+- Contorno por rol: contenedor `bg-default` y notch `border-accented` (antes
+  `bg-muted` + `border-default`, invisible en dark).

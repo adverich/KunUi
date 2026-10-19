@@ -6,11 +6,6 @@ export const kunListItemSubtitleProps = {
     type: [String, Number] as PropType<string | number | null>,
     default: null
   },
-  /** Color del texto. */
-  textColor: {
-    type: String,
-    default: 'text-ui-muted'
-  },
   /** Tamaño del texto. */
   fontSize: {
     type: String,

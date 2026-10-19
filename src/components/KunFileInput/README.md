@@ -44,7 +44,7 @@ import { KunFileInput } from 'adverich-kun-ui'
 | `prependInnerClass` | `String` | `-` | Clase del contenedor del ícono interno inicial. |
 | `appendInnerClass` | `String` | `-` | Clase del contenedor del ícono interno final. |
 | `clearIcon` | `String \| Object \| Function \| Array` | `-` | Ícono del botón limpiar. |
-| `iconSize` | `String` | `'text-base'` | Tamaño de los íconos. |
+| `iconSize` | `String` | `'size-4'` | Tamaño de los íconos (clase Tailwind, `size-4`). |
 | `variant` | `KunFileInputVariant` | `'filled'` | Variante visual del contenedor.<br/>Valores · Values: `filled` `outlined` `solo` |
 | `rules` | `Array` | `() => []` | Reglas de validación: `(valor) => true \| string`. |
 
@@ -79,6 +79,14 @@ import { KunFileInput } from 'adverich-kun-ui'
 
 Usa `inheritAttrs: false` y reenvía `$attrs` al contenedor interno: `@change`
 / `@click` e `id` / `aria-*` no se duplican en el DOM.
+
+## Bordes y radio
+
+- Contenedor `rounded-md`; chips con el nombre de archivo `rounded-sm`.
+- Contorno por rol: el control va sobre `bg-default` con `ring ring-inset ring-accented`
+  (variante `solo` → `bg-elevated` + ring). Antes `bg-muted` + `border border-default`,
+  que en dark quedaba invisible (`--kun-border == --kun-bg-muted == neutral-800`).
+  Foco `ring-2 ring-primary/25`; error `ring-error`.
 
 ---
 

@@ -7,10 +7,10 @@
       </div>
     </div>
 
-    <div class="max-h-[400px] border overflow-y-auto">
+    <div class="max-h-[400px] border border-default overflow-y-auto">
       <KunVirtualScroller :items="items" :estimated-item-height="48" :buffer="5" :scroll-to-index="scrollToApplied">
         <template #default="{ item, index }">
-          <div class="p-4 border-b bg-white">
+          <div class="p-4 border-b border-muted bg-elevated">
             <strong>#{{ index }}</strong>: {{ (item as any).name }}
           </div>
         </template>

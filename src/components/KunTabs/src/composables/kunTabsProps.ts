@@ -20,11 +20,7 @@ export const kunTabsProps = {
     default: 'horizontal',
     validator: (v: unknown) => ['horizontal', 'vertical'].includes(v as string),
   },
-  /** Color de fondo de la barra. */
-  bgColor: { type: String, default: '' },
-  /** Color de los tabs (reservado, sin efecto). */
-  color: String,
-  /** Color del slider indicador. */
+  /** Color del slider indicador (clase `bg-*` del theme). */
   sliderColor: { type: String, default: 'bg-primary' },
   /** Clase del tab activo. */
   selectedClass: { type: String, default: 'text-primary font-medium' },

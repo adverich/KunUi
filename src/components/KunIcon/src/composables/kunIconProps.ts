@@ -3,26 +3,21 @@ import type { Component, PropType } from 'vue';
 export type KunIconInput = string | Record<string, any> | Function | unknown[] | Component | boolean;
 
 export const kunIconProps = {
-  /** Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente o `[icono, tamaño]`. */
+  /** Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente, nombre Iconify (`i-mdi-home`, `mdi:home`) o `[icono, tamaño]`. */
   icon: {
     type: [String, Object, Function, Array] as PropType<KunIconInput>,
     required: false as const,
     default: undefined,
   },
-  /** Aliases `$nombre` → icono/clase/componente. Pisan el set bundleado (`$star`, ...). */
+  /** Aliases `$nombre` → icono/clase/componente. Máxima prioridad: pisan a `kunConfig.icons` y al set bundleado (`$star`, ...). */
   aliases: {
     type: Object as PropType<Record<string, unknown>>,
     default: (): Record<string, unknown> => ({}),
   },
-  /** Tamaño (clase de texto o número → px). */
+  /** Tamaño: clase Tailwind (`size-5`, `text-xl`) o número → px (ancho/alto). Vacío = hereda el contexto. */
   size: {
-    type: String,
-    default: 'text-md',
-  },
-  /** Color del ícono. */
-  color: {
-    type: String,
-    default: 'text-font-color',
+    type: [String, Number] as PropType<string | number>,
+    default: '',
   },
   /** Atenúa el ícono y bloquea el click. */
   disabled: {

@@ -14,8 +14,6 @@ export type KunMenuTransition =
 export const kunMenuProps = {
     /** Clase extra del contenido. */
     class: [String, Array, Object],
-    /** Color de fondo. */
-    bgColor: { type: String, default: 'bg-menu' },
     /** Apertura (v-model). */
     modelValue: Boolean,
     /** Selector o elemento que dispara el menú (reservado, sin efecto; usar el slot `activator`). */
@@ -109,8 +107,6 @@ export const kunMenuProps = {
     },
     /** No cierra al hacer click fuera ni con Escape. */
     persistent: Boolean,
-    /** Z-index del contenido. */
-    zIndex: [String, Number],
     /** Comportamiento de submenú (reservado, sin efecto). */
     submenu: Boolean,
     /** Etiqueta accesible del menú. */

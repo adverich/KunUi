@@ -16,10 +16,6 @@ export const kunCardProps = {
     subTitleSize: { type: String as PropType<string | null>, default: null },
     /** Texto del cuerpo (atajo; equivale al slot default). */
     text: { type: String as PropType<string | null>, default: null },
-    /** Color del texto. */
-    textColor: { type: String, default: 'text-ui' },
-    /** Color de fondo. */
-    bgColor: { type: String, default: 'bg-transparent' },
     /** Sin sombra. */
     flat: { type: Boolean, default: false },
     /** Redondeo: boolean o tamaño. */
@@ -28,10 +24,8 @@ export const kunCardProps = {
         default: true,
         validator: (v: unknown) => typeof v === 'boolean' || ['sm', 'md', 'lg', 'xl'].includes(v as string)
     },
-    /** Con borde (usa `outlineColor`). */
+    /** Con borde (`border border-default`). Redundante con `variant="outlined"`. */
     outlined: { type: Boolean, default: false },
-    /** Color del borde en modo `outlined`. */
-    outlineColor: { type: String, default: 'border-ui' },
     /** Nivel de sombra (0-5, como string o número). */
     elevation: {
         type: [String, Number] as PropType<KunCardElevation>,

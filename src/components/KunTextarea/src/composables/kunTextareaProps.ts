@@ -17,10 +17,6 @@ export const kunTextareaProps = {
   persistentHint: { type: Boolean, default: false },
   /** Clase extra del textarea. */
   class: String,
-  /** Color de fondo (se usa si la variante no lo define). */
-  bgColor: String,
-  /** Color del texto. */
-  textColor: String,
   /** Alineación del texto. */
   textAlign: {
     type: String as PropType<KunTextareaTextAlign>,
@@ -126,15 +122,11 @@ export const kunTextareaProps = {
   wrapperClass: [String, Array],
   /** Sin redondeo. */
   tile: Boolean,
-  /** Redondeo (string/number = clase `rounded-<valor>`). */
-  rounded: [String, Number],
+  /** Redondeo (clase de escala, `rounded-md` por defecto). */
+  rounded: { type: String, default: 'rounded-md' },
   /** Sin sombra. */
   flat: Boolean,
-  /** Color de acento (foco). */
-  color: String,
-  /** Color del anillo de foco. */
-  focusRingColor: { type: String, default: 'ring-ui-focus' },
-  /** Color de la barra de carga. */
+  /** Color de la barra de carga (clase `bg-*` del theme). */
   loadingColor: String,
   /** Muestra el botón limpiar (requiere `clearable` con valor). */
   clearIcon: Boolean,

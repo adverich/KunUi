@@ -35,11 +35,34 @@ const {
 defineExpose({ validate, resetValidation })
 
 const iconToRender = computed(() => {
-  if (props.indeterminate) return props.indeterminateIcon || icons.checkboxIndeterminate
+  if (props.indeterminate) return props.indeterminateIcon || icons.minus
   return isChecked.value
-    ? (props.trueIcon || icons.checkboxOn)
-    : (props.falseIcon || icons.checkboxBlank)
+    ? (props.trueIcon || icons.check)
+    : (props.falseIcon || null)
 })
+
+/**
+ * Caja del control (patrón Nuxt UI): contorno `ring ring-inset ring-accented`
+ * sobre `bg-default`; activa toma `bg-primary text-inverted` salvo que el
+ * consumidor pase `color`/`baseColor` (clases utilitarias libres).
+ */
+const boxClass = computed(() => {
+  const classes = ['ring-1', 'ring-inset', 'rounded-sm', 'bg-default', 'ring-accented']
+  if (props.error || !isValid.value) classes.push('ring-error')
+  if (isChecked.value || props.indeterminate) {
+    if (props.color) classes.push(props.color)
+    else classes.push('bg-primary', 'text-inverted')
+  } else if (props.baseColor) {
+    classes.push(props.baseColor)
+  }
+  return classes
+})
+
+const iconInnerSizeClass = computed(() => ({
+  sm: 'w-2.5 h-2.5',
+  md: 'w-3 h-3',
+  lg: 'w-3.5 h-3.5'
+}[effectiveSize.value] || 'w-3 h-3'))
 
 const iconClass = computed(() => [
   typeof props.iconColor === 'string' ? `text-${props.iconColor}` : '',
@@ -67,8 +90,7 @@ const iconSizeClass = computed(() => ({
     :class="[
       'kun-checkbox',
       'flex flex-col',
-      isChecked ? props.color : (props.baseColor || props.color),
-      { 'text-ui-error': props.error || !isValid }
+      { 'text-error': props.error || !isValid }
     ]"
     :style="{
       width: props.width && `${props.width}px`,
@@ -110,11 +132,11 @@ const iconSizeClass = computed(() => ({
       </div>
 
       <div
-        class="relative inline-flex items-center justify-center"
-        :class="[iconSizeClass]"
+        class="relative inline-flex items-center justify-center transition-colors"
+        :class="[iconSizeClass, boxClass]"
         v-ripple="props.ripple"
       >
-        <KunIcon :icon="iconToRender" :class="[...iconClass, iconSizeClass]" />
+        <KunIcon v-if="iconToRender" :icon="iconToRender" :class="[...iconClass, iconInnerSizeClass]" />
         <slot name="input" />
       </div>
 
@@ -130,7 +152,7 @@ const iconSizeClass = computed(() => ({
 
     <div
       v-if="!props.hideDetails && (errorMessages?.length || props.hint || props.persistentHint)"
-      class="text-xs text-ui-muted mt-1"
+      class="text-xs text-muted mt-1"
     >
       <slot name="details">
         <div v-if="(props.error || !isValid) && errorMessages?.length">

@@ -31,9 +31,9 @@ const fontWeight = ref('font-medium')
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunAppbarTitle</h2>
 
-      <div class="space-y-3 rounded-xl border border-ui bg-surface p-4">
+        <div class="space-y-3 rounded-lg ring ring-accented bg-muted p-4">
         <div>
-          <div class="text-ui-muted text-xs mb-1">Demo en vivo (variante: {{ variant }})</div>
+          <div class="text-muted text-xs mb-1">Demo en vivo (variante: {{ variant }})</div>
           <KunAppbarTitle
             :title="title || undefined"
             :title-image="titleImageProp"
@@ -43,32 +43,32 @@ const fontWeight = ref('font-medium')
           />
         </div>
 
-        <div class="grid gap-3 border-t border-ui pt-3 sm:grid-cols-2">
-          <div class="rounded-lg bg-field-background p-3">
-            <div class="text-ui-muted text-xs mb-1">Variante texto</div>
+        <div class="grid gap-3 border-t border-default pt-3 sm:grid-cols-2">
+          <div class="rounded-lg bg-muted p-3">
+            <div class="text-muted text-xs mb-1">Variante texto</div>
             <KunAppbarTitle title="Solo texto" text-size="text-lg" font-weight="font-bold" />
           </div>
-          <div class="rounded-lg bg-field-background p-3">
-            <div class="text-ui-muted text-xs mb-1">Variante imagen</div>
+          <div class="rounded-lg bg-muted p-3">
+            <div class="text-muted text-xs mb-1">Variante imagen</div>
             <KunAppbarTitle title="Con logo" :title-image="titleImageUrl || undefined" title-image-size="h-8" />
           </div>
         </div>
       </div>
 
-      <p class="text-xs text-ui-muted">
+      <p class="text-xs text-muted">
         Nota: el componente usa <code>v-else</code>: si <code>titleImage</code> está presente se renderiza el
         <code>&lt;img&gt;</code> del logo y el texto de <code>title</code> se oculta.
       </p>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">props en crudo</div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">props en crudo</div>
         <div>{{ JSON.stringify(title || null) }} · {{ JSON.stringify(titleImageProp ?? null) }} · {{ titleImageSize }} · {{ textSize }} · {{ fontWeight }}</div>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunSelect

@@ -23,26 +23,24 @@ import { KunBtn } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `text` | `String` | `-` | Texto del botón (alternativa al slot default). |
-| `size` | `KunBtnSize` | `'md'` | Tamaño: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'.<br/>Valores · Values: `xxs` `xs` `sm` `md` `lg` `xl` `xxl` |
+| `size` | `KunBtnSize` | `'md'` | Tamaño: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'. |
 | `minWidth` | `String` | `'min-w-[3rem]'` | Ancho mínimo (clase Tailwind). Solo aplica si no hay ancho custom. |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |
-| `rounded` | `String` | `'rounded-lg'` | Redondeo de bordes. |
+| `rounded` | `KunBtnRounded \| null \| undefined` | `null` | Redondeo propio: 'full' \| 'none'. `undefined` hereda la escala global. |
 | `textAlign` | `String` | `'text-center'` | Alineación del texto. |
-| `variant` | `KunBtnVariant` | `'default'` | Variante visual: 'default' \| 'tonal' \| 'plain' \| 'outlined' \| 'soft' \| 'text'.<br/>Valores · Values: `default` `tonal` `plain` `outlined` `soft` `text` |
+| `color` | `KunColor \| null` | `null` | Color semántico: 'primary' \| 'secondary' \| 'success' \| 'info' \| 'warning' \| 'error' \| 'neutral'. `null` delega al theme global. |
+| `variant` | `KunVariant \| null` | `null` | Variante visual: 'solid' \| 'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'link'. `null` delega al theme global. |
 | `disabled` | `Boolean` | `-` | Deshabilita el botón (también cuando loading). |
 | `loading` | `Boolean` | `-` | Muestra loader y bloquea interacción. |
-| `bgColor` | `String` | `'bg-button'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link en vez de button). |
 | `href` | `String` | `-` | URL externa (renderiza <a> en vez de button). |
 | `replace` | `Boolean` | `-` | Navegación con replace (solo con `to`). |
 | `target` | `String` | `-` | Target del enlace (solo con `to`/`href`). |
-| `ring` | `Boolean` | `-` | Anillo de foco accesible. |
+| `ring` | `Boolean` | `-` | Anillo de foco accesible extra (además del outline del sistema). |
 | `icon` | `Boolean \| String \| Function \| Object \| Array` | `-` | Ícono central (solo visible si no hay `text` ni slot default). |
 | `prependIcon` | `String \| Function \| Object \| Array` | `-` | Ícono a la izquierda del contenido. |
 | `appendIcon` | `String \| Function \| Object \| Array` | `-` | Ícono a la derecha del contenido. |
 | `iconSize` | `string \| null` | `null` | Tamaño del ícono (sobrescribe el calculado por `size`). |
-| `focusColor` | `string \| null` | `null` | Color extra en estado de foco. |
 
 ## Eventos · Events
 
