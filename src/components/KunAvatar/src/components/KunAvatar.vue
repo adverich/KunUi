@@ -1,11 +1,11 @@
 <template>
   <component :is="props.tag" v-bind="$attrs" :class="computedClasses"
-    :style="numericSize ? { width: numericSize, height: numericSize } : undefined"
+    :style="numericStyle"
     @click="$emit('click', $event)"
     @mouseover="$emit('hover', $event)" @contextmenu="$emit('contextmenu', $event)" @focus="$emit('focus', $event)">
     <img v-if="props.image" :src="props.image" :alt="props.alt" :class="computedImageClasses" />
     <span v-else-if="props.icon" :class="computedIconClasses">
-      <KunIcon v-if="useKunIcon" :icon="(props.icon as any)" size="size-5" />
+      <KunIcon v-if="useKunIcon" :icon="(props.icon as any)" size="size-[1em]" />
       <template v-else>{{ props.icon }}</template>
     </span>
     <span v-else-if="props.text" :class="computedTextClasses">{{ props.text }}</span>
@@ -24,15 +24,19 @@ const attrs = useAttrs();
 defineEmits(["click", "hover", "contextmenu", "focus"]);
 
 const sizes: Record<string, string> = {
-  "x-small": "w-6 h-6 text-xs",
-  small: "w-8 h-8 text-sm",
-  default: "w-12 h-12 text-base",
-  large: "w-16 h-16 text-lg",
-  "x-large": "w-24 h-24 text-xl",
+  "3xs": "w-8 h-8 text-xs",
+  "2xs": "w-9 h-9 text-xs",
+  xs: "w-10 h-10 text-xs",
+  sm: "w-11 h-11 text-sm",
+  md: "w-12 h-12 text-base",
+  lg: "w-14 h-14 text-base",
+  xl: "w-16 h-16 text-lg",
+  "2xl": "w-18 h-18 text-lg",
+  "3xl": "w-20 h-20 text-lg",
 };
 
 // Orden de menor a mayor para escalar por densidad.
-const sizeOrder = ["x-small", "small", "default", "large", "x-large"];
+const sizeOrder = ["3xs", "2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl"];
 const densityOffset: Record<string, number> = { compact: -2, comfortable: -1, default: 0 };
 
 // size numérico → dimensiones explícitas escaladas por densidad.
@@ -45,15 +49,26 @@ const numericSize = computed(() => {
         : null;
   if (raw == null || !Number.isFinite(raw) || raw <= 0) return null;
   const scale = props.density === "compact" ? 0.75 : props.density === "comfortable" ? 0.875 : 1;
-  return `${Math.max(1, Math.round(raw * scale))}px`;
+  return Math.max(1, Math.round(raw * scale));
 });
 
-// size nominal → clase del mapa, desplazada por densidad (piso en x-small).
+const numericStyle = computed(() => {
+  const px = numericSize.value;
+  if (px == null) return undefined;
+  return {
+    width: `${px}px`,
+    height: `${px}px`,
+    fontSize: `${Math.max(10, Math.round(px * 0.4))}px`,
+  };
+});
+
+// size nominal → clase del mapa, desplazada por densidad (piso en 3xs).
 const namedSizeClass = computed(() => {
   let i = sizeOrder.indexOf(String(props.size));
-  if (i < 0) i = 2;
+  if (i < 0) i = sizeOrder.indexOf("md");
   const off = densityOffset[String(props.density)] ?? 0;
-  return sizes[sizeOrder[Math.max(0, i + off)]] || sizes.default;
+  const idx = Math.min(sizeOrder.length - 1, Math.max(0, i + off));
+  return sizes[sizeOrder[idx]] || sizes.md;
 });
 
 const hasBackgroundClass = computed(() => {
@@ -109,7 +124,7 @@ const computedImageClasses = computed(() => [
 ]);
 
 const computedIconClasses = computed(() => [
-  "absolute text-inverted text-xl",
+  "absolute text-inverted",
 ]);
 
 const computedTextClasses = computed(() => [

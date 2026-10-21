@@ -10,7 +10,8 @@ import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 // Tipos locales para controles sin unión exportada en props
 // (size acepta strings libres y números; rounded se mapea abajo).
 // ------------------------------------------------------------------
-type KunAvatarSize = 'x-small' | 'small' | 'default' | 'large' | 'x-large'
+type KunAvatarSize =
+  | '3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 type RoundedMode = 'default' | 'circular' | 'off' | 'lg'
 
 // ------------------------------------------------------------------
@@ -43,13 +44,17 @@ const themeProp = computed(() => (themeRaw.value === '' ? undefined : themeRaw.v
 const tagProp = computed(() => (tagRaw.value === '' ? 'div' : tagRaw.value))
 const borderProp = computed((): string | boolean => (borderRaw.value === '' ? false : borderRaw.value))
 
-const size = ref<KunAvatarSize>('default')
+const size = ref<KunAvatarSize>('md')
 const sizeOptions = ref([
-  { id: 'x-small', name: 'x-small' },
-  { id: 'small', name: 'small' },
-  { id: 'default', name: 'default' },
-  { id: 'large', name: 'large' },
-  { id: 'x-large', name: 'x-large' },
+  { id: '3xs', name: '3xs (32px)' },
+  { id: '2xs', name: '2xs (36px)' },
+  { id: 'xs', name: 'xs (40px)' },
+  { id: 'sm', name: 'sm (44px)' },
+  { id: 'md', name: 'md (48px)' },
+  { id: 'lg', name: 'lg (56px)' },
+  { id: 'xl', name: 'xl (64px)' },
+  { id: '2xl', name: '2xl (72px)' },
+  { id: '3xl', name: '3xl (80px)' },
 ])
 
 const density = ref<KunAvatarDensity>('default')
@@ -145,12 +150,19 @@ function logEvent(name: string, detail: unknown): void {
       </div>
 
       <div class="flex flex-wrap items-center gap-3">
-        <KunAvatar :image="demoImage" alt="Imagen" size="small" />
-        <KunAvatar icon="★" size="small" />
-        <KunAvatar :icon="demoSvgIcon" size="small" />
-        <KunAvatar text="JD" size="small" />
-        <KunAvatar size="small">S</KunAvatar>
+        <KunAvatar :image="demoImage" alt="Imagen" size="xs" />
+        <KunAvatar icon="★" size="xs" />
+        <KunAvatar :icon="demoSvgIcon" size="xs" />
+        <KunAvatar text="JD" size="xs" />
+        <KunAvatar size="xs">S</KunAvatar>
         <span class="text-xs text-muted">imagen · icono (texto) · icono (SVG) · texto · slot</span>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <KunAvatar icon="$star" size="3xs" />
+        <KunAvatar icon="$star" size="md" />
+        <KunAvatar icon="$star" size="3xl" />
+        <span class="text-xs text-muted">ícono 3xs · md · 3xl</span>
       </div>
 
       <div class="rounded-lg bg-muted p-3 text-sm">

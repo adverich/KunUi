@@ -1,5 +1,19 @@
 # KunAvatar
 
+## Tamaños
+
+Escala: `3xs` (32px) · `2xs` (36px) · `xs` (40px) · `sm` (44px) · `md` (48px,
+default) · `lg` (56px) · `xl` (64px) · `2xl` (72px) · `3xl` (80px).
+
+Los nombres previos (`x-small`, `small`, `default`, `large`, `x-large`) se
+eliminaron: usar la escala nueva o `size` numérico en px.
+
+`density` mueve un paso de la escala (comfortable −1, compact −2, con piso en
+`3xs`).
+
+El ícono hereda el `text-*` del tamaño (`size-[1em]`), por lo que escala junto
+con el avatar. En tamaño numérico, el `font-size` se calcula como ~40% del px.
+
 ## Bordes y radio
 
 `rounded` acepta `String | Number | Boolean` y se resuelve así:

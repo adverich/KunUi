@@ -12,8 +12,8 @@ export const kunAvatarProps = {
   text: String,
   /** Texto alternativo de la imagen. */
   alt: String,
-  /** Tamaño predefinido ('x-small' | 'small' | 'default' | 'large' | 'x-large') o px numéricos. */
-  size: { type: [String, Number] as PropType<string | number>, default: "default" },
+  /** Tamaño predefinido ('3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl') o px numéricos. */
+  size: { type: [String, Number] as PropType<string | number>, default: "md" },
   /** Radio de borde: por defecto `rounded-full`; `false`/`'none'` → `rounded-none`; escala (`'md'`, `'lg'`, ...) → `rounded-<valor>`. */
   rounded: { type: [String, Number, Boolean], default: undefined },
   /** Borde: se renderiza como `border border-<valor>`. */
