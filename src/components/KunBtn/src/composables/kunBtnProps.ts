@@ -62,6 +62,8 @@ export const kunBtnProps = {
   target: String,
   /** Anillo de foco accesible extra (además del outline del sistema). */
   ring: Boolean,
+  /** Fuerza botón cuadrado: `aspect-square` + padding uniforme por tamaño (sin aplicar `minWidth`). Pensado para contenido por slot (p. ej. un solo ícono central); los botones con prop `icon` ya son cuadrados automáticos. */
+  square: Boolean,
   /** Ícono central (solo visible si no hay `text` ni slot default). */
   icon: [Boolean, String, Function, Object, Array],
   /** Ícono a la izquierda del contenido. */

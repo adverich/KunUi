@@ -117,6 +117,7 @@ const loading = ref(false)
 const disabled = ref(false)
 const ring = ref(false)
 const replace = ref(false)
+const square = ref(false)
 
 // ------------------------------------------------------------------
 // Log de eventos en vivo
@@ -167,6 +168,7 @@ function handleClick(event: MouseEvent): void {
         :replace="replace"
         :target="targetProp"
         :ring="ring"
+        :square="square"
         :icon="iconProp"
         :prepend-icon="prependIconProp"
         :append-icon="appendIconProp"
@@ -257,6 +259,7 @@ function handleClick(event: MouseEvent): void {
         <KunSwitch v-model="disabled" label="Disabled" />
         <KunSwitch v-model="ring" label="Ring" />
         <KunSwitch v-model="replace" label="Replace (solo con to)" />
+        <KunSwitch v-model="square" label="Square" />
       </div>
     </div>
   </div>

@@ -164,10 +164,13 @@ const isIconOnly = computed(() => {
   return (!!props.icon && !props.text && !slots.default) || isSingleCharText;
 })
 
+/** Modo cuadrado: heredado automático de `isIconOnly` o forzado por la prop `square`. */
+const isSquare = computed(() => props.square || isIconOnly.value)
+
 const computedClass = computed(() => {
   const base = [
     'inline-flex items-center justify-center break-keep transition-all whitespace-nowrap',
-    !isIconOnly.value ? buttonSize(props.size) : '',
+    !isSquare.value ? buttonSize(props.size) : '',
     props.fontWeight,
     roundedClass.value,
     props.textAlign,
@@ -177,7 +180,7 @@ const computedClass = computed(() => {
 
   if (attrs.class) base.push(attrs.class as string);
 
-  if (isIconOnly.value) {
+  if (isSquare.value) {
     base.push('aspect-square justify-center items-center');
     switch (props.size) {
       case 'xxs': base.push('p-1'); break;
@@ -205,8 +208,8 @@ const computedClass = computed(() => {
     if (props.disabled) base.push('opacity-50 cursor-not-allowed');
   }
 
-  // Solo aplicar minWidth si no hay clase de ancho personalizada
-  if (hasText.value && !isIconOnly.value && !hasCustomWidth.value) {
+  // Solo aplicar minWidth si no hay clase de ancho personalizada ni modo cuadrado
+  if (hasText.value && !isSquare.value && !hasCustomWidth.value) {
     base.push(props.minWidth);
   }
 

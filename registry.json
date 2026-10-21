@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.671",
+  "version": "0.1.672",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -1184,6 +1184,14 @@
           "default": "-",
           "values": [],
           "description": "Anillo de foco accesible extra (además del outline del sistema).",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
+        },
+        {
+          "name": "square",
+          "type": "Boolean",
+          "default": "-",
+          "values": [],
+          "description": "Fuerza botón cuadrado: `aspect-square` + padding uniforme por tamaño (sin aplicar `minWidth`). Pensado para contenido por slot (p. ej. un solo ícono central); los botones con prop `icon` ya son cuadrados automáticos.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBtn\\src\\composables\\kunBtnProps.ts"
         },
         {
