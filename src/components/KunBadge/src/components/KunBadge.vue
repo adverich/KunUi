@@ -64,37 +64,40 @@ const computedClass = computed(() => [
 ].filter(Boolean))
 
 const positionClass = computed(() => {
-  const map: Record<string, string> = {
+  const verticalMap: Record<string, string> = {
     top: 'top-0',
     center: 'top-1/2',
     bottom: 'bottom-0',
+  };
+  const horizontalMap: Record<string, string> = {
     left: 'left-0',
+    center: 'left-1/2',
     right: 'right-0',
-    'center-x': 'left-1/2',
-    'center-y': 'top-1/2',
   };
 
   const [vertical, horizontal] = (props.position as string).split(' ');
 
   return [
-    map[vertical] || '',
-    horizontal === 'center' ? 'left-1/2' : map[horizontal],
-    vertical === 'center' ? 'top-1/2' : '',
-    'absolute',
-    'transform',
-    horizontal === 'center' ? '-translate-x-1/2' : '',
-    vertical === 'center' ? '-translate-y-1/2' : ''
+    verticalMap[vertical] || '',
+    horizontalMap[horizontal] || '',
+    'absolute'
   ].filter(Boolean);
 });
 
-const style = computed(() => ({
-  transform: `
-    ${props.position.includes('center') ? 'translate(-50%, -50%)' : ''}
-    translate(${props.ejeX}px, ${props.ejeY}px)
-  `.trim(),
-  ...(isCircle.value && !hasCustomDimension.value
-    ? { width: `${circleSide.value}px`, height: `${circleSide.value}px` }
-    : {}),
-}));
+const style = computed(() => {
+  const [vertical, horizontal] = (props.position as string).split(' ');
+
+  /* Anclaje al borde (estilo Nuxt UI): el centro del badge se apoya en la
+     esquina correspondiente del contenido; los ejes suman px de desvío. */
+  const xAnchor = horizontal === 'right' ? 50 : -50;
+  const yAnchor = vertical === 'bottom' ? 50 : -50;
+
+  return {
+    transform: `translate(${Number(props.ejeX)}px, ${Number(props.ejeY)}px) translate(${xAnchor}%, ${yAnchor}%)`,
+    ...(isCircle.value && !hasCustomDimension.value
+      ? { width: `${circleSide.value}px`, height: `${circleSide.value}px` }
+      : {}),
+  };
+});
 
 </script>

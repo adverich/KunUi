@@ -1,6 +1,6 @@
 # KunUI — Full Documentation
 
-> Complete reference for AI agents. Generated from source by `scripts/generate-docs.ts` (v0.1.677). Start with `llms.txt` for the index; use `registry.json` for machine-readable data.
+> Complete reference for AI agents. Generated from source by `scripts/generate-docs.ts` (v0.1.678). Start with `llms.txt` for the index; use `registry.json` for machine-readable data.
 
 <!-- component: KunAlert -->
 
@@ -445,8 +445,8 @@ import { KunBadge } from 'adverich-kun-ui'
 | `dot` | `Boolean` | `false` | Modo punto (sin texto, solo indicador). |
 | `visible` | `Boolean` | `true` | Visibilidad del badge. |
 | `position` | `KunBadgePosition` | `'top right' as KunBadgePosition` | Posición relativa al contenido envuelto ("vertical horizontal"). |
-| `ejeX` | `Number \| String` | `25` | Desplazamiento horizontal en px respecto a la posición. |
-| `ejeY` | `Number \| String` | `-15` | Desplazamiento vertical en px respecto a la posición. |
+| `ejeX` | `Number` | `0` | Desplazamiento horizontal en px (se suma al anclaje al borde: default 0 = centrado en la esquina del contenido). |
+| `ejeY` | `Number` | `0` | Desplazamiento vertical en px (se suma al anclaje al borde: default 0 = centrado en la esquina del contenido). |
 | `cursor` | `String` | `'cursor-default'` | Cursor sobre el badge. |
 
 ## Slots
@@ -491,6 +491,25 @@ píldora y `rounded="none"` sigue siendo cuadrado.
 ```vue
 <KunBadge text="99" rounded="full" />
 ```
+
+## Posicionamiento anclado al borde
+
+El badge se ancla al contenido con `absolute` en la esquina correspondiente y
+un único `transform` inline (estilo Nuxt UI): el **centro** del badge se apoya
+en la esquina del wrapper.
+
+- `top` → `top-0` + `translateY(-50%)`; `bottom` → `bottom-0` + `translateY(50%)`.
+- `left` → `left-0` + `translateX(-50%)`; `right` → `right-0` + `translateX(50%)`.
+- `center` (eje) → `left-1/2`/`top-1/2` + `translate*(−50%)`.
+
+Cambios de API menores:
+
+- `ejeX`/`ejeY` ahora son `Number` (antes `[Number, String]`) y su default es
+  `0` (antes `25`/`-15`): los px son un desvío sobre el anclaje, no la
+  posición. Un badge sin ejes centrado en `top right` queda apoyado en la
+  esquina superior derecha del contenido.
+- Se eliminó el doble sistema de transform (clases `-translate-x-1/2` que el
+  estilo inline pisaba): la única fuente de verdad es el `transform` inline.
 
 ---
 
@@ -2064,6 +2083,18 @@ import { KunDrawer } from 'adverich-kun-ui'
   completo, invisible en dark sobre `bg-elevated`.
 - Se eliminó el `border-none` del modo `floating` (ahora lo resuelve
   `borderClass`).
+
+## Fallthrough de attrs (`inheritAttrs: false`)
+
+- La raíz del template es un `Teleport`; Vue **no** aplica attrs heredados a
+  través de Teleport (en dev advierte `Extraneous non-props attributes`, en
+  prod la clase se pierde silenciosamente).
+- Se reenvía `v-bind="attrs"` manualmente sobre el panel (`<component :is="tag">`),
+  como primer binding: `class`/`style` de `$attrs` se fusionan con las internas
+  y los bindings explícitos del componente (`@click.stop`, touch handlers,
+  `drawerStyle`) ganan ante conflictos.
+- Alcanza al panel: `class`, `style`, `id`, `aria-*`, `data-*` y listeners de
+  interacción (`@keydown`, etc.).
 
 ---
 

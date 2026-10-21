@@ -12,6 +12,7 @@
 
   <!-- Drawer -->
   <component
+    v-bind="attrs"
     v-show="modelValue || permanent || isDragging"
     :is="tag"
     ref="drawerEl"
@@ -50,10 +51,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch, type Ref } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch, useAttrs, type Ref } from 'vue'
 import { useAppbarHeight } from '@/utils/useLayout.js'
 import { zIndexStyle, zIndexVar } from '@/theme/kunZIndex.js'
 import { kunDrawerProps } from '../composables/kunDrawerProps.js'
+
+defineOptions({ inheritAttrs: false })
+
+/* Fallthrough attrs: la raíz es un Teleport, Vue no hace auto-fallthrough,
+   se reenvian manualmente al panel interno (v-bind primero: los bindings
+   explicitos del componente ganan ante conflictos). */
+const attrs = useAttrs()
 
 /* Emits */
 const emits = defineEmits([

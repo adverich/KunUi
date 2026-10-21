@@ -34,3 +34,22 @@ píldora y `rounded="none"` sigue siendo cuadrado.
 ```vue
 <KunBadge text="99" rounded="full" />
 ```
+
+## Posicionamiento anclado al borde
+
+El badge se ancla al contenido con `absolute` en la esquina correspondiente y
+un único `transform` inline (estilo Nuxt UI): el **centro** del badge se apoya
+en la esquina del wrapper.
+
+- `top` → `top-0` + `translateY(-50%)`; `bottom` → `bottom-0` + `translateY(50%)`.
+- `left` → `left-0` + `translateX(-50%)`; `right` → `right-0` + `translateX(50%)`.
+- `center` (eje) → `left-1/2`/`top-1/2` + `translate*(−50%)`.
+
+Cambios de API menores:
+
+- `ejeX`/`ejeY` ahora son `Number` (antes `[Number, String]`) y su default es
+  `0` (antes `25`/`-15`): los px son un desvío sobre el anclaje, no la
+  posición. Un badge sin ejes centrado en `top right` queda apoyado en la
+  esquina superior derecha del contenido.
+- Se eliminó el doble sistema de transform (clases `-translate-x-1/2` que el
+  estilo inline pisaba): la única fuente de verdad es el `transform` inline.

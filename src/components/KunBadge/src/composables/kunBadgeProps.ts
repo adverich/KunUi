@@ -44,10 +44,10 @@ export const kunBadgeProps = {
     validator: (val: unknown): boolean =>
       typeof val === 'string' && (KUN_BADGE_POSITIONS as string[]).includes(val),
   },
-  /** Desplazamiento horizontal en px respecto a la posición. */
-  ejeX: { type: [Number, String], default: 25 },
-  /** Desplazamiento vertical en px respecto a la posición. */
-  ejeY: { type: [Number, String], default: -15 },
+  /** Desplazamiento horizontal en px (se suma al anclaje al borde: default 0 = centrado en la esquina del contenido). */
+  ejeX: { type: Number, default: 0 },
+  /** Desplazamiento vertical en px (se suma al anclaje al borde: default 0 = centrado en la esquina del contenido). */
+  ejeY: { type: Number, default: 0 },
   /** Cursor sobre el badge. */
   cursor: { type: String, default: 'cursor-default' },
 };

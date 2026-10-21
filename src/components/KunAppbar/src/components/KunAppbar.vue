@@ -21,13 +21,11 @@
             :class="buttonClass"
             :color="buttonColor"
             :variant="buttonVariant"
-            minWidth="fit-content"
-            size="xs"
+            icon="$menuRounded"
+            size="sm"
             rounded="full"
             @click="$emit('toggle-drawer')"
-          >
-            <KunIcon icon="$menuRounded" size="size-6" />
-          </KunBtn>
+          />
         </slot>
 
         <slot name="prepend" />
@@ -82,7 +80,6 @@
 import { computed, ref, onMounted, onUpdated, nextTick, onBeforeUnmount, type Ref } from 'vue';
 import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
-import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
 import { setAppbarHeight } from '@/utils/useLayout.js';
 import { zIndexStyle } from '@/theme/kunZIndex.js';
 import { kunAppbarProps } from '../composables/kunAppbarProps.js'

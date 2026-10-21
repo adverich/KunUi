@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.677",
+  "version": "0.1.678",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -1031,18 +1031,18 @@
         },
         {
           "name": "ejeX",
-          "type": "Number | String",
-          "default": "25",
+          "type": "Number",
+          "default": "0",
           "values": [],
-          "description": "Desplazamiento horizontal en px respecto a la posición.",
+          "description": "Desplazamiento horizontal en px (se suma al anclaje al borde: default 0 = centrado en la esquina del contenido).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBadge\\src\\composables\\kunBadgeProps.ts"
         },
         {
           "name": "ejeY",
-          "type": "Number | String",
-          "default": "-15",
+          "type": "Number",
+          "default": "0",
           "values": [],
-          "description": "Desplazamiento vertical en px respecto a la posición.",
+          "description": "Desplazamiento vertical en px (se suma al anclaje al borde: default 0 = centrado en la esquina del contenido).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunBadge\\src\\composables\\kunBadgeProps.ts"
         },
         {

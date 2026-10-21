@@ -31,8 +31,8 @@ import { KunBadge } from 'adverich-kun-ui'
 | `dot` | `Boolean` | `false` | Modo punto (sin texto, solo indicador). |
 | `visible` | `Boolean` | `true` | Visibilidad del badge. |
 | `position` | `KunBadgePosition` | `'top right' as KunBadgePosition` | Posición relativa al contenido envuelto ("vertical horizontal"). |
-| `ejeX` | `Number \| String` | `25` | Desplazamiento horizontal en px respecto a la posición. |
-| `ejeY` | `Number \| String` | `-15` | Desplazamiento vertical en px respecto a la posición. |
+| `ejeX` | `Number` | `0` | Desplazamiento horizontal en px (se suma al anclaje al borde: default 0 = centrado en la esquina del contenido). |
+| `ejeY` | `Number` | `0` | Desplazamiento vertical en px (se suma al anclaje al borde: default 0 = centrado en la esquina del contenido). |
 | `cursor` | `String` | `'cursor-default'` | Cursor sobre el badge. |
 
 ## Slots
@@ -77,6 +77,25 @@ píldora y `rounded="none"` sigue siendo cuadrado.
 ```vue
 <KunBadge text="99" rounded="full" />
 ```
+
+## Posicionamiento anclado al borde
+
+El badge se ancla al contenido con `absolute` en la esquina correspondiente y
+un único `transform` inline (estilo Nuxt UI): el **centro** del badge se apoya
+en la esquina del wrapper.
+
+- `top` → `top-0` + `translateY(-50%)`; `bottom` → `bottom-0` + `translateY(50%)`.
+- `left` → `left-0` + `translateX(-50%)`; `right` → `right-0` + `translateX(50%)`.
+- `center` (eje) → `left-1/2`/`top-1/2` + `translate*(−50%)`.
+
+Cambios de API menores:
+
+- `ejeX`/`ejeY` ahora son `Number` (antes `[Number, String]`) y su default es
+  `0` (antes `25`/`-15`): los px son un desvío sobre el anclaje, no la
+  posición. Un badge sin ejes centrado en `top right` queda apoyado en la
+  esquina superior derecha del contenido.
+- Se eliminó el doble sistema de transform (clases `-translate-x-1/2` que el
+  estilo inline pisaba): la única fuente de verdad es el `transform` inline.
 
 ---
 

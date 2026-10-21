@@ -28,15 +28,10 @@
       <div class="min-w-1/3 flex h-full items-center" :class="[searchPositionClass]">
         <slot name="prependSearch" />
 
-        <KunBtn
-          class="h-fit"
-          v-if="filterable && filters.length"
-          @click="modalFilter = true"
-          rounded="full"
-          size="xs"
-          color="success"
+        <KunBtn v-if="filterable && filters.length"
+          @click="modalFilter = true" rounded="full" size="xs" color="success"
         >
-          <KunIcon class="h-fit" icon="$filter" size="size-4.5" />
+          <KunIcon icon="$filter" />
         </KunBtn>
 
         <div v-if="searchable" class="rounded-md flex mx-2" :class="[searchClass]">

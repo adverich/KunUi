@@ -28,7 +28,9 @@
       <div class="min-w-1/3 flex h-full items-center" :class="[searchPositionClass]">
         <slot name="prependSearch" />
 
-        <KunBtn v-if="filterable && filters.length" @click="modalFilter = true" rounded="full" size="xs" color="success">
+        <KunBtn v-if="filterable && filters.length" 
+          @click="modalFilter = true" rounded="full" size="xs" color="success"
+        >
           <KunIcon icon="$filter"  />
         </KunBtn>
 
