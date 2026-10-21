@@ -17,10 +17,11 @@ const colorOptions = ref([
 ])
 const dot = ref(false)
 const visible = ref(true)
-const shape = ref<'default' | 'pill' | 'square'>('default')
+const shape = ref<'default' | 'pill' | 'circle' | 'square'>('default')
 const shapeOptions = ref([
   { id: 'default', name: 'default (rounded-sm)' },
   { id: 'pill', name: 'pill (rounded-full)' },
+  { id: 'circle', name: 'circle (1:1)' },
   { id: 'square', name: 'square (rounded-none)' },
 ])
 </script>
@@ -34,11 +35,18 @@ const shapeOptions = ref([
         :color="color"
         :dot="dot"
         :visible="visible"
-        :rounded="shape === 'square' ? 'none' : null"
+        :rounded="shape === 'square' ? 'none' : shape === 'circle' ? 'full' : null"
         :pill="shape === 'pill'"
       >
-        <KunBtn color="neutral" variant="soft" class="p-3">🔔</KunBtn>
+        <KunBtn color="neutral" variant="soft" class="p-3">dY""</KunBtn>
       </KunBadge>
+
+      <div class="flex items-center gap-3 text-xs text-muted">
+        <KunBadge text="1" rounded="full"><span class="inline-block size-8 rounded-md bg-muted" /></KunBadge>
+        <KunBadge text="99" rounded="full"><span class="inline-block size-8 rounded-md bg-muted" /></KunBadge>
+        <KunBadge text="100" rounded="full"><span class="inline-block size-8 rounded-md bg-muted" /></KunBadge>
+        <span>1 / 99 / 100 (círculo 1:1)</span>
+      </div>
     </div>
 
     <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">

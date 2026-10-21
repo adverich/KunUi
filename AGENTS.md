@@ -67,6 +67,10 @@ No uses npm ni yarn.
     `--kun-radius`). Escala: `rounded-sm` (badge, tooltip, kbd), `rounded-md`
     (controles e ítems), `rounded-lg` (contenedores y paneles), `rounded-full`
     (avatar, chip, switch, radio, slider).
+  - **Forma circular**: si un componente declara `rounded-full` (o el default
+    circular de avatar/icono), la caja debe ser 1:1. Nunca un óvalo. Con
+    dimensiones custom (`w-*`/`h-*`/`size-*`) se omite el lado canónico y se
+    agrega `aspect-square`; los botones con texto pueden seguir siendo píldoras.
   - **Lados direccionales** en lógico: `border-s/e`, `rounded-s/e`, `ps/pe`
     (excepción: flecha de `KunTooltip`, aristas físicas por rotación).
   - **Ubicación del contorno** (en dark `--kun-border == --kun-bg-muted ==

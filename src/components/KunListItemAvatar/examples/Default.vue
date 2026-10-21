@@ -56,6 +56,13 @@ const fontWeight = ref('font-medium')
         <KunListItemAvatar text="MD" size="md" :rounded="roundedProp" />
         <KunListItemAvatar text="XXL" size="xxl" :rounded="roundedProp" />
       </div>
+
+      <div class="flex items-center gap-3 rounded-lg bg-muted p-3">
+        <KunListItemAvatar text="W" size="md" class="w-16" />
+        <KunListItemAvatar text="H" size="md" class="h-16" />
+        <KunListItemAvatar text="WH" size="md" class="h-14 w-14" />
+        <span class="text-xs text-muted">w-16 / h-16 / h-14 w-14</span>
+      </div>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->

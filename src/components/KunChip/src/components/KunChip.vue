@@ -46,6 +46,7 @@ import { computed, useAttrs } from 'vue'
 import { kunChipProps } from '../composables/kunChipProps.js'
 import { useChip } from '../composables/useChip.js'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
+import { hasExplicitDimensionClass } from '../../../../theme/kunSizes.js'
 
 const props = defineProps(kunChipProps)
 const emit = defineEmits(['update:modelValue', 'click:close'])
@@ -59,15 +60,48 @@ const {
   handleClose
 } = useChip(props, emit)
 
+const hasCustomDimension = computed(() => hasExplicitDimensionClass(attrs.class))
+const isCircle = computed(() => props.rounded === 'full')
+
+const fontPx = computed(() =>
+  props.density === 'compact' ? 12 : props.density === 'comfortable' ? 14 : 14,
+)
+
+const contentLength = computed(() => {
+  const text = String(props.label ?? props.text ?? '')
+  const extras =
+    (props.prependIcon ? 1.5 : 0) +
+    (props.appendIcon ? 1.5 : 0) +
+    (props.closable ? 1.5 : 0)
+  return text.length + extras
+})
+
+const circleSide = computed(() => {
+  const base = props.density === 'compact' ? 20 : props.density === 'comfortable' ? 26 : 30
+  return Math.max(base, Math.ceil(contentLength.value * fontPx.value * 0.62 + 8))
+})
+
+const circleStyle = computed(() =>
+  isCircle.value && !hasCustomDimension.value
+    ? { width: `${circleSide.value}px`, height: `${circleSide.value}px` }
+    : undefined,
+)
+
 const containerClass = computed(() => [
   'kun-chip',
-  ...computedClass.value
+  ...computedClass.value,
+  isCircle.value ? 'justify-center overflow-hidden' : '',
+  isCircle.value && hasCustomDimension.value ? 'aspect-square' : '',
 ].filter(Boolean))
 
-const mergedAttrs = computed(() => ({
-  ...attrs,
-  ...componentAttrs.value,
-}))
+const mergedAttrs = computed(() => {
+  const merged: Record<string, unknown> = {
+    ...attrs,
+    ...componentAttrs.value,
+  }
+  if (circleStyle.value) merged.style = [attrs.style, circleStyle.value]
+  return merged
+})
 </script>
 
 <style scoped>

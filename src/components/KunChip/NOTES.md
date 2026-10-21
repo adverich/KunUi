@@ -2,14 +2,17 @@
 
 ## Bordes y radio
 
-- El chip es **siempre** `rounded-full` (forma píldora), sin importar `variant`.
-- La variante `pill` ya no existe: el vocabulario de `variant` es el global
-  (`solid|outline|soft|subtle|ghost|link`).
-- La prop `pill` queda **reservada y sin efecto** (compat de API / documentación).
+- Default: `rounded-full` (píldora).
+- `rounded="full"`: círculo 1:1. Sin dimensiones custom el lado se calcula
+  según contenido y densidad; con `w-*`/`h-*` se agrega `aspect-square`.
+- `rounded="none"`: esquinas rectas.
 
-Migración: `variant="pill"` → `variant="solid"` (o el que corresponda); el
-redondeo píldora ahora es implícito.
+La prop `pill` queda reservada y sin efecto: usar `rounded` para elegir forma.
+El vocabulario de `variant` es el global
+(`solid|outline|soft|subtle|ghost|link`).
 
+Migración: `variant="pill"` -> `variant="solid"`; el redondeo píldora sigue
+siendo el default.
 ## Color
 
 `color` + `textColor` se reemplazaron por `color`

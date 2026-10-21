@@ -11,15 +11,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useAttrs } from 'vue'
 import { kunListItemAvatarProps } from '../composables/kunListItemAvatarProps.js'
-import { resolveKunSize, KUN_SQUARE_SIZE, KUN_TEXT_SIZE } from '../../../../theme/kunSizes.js'
+import { resolveKunSize, KUN_SQUARE_SIZE, KUN_TEXT_SIZE, hasExplicitDimensionClass } from '../../../../theme/kunSizes.js'
 
 const props = defineProps(kunListItemAvatarProps)
+const attrs = useAttrs()
+
+const hasCustomDimension = computed(() => hasExplicitDimensionClass(attrs.class))
+const isCircular = computed(() => props.rounded !== 'none')
 
 const sizeClass = computed(() => {
   const size = resolveKunSize(props.size)
-  return `${KUN_SQUARE_SIZE[size]} ${KUN_TEXT_SIZE[size]}`
+  const side = hasCustomDimension.value
+    ? (isCircular.value ? 'aspect-square' : '')
+    : KUN_SQUARE_SIZE[size]
+  return [side, KUN_TEXT_SIZE[size]].filter(Boolean).join(' ')
 })
 </script>
 

@@ -197,6 +197,23 @@ function handleClick(event: MouseEvent): void {
         </div>
       </div>
 
+      <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Icon-only por slot (siempre 1:1)</div>
+        <div class="flex flex-wrap items-center gap-3">
+          <KunBtn size="xxs" rounded="full" color="error">
+            <KunIcon icon="$close" size="xxs" />
+          </KunBtn>
+          <KunBtn size="sm" rounded="full" color="primary">
+            <KunIcon icon="$star" size="sm" />
+          </KunBtn>
+          <KunBtn size="md" rounded="full" color="success">
+            <KunIcon icon="$star" size="md" />
+          </KunBtn>
+          <KunBtn size="md" rounded="full" color="warning" class="h-16 w-16">
+            <KunIcon icon="$star" size="md" />
+          </KunBtn>
+        </div>
+      </div>
       <div class="rounded-lg bg-muted p-3 font-mono text-sm">
         <div class="text-muted text-xs mb-1">Clicks + último evento</div>
         <div>{{ clicks }} clicks</div>

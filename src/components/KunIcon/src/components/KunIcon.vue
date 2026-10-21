@@ -1,12 +1,12 @@
 <template>
   <span
-    class="flex items-center"
-    :class="[cursorClass, disabled ? 'opacity-50' : '']"
+    :class="rootClass"
+    :style="rootStyle"
     v-bind="passthroughAttrs"
     @click="handleClick"
   >
     <!-- Si hay slot, lo usa -->
-    <span v-if="$slots.default" :class="[passthroughClass, normalizedSize, contentClass]" :style="sizeStyle">
+    <span v-if="$slots.default" :class="glyphClass" :style="glyphStyle">
       <slot />
     </span>
 
@@ -14,8 +14,8 @@
     <component
       v-else-if="isComponent"
       :is="resolvedIcon"
-      :class="[passthroughClass, normalizedSize, contentClass]"
-      :style="sizeStyle"
+      :class="glyphClass"
+      :style="glyphStyle"
     />
 
     <!-- Nombre Iconify (`i-mdi-home`, `mdi:home`, `lucide:x`): resuelto vía @iconify/vue. -->
@@ -23,15 +23,15 @@
       v-else-if="isIconify"
       :is="IconifyIcon"
       :icon="(resolvedIcon as string)"
-      :class="[passthroughClass, normalizedSize, contentClass]"
-      :style="sizeStyle"
+      :class="glyphClass"
+      :style="glyphStyle"
     />
 
     <!-- Si es una string, la interpreta como clase o SVG raw (dependiendo del consumidor) -->
     <span
       v-else
-      :class="[!isSvg ? (resolvedIcon as string) : '', passthroughClass, normalizedSize, contentClass]"
-      :style="sizeStyle"
+      :class="[!isSvg ? (resolvedIcon as string) : '', ...glyphClass]"
+      :style="glyphStyle"
       v-html="isSvg ? (resolvedIcon as string) : ''"
     />
   </span>
@@ -43,7 +43,13 @@ import { kunIconProps } from '../composables/kunIconProps.js'
 import { kunIconAliases } from '../../../../icons/index.js'
 import { ensureKunIcons } from '../../../../icons/loader.js'
 import { kunConfig } from '../../../../config/kunConfig.js'
-import { isKunSize, KUN_ICON_SIZE, type KunSize } from '../../../../theme/kunSizes.js'
+import {
+  isKunSize,
+  hasExplicitDimensionClass,
+  KUN_ICON_SIZE,
+  KUN_SQUARE_SIZE,
+  type KunSize,
+} from '../../../../theme/kunSizes.js'
 
 defineOptions({ inheritAttrs: false })
 
@@ -57,7 +63,7 @@ const attrs = useAttrs();
 const passthroughClass = computed(() => attrs.class);
 /** Resto de attrs (id, title, listeners, …) al wrapper. */
 const passthroughAttrs = computed(() => {
-  const { class: _class, ...rest } = attrs;
+  const { class: _class, style: _style, ...rest } = attrs;
   return rest;
 });
 
@@ -137,12 +143,72 @@ const normalizedSize = computed(() => {
 });
 
 /** `width`/`height` inline cuando el tamaño es numérico (px). */
-const sizeStyle = computed(() => {
-  if (!isNumericSize.value) return undefined;
+const isBoxed = computed(() => props.rounded !== null && props.rounded !== 'none');
+
+const hasCustomDimension = computed(() => hasExplicitDimensionClass(attrs.class));
+
+const roundedClass = computed(() => {
+  if (!isBoxed.value) return '';
+  return props.rounded === 'full' ? 'rounded-full' : `rounded-${props.rounded}`;
+});
+
+const sizeToken = computed(() => {
+  const value = rawSize.value;
+  return typeof value === 'string' ? value.trim() : '';
+});
+
+/** Lado de la caja cuando `rounded` está activo: 1:1 y sin pelear con clases del consumidor. */
+const boxSizeClass = computed(() => {
+  if (!isBoxed.value) return '';
+  if (hasCustomDimension.value) return 'aspect-square';
+  if (isNamedSize.value) return KUN_SQUARE_SIZE[rawSize.value as KunSize];
+  if (isNumericSize.value) return '';
+  if (hasExplicitDimensionClass(rawSize.value)) return sizeToken.value;
+  return KUN_SQUARE_SIZE.md;
+});
+
+/** Clase del glifo: 50% del lado cuando la caja es canónica o custom. */
+const glyphClass = computed<unknown[]>(() => {
+  if (!isBoxed.value) {
+    return [passthroughClass.value, normalizedSize.value, props.contentClass];
+  }
+
+  let sizeClass = 'size-[50%]';
+  if (!hasCustomDimension.value && isNamedSize.value) {
+    sizeClass = KUN_ICON_SIZE[rawSize.value as KunSize];
+  } else if (!hasCustomDimension.value && isNumericSize.value) {
+    sizeClass = '';
+  } else if (!hasCustomDimension.value && sizeToken.value && !hasExplicitDimensionClass(rawSize.value)) {
+    sizeClass = normalizedSize.value;
+  }
+
+  return [sizeClass, props.contentClass];
+});
+
+const rootClass = computed(() => {
+  const base = isBoxed.value
+    ? ['inline-flex items-center justify-center shrink-0', roundedClass.value, boxSizeClass.value, passthroughClass.value]
+    : ['flex items-center'];
+  return [...base, cursorClass.value, props.disabled ? 'opacity-50' : ''];
+});
+
+const boxStyle = computed(() => {
+  if (!isBoxed.value || !isNumericSize.value || hasCustomDimension.value) return undefined;
   const px = `${String(rawSize.value).trim()}px`;
   return { width: px, height: px };
 });
 
+const rootStyle = computed(() => {
+  if (!attrs.style) return boxStyle.value;
+  return boxStyle.value ? [attrs.style, boxStyle.value] : attrs.style;
+});
+
+const glyphStyle = computed(() => {
+  if (!isNumericSize.value || (isBoxed.value && hasCustomDimension.value)) return undefined;
+  const value = Number(rawSize.value);
+  const px = isBoxed.value ? Math.max(1, Math.round(value / 2)) : value;
+  return { width: `${px}px`, height: `${px}px` };
+});
 const cursorClass = computed(() => {
   if (props.cursor) return props.cursor;
   return props.disabled ? 'cursor-not-allowed' : 'cursor-pointer';

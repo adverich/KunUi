@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import KunChip from '../src/components/KunChip.vue'
-import type { KunChipDensity } from '../src/composables/kunChipProps.js'
+import type { KunChipDensity, KunChipRounded } from '../src/composables/kunChipProps.js'
 import type { KunColor, KunVariant } from '../../../theme/kunVariants.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
@@ -51,6 +51,13 @@ const colorOptions = ref([
 ])
 const closeLabel = ref('Cerrar')
 const pill = ref(false)
+const roundedRaw = ref<'default' | KunChipRounded>('default')
+const roundedOptions = ref([
+  { id: 'default', name: 'default (píldora)' },
+  { id: 'full', name: 'full (círculo 1:1)' },
+  { id: 'none', name: 'none' },
+])
+const roundedProp = computed<KunChipRounded | null>(() => (roundedRaw.value === 'default' ? null : roundedRaw.value))
 
 // ------------------------------------------------------------------
 // Iconos y enlace (aceptan null: vacío = null)
@@ -105,6 +112,7 @@ function logEvent(name: string, detail: unknown): void {
           :close-label="closeLabel"
           :variant="variant"
           :pill="pill"
+          :rounded="roundedProp"
           :clickable="clickable"
           :closable="closable"
           :disabled="disabled"
@@ -127,6 +135,13 @@ function logEvent(name: string, detail: unknown): void {
         >
           Restablecer
         </button>
+      </div>
+
+      <div class="flex items-center gap-3 text-xs text-muted">
+        <KunChip label="1" rounded="full" :closable="false" />
+        <KunChip label="99" rounded="full" :closable="false" />
+        <KunChip label="100" rounded="full" :closable="false" />
+        <span>1 / 99 / 100 (círculo 1:1)</span>
       </div>
 
       <div class="rounded-lg bg-muted p-3 font-mono text-sm">
@@ -182,6 +197,14 @@ function logEvent(name: string, detail: unknown): void {
           density="compact"
         />
         <KunSwitch v-model="pill" label="Pill (reservada, sin efecto)" />
+        <KunSelect
+          v-model="roundedRaw"
+          v-model:items="roundedOptions"
+          label="Rounded"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
 
         <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Iconos</p>
         <KunTextField v-model="prependIcon" label="Prepend icon (vacío = null)" density="compact" />

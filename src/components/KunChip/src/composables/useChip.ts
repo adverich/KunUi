@@ -35,12 +35,14 @@ export function useChip(props: KunChipProps, emit: KunChipEmit) {
     const computedClass: ComputedRef<string[]> = computed(() => {
         const base: string[] = []
 
+        const circle = props.rounded === 'full'
+
         if (props.density === 'compact') {
-            base.push('px-2 py-0.5 text-xs')
+            base.push(circle ? 'text-xs' : 'px-2 py-0.5 text-xs')
         } else if (props.density === 'comfortable') {
-            base.push('px-2.5 py-1 text-sm')
+            base.push(circle ? 'text-sm' : 'px-2.5 py-1 text-sm')
         } else {
-            base.push('px-3 py-1.5 text-sm')
+            base.push(circle ? 'text-sm' : 'px-3 py-1.5 text-sm')
         }
 
         if (!props.clickable) {
@@ -52,7 +54,7 @@ export function useChip(props: KunChipProps, emit: KunChipEmit) {
         }
 
         base.push(kunVariantClasses(resolveKunColor(props.color ?? null), resolveKunVariant(props.variant ?? null)))
-        base.push('rounded-full')
+        base.push(props.rounded === 'none' ? 'rounded-none' : 'rounded-full')
 
         return base
     })

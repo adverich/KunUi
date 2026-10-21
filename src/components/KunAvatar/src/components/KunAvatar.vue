@@ -23,6 +23,7 @@ import {
   KUN_ICON_SIZE,
   KUN_SQUARE_SIZE,
   KUN_TEXT_SIZE,
+  hasExplicitDimensionClass,
   type KunSize,
 } from '../../../../theme/kunSizes.js'
 
@@ -59,12 +60,20 @@ const numericSize = computed(() => {
   return Math.max(1, Math.round(raw * scale));
 });
 
+const hasCustomDimension = computed(() => hasExplicitDimensionClass(attrs.class));
+
+const isCircular = computed(() =>
+  !props.tile &&
+  props.rounded !== false &&
+  props.rounded !== "none" &&
+  !(typeof props.rounded === "string" && props.rounded !== "full")
+);
+
 const numericStyle = computed(() => {
   const px = numericSize.value;
   if (px == null) return undefined;
   return {
-    width: `${px}px`,
-    height: `${px}px`,
+    ...(hasCustomDimension.value ? {} : { width: `${px}px`, height: `${px}px` }),
     fontSize: `${Math.max(10, Math.round(px * 0.4))}px`,
   };
 });
@@ -79,10 +88,14 @@ const effectiveSize = computed<KunSize>(() => {
 });
 
 // size nominal → clase compartida (cuadrado + tipografía), desplazada por densidad.
-const namedSizeClass = computed(() =>
-  numericSize.value == null
-    ? `${KUN_SQUARE_SIZE[effectiveSize.value]} ${KUN_TEXT_SIZE[effectiveSize.value]}`
+const namedSquareClass = computed(() =>
+  numericSize.value == null && !hasCustomDimension.value
+    ? KUN_SQUARE_SIZE[effectiveSize.value]
     : "",
+);
+
+const namedTextClass = computed(() =>
+  numericSize.value == null ? KUN_TEXT_SIZE[effectiveSize.value] : "",
 );
 
 const resolvedIconSize = computed<string | number>(() => {
@@ -122,8 +135,9 @@ const variantClasses = computed(() => {
 });
 
 const computedClasses = computed(() => [
-  "relative flex items-center justify-center overflow-hidden cursor-pointer transition-all",
-  numericSize.value ? "" : namedSizeClass.value,
+  "relative flex items-center justify-center overflow-hidden cursor-pointer transition-all shrink-0",
+  numericSize.value ? "" : [namedSquareClass.value, namedTextClass.value],
+  isCircular.value && hasCustomDimension.value ? "aspect-square" : "",
   props.tile || props.rounded === false || props.rounded === 'none'
     ? "rounded-none"
     : typeof props.rounded === "string" && props.rounded !== "full"

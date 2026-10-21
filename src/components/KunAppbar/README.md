@@ -32,7 +32,7 @@ import { KunAppbar } from 'adverich-kun-ui'
 | `elevation` | `KunAppbarElevation` | `'md'` | Elevación/sombra.<br/>Valores · Values: `sm` `md` `lg` `xl` `2xl` `none` |
 | `bordered` | `Boolean` | `true` | Muestra borde inferior (`border-b border-default`). Por defecto `true` (igual que el header de Nuxt UI). |
 | `showDrawerButton` | `Boolean` | `true` | Muestra el botón para abrir/cerrar el drawer. |
-| `buttonClass` | `String` | `'px-2'` | Clase extra del botón del drawer. |
+| `buttonClass` | `String` | `''` | Clase extra del botón del drawer. |
 | `buttonColor` | `KunColor \| null` | `null` | Color del botón del drawer. `null` delega al theme global. |
 | `buttonVariant` | `KunVariant \| null` | `null` | Variante del botón del drawer. `null` delega al theme global. |
 | `leftSectionClass` | `String` | `'flex items-center gap-2'` | Clase de la sección izquierda (slot `left`). |

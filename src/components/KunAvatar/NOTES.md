@@ -36,3 +36,13 @@ Cambio respecto al comportamiento anterior:
 
 Nota: en `KunToast` el `rounded` del `<KunAvatar>` es la prop booleana del avatar
 (el chrome de la tarjeta lo aporta el consumidor vía `ui.root`).
+
+## Círculo con dimensión custom
+
+Si el avatar es circular (default o `rounded="full"`) y el consumidor pasa
+`w-*`, `h-*` o `size-*`, se omite el `size-*` canónico y se agrega
+`aspect-square`. Así `class="w-16"` y `class="h-16"` producen un círculo de
+64px, no un óvalo.
+
+Con `rounded="lg"`/`tile` no se fuerza 1:1: la dimensión custom se respeta como
+en cualquier caja rectangular.

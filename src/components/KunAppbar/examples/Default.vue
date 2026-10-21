@@ -46,7 +46,7 @@ const bordered = ref(false)
 // Botón drawer
 // ------------------------------------------------------------------
 const showDrawerButton = ref(true)
-const buttonClass = ref('px-2')
+const buttonClass = ref('')
 const buttonColorRaw = ref<KunColor>('neutral')
 const buttonColorOptions = ref([
   { id: 'primary', name: 'primary' },

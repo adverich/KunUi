@@ -23,3 +23,14 @@ Vocabulario propio del badge (alineado con Nuxt UI):
 `bgColor` / `textColor` se reemplazaron por `color`
 (`primary|secondary|success|info|warning|error|neutral`), resuelto con
 `kunVariantClasses` del theme global.
+
+## Círculo 1:1
+
+`rounded="full"` ya no es solo `rounded-full`: fuerza una caja cuadrada. Si el
+consumidor no fija dimensiones, el lado se calcula según el texto y
+`textSize`; si pasa `w-*`/`h-*`, se agrega `aspect-square`. `pill` sigue siendo
+píldora y `rounded="none"` sigue siendo cuadrado.
+
+```vue
+<KunBadge text="99" rounded="full" />
+```

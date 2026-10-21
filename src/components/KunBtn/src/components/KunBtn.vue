@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useAttrs, useSlots, h, type Ref } from 'vue'
+import { computed, ref, useAttrs, useSlots, h, isVNode, Comment, Text, Fragment, type Ref, type VNode } from 'vue'
 import { RouterLink } from 'vue-router'
 import KunLoaderCircular from '@/components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
@@ -70,6 +70,8 @@ import {
   KUN_LOADER_WIDTH,
   KUN_SQUARE_SIZE,
   KUN_TEXT_SIZE,
+  hasExplicitWidthClass,
+  hasExplicitHeightClass,
 } from '../../../../theme/kunSizes.js'
 
 const slots = useSlots()
@@ -130,8 +132,15 @@ const componentAttrs = computed(() => {
   }
 })
 
+const hasCustomWidth = computed(() => hasExplicitWidthClass(attrs.class));
+
+const hasCustomHeight = computed(() => hasExplicitHeightClass(attrs.class));
+
 const buttonSize = computed(() =>
-  `${KUN_CONTROL_HEIGHT[resolvedSize.value]} ${KUN_CONTROL_PADDING[resolvedSize.value]}`,
+  [
+    hasCustomHeight.value ? '' : KUN_CONTROL_HEIGHT[resolvedSize.value],
+    KUN_CONTROL_PADDING[resolvedSize.value],
+  ].filter(Boolean).join(' '),
 )
 
 const resolvedIconSize = computed(() => props.iconSize || KUN_ICON_SIZE[resolvedSize.value])
@@ -145,20 +154,27 @@ const variantClasses = computed(() => kunVariantClasses(resolvedColor.value, res
 
 const hasText = computed(() => !!props.text)
 
-const hasCustomWidth = computed(() => {
-  const cls = attrs.class as string | undefined;
-  return cls?.includes('w-') || cls?.includes('min-w-') || cls?.includes('max-w-');
-})
+function meaningfulSlotNodes(nodes: VNode[]): VNode[] {
+  return nodes.flatMap((node) => {
+    if (node.type === Comment) return [];
+    if (node.type === Text) return String(node.children ?? '').trim() ? [node] : [];
+    if (node.type === Fragment) return meaningfulSlotNodes((node.children as VNode[]) ?? []);
+    return [node];
+  });
+}
 
-const hasCustomHeight = computed(() => {
-  const cls = attrs.class as string | undefined;
-  return cls?.includes('h-') || cls?.includes('min-h-') || cls?.includes('max-h-');
-})
+const hasSingleIconSlot = computed(() => {
+  const content = slots.default?.();
+  if (!content) return false;
+  const nodes = meaningfulSlotNodes(content);
+  return nodes.length === 1 && nodes[0]?.type === KunIcon;
+});
 
 const isIconOnly = computed(() => {
   const isSingleCharText = props.text?.length === 1 && !slots.default && !props.icon;
-  return (!!props.icon && !props.text && !slots.default) || isSingleCharText;
-})
+  const isIconPropOnly = !!props.icon && !props.text && !slots.default;
+  return isIconPropOnly || hasSingleIconSlot.value || isSingleCharText;
+});
 
 /** Modo cuadrado: heredado automático de `isIconOnly` o forzado por la prop `square`. */
 const isSquare = computed(() => props.square || isIconOnly.value)
@@ -178,7 +194,12 @@ const computedClass = computed(() => {
   if (attrs.class) base.push(attrs.class as string);
 
   if (isSquare.value) {
-    base.push(KUN_SQUARE_SIZE[resolvedSize.value], 'shrink-0');
+    base.push(
+      hasCustomWidth.value || hasCustomHeight.value
+        ? 'aspect-square'
+        : KUN_SQUARE_SIZE[resolvedSize.value],
+      'shrink-0',
+    );
   }
 
   if (!props.loading && !props.disabled) {

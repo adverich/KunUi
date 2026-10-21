@@ -116,6 +116,39 @@ export function isKunSize(value: unknown): value is KunSize {
   return typeof value === 'string' && (KUN_SIZE_ORDER as readonly string[]).includes(value);
 }
 
+/** Convierte `class` de Vue (string, array u objeto) en tokens planos. */
+export function kunClassTokens(value: unknown): string[] {
+  if (Array.isArray(value)) return value.flatMap(kunClassTokens);
+  if (value && typeof value === 'object') {
+    return Object.entries(value as Record<string, unknown>)
+      .filter(([, enabled]) => Boolean(enabled))
+      .map(([token]) => token);
+  }
+  return typeof value === 'string' ? value.split(/\s+/).filter(Boolean) : [];
+}
+
+function hasDimensionToken(value: unknown, prefixes: readonly string[]): boolean {
+  return kunClassTokens(value).some((token) => {
+    const base = token.replace(/!/g, '').split(':').pop() ?? '';
+    return prefixes.some((prefix) => base.startsWith(`${prefix}-`));
+  });
+}
+
+/** `true` si el consumidor fijó ancho, alto o ambos (`w-*`, `h-*`, `size-*`). */
+export function hasExplicitDimensionClass(value: unknown): boolean {
+  return hasDimensionToken(value, ['w', 'h', 'size']);
+}
+
+/** `true` si el consumidor fijó el ancho (`w-*` o `size-*`). */
+export function hasExplicitWidthClass(value: unknown): boolean {
+  return hasDimensionToken(value, ['w', 'size']);
+}
+
+/** `true` si el consumidor fijó el alto (`h-*` o `size-*`). */
+export function hasExplicitHeightClass(value: unknown): boolean {
+  return hasDimensionToken(value, ['h', 'size']);
+}
+
 export function resolveKunSize(value: unknown, fallback: KunSize = 'md'): KunSize {
   return isKunSize(value) ? value : fallback;
 }

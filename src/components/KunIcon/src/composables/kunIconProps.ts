@@ -3,6 +3,8 @@ import type { KunSize } from '../../../../theme/kunSizes.js';
 
 export type KunIconInput = string | Record<string, any> | Function | unknown[] | Component | boolean;
 export type KunIconSize = KunSize | string | number;
+/** Forma del contenedor del icono: `full` = caja 1:1 circular. */
+export type KunIconRounded = 'none' | 'sm' | 'md' | 'lg' | 'full';
 
 export const kunIconProps = {
   /** Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente, nombre Iconify (`i-mdi-home`, `mdi:home`) o `[icono, tamaño]`. */
@@ -33,4 +35,10 @@ export const kunIconProps = {
   },
   /** Clase extra del contenido del ícono. */
   contentClass: [String, Array, Object] as PropType<string | unknown[] | Record<string, unknown>>,
+  /** Forma del contenedor: `full` fuerza caja 1:1 circular; `sm|md|lg` caja cuadrada con ese radio; `none`/`null` deja el icono suelto. */
+  rounded: {
+    type: String as PropType<KunIconRounded | null>,
+    default: null,
+    validator: (v: unknown) => v === null || ['none', 'sm', 'md', 'lg', 'full'].includes(v as string),
+  },
 };

@@ -52,3 +52,19 @@ de nombres cambió de métrica.
   comparar cuadrados; solo su ícono sigue la tipografía compartida.
 - `KunCheckbox`: mantiene sus cajas `sm|md|lg` (16/20/24) como excepción de
   forma, igual que antes.
+
+## Formas circulares (1:1)
+
+Regla: si un componente declara una forma circular (`rounded="full"` o el
+default de avatar/icono circular), la caja debe ser 1:1. Nunca un óvalo.
+
+- `KunBtn` icon-only: lado canónico del `size`; con `w-*`/`h-*`/`size-*` del
+  consumidor se omite el lado canónico y se agrega `aspect-square`.
+- `KunAvatar`/`KunListItemAvatar`: si son circulares y reciben una dimensión
+  custom, se omite el `size-*` y se agrega `aspect-square`.
+- `KunIcon`: `rounded="full"` crea caja 1:1 con el glifo al 50%.
+- `KunBadge`/`KunChip`: `rounded="full"` crea caja 1:1; sin dimensiones custom
+  el lado se calcula por contenido. `KunBadge` con `pill` y `KunChip` default
+  siguen siendo píldoras.
+- Los botones/textos con `rounded="full"` que no son icon-only pueden seguir
+  siendo píldoras: ahí el 1:1 no aplica.

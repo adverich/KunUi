@@ -28,6 +28,7 @@ import { KunIcon } from 'adverich-kun-ui'
 | `disabled` | `Boolean` | `false` | Atenúa el ícono y bloquea el click. |
 | `cursor` | `string \| null` | `null as string \| null` | Cursor (por defecto pointer, o not-allowed si disabled). |
 | `contentClass` | `String \| Array \| Object` | `-` | Clase extra del contenido del ícono. |
+| `rounded` | `KunIconRounded \| null` | `null` | Forma del contenedor: `full` fuerza caja 1:1 circular; `sm\|md\|lg` caja cuadrada con ese radio; `none`/`null` deja el icono suelto. |
 
 ## Eventos · Events
 
@@ -113,6 +114,20 @@ color del contexto. La `class` del consumidor va al elemento del ícono, por eso
 
 Dentro de `KunAvatar` y `KunBtn` el ícono usa siempre el 50% del contenedor
 cuadrado, por lo que ambos quedan alineados con el mismo `size`.
+
+## Contenedor circular (`rounded`)
+
+`rounded` acepta `none | sm | md | lg | full`. Cualquier valor salvo `none`/`null`
+crea una caja 1:1; `full` la hace circular.
+
+- `rounded="full"` + `size="md"` = caja de 36px y glifo de 18px.
+- `rounded="full"` + `size` numérico = caja del px indicado y glifo al 50%.
+- `rounded="full"` + `class="h-16 w-16"` respeta la dimensión del consumidor y
+  agrega `aspect-square` para completar el lado faltante.
+- Cuando la caja está activa, la `class` del consumidor va al contenedor (fondo,
+  borde, color); el glifo conserva el 50% del lado. `contentClass` sigue
+  aplicándose al glifo.
+- Sin `rounded`, el comportamiento no cambia: la `class` va al icono suelto.
 
 ---
 

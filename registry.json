@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.674",
+  "version": "0.1.676",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -290,7 +290,7 @@
         {
           "name": "buttonClass",
           "type": "String",
-          "default": "'px-2'",
+          "default": "''",
           "values": [],
           "description": "Clase extra del botón del drawer.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAppbar\\src\\composables\\kunAppbarProps.ts"
@@ -2715,6 +2715,14 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunChip\\src\\composables\\kunChipProps.ts"
         },
         {
+          "name": "rounded",
+          "type": "KunChipRounded | null",
+          "default": "null",
+          "values": [],
+          "description": "`full` = círculo 1:1; `none` = esquinas rectas; `null` = píldora por defecto.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunChip\\src\\composables\\kunChipProps.ts"
+        },
+        {
           "name": "clickable",
           "type": "Boolean",
           "default": "true",
@@ -4524,6 +4532,14 @@
           "default": "-",
           "values": [],
           "description": "Clase extra del contenido del ícono.",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunIcon\\src\\composables\\kunIconProps.ts"
+        },
+        {
+          "name": "rounded",
+          "type": "KunIconRounded | null",
+          "default": "null",
+          "values": [],
+          "description": "Forma del contenedor: `full` fuerza caja 1:1 circular; `sm|md|lg` caja cuadrada con ese radio; `none`/`null` deja el icono suelto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunIcon\\src\\composables\\kunIconProps.ts"
         }
       ],

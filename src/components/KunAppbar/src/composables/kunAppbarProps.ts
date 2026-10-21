@@ -40,7 +40,7 @@ export const kunAppbarProps = {
   /** Muestra el botón para abrir/cerrar el drawer. */
   showDrawerButton: { type: Boolean, default: true },
   /** Clase extra del botón del drawer. */
-  buttonClass: { type: String, default: 'px-2' },
+  buttonClass: { type: String, default: '' },
   /** Color del botón del drawer. `null` delega al theme global. */
   buttonColor: {
     type: String as PropType<KunColor | null>,

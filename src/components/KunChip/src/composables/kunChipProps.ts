@@ -2,6 +2,7 @@ import type { PropType } from 'vue';
 import { isKunColor, isKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js';
 
 export type KunChipDensity = 'default' | 'comfortable' | 'compact';
+export type KunChipRounded = 'full' | 'none';
 
 export const kunChipProps = {
     /** Visibilidad del chip (v-model). En `false` con `closable` muestra botón cerrar. */
@@ -40,6 +41,12 @@ export const kunChipProps = {
     pill: {
         type: Boolean,
         default: false,
+    },
+    /** `full` = círculo 1:1; `none` = esquinas rectas; `null` = píldora por defecto. */
+    rounded: {
+        type: String as PropType<KunChipRounded | null>,
+        default: null,
+        validator: (v: unknown) => v === null || ['full', 'none'].includes(v as string),
     },
     /** Clickable (cursor pointer y hover). */
     clickable: {

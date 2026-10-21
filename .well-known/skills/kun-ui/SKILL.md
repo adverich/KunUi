@@ -49,6 +49,10 @@ Peer deps: `vue@^3.5`, `tailwindcss@^4`. Package manager is **pnpm**
   (`12|14|16|18|20|24|28`). Shape exceptions: `KunSwitch` (rectangular track)
   and `KunCheckbox` (box). KunAvatar also accepts the legacy aliases
   `3xs|2xs|2xl|3xl`. Density: `default | comfortable | compact`.
+- **Circular shapes are 1:1.** When `rounded="full"` (or an avatar/icon's
+  circular default) is used, the box must stay square, never an oval. Custom
+  `w-*`/`h-*`/`size-*` classes skip the canonical side and add `aspect-square`.
+  Text buttons with `rounded="full"` may remain pills.
 - **Icon slots.** A prop named `*Icon` maps to a slot without the suffix:
   `prependIcon` → `#prepend`, `appendInnerIcon` → `#append-inner`.
 - **`v-model` nullability.** Selection inputs accept `null` as "empty":

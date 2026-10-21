@@ -165,6 +165,15 @@ function logEvent(name: string, detail: unknown): void {
       </div>
 
       <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Override de una dimensión (sigue circular)</div>
+        <div class="flex flex-wrap items-center gap-3">
+          <KunAvatar icon="$star" size="md" class="w-16" />
+          <KunAvatar icon="$star" size="md" class="h-16" />
+          <KunAvatar icon="$star" size="md" class="h-14 w-14" />
+          <span class="text-xs text-muted">w-16 / h-16 / h-14 w-14</span>
+        </div>
+      </div>
+      <div class="rounded-lg border border-default p-3">
         <div class="text-muted text-xs mb-2">Consistencia (mismo size = mismo px)</div>
         <div class="flex flex-wrap items-end gap-3">
           <div v-for="s in KUN_SIZE_ORDER" :key="s" class="flex flex-col items-center gap-1">

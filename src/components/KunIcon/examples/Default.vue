@@ -4,8 +4,10 @@ import KunIcon from '../src/components/KunIcon.vue'
 import { kunIconAliases } from '../../../icons/index.js'
 import { kunConfig } from '../../../config/kunConfig.js'
 import { KUN_SIZE_ORDER } from '../../../theme/kunSizes.js'
+import type { KunIconRounded } from '../src/composables/kunIconProps.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 
 // ------------------------------------------------------------------
 // Icono seleccionado (grilla de alias + texto libre: `$alias`, clase,
@@ -27,6 +29,16 @@ const colorClass = ref('')
 const cursor = ref('')
 const contentClass = ref('')
 const disabled = ref(false)
+const roundedRaw = ref<'__none' | KunIconRounded>('__none')
+const roundedOptions = ref([
+  { id: '__none', name: 'none (icono suelto)' },
+  { id: 'full', name: 'full (círculo 1:1)' },
+  { id: 'sm', name: 'sm' },
+  { id: 'md', name: 'md' },
+  { id: 'lg', name: 'lg' },
+  { id: 'none', name: 'rounded-none' },
+])
+const roundedProp = computed<KunIconRounded | null>(() => (roundedRaw.value === '__none' ? null : roundedRaw.value))
 
 // Aliases custom por instancia: pisan el mapa global (demo con `star`).
 const customAliases = {
@@ -84,6 +96,7 @@ function logEvent(name: string, detail: unknown): void {
           :cursor="cursor || null"
           :content-class="contentClass || undefined"
           :disabled="disabled"
+          :rounded="roundedProp"
           :aliases="aliasesProp"
           @click="logEvent('click', iconProp)"
         />
@@ -124,6 +137,17 @@ function logEvent(name: string, detail: unknown): void {
       </div>
 
       <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Caja circular (rounded: full)</div>
+        <div class="flex flex-wrap items-end gap-3">
+          <KunIcon icon="$star" size="xxs" rounded="full" class="bg-primary text-white" />
+          <KunIcon icon="$star" size="sm" rounded="full" class="bg-success text-white" />
+          <KunIcon icon="$star" size="md" rounded="full" class="bg-warning text-white" />
+          <KunIcon icon="$star" size="xl" rounded="full" class="bg-error text-white" />
+          <KunIcon icon="$star" size="md" rounded="full" class="h-16 w-16 bg-muted text-primary" />
+        </div>
+      </div>
+
+      <div class="rounded-lg border border-default p-3">
         <div class="text-muted text-xs mb-2">Escala nominal (mismo size = mismo px)</div>
         <div class="flex flex-wrap items-end gap-3">
           <div v-for="s in KUN_SIZE_ORDER" :key="s" class="flex flex-col items-center gap-1">
@@ -155,6 +179,14 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="colorClass" label="Class (text-error …)" density="compact" />
         <KunTextField v-model="cursor" label="Cursor (vacío = auto)" density="compact" />
         <KunTextField v-model="contentClass" label="Content class" density="compact" />
+        <KunSelect
+          v-model="roundedRaw"
+          v-model:items="roundedOptions"
+          label="Rounded"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
 
         <KunSwitch v-model="disabled" label="Disabled" />
         <KunSwitch v-model="useCustomAliases" label="Aliases custom (star→círculo)" />
