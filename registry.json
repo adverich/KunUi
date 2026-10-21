@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.673",
+  "version": "0.1.674",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -844,10 +844,10 @@
         },
         {
           "name": "size",
-          "type": "string | number",
+          "type": "KunAvatarSize | number",
           "default": "\"md\"",
           "values": [],
-          "description": "Tamaño predefinido ('3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl') o px numéricos.",
+          "description": "Tamaño: escala canónica ('xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'), alias legacy ('3xs' | '2xs' | '2xl' | '3xl') o px numéricos.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunAvatar\\src\\composables\\kunAvatarProps.ts"
         },
         {
@@ -4496,10 +4496,10 @@
         },
         {
           "name": "size",
-          "type": "string | number",
+          "type": "KunIconSize",
           "default": "''",
           "values": [],
-          "description": "Tamaño: clase Tailwind (`size-5`, `text-xl`) o número → px (ancho/alto). Vacío = hereda el contexto.",
+          "description": "Tamaño: paso de la escala (`xxs`…`xxl`), clase Tailwind (`size-5`, `text-xl`) o número → px. Vacío = hereda el contexto.",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunIcon\\src\\composables\\kunIconProps.ts"
         },
         {
@@ -5091,12 +5091,8 @@
           "name": "size",
           "type": "KunListItemAvatarSize",
           "default": "'md'",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
-          "description": "Tamaño predefinido.",
+          "values": [],
+          "description": "Tamaño: escala canónica (`xxs`…`xxl`).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunListItemAvatar\\src\\composables\\kunListItemAvatarProps.ts"
         },
         {

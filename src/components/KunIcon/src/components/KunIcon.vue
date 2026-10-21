@@ -43,6 +43,7 @@ import { kunIconProps } from '../composables/kunIconProps.js'
 import { kunIconAliases } from '../../../../icons/index.js'
 import { ensureKunIcons } from '../../../../icons/loader.js'
 import { kunConfig } from '../../../../config/kunConfig.js'
+import { isKunSize, KUN_ICON_SIZE, type KunSize } from '../../../../theme/kunSizes.js'
 
 defineOptions({ inheritAttrs: false })
 
@@ -120,14 +121,17 @@ const isComponent = computed(() =>
 
 const rawSize = computed<unknown>(() => (Array.isArray(props.icon) ? props.icon[1] : props.size));
 
+const isNamedSize = computed(() => isKunSize(rawSize.value));
+
 const isNumericSize = computed(() => {
   const value = rawSize.value;
   return typeof value === 'number' || (typeof value === 'string' && /^\d+(?:\.\d+)?$/.test(value.trim()));
 });
 
-/** Clase de tamaño (Tailwind). Vacío = hereda; numérico → `sizeStyle`. */
+/** Clase de tamaño: paso canónico, clase Tailwind libre o vacío (hereda). */
 const normalizedSize = computed(() => {
   const value = rawSize.value;
+  if (isNamedSize.value) return KUN_ICON_SIZE[value as KunSize];
   if (value === undefined || value === null || value === '' || isNumericSize.value) return '';
   return String(value).trim();
 });

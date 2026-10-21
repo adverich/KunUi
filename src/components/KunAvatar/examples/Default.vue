@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import KunAvatar from '../src/components/KunAvatar.vue'
-import type { KunAvatarDensity, KunAvatarVariant } from '../src/composables/kunAvatarProps.js'
+import type { KunAvatarDensity, KunAvatarSize, KunAvatarVariant } from '../src/composables/kunAvatarProps.js'
+import KunBtn from '../../KunBtn/src/components/KunBtn.vue'
+import KunIcon from '../../KunIcon/src/components/KunIcon.vue'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import { KUN_SIZE_ORDER } from '../../../theme/kunSizes.js'
 
-// ------------------------------------------------------------------
-// Tipos locales para controles sin unión exportada en props
-// (size acepta strings libres y números; rounded se mapea abajo).
-// ------------------------------------------------------------------
-type KunAvatarSize =
-  | '3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 type RoundedMode = 'default' | 'circular' | 'off' | 'lg'
 
 // ------------------------------------------------------------------
@@ -46,15 +43,17 @@ const borderProp = computed((): string | boolean => (borderRaw.value === '' ? fa
 
 const size = ref<KunAvatarSize>('md')
 const sizeOptions = ref([
-  { id: '3xs', name: '3xs (32px)' },
-  { id: '2xs', name: '2xs (36px)' },
-  { id: 'xs', name: 'xs (40px)' },
-  { id: 'sm', name: 'sm (44px)' },
-  { id: 'md', name: 'md (48px)' },
-  { id: 'lg', name: 'lg (56px)' },
-  { id: 'xl', name: 'xl (64px)' },
-  { id: '2xl', name: '2xl (72px)' },
-  { id: '3xl', name: '3xl (80px)' },
+  { id: 'xxs', name: 'xxs (24px)' },
+  { id: 'xs', name: 'xs (28px)' },
+  { id: 'sm', name: 'sm (32px)' },
+  { id: 'md', name: 'md (36px)' },
+  { id: 'lg', name: 'lg (40px)' },
+  { id: 'xl', name: 'xl (48px)' },
+  { id: 'xxl', name: 'xxl (56px)' },
+  { id: '3xs', name: '3xs legacy (32px)' },
+  { id: '2xs', name: '2xs legacy (36px)' },
+  { id: '2xl', name: '2xl legacy (72px)' },
+  { id: '3xl', name: '3xl legacy (80px)' },
 ])
 
 const density = ref<KunAvatarDensity>('default')
@@ -159,10 +158,25 @@ function logEvent(name: string, detail: unknown): void {
       </div>
 
       <div class="flex flex-wrap items-center gap-3">
-        <KunAvatar icon="$star" size="3xs" />
+        <KunAvatar icon="$star" size="xxs" />
         <KunAvatar icon="$star" size="md" />
-        <KunAvatar icon="$star" size="3xl" />
-        <span class="text-xs text-muted">ícono 3xs · md · 3xl</span>
+        <KunAvatar icon="$star" size="xxl" />
+        <span class="text-xs text-muted">ícono xxs · md · xxl</span>
+      </div>
+
+      <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Consistencia (mismo size = mismo px)</div>
+        <div class="flex flex-wrap items-end gap-3">
+          <div v-for="s in KUN_SIZE_ORDER" :key="s" class="flex flex-col items-center gap-1">
+            <div class="flex items-center gap-1">
+              <KunAvatar icon="$star" :size="s" />
+              <KunBtn :size="s" square color="primary">
+                <KunIcon icon="$star" :size="s" />
+              </KunBtn>
+            </div>
+            <span class="text-[10px] text-muted">{{ s }}</span>
+          </div>
+        </div>
       </div>
 
       <div class="rounded-lg bg-muted p-3 text-sm">

@@ -13,14 +13,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { kunListItemAvatarProps } from '../composables/kunListItemAvatarProps.js'
+import { resolveKunSize, KUN_SQUARE_SIZE, KUN_TEXT_SIZE } from '../../../../theme/kunSizes.js'
 
 const props = defineProps(kunListItemAvatarProps)
 
-const sizeClass = computed(() => ({
-  sm: 'w-6 h-6 text-xs',
-  md: 'w-8 h-8 text-sm',
-  lg: 'w-10 h-10 text-base'
-} as Record<string, string>)[props.size] || 'w-8 h-8 text-sm')
+const sizeClass = computed(() => {
+  const size = resolveKunSize(props.size)
+  return `${KUN_SQUARE_SIZE[size]} ${KUN_TEXT_SIZE[size]}`
+})
 </script>
 
 <style scoped>

@@ -16,16 +16,16 @@
       <template v-if="loading">
         <slot name="loader">
           <div class="absolute inset-0 flex items-center justify-center z-10">
-            <KunLoaderCircular size="20" width="5" />
+            <KunLoaderCircular :size="loaderSize" :width="loaderWidth" />
           </div>
         </slot>
       </template>
 
       <!-- Contenido del botón con opacidad -->
-      <div :class="{ 'opacity-50': loading }" class="flex items-center justify-center w-full h-full">
+      <div :class="[{ 'opacity-50': loading }, controlGap]" class="flex items-center justify-center w-full h-full">
         <!-- Prepend -->
         <template v-if="$slots.prepend || prependIcon">
-          <span class="mr-2 flex items-center">
+          <span class="flex items-center">
             <slot name="prepend" />
             <component :is="renderIcon(prependIcon)" />
           </span>
@@ -43,7 +43,7 @@
 
         <!-- Append -->
         <template v-if="$slots.append || appendIcon">
-          <span class="ml-2 flex items-center">
+          <span class="flex items-center">
             <slot name="append" />
             <component :is="renderIcon(appendIcon)" />
           </span>
@@ -60,6 +60,17 @@ import KunLoaderCircular from '@/components/KunLoaderCircular/src/components/Kun
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 import { kunBtnProps } from '../composables/kunBtnProps.js'
 import { kunVariantClasses, resolveKunColor, resolveKunVariant, type KunColor } from '../../../../theme/kunVariants.js'
+import {
+  resolveKunSize,
+  KUN_CONTROL_HEIGHT,
+  KUN_CONTROL_PADDING,
+  KUN_CONTROL_GAP,
+  KUN_ICON_SIZE,
+  KUN_ICON_PX,
+  KUN_LOADER_WIDTH,
+  KUN_SQUARE_SIZE,
+  KUN_TEXT_SIZE,
+} from '../../../../theme/kunSizes.js'
 
 const slots = useSlots()
 const attrs = useAttrs()
@@ -79,6 +90,7 @@ const componentTag = computed(() => {
 
 const resolvedColor = computed<KunColor>(() => resolveKunColor(props.color ?? null))
 const resolvedVariant = computed(() => resolveKunVariant(props.variant ?? null))
+const resolvedSize = computed(() => resolveKunSize(props.size))
 
 /** Redondeo: 'full' | 'none' propios, o `rounded-md` (escala global). */
 const roundedClass = computed(() => {
@@ -118,32 +130,16 @@ const componentAttrs = computed(() => {
   }
 })
 
-const buttonSize = (size: unknown) => {
-  switch (size) {
-    case 'xxs': return 'px-1 py-1 text-xs'
-    case 'xs': return 'px-2 py-2 text-xs'
-    case 'sm': return 'px-2 py-1 text-sm'
-    case 'md': return 'px-3 py-2 text-sm'
-    case 'lg': return 'px-4 py-2 text-base'
-    case 'xl': return 'px-5 py-3 text-lg'
-    case 'xxl': return 'px-6 py-4 text-xl'
-    default: return 'px-3 py-2 text-sm'
-  }
-}
+const buttonSize = computed(() =>
+  `${KUN_CONTROL_HEIGHT[resolvedSize.value]} ${KUN_CONTROL_PADDING[resolvedSize.value]}`,
+)
 
-const resolvedIconSize = computed(() => {
-  if (props.iconSize) return props.iconSize
-  switch (props.size) {
-    case 'xxs': return 'size-3'
-    case 'xs':  return 'size-3.5'
-    case 'sm':  return 'size-3.5'
-    case 'md':  return 'size-4'
-    case 'lg':  return 'size-4.5'
-    case 'xl':  return 'size-5'
-    case 'xxl': return 'size-6'
-    default:    return 'size-4'
-  }
-})
+const resolvedIconSize = computed(() => props.iconSize || KUN_ICON_SIZE[resolvedSize.value])
+
+const loaderSize = computed(() => KUN_ICON_PX[resolvedSize.value])
+const loaderWidth = computed(() => KUN_LOADER_WIDTH[resolvedSize.value])
+
+const controlGap = computed(() => KUN_CONTROL_GAP[resolvedSize.value])
 
 const variantClasses = computed(() => kunVariantClasses(resolvedColor.value, resolvedVariant.value))
 
@@ -170,7 +166,8 @@ const isSquare = computed(() => props.square || isIconOnly.value)
 const computedClass = computed(() => {
   const base = [
     'inline-flex items-center justify-center break-keep transition-all whitespace-nowrap',
-    !isSquare.value ? buttonSize(props.size) : '',
+    !isSquare.value ? buttonSize.value : '',
+    KUN_TEXT_SIZE[resolvedSize.value],
     props.fontWeight,
     roundedClass.value,
     props.textAlign,
@@ -181,17 +178,7 @@ const computedClass = computed(() => {
   if (attrs.class) base.push(attrs.class as string);
 
   if (isSquare.value) {
-    base.push('aspect-square justify-center items-center');
-    switch (props.size) {
-      case 'xxs': base.push('p-1'); break;
-      case 'xs':  base.push('p-1.5'); break;
-      case 'sm':  base.push('p-2'); break;
-      case 'md':  base.push('p-2.5'); break;
-      case 'lg':  base.push('p-3'); break;
-      case 'xl':  base.push('p-3.5'); break;
-      case 'xxl': base.push('p-4'); break;
-      default:    base.push('p-2.5');
-    }
+    base.push(KUN_SQUARE_SIZE[resolvedSize.value], 'shrink-0');
   }
 
   if (!props.loading && !props.disabled) {

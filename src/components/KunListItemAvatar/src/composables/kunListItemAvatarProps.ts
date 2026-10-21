@@ -1,6 +1,7 @@
 import type { PropType } from 'vue';
+import { isKunSize, type KunSize } from '../../../../theme/kunSizes.js';
 
-export type KunListItemAvatarSize = 'sm' | 'md' | 'lg';
+export type KunListItemAvatarSize = KunSize;
 
 export const kunListItemAvatarProps = {
   /** Texto (iniciales) del avatar. */
@@ -8,11 +9,11 @@ export const kunListItemAvatarProps = {
     type: [String, Number] as PropType<string | number | null>,
     default: null
   },
-  /** Tamaño predefinido. */
+  /** Tamaño: escala canónica (`xxs`…`xxl`). */
   size: {
     type: String as PropType<KunListItemAvatarSize>,
     default: 'md',
-    validator: (v: unknown) => ['sm', 'md', 'lg'].includes(v as string),
+    validator: (v: unknown) => isKunSize(v),
   },
   /** Redondeo: 'full' | 'none'. `null` = circular (propio de avatar). */
   rounded: {

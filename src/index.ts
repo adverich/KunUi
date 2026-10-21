@@ -128,6 +128,22 @@ export {
 } from './theme/kunVariants.js';
 export type { KunColor, KunVariant } from './theme/kunVariants.js';
 export {
+    KUN_SIZE_ORDER,
+    KUN_SIZE_PX,
+    KUN_ICON_PX,
+    KUN_SQUARE_SIZE,
+    KUN_CONTROL_HEIGHT,
+    KUN_ICON_SIZE,
+    KUN_TEXT_SIZE,
+    KUN_CONTROL_PADDING,
+    KUN_CONTROL_GAP,
+    KUN_LOADER_WIDTH,
+    isKunSize,
+    resolveKunSize,
+    shiftKunSize,
+} from './theme/kunSizes.js';
+export type { KunSize } from './theme/kunSizes.js';
+export {
     KUN_Z_LAYERS,
     zIndexVar,
     zIndexStyle,

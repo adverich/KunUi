@@ -12,9 +12,13 @@ const text = ref('AB')
 
 const size = ref<KunListItemAvatarSize>('md')
 const sizeOptions = ref([
-  { id: 'sm', name: 'sm' },
-  { id: 'md', name: 'md' },
-  { id: 'lg', name: 'lg' },
+  { id: 'xxs', name: 'xxs (24px)' },
+  { id: 'xs', name: 'xs (28px)' },
+  { id: 'sm', name: 'sm (32px)' },
+  { id: 'md', name: 'md (36px)' },
+  { id: 'lg', name: 'lg (40px)' },
+  { id: 'xl', name: 'xl (48px)' },
+  { id: 'xxl', name: 'xxl (56px)' },
 ])
 
 const roundedRaw = ref('__circle')
@@ -48,9 +52,9 @@ const fontWeight = ref('font-medium')
       </div>
 
       <div class="flex items-center gap-3 rounded-lg bg-muted p-3">
-        <KunListItemAvatar text="SM" size="sm" :rounded="roundedProp" />
+        <KunListItemAvatar text="XXS" size="xxs" :rounded="roundedProp" />
         <KunListItemAvatar text="MD" size="md" :rounded="roundedProp" />
-        <KunListItemAvatar text="LG" size="lg" :rounded="roundedProp" />
+        <KunListItemAvatar text="XXL" size="xxl" :rounded="roundedProp" />
       </div>
     </div>
 

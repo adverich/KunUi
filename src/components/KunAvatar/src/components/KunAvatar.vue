@@ -5,7 +5,7 @@
     @mouseover="$emit('hover', $event)" @contextmenu="$emit('contextmenu', $event)" @focus="$emit('focus', $event)">
     <img v-if="props.image" :src="props.image" :alt="props.alt" :class="computedImageClasses" />
     <span v-else-if="props.icon" :class="computedIconClasses">
-      <KunIcon v-if="useKunIcon" :icon="(props.icon as any)" size="size-[1em]" />
+      <KunIcon v-if="useKunIcon" :icon="(props.icon as any)" :size="resolvedIconSize" />
       <template v-else>{{ props.icon }}</template>
     </span>
     <span v-else-if="props.text" :class="computedTextClasses">{{ props.text }}</span>
@@ -17,27 +17,34 @@
 import { computed, useAttrs } from "vue";
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { kunAvatarProps } from '../composables/kunAvatarProps.js'
+import {
+  isKunSize,
+  shiftKunSize,
+  KUN_ICON_SIZE,
+  KUN_SQUARE_SIZE,
+  KUN_TEXT_SIZE,
+  type KunSize,
+} from '../../../../theme/kunSizes.js'
 
 const props = defineProps(kunAvatarProps);
 const attrs = useAttrs();
 
 defineEmits(["click", "hover", "contextmenu", "focus"]);
 
-const sizes: Record<string, string> = {
-  "3xs": "w-8 h-8 text-xs",
-  "2xs": "w-9 h-9 text-xs",
-  xs: "w-10 h-10 text-xs",
-  sm: "w-11 h-11 text-sm",
-  md: "w-12 h-12 text-base",
-  lg: "w-14 h-14 text-base",
-  xl: "w-16 h-16 text-lg",
-  "2xl": "w-18 h-18 text-lg",
-  "3xl": "w-20 h-20 text-lg",
+/** Nombres de la escala anterior que conservan su px como alias deprecado. */
+const legacySizes: Record<string, KunSize | number> = {
+  "3xs": "sm", // 32px
+  "2xs": "md", // 36px
+  "2xl": 72,
+  "3xl": 80,
 };
 
-// Orden de menor a mayor para escalar por densidad.
-const sizeOrder = ["3xs", "2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl"];
 const densityOffset: Record<string, number> = { compact: -2, comfortable: -1, default: 0 };
+
+const legacyPx = computed(() => {
+  const legacy = legacySizes[String(props.size)];
+  return typeof legacy === "number" ? legacy : null;
+});
 
 // size numérico → dimensiones explícitas escaladas por densidad.
 const numericSize = computed(() => {
@@ -46,7 +53,7 @@ const numericSize = computed(() => {
       ? props.size
       : /^\d+$/.test(String(props.size ?? ""))
         ? Number(props.size)
-        : null;
+        : legacyPx.value;
   if (raw == null || !Number.isFinite(raw) || raw <= 0) return null;
   const scale = props.density === "compact" ? 0.75 : props.density === "comfortable" ? 0.875 : 1;
   return Math.max(1, Math.round(raw * scale));
@@ -62,13 +69,25 @@ const numericStyle = computed(() => {
   };
 });
 
-// size nominal → clase del mapa, desplazada por densidad (piso en 3xs).
-const namedSizeClass = computed(() => {
-  let i = sizeOrder.indexOf(String(props.size));
-  if (i < 0) i = sizeOrder.indexOf("md");
-  const off = densityOffset[String(props.density)] ?? 0;
-  const idx = Math.min(sizeOrder.length - 1, Math.max(0, i + off));
-  return sizes[sizeOrder[idx]] || sizes.md;
+const effectiveSize = computed<KunSize>(() => {
+  const base = isKunSize(props.size)
+    ? props.size
+    : typeof legacySizes[String(props.size)] === "string"
+      ? (legacySizes[String(props.size)] as KunSize)
+      : "md";
+  return shiftKunSize(base, densityOffset[String(props.density)] ?? 0);
+});
+
+// size nominal → clase compartida (cuadrado + tipografía), desplazada por densidad.
+const namedSizeClass = computed(() =>
+  numericSize.value == null
+    ? `${KUN_SQUARE_SIZE[effectiveSize.value]} ${KUN_TEXT_SIZE[effectiveSize.value]}`
+    : "",
+);
+
+const resolvedIconSize = computed<string | number>(() => {
+  if (numericSize.value != null) return Math.max(10, Math.round(numericSize.value * 0.5));
+  return KUN_ICON_SIZE[effectiveSize.value];
 });
 
 const hasBackgroundClass = computed(() => {
@@ -114,7 +133,6 @@ const computedClasses = computed(() => [
   bgClass.value,
   variantClasses.value,
   props.theme ? `theme-${props.theme}` : "",
-  props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3",
   props.start ? "ms-2" : "",
   props.end ? "me-2" : "",
 ]);

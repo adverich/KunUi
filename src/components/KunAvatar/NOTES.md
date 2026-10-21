@@ -2,17 +2,21 @@
 
 ## Tamaños
 
-Escala: `3xs` (32px) · `2xs` (36px) · `xs` (40px) · `sm` (44px) · `md` (48px,
-default) · `lg` (56px) · `xl` (64px) · `2xl` (72px) · `3xl` (80px).
+Escala canónica compartida: `xxs` (24px) · `xs` (28px) · `sm` (32px) ·
+`md` (36px, default) · `lg` (40px) · `xl` (48px) · `xxl` (56px). Es la misma
+que usan `KunBtn`, `KunIcon`, `KunListItemAvatar` y `KunDragAndDropHandle`
+(fuente única: `src/theme/kunSizes.ts`).
 
-Los nombres previos (`x-small`, `small`, `default`, `large`, `x-large`) se
-eliminaron: usar la escala nueva o `size` numérico en px.
+Alias legacy con su px histórico: `3xs` (32px → `sm`), `2xs` (36px → `md`),
+`2xl` (72px) y `3xl` (80px). Los nombres `xs`/`sm`/`md`/`lg`/`xl` cambiaron de
+métrica: ver `docs/refactor/sizes.md` para migrar.
 
 `density` mueve un paso de la escala (comfortable −1, compact −2, con piso en
-`3xs`).
+`xxs`).
 
-El ícono hereda el `text-*` del tamaño (`size-[1em]`), por lo que escala junto
-con el avatar. En tamaño numérico, el `font-size` se calcula como ~40% del px.
+El ícono usa el tamaño compartido (50% del lado): `md` = 36px / 18px. En
+tamaño numérico, el ícono se calcula como ~50% del px y el `font-size` como
+~40%.
 
 ## Bordes y radio
 

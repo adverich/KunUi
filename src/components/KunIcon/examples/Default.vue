@@ -3,6 +3,7 @@ import { ref, computed, watch, h } from 'vue'
 import KunIcon from '../src/components/KunIcon.vue'
 import { kunIconAliases } from '../../../icons/index.js'
 import { kunConfig } from '../../../config/kunConfig.js'
+import { KUN_SIZE_ORDER } from '../../../theme/kunSizes.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 
@@ -122,6 +123,16 @@ function logEvent(name: string, detail: unknown): void {
         <span class="flex items-center gap-2 text-error"><KunIcon size="size-5">●</KunIcon> Hereda color (<code>class="text-error"</code>)</span>
       </div>
 
+      <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Escala nominal (mismo size = mismo px)</div>
+        <div class="flex flex-wrap items-end gap-3">
+          <div v-for="s in KUN_SIZE_ORDER" :key="s" class="flex flex-col items-center gap-1">
+            <KunIcon icon="$star" :size="s" />
+            <span class="text-[10px] text-muted">{{ s }}</span>
+          </div>
+        </div>
+      </div>
+
       <div class="rounded-lg bg-muted p-3 text-sm">
         <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
@@ -140,7 +151,7 @@ function logEvent(name: string, detail: unknown): void {
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="iconRaw" label="Icon ($alias, clase, SVG, Iconify)" density="compact" />
-        <KunTextField v-model="size" label="Size (clase: size-9)" density="compact" />
+        <KunTextField v-model="size" label="Size (xxs…xxl, size-9, px)" density="compact" />
         <KunTextField v-model="colorClass" label="Class (text-error …)" density="compact" />
         <KunTextField v-model="cursor" label="Cursor (vacío = auto)" density="compact" />
         <KunTextField v-model="contentClass" label="Content class" density="compact" />

@@ -1,7 +1,12 @@
 import type { PropType } from 'vue';
+import { KUN_SIZE_ORDER, type KunSize } from '../../../../theme/kunSizes.js';
 
 export type KunAvatarDensity = 'default' | 'comfortable' | 'compact';
 export type KunAvatarVariant = 'flat' | 'outlined' | 'tonal' | 'text';
+/** Escala canónica (`xxs`…`xxl`) + alias legacy (`3xs`, `2xs`, `2xl`, `3xl`). */
+export type KunAvatarSize = KunSize | '3xs' | '2xs' | '2xl' | '3xl';
+
+const avatarSizes: string[] = [...KUN_SIZE_ORDER, '3xs', '2xs', '2xl', '3xl'];
 
 export const kunAvatarProps = {
   /** URL de imagen a mostrar (tiene prioridad sobre icon/text/slot). */
@@ -12,8 +17,14 @@ export const kunAvatarProps = {
   text: String,
   /** Texto alternativo de la imagen. */
   alt: String,
-  /** Tamaño predefinido ('3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl') o px numéricos. */
-  size: { type: [String, Number] as PropType<string | number>, default: "md" },
+  /** Tamaño: escala canónica ('xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'), alias legacy ('3xs' | '2xs' | '2xl' | '3xl') o px numéricos. */
+  size: {
+    type: [String, Number] as PropType<KunAvatarSize | number>,
+    default: "md",
+    validator: (v: unknown) =>
+      typeof v === 'number' ||
+      (typeof v === 'string' && (avatarSizes.includes(v) || /^\d+$/.test(v))),
+  },
   /** Radio de borde: por defecto `rounded-full`; `false`/`'none'` → `rounded-none`; escala (`'md'`, `'lg'`, ...) → `rounded-<valor>`. */
   rounded: { type: [String, Number, Boolean], default: undefined },
   /** Borde: se renderiza como `border border-<valor>`. */

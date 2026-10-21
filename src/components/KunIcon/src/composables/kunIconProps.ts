@@ -1,6 +1,8 @@
 import type { Component, PropType } from 'vue';
+import type { KunSize } from '../../../../theme/kunSizes.js';
 
 export type KunIconInput = string | Record<string, any> | Function | unknown[] | Component | boolean;
+export type KunIconSize = KunSize | string | number;
 
 export const kunIconProps = {
   /** Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente, nombre Iconify (`i-mdi-home`, `mdi:home`) o `[icono, tamaño]`. */
@@ -14,9 +16,9 @@ export const kunIconProps = {
     type: Object as PropType<Record<string, unknown>>,
     default: (): Record<string, unknown> => ({}),
   },
-  /** Tamaño: clase Tailwind (`size-5`, `text-xl`) o número → px (ancho/alto). Vacío = hereda el contexto. */
+  /** Tamaño: paso de la escala (`xxs`…`xxl`), clase Tailwind (`size-5`, `text-xl`) o número → px. Vacío = hereda el contexto. */
   size: {
-    type: [String, Number] as PropType<string | number>,
+    type: [String, Number] as PropType<KunIconSize>,
     default: '',
   },
   /** Atenúa el ícono y bloquea el click. */

@@ -24,7 +24,7 @@ import { KunIcon } from 'adverich-kun-ui'
 |---|---|---|---|
 | `icon` | `KunIconInput` | `-` | Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente, nombre Iconify (`i-mdi-home`, `mdi:home`) o `[icono, tamaño]`. |
 | `aliases` | `Record<string, unknown>` | `(): Record<string` | Aliases `$nombre` → icono/clase/componente. Máxima prioridad: pisan a `kunConfig.icons` y al set bundleado (`$star`, ...). |
-| `size` | `string \| number` | `''` | Tamaño: clase Tailwind (`size-5`, `text-xl`) o número → px (ancho/alto). Vacío = hereda el contexto. |
+| `size` | `KunIconSize` | `''` | Tamaño: paso de la escala (`xxs`…`xxl`), clase Tailwind (`size-5`, `text-xl`) o número → px. Vacío = hereda el contexto. |
 | `disabled` | `Boolean` | `false` | Atenúa el ícono y bloquea el click. |
 | `cursor` | `string \| null` | `null as string \| null` | Cursor (por defecto pointer, o not-allowed si disabled). |
 | `contentClass` | `String \| Array \| Object` | `-` | Clase extra del contenido del ícono. |
@@ -102,8 +102,17 @@ await registerKunIcons([lucide, mdi])
 
 `KunIcon` no tiene prop `color`: el ícono pinta con `currentColor` y hereda el
 color del contexto. La `class` del consumidor va al elemento del ícono, por eso
-`text-…` y `size-…` funcionan directo. `size` acepta clase Tailwind
-(`size-5`, `text-xl`) o número (`px`).
+`text-…` y `size-…` funcionan directo.
+
+`size` acepta:
+
+- Paso canónico `xxs | xs | sm | md | lg | xl | xxl` (fuente única:
+  `src/theme/kunSizes.ts`): `md` = 18px.
+- Clase Tailwind (`size-5`, `text-xl`) para casos puntuales.
+- Número en px.
+
+Dentro de `KunAvatar` y `KunBtn` el ícono usa siempre el 50% del contenedor
+cuadrado, por lo que ambos quedan alineados con el mismo `size`.
 
 ---
 

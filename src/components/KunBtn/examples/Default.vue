@@ -3,6 +3,9 @@ import { ref, computed } from 'vue'
 import KunBtn from '../src/components/KunBtn.vue'
 import type { KunBtnSize, KunBtnType, KunBtnRounded } from '../src/composables/kunBtnProps.js'
 import type { KunColor, KunVariant } from '../../../theme/kunVariants.js'
+import { KUN_SIZE_ORDER } from '../../../theme/kunSizes.js'
+import KunAvatar from '../../KunAvatar/src/components/KunAvatar.vue'
+import KunIcon from '../../KunIcon/src/components/KunIcon.vue'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
@@ -57,13 +60,13 @@ const roundedProp = computed<KunBtnRounded | null>(() =>
 
 const size = ref<KunBtnSize>('md')
 const sizeOptions = ref([
-  { id: 'xxs', name: 'xxs' },
-  { id: 'xs', name: 'xs' },
-  { id: 'sm', name: 'sm' },
-  { id: 'md', name: 'md' },
-  { id: 'lg', name: 'lg' },
-  { id: 'xl', name: 'xl' },
-  { id: 'xxl', name: 'xxl' },
+  { id: 'xxs', name: 'xxs (24px)' },
+  { id: 'xs', name: 'xs (28px)' },
+  { id: 'sm', name: 'sm (32px)' },
+  { id: 'md', name: 'md (36px)' },
+  { id: 'lg', name: 'lg (40px)' },
+  { id: 'xl', name: 'xl (48px)' },
+  { id: 'xxl', name: 'xxl (56px)' },
 ])
 
 const type = ref<KunBtnType>('button')
@@ -178,6 +181,21 @@ function handleClick(event: MouseEvent): void {
         @keyup="logEvent('keyup', ($event as KeyboardEvent).key)"
         @keypress="logEvent('keypress', ($event as KeyboardEvent).key)"
       />
+
+      <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Consistencia (mismo size = mismo px)</div>
+        <div class="flex flex-wrap items-end gap-3">
+          <div v-for="s in KUN_SIZE_ORDER" :key="s" class="flex flex-col items-center gap-1">
+            <div class="flex items-center gap-1">
+              <KunAvatar icon="$star" :size="s" />
+              <KunBtn :size="s" square color="primary">
+                <KunIcon icon="$star" :size="s" />
+              </KunBtn>
+            </div>
+            <span class="text-[10px] text-muted">{{ s }}</span>
+          </div>
+        </div>
+      </div>
 
       <div class="rounded-lg bg-muted p-3 font-mono text-sm">
         <div class="text-muted text-xs mb-1">Clicks + último evento</div>

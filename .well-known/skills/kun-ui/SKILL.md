@@ -43,8 +43,12 @@ Peer deps: `vue@^3.5`, `tailwindcss@^4`. Package manager is **pnpm**
 
 - **Styling via Tailwind classes.** Colors, rounding, sizes are props that take
   Tailwind classes (`bgColor`, `textColor`, `rounded`, `inputTextSize`, …).
-  Sizes: `xxs | xs | sm | md | lg | xl | xxl`. Density:
-  `default | comfortable | compact`.
+  Sizes: `xxs | xs | sm | md | lg | xl | xxl` (single source:
+  `src/theme/kunSizes.ts`). The same `size` is the same px everywhere:
+  square/height `24|28|32|36|40|48|56`, icon 50% of the square
+  (`12|14|16|18|20|24|28`). Shape exceptions: `KunSwitch` (rectangular track)
+  and `KunCheckbox` (box). KunAvatar also accepts the legacy aliases
+  `3xs|2xs|2xl|3xl`. Density: `default | comfortable | compact`.
 - **Icon slots.** A prop named `*Icon` maps to a slot without the suffix:
   `prependIcon` → `#prepend`, `appendInnerIcon` → `#append-inner`.
 - **`v-model` nullability.** Selection inputs accept `null` as "empty":

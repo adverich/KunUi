@@ -52,7 +52,12 @@ No uses npm ni yarn.
   los colores semánticos van por `color`
   (`primary|secondary|success|info|warning|error|neutral`) y `variant`
   (`solid|outline|soft|subtle|ghost|link`), nunca como clase.
-  Tamaños: `xxs|xs|sm|md|lg|xl|xxl`. Densidad: `default|comfortable|compact`.
+  Tamaños: `xxs|xs|sm|md|lg|xl|xxl` (fuente única: `src/theme/kunSizes.ts`).
+  Mismo `size` = mismo px en todos los componentes: cuadrado/altura
+  `24|28|32|36|40|48|56` e ícono 50% del cuadrado (`12|14|16|18|20|24|28`).
+  Excepciones de forma: `KunSwitch` (track rectangular) y `KunCheckbox` (caja).
+  KunAvatar admite además los alias legacy `3xs|2xs|2xl|3xl`.
+  Densidad: `default|comfortable|compact`.
 - **Bordes y radio** (detalle en `docs/refactor/borders-radius.md`):
   - **Color**: siempre un rol de token — `border-default|muted|accented|inverted`.
     Nunca `border-gray-200` ni `border` pelado (salvo `border-current` /
