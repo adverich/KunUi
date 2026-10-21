@@ -8,6 +8,13 @@ Fecha: 2026-10-15
 Revisión: 2026-10-15, alineada contra el repo y contra Nuxt UI v4 (MCP: Design System, CSS Variables, theme de Button; fuente: `src/runtime/index.css` y `src/templates.ts`). El color activo es un alias a una paleta Tailwind completa.
 Estado: lineamientos aprobados, con correcciones de esta revisión. Ruptura total. Sin aliases legacy.
 
+> **Actualización 2026-10-21 — `text-inverted` solo manual.** Se revierte el
+> uso automático: los `solid` de color usan `text-highlighted` (`neutral-900` en
+> light, blanco en dark); `neutral.solid` usa `text-white dark:text-neutral-900`.
+> Ningún componente aplica `text-inverted`: el token queda exclusivamente para
+> que el consumidor lo pase manualmente. La nota del 2026-10-18 queda como
+> historial.
+>
 > **Actualización 2026-10-18 — paridad estricta de botones.** La decisión §0.5
 > (`--kun-on-{color}` calculado por luminancia) quedó **eliminada**. Los botones
 > sólidos usan `text-inverted` (blanco en light, `neutral-950` en dark), igual que
@@ -373,7 +380,8 @@ Cada par es un string literal de clases, al estilo del theme de `UButton`:
 - `subtle`: soft + `ring-{color}/25`
 - `ghost`: texto del color, hover `bg-{color}/10`, sin fondo en disabled
 - `link`: solo texto, hover `text-{color}/75`
-- `neutral` no usa `bg-neutral`. Sigue el patrón Nuxt: solid = `bg-inverted text-inverted`; el resto usa `bg-elevated`, `text-default`, `ring-accented`.
+- `neutral` no usa `bg-neutral`: solid = `bg-inverted text-white dark:text-neutral-900`; el resto usa `bg-elevated`, `text-default`, `ring-accented`.
+- Ningún `solid` aplica `text-inverted`; ese token es solo para uso manual del consumidor.
 
 `disabled` es opacidad (`disabled:opacity-75`), no un HEX `--button-disabled`.
 

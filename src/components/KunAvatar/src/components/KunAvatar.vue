@@ -156,7 +156,7 @@ const computedImageClasses = computed(() => [
 ]);
 
 const computedIconClasses = computed(() => [
-  "absolute text-inverted",
+  "absolute text-highlighted",
 ]);
 
 const computedTextClasses = computed(() => [

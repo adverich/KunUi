@@ -41,33 +41,53 @@ const iconToRender = computed(() => {
     : (props.falseIcon || null)
 })
 
+/** `iconColor` solo tiene efecto con un string no vacío (el default es `undefined`). */
+const hasIconColor = computed(
+  () => typeof props.iconColor === 'string' && props.iconColor.trim().length > 0,
+)
+
 /**
- * Caja del control (patrón Nuxt UI): contorno `ring ring-inset ring-accented`
- * sobre `bg-default`; activa toma `bg-primary text-inverted` salvo que el
- * consumidor pase `color`/`baseColor` (clases utilitarias libres).
+ * Caja del control: contorno `ring ring-inset ring-accented`; inactiva usa
+ * `bg-elevated` para que se lea sobre fondos oscuros (en dark `bg-default` se
+ * confunde con la página). Activa: `color` libre del consumidor; con
+ * `iconColor` la caja queda neutra para que el glifo coloreado contraste; por
+ * defecto `bg-primary text-highlighted`.
  */
 const boxClass = computed(() => {
-  const classes = ['ring-1', 'ring-inset', 'rounded-sm', 'bg-default', 'ring-accented']
-  if (props.error || !isValid.value) classes.push('ring-error')
-  if (isChecked.value || props.indeterminate) {
-    if (props.color) classes.push(props.color)
-    else classes.push('bg-primary', 'text-inverted')
-  } else if (props.baseColor) {
-    classes.push(props.baseColor)
+  const active = isChecked.value || props.indeterminate
+  const classes = ['ring-1', 'ring-inset', 'rounded-sm', 'ring-accented']
+
+  if (active) {
+    if (props.color) {
+      classes.push(props.color)
+    } else if (hasIconColor.value) {
+      classes.push('bg-elevated')
+    } else {
+      classes.push('bg-primary', 'text-highlighted')
+    }
+  } else {
+    classes.push(props.baseColor || 'bg-elevated')
   }
+
+  if (props.error || !isValid.value) classes.push('ring-error')
   return classes
 })
 
 const iconInnerSizeClass = computed(() => ({
-  sm: 'w-2.5 h-2.5',
-  md: 'w-3 h-3',
-  lg: 'w-3.5 h-3.5'
-}[effectiveSize.value] || 'w-3 h-3'))
+  sm: 'w-3 h-3',
+  md: 'w-3.5 h-3.5',
+  lg: 'w-4 h-4'
+}[effectiveSize.value] || 'w-3.5 h-3.5'))
 
-const iconClass = computed(() => [
-  typeof props.iconColor === 'string' ? `text-${props.iconColor}` : '',
-  props.glow && isFocused.value ? 'opacity-100' : 'opacity-70',
-])
+const iconClass = computed(() => {
+  const color = hasIconColor.value
+    ? (props.iconColor as string).trim().replace(/^text-/, '')
+    : ''
+  return [
+    color ? `text-${color}` : '',
+    props.glow && isFocused.value ? 'drop-shadow-[0_0_5px_currentColor]' : '',
+  ]
+})
 
 // Escala de tamaño por densidad (como KunAvatar): comfortable -1, compact -2, piso en sm.
 const sizeOrder = ['sm', 'md', 'lg']

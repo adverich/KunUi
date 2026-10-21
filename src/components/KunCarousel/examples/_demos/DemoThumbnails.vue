@@ -35,7 +35,7 @@ function onMainSelect(_: unknown, i: number): void {
   <div class="space-y-3">
     <KunCarousel ref="mainRef" v-model="selected" align="center" :show-dots="false" @select="onMainSelect">
       <KunCarouselSlide v-for="s in slides" :key="s.id">
-        <div :class="['flex h-56 items-center justify-center rounded-lg text-2xl font-bold text-inverted', s.bg]">
+        <div :class="['flex h-56 items-center justify-center rounded-lg text-2xl font-bold text-highlighted', s.bg]">
           {{ s.title }}
         </div>
       </KunCarouselSlide>
@@ -55,7 +55,7 @@ function onMainSelect(_: unknown, i: number): void {
         <button
           type="button"
           :class="[
-            'flex h-16 w-full cursor-pointer items-center justify-center rounded-lg text-sm font-bold text-inverted transition',
+            'flex h-16 w-full cursor-pointer items-center justify-center rounded-lg text-sm font-bold text-highlighted transition',
             s.bg,
             i !== selected ? 'opacity-50 hover:opacity-90' : '',
           ]"

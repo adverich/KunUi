@@ -21,7 +21,7 @@ const slides = ref(Array.from({ length: 6 }, (_, i) => ({
     <KunCarouselSlide v-for="(s, i) in slides" :key="s.id">
       <div
         v-if="visible.includes(i)"
-        :class="['flex h-48 items-center justify-center rounded-lg text-xl font-bold text-inverted', s.bg]"
+        :class="['flex h-48 items-center justify-center rounded-lg text-xl font-bold text-highlighted', s.bg]"
       >
         {{ s.title }}
       </div>

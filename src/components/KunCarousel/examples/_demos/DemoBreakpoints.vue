@@ -18,7 +18,7 @@ const breakpoints = {
 <template>
   <KunCarousel align="center" slide-size="50%" :slides-to-scroll="1" :breakpoints="breakpoints" gap="0.75rem" :contain-scroll="false">
     <KunCarouselSlide v-for="s in slides" :key="s.id">
-      <div :class="['flex h-40 items-center justify-center rounded-lg text-xl font-bold text-inverted', s.bg]">
+      <div :class="['flex h-40 items-center justify-center rounded-lg text-xl font-bold text-highlighted', s.bg]">
         {{ s.title }}
       </div>
     </KunCarouselSlide>

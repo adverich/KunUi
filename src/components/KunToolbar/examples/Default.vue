@@ -135,7 +135,7 @@ const useImageSlot = ref(false)
           </template>
 
           <template v-if="showAppend" #append>
-            <button type="button" class="rounded-md bg-primary px-2 py-1 text-xs text-inverted">Guardar</button>
+            <button type="button" class="rounded-md bg-primary px-2 py-1 text-xs text-highlighted">Guardar</button>
             <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs">AD</span>
           </template>
 

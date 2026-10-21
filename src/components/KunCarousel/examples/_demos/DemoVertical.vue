@@ -14,7 +14,7 @@ const slides = ref([
 <template>
   <KunCarousel axis="y" drag-free height="320px" slide-size="45%">
     <KunCarouselSlide v-for="s in slides" :key="s.id">
-      <div :class="['flex h-full min-h-32 items-center justify-center rounded-lg text-2xl font-bold text-inverted', s.bg]">
+      <div :class="['flex h-full min-h-32 items-center justify-center rounded-lg text-2xl font-bold text-highlighted', s.bg]">
         {{ s.title }}
       </div>
     </KunCarouselSlide>

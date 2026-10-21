@@ -13,7 +13,7 @@ const slides = ref(Array.from({ length: 8 }, (_, i) => ({
 <template>
   <KunCarousel align="start" slide-size="25%" slides-to-scroll="auto" gap="0.75rem">
     <KunCarouselSlide v-for="s in slides" :key="s.id">
-      <div :class="['flex h-36 items-center justify-center rounded-lg text-lg font-bold text-inverted', s.bg]">
+      <div :class="['flex h-36 items-center justify-center rounded-lg text-lg font-bold text-highlighted', s.bg]">
         {{ s.title }}
       </div>
     </KunCarouselSlide>

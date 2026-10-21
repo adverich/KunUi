@@ -34,7 +34,7 @@
             >
               <KunCheckbox
                 :modelValue="hasRelation(row as MatrixRow, col)"
-                :color="hasRelation(row as MatrixRow, col) ? 'bg-success text-inverted' : ''"
+                :color="hasRelation(row as MatrixRow, col) ? 'bg-success text-highlighted' : ''"
                 @update:modelValue="checked => onCheckboxChange(row as MatrixRow, col, checked as boolean)"
                 size="lg"
                 :label="''"

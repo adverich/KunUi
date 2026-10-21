@@ -92,11 +92,19 @@ root.
 
 Ahora el control es una **caja** con el patrón de Nuxt UI:
 
-- contorno `ring-1 ring-inset ring-accented` sobre `bg-default`, `rounded-sm`;
-- activa/indeterminada: `bg-primary text-inverted` por defecto, salvo que el
-  consumidor pase `color` (clases libres, p. ej. `bg-success text-inverted`);
-- inactiva: `bg-default`, con `baseColor` opcional;
+- contorno `ring-1 ring-inset ring-accented`, `rounded-sm`;
+- inactiva: `bg-elevated` (se lee sobre fondos oscuros; `bg-default` se
+  confundía con la página en dark), con `baseColor` opcional;
+- activa/indeterminada: `bg-primary text-highlighted` por defecto, salvo que
+  el consumidor pase `color` (clases libres, p. ej. `bg-success text-highlighted`);
+- con `iconColor` la caja queda neutra (`bg-elevated`) y el glifo se pinta con
+  ese color: así un check verde/rojo no cae sobre `bg-primary` (verde sobre
+  celeste era ilegible en dark);
 - error: `ring-error`.
+
+El glifo ya no lleva `opacity-70`: se dibuja a opacidad completa (`glow` suma
+un `drop-shadow` al enfocar). Tamaño interno: sm `w-3 h-3`, md `w-3.5 h-3.5`,
+lg `w-4 h-4`.
 
 Los glifos por defecto pasan a `lucide:check` (activo), `lucide:minus`
 (indeterminado) y **ninguno** (inactivo): el `square` propio ya no se dibuja
@@ -105,7 +113,9 @@ overrideando el glifo interior.
 
 Ruptura: el estado activo ya no hereda el color del texto como color de glifo;
 para colorear la caja pasar una clase de fondo en `color`
-(ej. `color="bg-success text-inverted"`, como en `KunRelationMatrix`).
+(ej. `color="bg-success text-highlighted"`, como en `KunRelationMatrix`).
+La librería no aplica `text-inverted`; si el consumidor quiere ese
+comportamiento, debe pasarlo manualmente en `color` o `class`.
 
 ---
 

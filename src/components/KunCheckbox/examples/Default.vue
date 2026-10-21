@@ -22,6 +22,10 @@ type CheckboxHideDetailsSel = 'visible' | 'hidden' | 'auto'
 const value = ref<boolean | null>(true)
 const groupValue = ref<unknown[]>(['opcion-1'])
 
+// Preset indicador on/off con iconColor: caja neutra + glifo coloreado.
+const indicatorOn = ref(true)
+const indicatorOff = ref(false)
+
 // ------------------------------------------------------------------
 // Controles del playground (demo single)
 // ------------------------------------------------------------------
@@ -171,6 +175,13 @@ function logEvent(name: string, detail: unknown): void {
         @click:prepend="logEvent('click:prepend', '')"
         @click:append="logEvent('click:append', '')"
       />
+
+      <div class="space-y-2 rounded-lg border border-default p-3">
+        <div class="text-muted text-xs">Indicador on/off con iconColor (caja neutra + glifo)</div>
+        <KunCheckbox v-model="indicatorOn" label="Activo" icon-color="green-500" hide-details />
+        <KunCheckbox v-model="indicatorOff" label="Inactivo" icon-color="red-500" hide-details />
+        <div class="font-mono text-xs">{{ indicatorOn }} / {{ indicatorOff }}</div>
+      </div>
 
       <div class="space-y-2 rounded-lg border border-default p-3">
         <div class="text-muted text-xs">Grupo múltiple (array v-model compartido)</div>

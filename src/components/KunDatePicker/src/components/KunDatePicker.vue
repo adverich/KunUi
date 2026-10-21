@@ -876,7 +876,7 @@ function dayClasses(dayObj: CalendarDay): string {
     const text = !isCurrentMonth ? 'text-disabled' : 'text-default';
 
     if (isOutOfRange(date)) return `${base} text-disabled opacity-40 cursor-not-allowed`;
-    if (isSelected) return `${base} bg-primary text-inverted shadow-md hover:bg-primary/75 rounded-full`;
+    if (isSelected) return `${base} bg-primary text-highlighted shadow-md hover:bg-primary/75 rounded-full`;
     if (inRange) return `${base} bg-accented text-default rounded-none`;
     
     const hover = 'hover:bg-accented';

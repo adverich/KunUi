@@ -2,14 +2,14 @@
   <div class="p-4 space-y-6">
     <div class="flex items-center gap-4">
       <button
-        class="px-4 py-2 bg-success text-inverted rounded-md hover:bg-success/75"
+        class="px-4 py-2 bg-success text-highlighted rounded-md hover:bg-success/75"
         @click="useVirtual = !useVirtual"
       >
         Toggle Virtual Scroll ({{ useVirtual ? 'ON' : 'OFF' }})
       </button>
 
       <button
-        class="px-4 py-2 bg-primary text-inverted rounded-md hover:bg-primary/75"
+        class="px-4 py-2 bg-primary text-highlighted rounded-md hover:bg-primary/75"
         @click="scrollTo(50)"
       >
         Scroll to Item #50

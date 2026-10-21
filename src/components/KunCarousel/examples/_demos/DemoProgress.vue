@@ -26,7 +26,7 @@ const slides = ref([
     </div>
     <KunCarousel align="start" @scroll="(p) => (progress = p)">
       <KunCarouselSlide v-for="s in slides" :key="s.id">
-        <div :class="['flex h-56 items-center justify-center rounded-lg text-2xl font-bold text-inverted', s.bg]">
+        <div :class="['flex h-56 items-center justify-center rounded-lg text-2xl font-bold text-highlighted', s.bg]">
           {{ s.title }}
         </div>
       </KunCarouselSlide>

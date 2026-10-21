@@ -113,7 +113,7 @@ mismos valores: el borde no es un problema de token sino de **ubicación**.
 | Ítem/fila (Table, RelationMatrix) | `bg-default` | `divide-y divide-default`, hover `bg-elevated/50` | fila `bg-default`, hover `bg-elevated/50`, thead `bg-elevated` |
 | ListItem/ToolbarItems `outlined` | — | `ring ring-accented` | `ring ring-accented` |
 | `KunSwitch` track off | — | `bg-accented` | `bg-accented` (antes `bg-muted`) |
-| `KunCheckbox` | — | caja `ring ring-inset ring-accented`, activa `bg-primary text-inverted` | caja nueva (antes glifo `square`/`square-check`) |
+| `KunCheckbox` | — | caja `ring ring-inset ring-accented`, activa `bg-primary text-highlighted` | caja nueva (antes glifo `square`/`square-check`) |
 | `KunTooltip` | `bg-default` | `bg-default ring ring-default` | `bg-default text-highlighted ring ring-default` (antes `bg-inverted`) |
 
 Componentes reasignados: `KunMenu`, `KunDatePicker`, `KunColorPicker`,
@@ -131,7 +131,7 @@ Componentes reasignados: `KunMenu`, `KunDatePicker`, `KunColorPicker`,
 - `KunTooltip` deja de ser `bg-inverted` (alto contraste) → `bg-default`.
 - `KunCheckbox` cambia el glifo por una **caja con ring**; `color`/`baseColor`
   ahora tiñen la caja activa/inactiva (para el estado activo, pasar p.ej.
-  `bg-success text-inverted`).
+  `bg-success text-highlighted`).
 - `KunSwitch.offColor` por defecto `bg-accented`.
 
 ## Lados lógicos (RTL)
