@@ -3,9 +3,8 @@
     <div class="w-full flex flex-col justify-center relative">
       <div
         class="flex items-center w-full h-full border border-transparent relative"
-        :class="['bg-default', rounded, containerDensity,
-          disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
-          error ? 'bg-error/10' : ''
+        :class="[bgInputClass, rounded, containerDensity,
+          disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'
         ]"
       >
         <!-- Borde nativo completo (respeta cualquier `rounded`, pill incluido)
@@ -352,6 +351,11 @@ const containerDensity = computed(() =>
   props.density === "comfortable" ? "min-h-[40px]" :
   "min-h-[48px]"
 );
+
+// Fondo del contenedor. `bgInput` (clase Tailwind) gana si existe: permite
+// resaltar estados por el consumidor (ej. control de caja). Sin ella:
+// `bg-default`, con `bg-error/10` automático en estado de error.
+const bgInputClass = computed(() => props.bgInput ?? (props.error ? 'bg-error/10' : 'bg-default'));
 
 // Padding de los botones de incremento/decremento por densidad.
 // Sin esto, el `p-3`/`px-3` fijo de los botones impone la altura del

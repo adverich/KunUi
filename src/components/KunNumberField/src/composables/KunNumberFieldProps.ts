@@ -63,6 +63,8 @@ export const KunNumberFieldProps = {
   // Estilo y diseño
   /** Redondeo del contenedor (clase de escala, `rounded-md` por defecto). */
   rounded: { type: String, default: 'rounded-md' },
+  /** Color de fondo del contenedor (clase Tailwind, p. ej. `bg-success/20`). `null` = `bg-default`, con `bg-error/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error). */
+  bgInput: { type: String as PropType<string | null>, default: null },
   /** Tamaño del texto del valor (null = 'text-sm'). */
   inputTextSize: { type: String as PropType<string | null>, default: null },
   /** Peso del texto del valor (null = hereda). */

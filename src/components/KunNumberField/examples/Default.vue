@@ -101,6 +101,15 @@ const appendInnerClass = ref('')
 // Colores y texto
 // ------------------------------------------------------------------
 const rounded = ref('rounded-md')
+const bgInputRaw = ref('__default')
+const bgInputOptions = ref([
+  { id: '__default', name: 'default (null)' },
+  { id: 'bg-primary/20', name: 'bg-primary/20' },
+  { id: 'bg-success/20', name: 'bg-success/20' },
+  { id: 'bg-warning/20', name: 'bg-warning/20' },
+  { id: 'bg-error/20', name: 'bg-error/20' },
+])
+const bgInputProp = computed(() => (bgInputRaw.value === '__default' ? null : bgInputRaw.value))
 const inputTextSize = ref('')
 const inputWeight = ref('')
 const placeholderTextSize = ref('')
@@ -194,6 +203,7 @@ function logEvent(name: string, detail: unknown): void {
         :prepend-inner-class="prependInnerClass || undefined"
         :append-inner-class="appendInnerClass || undefined"
         :rounded="rounded"
+        :bg-input="bgInputProp"
         :input-text-size="inputTextSize || null"
         :input-weight="inputWeight || null"
         :placeholder-text-size="placeholderTextSize || null"
@@ -320,6 +330,14 @@ function logEvent(name: string, detail: unknown): void {
 
         <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Colores y texto</p>
         <KunTextField v-model="rounded" label="Rounded" density="compact" />
+        <KunSelect
+          v-model="bgInputRaw"
+          v-model:items="bgInputOptions"
+          label="Bg input"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
         <KunTextField v-model="inputTextSize" label="Input text size (vacío = text-sm)" density="compact" />
         <KunTextField v-model="inputWeight" label="Input weight (vacío = hereda)" density="compact" />
         <KunTextField v-model="placeholderTextSize" label="Placeholder text size" density="compact" />

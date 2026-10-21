@@ -9,9 +9,8 @@
           </slot>
         </div>
 
-      <div data-kun-input-box class="flex flex-row items-center w-full border border-transparent relative" :class="['bg-default', rounded, containerDensity,
-        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
-        hasError ? 'bg-error/10' : ''
+      <div data-kun-input-box class="flex flex-row items-center w-full border border-transparent relative" :class="[bgInputClass, rounded, containerDensity,
+        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'
       ]">
         <!-- Borde nativo completo (respeta cualquier `rounded`, pill incluido)
              con la muesca del label recortada vía mask: hueco real en cualquier
@@ -260,5 +259,10 @@ const placeholderTextSizeClass = computed(() => {
 });
 
 const containerDensity = computed(() => props.density === "compact" ? "min-h-[32px]" : props.density === "comfortable" ? "min-h-[40px]" : "min-h-[48px]");
+
+// Fondo del contenedor. `bgInput` (clase Tailwind) gana si existe: permite
+// resaltar estados por el consumidor (ej. cajas de cobro). Sin ella:
+// `bg-default`, con `bg-error/10` automático en estado de error.
+const bgInputClass = computed(() => props.bgInput ?? (hasError.value ? 'bg-error/10' : 'bg-default'));
 </script>
 

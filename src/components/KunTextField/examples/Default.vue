@@ -48,6 +48,15 @@ const appendInnerClass = ref('')
 
 // Estilo y diseño (clases Tailwind libres)
 const rounded = ref('rounded-md')
+const bgInputRaw = ref('__default')
+const bgInputOptions = ref([
+  { id: '__default', name: 'default (null)' },
+  { id: 'bg-primary/20', name: 'bg-primary/20' },
+  { id: 'bg-success/20', name: 'bg-success/20' },
+  { id: 'bg-warning/20', name: 'bg-warning/20' },
+  { id: 'bg-error/20', name: 'bg-error/20' },
+])
+const bgInputProp = computed(() => (bgInputRaw.value === '__default' ? undefined : bgInputRaw.value))
 const labelSize = ref('text-sm')
 const floatingLabelSize = ref('text-xs')
 const labelOpacity = ref('opacity-60')
@@ -141,6 +150,7 @@ function logEvent(name: string, detail: unknown): void {
         :prepend-inner-class="prependInnerClass"
         :append-inner-class="appendInnerClass"
         :rounded="rounded"
+        :bg-input="bgInputProp"
         :label-size="labelSize"
         :floating-label-size="floatingLabelSize"
         :label-opacity="labelOpacity"
@@ -255,6 +265,14 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="debounceRaw" label="Debounce ms" density="compact" inputmode="decimal" />
 
         <KunTextField v-model="rounded" label="Rounded" density="compact" />
+        <KunSelect
+          v-model="bgInputRaw"
+          v-model:items="bgInputOptions"
+          label="Bg input"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
         <KunTextField v-model="labelSize" label="Label size" density="compact" />
         <KunTextField v-model="floatingLabelSize" label="Floating label size" density="compact" />
         <KunTextField v-model="labelOpacity" label="Label opacity" density="compact" />

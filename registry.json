@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.672",
+  "version": "0.1.673",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -5775,6 +5775,14 @@
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
         },
         {
+          "name": "bgInput",
+          "type": "string | null",
+          "default": "null",
+          "values": [],
+          "description": "Color de fondo del contenedor (clase Tailwind, p. ej. `bg-success/20`). `null` = `bg-default`, con `bg-error/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error).",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunNumberField\\src\\composables\\KunNumberFieldProps.ts"
+        },
+        {
           "name": "inputTextSize",
           "type": "string | null",
           "default": "null",
@@ -9227,6 +9235,14 @@
           "default": "'rounded-md'",
           "values": [],
           "description": "Redondeo del contenedor (clase de escala, `rounded-md` por defecto).",
+          "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
+        },
+        {
+          "name": "bgInput",
+          "type": "string | null",
+          "default": "null",
+          "values": [],
+          "description": "Color de fondo del contenedor (clase Tailwind, p. ej. `bg-success/20`). `null` = `bg-default`, con `bg-error/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error).",
           "source": "C:\\xampp\\htdocs\\kun-ui\\src\\components\\KunTextField\\src\\composables\\KunTextFieldProps.ts"
         },
         {
