@@ -91,16 +91,123 @@ export function kunVariantClasses(color: KunColor, variant: KunVariant): string 
 }
 
 /**
- * Resuelve color/variante con fallback prop > `theme.defaults.button` > default.
- * `null`/`undefined` en prop delega al theme global.
+ * Solo la capa de fondo de un par color x variante, para contenedores
+ * (listas, superficies) donde el texto no debe teñirse entero. Shares la
+ * semantica de `KUN_VARIANT_CLASSES` pero restringida a `bg-*`/ring de
+ * superficie. `neutral` mantiene el trato especial de `solid` (`bg-inverted`).
  */
-export function resolveKunColor(prop: KunColor | null | undefined): KunColor {
+export const KUN_SURFACE_BG: Record<KunColor, Record<KunVariant, string>> = {
+    primary: {
+        solid: 'bg-primary',
+        outline: 'bg-default ring ring-default',
+        soft: 'bg-primary/10',
+        subtle: 'bg-primary/10 ring ring-primary/25',
+        ghost: '',
+        link: '',
+    },
+    secondary: {
+        solid: 'bg-secondary',
+        outline: 'bg-default ring ring-default',
+        soft: 'bg-secondary/10',
+        subtle: 'bg-secondary/10 ring ring-secondary/25',
+        ghost: '',
+        link: '',
+    },
+    success: {
+        solid: 'bg-success',
+        outline: 'bg-default ring ring-default',
+        soft: 'bg-success/10',
+        subtle: 'bg-success/10 ring ring-success/25',
+        ghost: '',
+        link: '',
+    },
+    info: {
+        solid: 'bg-info',
+        outline: 'bg-default ring ring-default',
+        soft: 'bg-info/10',
+        subtle: 'bg-info/10 ring ring-info/25',
+        ghost: '',
+        link: '',
+    },
+    warning: {
+        solid: 'bg-warning',
+        outline: 'bg-default ring ring-default',
+        soft: 'bg-warning/10',
+        subtle: 'bg-warning/10 ring ring-warning/25',
+        ghost: '',
+        link: '',
+    },
+    error: {
+        solid: 'bg-error',
+        outline: 'bg-default ring ring-default',
+        soft: 'bg-error/10',
+        subtle: 'bg-error/10 ring ring-error/25',
+        ghost: '',
+        link: '',
+    },
+    neutral: {
+        solid: 'bg-inverted',
+        outline: 'bg-default ring ring-accented',
+        soft: 'bg-elevated',
+        subtle: 'bg-elevated ring ring-accented',
+        ghost: '',
+        link: '',
+    },
+};
+
+/** Clases literales de solo fondo para un par color x variante. */
+export function kunSurfaceBg(color: KunColor, variant: KunVariant): string {
+    return KUN_SURFACE_BG[color][variant];
+}
+
+/**
+ * Estado activo/seleccionado de items de lista, por color. Lleva modificador
+ * `!` para ganarle al `bg-*`/`hover:bg-*` de la variante (ambos literales,
+ * el orden del CSS generado no puede decidir el estado).
+ */
+export const KUN_SELECTED_CLASSES: Record<KunColor, string> = {
+    primary: 'bg-primary/25! text-primary ring ring-inset ring-primary/50',
+    secondary: 'bg-secondary/25! text-secondary ring ring-inset ring-secondary/50',
+    success: 'bg-success/25! text-success ring ring-inset ring-success/50',
+    info: 'bg-info/25! text-info ring ring-inset ring-info/50',
+    warning: 'bg-warning/25! text-warning ring ring-inset ring-warning/50',
+    error: 'bg-error/25! text-error ring ring-inset ring-error/50',
+    neutral: 'bg-elevated! text-default ring ring-inset ring-accented',
+};
+
+/** Clases literales para el estado activo/seleccionado de un item. */
+export function kunSelectedClasses(color: KunColor): string {
+    return KUN_SELECTED_CLASSES[color];
+}
+
+/** Hover neutro para items seleccionables (sin estado activo), por color. */
+export const KUN_HOVER_CLASSES: Record<KunColor, string> = {
+    primary: 'hover:bg-primary/15',
+    secondary: 'hover:bg-secondary/15',
+    success: 'hover:bg-success/15',
+    info: 'hover:bg-info/15',
+    warning: 'hover:bg-warning/15',
+    error: 'hover:bg-error/15',
+    neutral: 'hover:bg-elevated',
+};
+
+/** Clases literales de hover para un item de lista seleccionable. */
+export function kunHoverClasses(color: KunColor): string {
+    return KUN_HOVER_CLASSES[color];
+}
+
+/**
+ * Resuelve color/variante con fallback prop > `theme.defaults[component]` > default.
+ * `null`/`undefined` en prop delega al theme global. `component` permite defaults
+ * por componente (`button`, `list`); default `'button'`.
+ */
+export function resolveKunColor(prop: KunColor | null | undefined, component: 'button' | 'list' = 'button'): KunColor {
     if (prop) return prop;
-    const configured = kunTheme.current.defaults?.button?.color;
+    const configured = kunTheme.current.defaults?.[component]?.color;
     return configured ?? 'primary';
 }
-export function resolveKunVariant(prop: KunVariant | null | undefined): KunVariant {
+export function resolveKunVariant(prop: KunVariant | null | undefined, component: 'button' | 'list' = 'button'): KunVariant {
     if (prop) return prop;
-    const configured = kunTheme.current.defaults?.button?.variant;
+    const configured = kunTheme.current.defaults?.[component]?.variant;
     return configured ?? 'solid';
 }

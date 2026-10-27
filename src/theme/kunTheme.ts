@@ -47,12 +47,19 @@ export interface KunThemeOptions {
             color?: KunColor;
             variant?: KunVariant;
         };
+        list?: {
+            color?: KunColor;
+            variant?: KunVariant;
+        };
     };
 }
 
 interface KunThemeState extends Required<Omit<KunThemeOptions, 'font' | 'defaults'>> {
     font: { sans: string; mono: string };
-    defaults: { button: { color: KunColor; variant: KunVariant } };
+    defaults: {
+        button: { color: KunColor; variant: KunVariant };
+        list: { color: KunColor; variant: KunVariant };
+    };
 }
 
 const STOPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
@@ -238,7 +245,10 @@ const state = reactive<KunThemeState>({    primary: DEFAULT_PALETTES.primary,
     radius: DEFAULT_RADIUS,
     font: { sans: '', mono: '' },
     colorMode: 'light',
-    defaults: { button: { color: 'primary', variant: 'solid' } },
+    defaults: {
+        button: { color: 'primary', variant: 'solid' },
+        list: { color: 'primary', variant: 'soft' },
+    },
 });
 
 /** Stops publicados por `registerPalette`, para recalcular `on-*` al aliasar. */
@@ -365,7 +375,11 @@ export const kunTheme = {
         if (options.colorMode !== undefined) kunTheme.setColorMode(options.colorMode);
         if (options.defaults?.button !== undefined) {
             Object.assign(state.defaults.button, options.defaults.button);
-            persist(STORE_KEYS.defaults, JSON.stringify(state.defaults.button));
+            persist(STORE_KEYS.defaults, JSON.stringify(state.defaults));
+        }
+        if (options.defaults?.list !== undefined) {
+            Object.assign(state.defaults.list, options.defaults.list);
+            persist(STORE_KEYS.defaults, JSON.stringify(state.defaults));
         }
     },
 
@@ -401,7 +415,10 @@ export const kunTheme = {
             radius: DEFAULT_RADIUS,
             font: { sans: '', mono: '' },
             colorMode: 'light' as KunColorMode,
-            defaults: { button: { color: 'primary' as KunColor, variant: 'solid' as KunVariant } },
+            defaults: {
+                button: { color: 'primary' as KunColor, variant: 'solid' as KunVariant },
+                list: { color: 'primary' as KunColor, variant: 'soft' as KunVariant },
+            },
         });
         applyColorMode('light');
     },
@@ -529,10 +546,22 @@ export const kunTheme = {
         const defaults = readStore(STORE_KEYS.defaults);
         if (defaults) {
             try {
-                const parsed = JSON.parse(defaults) as { color?: KunColor; variant?: KunVariant };
+                const parsed = JSON.parse(defaults) as {
+                    color?: KunColor;
+                    variant?: KunVariant;
+                    button?: { color?: KunColor; variant?: KunVariant };
+                    list?: { color?: KunColor; variant?: KunVariant };
+                };
                 if (parsed && typeof parsed === 'object') {
-                    if (isButtonColor(parsed.color)) state.defaults.button.color = parsed.color;
-                    if (isButtonVariant(parsed.variant)) state.defaults.button.variant = parsed.variant;
+                    // Formato viejo (plano) y nuevo (por componente).
+                    const button = parsed.button ?? parsed;
+                    const list = parsed.list;
+                    if (isButtonColor(button.color)) state.defaults.button.color = button.color;
+                    if (isButtonVariant(button.variant)) state.defaults.button.variant = button.variant;
+                    if (list) {
+                        if (isButtonColor(list.color)) state.defaults.list.color = list.color;
+                        if (isButtonVariant(list.variant)) state.defaults.list.variant = list.variant;
+                    }
                 }
             } catch { /* valor corrupto */ }
         }

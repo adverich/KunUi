@@ -86,10 +86,19 @@ import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs, useId, typ
 import KunListItemInner from './KunListItemInner.vue';
 import { RouterLink } from 'vue-router'
 import { kunListItemProps } from '../composables/kunListItemProps.js'
+import {
+  kunVariantClasses,
+  kunSelectedClasses,
+  kunHoverClasses,
+  type KunColor,
+} from '../../../../theme/kunVariants.js'
 
 interface KunListItemContext {
   toggleItem?: (value: unknown) => void;
   isSelected?: (value: unknown) => boolean;
+  /** La lista contenedora gestiona selección (selectable). */
+  gestiona?: boolean;
+  color?: string;
 }
 
 const attrs = useAttrs();
@@ -117,7 +126,23 @@ onBeforeUnmount(() => {
   if (registerRef) registerRef(null)
 })
 
-const isItemSelected = computed(() => listContext?.isSelected?.(props.value) ?? false);
+// ------------------------------------------------------------------
+// Selección por prioridad:
+// 1) KunList contenedora que gestiona selección (`gestiona`) → el
+//    estado lo decide `v-model:selected` de la lista (isSelected).
+// 2) `v-model:selected` propio del ítem: un solo valor (primitivo u
+//    objeto) compartido entre ítems hace que SOLO el que coincide
+//    quede resaltado (selección single).
+// 3) Sin v-model enlazado: cada ítem mantiene su propio valor interno
+//    (útil para menús flotantes y uso suelto).
+// ------------------------------------------------------------------
+// `any` es el patrón documentado de la librería para defineModel de
+// valor desconocido (ver AGENTS.md: `null` aceptado como vacío).
+const itemSelected = defineModel<any>('selected', {
+  type: [String, Number, Boolean, Object, Array],
+  default: undefined,
+})
+const isItemSelected = computed(() => listContext?.isSelected?.(props.value) || itemSelected.value === props.value);
 const isActive = computed(() => props.active);
 const isLink = computed(() => !!props.to);
 
@@ -137,8 +162,14 @@ function handleClick(e: MouseEvent | KeyboardEvent, navigateFn: ((e?: MouseEvent
     el.dispatchEvent(new CustomEvent('select', { detail: props.value, bubbles: true }))
   }
 
-if (listContext && props.selectable && props.value !== null) {
-    listContext.toggleItem?.(props.value)
+  if (props.selectable && props.value !== null && !props.disabled) {
+    if (listContext?.gestiona) {
+      listContext.toggleItem?.(props.value)
+    } else {
+      // Sin lista gestionando: v-model propio del ítem (o estado interno
+      // si nadie lo enlaza). Un solo valor compartido => single selection.
+      itemSelected.value = isItemSelected.value ? null : props.value
+    }
     if (el?.dispatchEvent) {
       el.dispatchEvent(new CustomEvent('selected', { detail: props.value, bubbles: true }))
     }
@@ -148,16 +179,12 @@ if (listContext && props.selectable && props.value !== null) {
 }
 
 const baseItemClass = 'w-full flex transition duration-150 ease-in-out'
-const variantClass = computed(() => {
-  switch (props.variant) {
-    case 'outlined': return 'ring ring-accented'
-    case 'elevated': return 'shadow-md'
-    case 'tonal': return 'bg-muted'
-    case 'flat': return 'bg-transparent'
-    case 'plain': return ''
-    default: return ''
-  }
-})
+
+// Color: prop > color resuelto de la lista contenedora > default.
+const resolvedColor = computed<KunColor>(() => props.color ?? (listContext?.color as KunColor | undefined) ?? 'primary')
+// La matriz KunColor x KunVariant provee TODAS las clases literales
+// (texto + fondo + ring + estados); nunca se construyen con template.
+const variantClass = computed(() => kunVariantClasses(resolvedColor.value, props.variant))
 const densityClass = computed(() => {
   switch (props.density) {
     case 'comfortable': return 'py-2'
@@ -171,20 +198,28 @@ const roundedClass = computed(() => {
   return ''
 })
 const rippleClass = computed(() => props.ripple ? 'relative overflow-hidden' : '')
+const isActiveState = computed(() => isItemSelected.value || isActive.value)
+// Estado activo/seleccionado lleva `!` para ganarle al bg de la variante
+// (todas son literales; el orden del CSS generado no decide el estado).
+const stateClass = computed(() => (isActiveState.value ? kunSelectedClasses(resolvedColor.value) : ''))
+// Hover de seleccion con color del item (solo si no hay estado activo).
+const hoverClass = computed(() =>
+  (props.selectable && !props.disabled && !isActiveState.value) ? kunHoverClasses(resolvedColor.value) : ''
+)
 
 const mergedItemClass = computed(() => {
   return [
     baseItemClass,
-    'bg-transparent text-default',
     variantClass.value,
     densityClass.value,
     roundedClass.value,
     rippleClass.value,
     props.itemPosition,
+    stateClass.value,
+    hoverClass.value,
     {
       'cursor-not-allowed opacity-50': props.disabled,
-      'cursor-pointer hover:bg-elevated': props.selectable && !props.disabled,
-      'bg-accented text-default': isItemSelected.value || isActive.value,
+      'cursor-pointer': props.selectable && !props.disabled,
       'px-4': !props.noGutters,
     },
     props.containerClass,

@@ -2,29 +2,36 @@
 import { ref, computed } from 'vue'
 import KunListItem from '../src/components/KunListItem.vue'
 import type { KunListItemVariant, KunListItemDensity } from '../src/composables/kunListItemProps.js'
+import { KUN_COLORS, KUN_VARIANTS, type KunColor } from '../../../theme/kunVariants.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 
 // ------------------------------------------------------------------
-// Contenido
+// Contenido (compartido por los 3 items)
 // ------------------------------------------------------------------
 const title = ref('Elemento demo')
 const subtitle = ref('Subtítulo demo')
 
 // ------------------------------------------------------------------
-// Uniones cerradas -> KunSelect con refs tipadas
+// v-model:selected compartido: un solo valor (null o el `value` del
+// ítem) => SOLO el ítem seleccionado queda resaltado.
 // ------------------------------------------------------------------
-const variant = ref<KunListItemVariant>('text')
-const variantOptions = ref([
-  { id: 'text', name: 'text' },
-  { id: 'outlined', name: 'outlined' },
-  { id: 'elevated', name: 'elevated' },
-  { id: 'tonal', name: 'tonal' },
-  { id: 'flat', name: 'flat' },
-  { id: 'plain', name: 'plain' },
-])
+const selectedItem = ref<unknown>(null)
 
+// ------------------------------------------------------------------
+// Color x variante (matriz semántica de kunVariants.ts)
+// ------------------------------------------------------------------
+const colorRaw = ref('')
+const colorOptions = ref([{ id: '', name: '(default: primary)' }, ...KUN_COLORS.map(c => ({ id: c, name: c }))])
+const color = computed<KunColor | null>(() => (colorRaw.value === '' ? null : (colorRaw.value as KunColor)))
+
+const variant = ref<KunListItemVariant>('ghost')
+const variantOptions = ref(KUN_VARIANTS.map(v => ({ id: v, name: v })))
+
+// ------------------------------------------------------------------
+// Densidad
+// ------------------------------------------------------------------
 const density = ref<KunListItemDensity>('default')
 const densityOptions = ref([
   { id: 'default', name: 'default' },
@@ -45,7 +52,7 @@ const prependAvatarProp = computed(() => (prependAvatar.value === '' ? undefined
 const appendAvatarProp = computed(() => (appendAvatar.value === '' ? undefined : appendAvatar.value))
 
 // ------------------------------------------------------------------
-// Estado
+// Estado (se aplica a los 3 items por igual)
 // ------------------------------------------------------------------
 const active = ref(false)
 const selectable = ref(false)
@@ -78,38 +85,43 @@ function logEvent(name: string, detail: unknown): void {
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunListItem</h2>
 
-      <ul class="space-y-1 rounded-lg bg-muted p-3">
-        <KunListItem
-          value="demo"
-          :title="title"
-          :subtitle="subtitle"
-          :variant="variant"
-          :density="density"
-          :prepend-icon="prependIconProp"
-          :append-icon="appendIconProp"
-          :prepend-avatar="prependAvatarProp"
-          :append-avatar="appendAvatarProp"
-          :active="active"
-          :selectable="selectable"
-          :disabled="disabled"
-          :ripple="ripple"
-          :tile="tile"
-          :no-gutters="noGutters"
-          @click="logEvent('click', title)"
-        />
-        <KunListItem active>Elemento activo</KunListItem>
-        <KunListItem disabled>Elemento deshabilitado</KunListItem>
-      </ul>
+      <!-- Los 3 items tienen exactamente las mismas propiedades
+           configuradas: reaccionan en vivo a hover, selección,
+           disabled, ripple, etc. -->
+      <KunListItem
+        v-for="i in 3"
+        :key="i"
+        :value="`item-${i}`"
+        v-model:selected="selectedItem"
+        :title="title"
+        :subtitle="subtitle"
+        :color="color"
+        :variant="variant"
+        :density="density"
+        :prepend-icon="prependIconProp"
+        :append-icon="appendIconProp"
+        :prepend-avatar="prependAvatarProp"
+        :append-avatar="appendAvatarProp"
+        :active="active"
+        :selectable="selectable"
+        :disabled="disabled"
+        :ripple="ripple"
+        :tile="tile"
+        :no-gutters="noGutters"
+        @click="logEvent('click', `item-${i}`)"
+      />
 
       <div class="rounded-lg bg-muted p-3 text-sm">
-        <div class="text-muted text-xs mb-1">Últimos eventos</div>
+        <div class="text-muted text-xs mb-1">v-model:selected en crudo</div>
+        <div class="font-mono text-xs">{{ JSON.stringify(selectedItem) ?? 'null' }}</div>
+        <div class="text-muted text-xs mt-1 mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
             <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-muted">Hacé clic en el ítem demo para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Hacé clic en un ítem para ver eventos…</p>
       </div>
     </div>
 
@@ -122,7 +134,15 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="title" label="Title" density="compact" />
         <KunTextField v-model="subtitle" label="Subtitle" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Variante y densidad</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Color y variante</p>
+        <KunSelect
+          v-model="colorRaw"
+          v-model:items="colorOptions"
+          label="Color"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
         <KunSelect
           v-model="variant"
           v-model:items="variantOptions"

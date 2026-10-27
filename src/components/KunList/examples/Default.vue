@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import KunList from '../src/components/KunList.vue'
 import KunListItem from '../../KunListItem/src/components/KunListItem.vue'
 import type { KunListSelectionMode } from '../src/composables/kunListProps.js'
+import { KUN_COLORS, KUN_VARIANTS, type KunColor, type KunVariant } from '../../../theme/kunVariants.js'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
@@ -13,7 +14,7 @@ import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 const selected = ref<unknown>([])
 
 // ------------------------------------------------------------------
-// Controles del playground
+// Controles de la lista (se aplican a TODOS los items por igual)
 // ------------------------------------------------------------------
 const nav = ref(true)
 const sub = ref(false)
@@ -31,6 +32,29 @@ watch(selectionMode, (mode) => {
 })
 
 const fontSize = ref('text-base')
+
+// Color semántico del contenedor ('' = default del tema)
+const colorRaw = ref('')
+const colorOptions = ref([{ id: '', name: '(default del tema)' }, ...KUN_COLORS.map(c => ({ id: c, name: c }))])
+const listColor = computed<KunColor | null>(() => (colorRaw.value === '' ? null : (colorRaw.value as KunColor)))
+
+// Variante del contenedor ('' = default del tema)
+const variantRaw = ref('')
+const variantOptions = ref([{ id: '', name: '(default del tema)' }, ...KUN_VARIANTS.map(v => ({ id: v, name: v }))])
+const listVariant = computed<KunVariant | null>(() => (variantRaw.value === '' ? null : (variantRaw.value as KunVariant)))
+
+// Clase Tailwind libre de fondo (gana sobre color/variant)
+const bgRaw = ref('')
+const listBg = computed(() => (bgRaw.value.trim() === '' ? undefined : bgRaw.value))
+
+// Overrides de los items ('' = heredan de la lista)
+const itemColorRaw = ref('')
+const itemColorOptions = ref([{ id: '', name: '(heredar de la lista)' }, ...KUN_COLORS.map(c => ({ id: c, name: c }))])
+const itemColor = computed<KunColor | null | undefined>(() => (itemColorRaw.value === '' ? undefined : (itemColorRaw.value as KunColor)))
+
+const itemVariantRaw = ref('')
+const itemVariantOptions = ref([{ id: '', name: '(default: ghost)' }, ...KUN_VARIANTS.map(v => ({ id: v, name: v }))])
+const itemVariant = computed(() => (itemVariantRaw.value === '' ? undefined : (itemVariantRaw.value as KunVariant)))
 </script>
 
 <template>
@@ -47,11 +71,22 @@ const fontSize = ref('text-base')
         :selectable="selectable"
         :selection-mode="selectionMode"
         :font-size="fontSize"
+        :color="listColor"
+        :variant="listVariant"
+        :bg="listBg"
       >
-        <KunListItem value="ada" title="Ada Lovelace" subtitle="Ingeniera" selectable />
-        <KunListItem value="grace" title="Grace Hopper" subtitle="Almirante" selectable />
-        <KunListItem value="alan" title="Alan Turing" subtitle="Matemático" selectable />
-        <KunListItem value="dijkstra" title="Edsger Dijkstra" subtitle="Informático" selectable />
+        <!-- Los 3 items comparten exactamente las mismas propiedades:
+             reaccionan en vivo a hover, selección,.disabled, etc. -->
+        <KunListItem
+          v-for="person in ['ada', 'grace', 'alan']"
+          :key="person"
+          :value="person"
+          title="Elemento demo"
+          subtitle="Subtítulo demo"
+          :selectable="selectable"
+          :color="itemColor"
+          :variant="itemVariant"
+        />
       </KunList>
 
       <div class="rounded-lg bg-muted p-3 font-mono text-sm">
@@ -65,20 +100,54 @@ const fontSize = ref('text-base')
       <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Contenedor</p>
+        <KunSelect
+          v-model="colorRaw"
+          v-model:items="colorOptions"
+          label="Color"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="variantRaw"
+          v-model:items="variantOptions"
+          label="Variant"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunTextField
+          v-model="bgRaw"
+          label="BG libre (clase Tailwind)"
+          density="compact"
+          class="col-span-2"
+          placeholder="bg-sky-900/60"
+        />
+
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Items (se aplican a los 3)</p>
+        <KunSelect
+          v-model="itemColorRaw"
+          v-model:items="itemColorOptions"
+          label="Color del item"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="itemVariantRaw"
+          v-model:items="itemVariantOptions"
+          label="Variant del item"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Estado</p>
         <KunSwitch v-model="nav" label="Nav" />
         <KunSwitch v-model="sub" label="Sub" />
         <KunSwitch v-model="dense" label="Dense" />
         <KunSwitch v-model="selectable" label="Selectable" />
-        <KunSelect
-          v-model="selectionMode"
-          v-model:items="selectionModeOptions"
-          label="Selection mode"
-          item-value="id"
-          item-title="name"
-          density="compact"
-          class="col-span-2"
-        />
-        <KunTextField v-model="fontSize" label="Font size" density="compact" />
       </div>
     </div>
   </div>

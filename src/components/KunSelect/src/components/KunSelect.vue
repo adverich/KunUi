@@ -70,7 +70,7 @@
             {{ btnCreateText }}
           </KunBtn>
         </div>
-        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false">
+        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false" color="neutral" variant="link">
           <template v-if="items.length">
             <KunListItem
               v-for="(item, index) in items"
@@ -82,6 +82,7 @@
               :selectable="true"
               :active="isItemSelected(item)"
               :rounded="false"
+              color="neutral"
             >
               <KunListItemTitle class="text-wrap">
                 {{ itemToString(item, itemTitle ?? textArr, 'hasDefault') }}

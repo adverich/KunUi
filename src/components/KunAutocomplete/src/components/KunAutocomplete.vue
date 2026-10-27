@@ -57,12 +57,12 @@
           </KunBtn>
         </div>
         <div @keydown.capture="handleListCapture">
-        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false" :font-size="itemFontSize">
+        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false" :font-size="itemFontSize" color="neutral" variant="link">
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="sp">
             <template v-if="!(sp as any).empty && ((sp as any).item !== undefined && (sp as any).item !== null)">
               <KunListItem :value="(sp as any).item" :key="`kun-list-${(sp as any).index + 1}`" :id="`kun-item-${(sp as any).index + 1}`" :disabled="checkDisabled((sp as any).item)"
-              :density="density" :selectable="true" :active="isItemSelected((sp as any).item)" :rounded="false">
+              :density="density" :selectable="true" :active="isItemSelected((sp as any).item)" :rounded="false" color="neutral">
                 <KunListItemTitle class="text-wrap" :font-size="itemFontSize">
                   {{ itemToString((sp as any).item, itemTitle ?? textArr, 'hasDefault') }}
                 </KunListItemTitle>

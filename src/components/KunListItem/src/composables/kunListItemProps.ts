@@ -1,6 +1,8 @@
 import type { PropType } from 'vue';
+import { isKunColor, isKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js';
 
-export type KunListItemVariant = 'text' | 'outlined' | 'elevated' | 'tonal' | 'flat' | 'plain';
+export type KunListItemColor = KunColor | null;
+export type KunListItemVariant = KunVariant;
 export type KunListItemDensity = 'default' | 'comfortable' | 'compact';
 
 export const kunListItemProps = {
@@ -21,8 +23,10 @@ export const kunListItemProps = {
   active: Boolean,
   /** Permite selección (emite toggle al contexto KunList). */
   selectable: { type: Boolean, default: false },
-  /** Variante visual. */
-  variant: { type: String as PropType<KunListItemVariant>, default: 'text', validator: (v: unknown) => ['text', 'outlined', 'elevated', 'tonal', 'flat', 'plain'].includes(v as string) },
+  /** Color semántico del item. `null` hereda el color resuelto de la KunList contenedora. */
+  color: { type: String as PropType<KunListItemColor>, default: null, validator: (v: unknown) => v === null || isKunColor(v) },
+  /** Variante visual (matriz `KunColor x KunVariant` de `kunVariants.ts`). */
+  variant: { type: String as PropType<KunListItemVariant>, default: 'ghost', validator: (v: unknown) => isKunVariant(v) },
   /** Densidad del padding vertical. */
   density: { type: String as PropType<KunListItemDensity>, default: 'default', validator: (v: unknown) => ['default', 'comfortable', 'compact'].includes(v as string) },
   /** Redondeo de escala (`rounded-md`). `tile` lo anula. */
