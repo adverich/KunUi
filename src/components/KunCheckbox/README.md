@@ -40,9 +40,9 @@ import { KunCheckbox } from 'adverich-kun-ui'
 | `ripple` | `Boolean \| Object` | `true` | Efecto ripple al hacer click. |
 | `density` | `KunCheckboxDensity` | `'default'` | Densidad del padding (escala el tamaño como KunAvatar: comfortable/compact reducen).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `direction` | `KunCheckboxDirection` | `'horizontal'` | Dirección del layout (label al lado o debajo).<br/>Valores · Values: `horizontal` `vertical` |
-| `color` | `String` | `-` | Color cuando está activo. |
-| `iconColor` | `String \| Boolean` | `-` | Color del ícono. |
-| `baseColor` | `String` | `-` | Color base cuando está inactivo. |
+| `color` | `KunColor \| null` | `null` | Color semántico de la caja activa; `null` usa el default (`bg-primary text-highlighted`). |
+| `iconColor` | `KunColor \| null` | `null` | Color semántico del glifo (✓) sobre la caja; gana sobre el texto heredado de `color`. |
+| `baseColor` | `KunColor \| null` | `null` | Color semántico de la caja inactiva (tinte suave); `null` usa `bg-elevated`. |
 | `trueIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado activo. Acepta alias `$`, componente o clase CSS. |
 | `falseIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado inactivo. Acepta alias `$`, componente o clase CSS. |
 | `indeterminateIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado indeterminado. Acepta alias `$`, componente o clase CSS. |
@@ -84,9 +84,23 @@ import { KunCheckbox } from 'adverich-kun-ui'
 
 ## Notas · Notes
 
-## Control con caja (rediseño)
+## Color alineado a `KunColor` (anula párrafos de arriba que hagan referencia a clases libres)
 
-Antes el estado estaba dibujado por el glifo (`lucide:square` /
+`color`, `iconColor` y `baseColor` ya **no** aceptan clases Tailwind crudas:
+
+- `color`: `KunColor | null` → caja activa con `KUN_SURFACE_BG[color].solid` +
+  `text-highlighted`; `null` conserva `bg-primary text-highlighted`.
+- `iconColor`: `KunColor | null` → glifo con `KUN_TEXT_COLORS[color]` (literal,
+  en `src/theme/kunVariants.ts`); con `iconColor` la caja queda neutra
+  (`bg-elevated`).
+- `baseColor`: `KunColor | null` → caja inactiva con tinte suave
+  (`KUN_SURFACE_BG[color].soft`); `null` conserva `bg-elevated`.
+
+El validador sólo acepta la unión `KunColor`; los strings libres
+(`bg-success text-highlighted`, `text-green-500`) son inválidos. Consumidores
+anteriores (`KunRelationMatrix`, `KunTable`) ya están migrados.
+
+## Control con caja (rediseño)Antes el estado estaba dibujado por el glifo (`lucide:square` /
 `square-check` / `square-minus`) y `color`/`baseColor` pintaban el **texto** del
 root.
 

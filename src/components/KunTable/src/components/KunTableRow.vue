@@ -22,7 +22,7 @@
         :ripple="false"
         :true-value="true"
         :false-value="false"
-        :color="isSelected ? 'text-success' : ''"
+        :color="isSelected ? 'success' : null"
         hide-details
       />
     </td>

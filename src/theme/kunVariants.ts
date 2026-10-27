@@ -196,18 +196,55 @@ export function kunHoverClasses(color: KunColor): string {
     return KUN_HOVER_CLASSES[color];
 }
 
+/** Solo la capa de texto de un color (para glifos dentro de controles: ✓ del checkbox). */
+export const KUN_TEXT_COLORS: Record<KunColor, string> = {
+    primary: 'text-primary',
+    secondary: 'text-secondary',
+    success: 'text-success',
+    info: 'text-info',
+    warning: 'text-warning',
+    error: 'text-error',
+    neutral: 'text-default',
+};
+
+/** Clases literales de solo texto para un color. */
+export function kunTextClasses(color: KunColor): string {
+    return KUN_TEXT_COLORS[color];
+}
+
+/** Componentes con defaults de color/variante configurables vía `kunTheme.configure({ defaults })`. */
+export type KunThemeComponent = 'button' | 'list' | 'avatar' | 'card' | 'toolbar-items';
+
+/** Fallback cuando no hay default configurado (ni prop). */
+const KUN_FALLBACK_COLOR: Record<KunThemeComponent, KunColor> = {
+    button: 'primary',
+    list: 'primary',
+    avatar: 'neutral',
+    card: 'neutral',
+    'toolbar-items': 'neutral',
+};
+
+/** Fallback de variante. */
+const KUN_FALLBACK_VARIANT: Record<KunThemeComponent, KunVariant> = {
+    button: 'solid',
+    list: 'soft',
+    avatar: 'soft',
+    card: 'solid',
+    'toolbar-items': 'ghost',
+};
+
 /**
  * Resuelve color/variante con fallback prop > `theme.defaults[component]` > default.
  * `null`/`undefined` en prop delega al theme global. `component` permite defaults
- * por componente (`button`, `list`); default `'button'`.
+ * por componente (`button`, `list`, `avatar`, `card`, `toolbar-items`); default `'button'`.
  */
-export function resolveKunColor(prop: KunColor | null | undefined, component: 'button' | 'list' = 'button'): KunColor {
+export function resolveKunColor(prop: KunColor | null | undefined, component: KunThemeComponent = 'button'): KunColor {
     if (prop) return prop;
-    const configured = kunTheme.current.defaults?.[component]?.color;
-    return configured ?? 'primary';
+    const configured = (kunTheme.current.defaults as Record<string, { color?: KunColor } | undefined> | undefined)?.[component]?.color;
+    return configured ?? KUN_FALLBACK_COLOR[component];
 }
-export function resolveKunVariant(prop: KunVariant | null | undefined, component: 'button' | 'list' = 'button'): KunVariant {
+export function resolveKunVariant(prop: KunVariant | null | undefined, component: KunThemeComponent = 'button'): KunVariant {
     if (prop) return prop;
-    const configured = kunTheme.current.defaults?.[component]?.variant;
-    return configured ?? 'solid';
+    const configured = (kunTheme.current.defaults as Record<string, { variant?: KunVariant } | undefined> | undefined)?.[component]?.variant;
+    return configured ?? KUN_FALLBACK_VARIANT[component];
 }

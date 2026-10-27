@@ -1,5 +1,27 @@
 # KunAvatar
 
+## Color y variante (alineado a `KunVariant`)
+
+- `color`: `KunColor | null`; `null` hereda `kunTheme.configure({ defaults: { avatar } })`
+  (fallback `neutral`). Nunca clases Tailwind crudas (`bg-green-500`): el color va
+  por la matriz `KUN_VARIANT_CLASSES` (literal en `src/theme/kunVariants.ts`), que
+  pinta fondo + texto del avatar.
+- `variant`: estándar `KunVariant` (`solid | outline | soft | subtle | ghost | link`);
+  `null` hereda theme (fallback `soft`). El default (sin color ni variante) queda
+  `soft × neutral` = `bg-elevated text-default`, equivalente token-correcto del
+  antiguo `bg-muted`.
+- Mapeo legacy → nuevo (los valores viejos son error de validación):
+  - `flat` → `solid ` (fondo pleno; antes `bg-${color}` + `bg-opacity-30` removido)
+  - `tonal` → `soft`
+  - `outlined` → `outline` (antes `border border-current`; hoy `outline` añade `ring`)
+  - `text` → `ghost`
+- Si el consumidor pasa una clase `bg-*` por `$attrs`, no se aplica la matriz
+  (override manual explícito).
+- `border` ya no recibe colores de paleta: `true | 'default' | 'muted' | 'accented' | 'inverted'`
+  → `border border-<rol>` (tokens `--kun-border*`). Los avatares coloreados usan
+  `color`, no `border-$color`.
+
+
 ## Tamaños
 
 Escala canónica compartida: `xxs` (24px) · `xs` (28px) · `sm` (32px) ·

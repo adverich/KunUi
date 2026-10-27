@@ -5,6 +5,8 @@ import type { KunToolbarTitlePosition, KunToolbarDensity } from '../src/composab
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import KunToolbarItems from '../src/components/KunToolbarItems.vue'
+import { KUN_COLORS, KUN_VARIANTS, type KunColor, type KunVariant } from '../../../theme/kunVariants.js'
 
 // ------------------------------------------------------------------
 // Título
@@ -73,6 +75,19 @@ const leftSectionClass = ref('flex items-center gap-x-2')
 const rightSectionClass = ref('flex items-center gap-x-2 justify-end')
 
 // ------------------------------------------------------------------
+// KunToolbarItems (contenedor de ítems del toolbar)
+// ------------------------------------------------------------------
+const itemsColor = ref('')
+const itemsColorOptions = ref([{ id: '', name: '(default: neutral)' }, ...KUN_COLORS.map(c => ({ id: c, name: c }))])
+const itemsColorProp = computed<KunColor | null>(() => (itemsColor.value === '' ? null : itemsColor.value as KunColor))
+const itemsVariant = ref('')
+const itemsVariantOptions = ref([
+  { id: '', name: '(default: ghost)' },
+  ...KUN_VARIANTS.map(v => ({ id: v, name: v })),
+])
+const itemsVariantProp = computed<KunVariant | null>(() => (itemsVariant.value === '' ? null : itemsVariant.value as KunVariant))
+
+// ------------------------------------------------------------------
 // Slots demo (no son props del componente)
 // ------------------------------------------------------------------
 const showPrepend = ref(true)
@@ -130,8 +145,10 @@ const useImageSlot = ref(false)
           </template>
 
           <template v-if="showItems" #items>
-            <button type="button" class="rounded-md bg-muted px-2 py-1 text-xs">Nuevo</button>
-            <button type="button" class="rounded-md bg-muted px-2 py-1 text-xs">Filtros</button>
+            <KunToolbarItems :color="itemsColorProp" :variant="itemsVariantProp">
+              <button type="button" class="rounded-md bg-muted px-2 py-1 text-xs">Nuevo</button>
+              <button type="button" class="rounded-md bg-muted px-2 py-1 text-xs">Filtros</button>
+            </KunToolbarItems>
           </template>
 
           <template v-if="showAppend" #append>
@@ -215,6 +232,24 @@ const useImageSlot = ref(false)
         <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Secciones</p>
         <KunTextField v-model="leftSectionClass" label="Left section class" density="compact" class="col-span-2" />
         <KunTextField v-model="rightSectionClass" label="Right section class" density="compact" class="col-span-2" />
+
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">KunToolbarItems (#items)</p>
+        <KunSelect
+          v-model="itemsColor"
+          v-model:items="itemsColorOptions"
+          label="Items color"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="itemsVariant"
+          v-model:items="itemsVariantOptions"
+          label="Items variant"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
 
         <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Slots demo</p>
         <KunSwitch v-model="showPrepend" label="#prepend" />

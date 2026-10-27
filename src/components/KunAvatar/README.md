@@ -28,15 +28,15 @@ import { KunAvatar } from 'adverich-kun-ui'
 | `alt` | `String` | `-` | Texto alternativo de la imagen. |
 | `size` | `KunAvatarSize \| number` | `"md"` | Tamaño: escala canónica ('xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'), alias legacy ('3xs' \| '2xs' \| '2xl' \| '3xl') o px numéricos. |
 | `rounded` | `String \| Number \| Boolean` | `-` | Radio de borde: por defecto `rounded-full`; `false`/`'none'` → `rounded-none`; escala (`'md'`, `'lg'`, ...) → `rounded-<valor>`. |
-| `border` | `String \| Number \| Boolean` | `false` | Borde: se renderiza como `border border-<valor>`. |
-| `color` | `String` | `-` | Sufijo de color de fondo (`bg-<color>`). |
+| `border` | `KunAvatarBorder` | `false` | Borde con rol de token: `true` \| `'default'` \| `'muted'` \| `'accented'` \| `'inverted'` → `border border-<rol>`. Nunca un color de paleta crudo (eso lo porta `color`). |
+| `color` | `KunColor \| null` | `null` | Color semántico; `null` hereda `kunTheme.configure({ defaults: { avatar } })` (fallback `neutral`). |
 | `density` | `KunAvatarDensity` | `"default"` | Densidad: escala el tamaño del avatar (comfortable −1 paso, compact −2 pasos).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `end` | `Boolean` | `-` | Margen al final (útil en listas). |
 | `start` | `Boolean` | `-` | Margen al inicio (útil en listas). |
 | `tag` | `String` | `"div"` | Tag del contenedor. |
 | `theme` | `String` | `-` | Tema de color (hook de clase `theme-<valor>` para CSS del consumidor). |
 | `tile` | `Boolean` | `-` | Sin redondeo (esquinas rectas). |
-| `variant` | `KunAvatarVariant` | `"flat"` | Variante visual: 'flat' (fondo pleno) \| 'outlined' (transparente con borde) \| 'tonal' (fondo suave) \| 'text' (transparente).<br/>Valores · Values: `flat` `outlined` `tonal` `text` |
+| `variant` | `KunVariant \| null` | `null` | Variante estándar (`KunVariant`): solid \| outline \| soft \| subtle \| ghost \| link. Null hereda theme (`avatar`, fallback `soft`). |
 
 ## Eventos · Events
 
@@ -52,6 +52,28 @@ import { KunAvatar } from 'adverich-kun-ui'
 ## Notas · Notes
 
 # KunAvatar
+
+## Color y variante (alineado a `KunVariant`)
+
+- `color`: `KunColor | null`; `null` hereda `kunTheme.configure({ defaults: { avatar } })`
+  (fallback `neutral`). Nunca clases Tailwind crudas (`bg-green-500`): el color va
+  por la matriz `KUN_VARIANT_CLASSES` (literal en `src/theme/kunVariants.ts`), que
+  pinta fondo + texto del avatar.
+- `variant`: estándar `KunVariant` (`solid | outline | soft | subtle | ghost | link`);
+  `null` hereda theme (fallback `soft`). El default (sin color ni variante) queda
+  `soft × neutral` = `bg-elevated text-default`, equivalente token-correcto del
+  antiguo `bg-muted`.
+- Mapeo legacy → nuevo (los valores viejos son error de validación):
+  - `flat` → `solid ` (fondo pleno; antes `bg-${color}` + `bg-opacity-30` removido)
+  - `tonal` → `soft`
+  - `outlined` → `outline` (antes `border border-current`; hoy `outline` añade `ring`)
+  - `text` → `ghost`
+- Si el consumidor pasa una clase `bg-*` por `$attrs`, no se aplica la matriz
+  (override manual explícito).
+- `border` ya no recibe colores de paleta: `true | 'default' | 'muted' | 'accented' | 'inverted'`
+  → `border border-<rol>` (tokens `--kun-border*`). Los avatares coloreados usan
+  `color`, no `border-$color`.
+
 
 ## Tamaños
 

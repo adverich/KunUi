@@ -4,6 +4,7 @@ import KunCheckbox from '../src/components/KunCheckbox.vue'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import { KUN_COLORS, type KunColor } from '../../../theme/kunVariants.js'
 
 // ------------------------------------------------------------------
 // kunCheckboxProps.ts no exporta tipos union: tipos locales para
@@ -79,9 +80,13 @@ const maxErrorsOptions = ref([
 const color = ref('')
 const baseColor = ref('')
 const iconColor = ref('')
-const colorProp = computed(() => (color.value === '' ? undefined : color.value))
-const baseColorProp = computed(() => (baseColor.value === '' ? undefined : baseColor.value))
-const iconColorProp = computed(() => (iconColor.value === '' ? undefined : iconColor.value))
+const colorOptions = ref([
+  { id: '', name: '(default: primary)' },
+  ...KUN_COLORS.map(c => ({ id: c, name: c })),
+])
+const colorProp = computed<KunColor | null>(() => (color.value === '' ? null : color.value as KunColor))
+const baseColorProp = computed<KunColor | null>(() => (baseColor.value === '' ? null : baseColor.value as KunColor))
+const iconColorProp = computed<KunColor | null>(() => (iconColor.value === '' ? null : iconColor.value as KunColor))
 
 const prependIcon = ref('')
 const appendIcon = ref('')
@@ -178,8 +183,8 @@ function logEvent(name: string, detail: unknown): void {
 
       <div class="space-y-2 rounded-lg border border-default p-3">
         <div class="text-muted text-xs">Indicador on/off con iconColor (caja neutra + glifo)</div>
-        <KunCheckbox v-model="indicatorOn" label="Activo" icon-color="green-500" hide-details />
-        <KunCheckbox v-model="indicatorOff" label="Inactivo" icon-color="red-500" hide-details />
+        <KunCheckbox v-model="indicatorOn" label="Activo" icon-color="success" hide-details />
+        <KunCheckbox v-model="indicatorOff" label="Inactivo" icon-color="error" hide-details />
         <div class="font-mono text-xs">{{ indicatorOn }} / {{ indicatorOff }}</div>
       </div>
 
@@ -217,9 +222,24 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="hint" label="Hint" density="compact" />
         <KunTextField v-model="name" label="Name (input nativo)" density="compact" />
         <KunTextField v-model="errorText" label="Error externo (vacío = sin error)" density="compact" />
-        <KunTextField v-model="color" label="Color (vacío = default)" density="compact" />
-        <KunTextField v-model="baseColor" label="Base color (vacío = default)" density="compact" />
-        <KunTextField v-model="iconColor" label="Icon color (vacío = default)" density="compact" />
+        <KunSelect
+          v-model="color"
+          v-model:items="colorOptions"
+          label="Color (caja activa)"
+          density="compact"
+        />
+        <KunSelect
+          v-model="iconColor"
+          v-model:items="colorOptions"
+          label="Icon color (glifo)"
+          density="compact"
+        />
+        <KunSelect
+          v-model="baseColor"
+          v-model:items="colorOptions"
+          label="Base color (caja inactiva)"
+          density="compact"
+        />
         <KunTextField v-model="prependIcon" label="Prepend icon (ej. $star)" density="compact" />
         <KunTextField v-model="appendIcon" label="Append icon (ej. $star)" density="compact" />
         <KunTextField v-model="trueValueRaw" label="True value" density="compact" />

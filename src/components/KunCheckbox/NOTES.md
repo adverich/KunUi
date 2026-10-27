@@ -1,6 +1,20 @@
-## Control con caja (rediseño)
+## Color alineado a `KunColor` (anula párrafos de arriba que hagan referencia a clases libres)
 
-Antes el estado estaba dibujado por el glifo (`lucide:square` /
+`color`, `iconColor` y `baseColor` ya **no** aceptan clases Tailwind crudas:
+
+- `color`: `KunColor | null` → caja activa con `KUN_SURFACE_BG[color].solid` +
+  `text-highlighted`; `null` conserva `bg-primary text-highlighted`.
+- `iconColor`: `KunColor | null` → glifo con `KUN_TEXT_COLORS[color]` (literal,
+  en `src/theme/kunVariants.ts`); con `iconColor` la caja queda neutra
+  (`bg-elevated`).
+- `baseColor`: `KunColor | null` → caja inactiva con tinte suave
+  (`KUN_SURFACE_BG[color].soft`); `null` conserva `bg-elevated`.
+
+El validador sólo acepta la unión `KunColor`; los strings libres
+(`bg-success text-highlighted`, `text-green-500`) son inválidos. Consumidores
+anteriores (`KunRelationMatrix`, `KunTable`) ya están migrados.
+
+## Control con caja (rediseño)Antes el estado estaba dibujado por el glifo (`lucide:square` /
 `square-check` / `square-minus`) y `color`/`baseColor` pintaban el **texto** del
 root.
 

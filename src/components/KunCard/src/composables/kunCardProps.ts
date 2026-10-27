@@ -1,9 +1,10 @@
 import type { PropType } from 'vue';
+import { isKunColor, isKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js';
 
 export type KunCardRounded = boolean | 'sm' | 'md' | 'lg' | 'xl';
 export type KunCardElevation = '' | '0' | '1' | '2' | '3' | '4' | '5' | 0 | 1 | 2 | 3 | 4 | 5;
 export type KunCardDensity = 'default' | 'comfortable' | 'compact';
-export type KunCardVariant = 'elevated' | 'outlined' | 'flat' | 'tonal' | 'text' | 'plain';
+export type KunCardVariant = KunVariant;
 
 export const kunCardProps = {
     /** Título (atajo; equivale al slot de título). */
@@ -16,7 +17,7 @@ export const kunCardProps = {
     subTitleSize: { type: String as PropType<string | null>, default: null },
     /** Texto del cuerpo (atajo; equivale al slot default). */
     text: { type: String as PropType<string | null>, default: null },
-    /** Sin sombra. */
+    /** Sin sombra. Deprecado: usar `variant="solid"` + `elevation="0"`. Solo afecta cuando la superficie lleva sombra. */
     flat: { type: Boolean, default: false },
     /** Redondeo: boolean o tamaño. */
     rounded: {
@@ -24,7 +25,7 @@ export const kunCardProps = {
         default: true,
         validator: (v: unknown) => typeof v === 'boolean' || ['sm', 'md', 'lg', 'xl'].includes(v as string)
     },
-    /** Con borde (`border border-default`). Redundante con `variant="outlined"`. */
+    /** Con borde (`ring ring-default`). Deprecado: usar `variant="outline"`. */
     outlined: { type: Boolean, default: false },
     /** Nivel de sombra (0-5, como string o número). */
     elevation: {
@@ -42,16 +43,18 @@ export const kunCardProps = {
     // Nuevos props
     /** Tag del contenedor. */
     tag: { type: String, default: 'div' },
+    /** Color semántico de la superficie; `null` hereda `kunTheme.configure({ defaults: { card } })` (fallback `neutral`). */
+    color: { type: String as PropType<KunColor | null>, default: null, validator: (v: unknown) => v === null || isKunColor(v) },
+    /** Variante estándar de superficie (`KunVariant`); `null` hereda theme (`card`, fallback `solid`). */
+    variant: {
+        type: String as PropType<KunVariant | null>,
+        default: null,
+        validator: (v: unknown) => v === null || isKunVariant(v),
+    },
     /** Deshabilita interacción. */
     disabled: { type: Boolean, default: false },
     /** Efecto ripple al hacer click. */
     ripple: { type: Boolean, default: true },
-    /** Variante visual. */
-    variant: {
-        type: String as PropType<KunCardVariant>,
-        default: 'elevated',
-        validator: (v: unknown) => ['elevated', 'outlined', 'flat', 'tonal', 'text', 'plain'].includes(v as string)
-    },
     /** Altura fija (clase Tailwind). */
     height: { type: String as PropType<string | null>, default: null },
     /** Ancho fijo (clase Tailwind). */

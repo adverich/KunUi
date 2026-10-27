@@ -1,4 +1,5 @@
 import type { PropType } from 'vue';
+import { isKunColor, type KunColor } from '../../../../theme/kunVariants.js';
 
 export type KunCheckboxDirection = 'horizontal' | 'vertical';
 export type KunCheckboxSize = 'sm' | 'md' | 'lg';
@@ -53,12 +54,12 @@ export const kunCheckboxProps = {
     default: 'horizontal',
     validator: (v: unknown) => ['horizontal', 'vertical'].includes(v as string)
   },
-  /** Color cuando está activo. */
-  color: String,
-  /** Color del ícono. */
-  iconColor: [String, Boolean],
-  /** Color base cuando está inactivo. */
-  baseColor: String,
+  /** Color semántico de la caja activa; `null` usa el default (`bg-primary text-highlighted`). */
+  color: { type: String as PropType<KunColor | null>, default: null, validator: (v: unknown) => v === null || isKunColor(v) },
+  /** Color semántico del glifo (✓) sobre la caja; gana sobre el texto heredado de `color`. */
+  iconColor: { type: String as PropType<KunColor | null>, default: null, validator: (v: unknown) => v === null || isKunColor(v) },
+  /** Color semántico de la caja inactiva (tinte suave); `null` usa `bg-elevated`. */
+  baseColor: { type: String as PropType<KunColor | null>, default: null, validator: (v: unknown) => v === null || isKunColor(v) },
   /** Ícono personalizado para el estado activo. Acepta alias `$`, componente o clase CSS. */
   trueIcon: { type: [String, Object, Function] as PropType<string | Record<string, unknown> | Function | null>, default: undefined },
   /** Ícono personalizado para el estado inactivo. Acepta alias `$`, componente o clase CSS. */

@@ -1,6 +1,6 @@
 # KunUI — Full Documentation
 
-> Complete reference for AI agents. Generated from source by `scripts/generate-docs.ts` (v0.1.679). Start with `llms.txt` for the index; use `registry.json` for machine-readable data.
+> Complete reference for AI agents. Generated from source by `scripts/generate-docs.ts` (v0.1.681). Start with `llms.txt` for the index; use `registry.json` for machine-readable data.
 
 <!-- component: KunAlert -->
 
@@ -338,15 +338,15 @@ import { KunAvatar } from 'adverich-kun-ui'
 | `alt` | `String` | `-` | Texto alternativo de la imagen. |
 | `size` | `KunAvatarSize \| number` | `"md"` | Tamaño: escala canónica ('xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'), alias legacy ('3xs' \| '2xs' \| '2xl' \| '3xl') o px numéricos. |
 | `rounded` | `String \| Number \| Boolean` | `-` | Radio de borde: por defecto `rounded-full`; `false`/`'none'` → `rounded-none`; escala (`'md'`, `'lg'`, ...) → `rounded-<valor>`. |
-| `border` | `String \| Number \| Boolean` | `false` | Borde: se renderiza como `border border-<valor>`. |
-| `color` | `String` | `-` | Sufijo de color de fondo (`bg-<color>`). |
+| `border` | `KunAvatarBorder` | `false` | Borde con rol de token: `true` \| `'default'` \| `'muted'` \| `'accented'` \| `'inverted'` → `border border-<rol>`. Nunca un color de paleta crudo (eso lo porta `color`). |
+| `color` | `KunColor \| null` | `null` | Color semántico; `null` hereda `kunTheme.configure({ defaults: { avatar } })` (fallback `neutral`). |
 | `density` | `KunAvatarDensity` | `"default"` | Densidad: escala el tamaño del avatar (comfortable −1 paso, compact −2 pasos).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `end` | `Boolean` | `-` | Margen al final (útil en listas). |
 | `start` | `Boolean` | `-` | Margen al inicio (útil en listas). |
 | `tag` | `String` | `"div"` | Tag del contenedor. |
 | `theme` | `String` | `-` | Tema de color (hook de clase `theme-<valor>` para CSS del consumidor). |
 | `tile` | `Boolean` | `-` | Sin redondeo (esquinas rectas). |
-| `variant` | `KunAvatarVariant` | `"flat"` | Variante visual: 'flat' (fondo pleno) \| 'outlined' (transparente con borde) \| 'tonal' (fondo suave) \| 'text' (transparente).<br/>Valores · Values: `flat` `outlined` `tonal` `text` |
+| `variant` | `KunVariant \| null` | `null` | Variante estándar (`KunVariant`): solid \| outline \| soft \| subtle \| ghost \| link. Null hereda theme (`avatar`, fallback `soft`). |
 
 ## Eventos · Events
 
@@ -362,6 +362,28 @@ import { KunAvatar } from 'adverich-kun-ui'
 ## Notas · Notes
 
 # KunAvatar
+
+## Color y variante (alineado a `KunVariant`)
+
+- `color`: `KunColor | null`; `null` hereda `kunTheme.configure({ defaults: { avatar } })`
+  (fallback `neutral`). Nunca clases Tailwind crudas (`bg-green-500`): el color va
+  por la matriz `KUN_VARIANT_CLASSES` (literal en `src/theme/kunVariants.ts`), que
+  pinta fondo + texto del avatar.
+- `variant`: estándar `KunVariant` (`solid | outline | soft | subtle | ghost | link`);
+  `null` hereda theme (fallback `soft`). El default (sin color ni variante) queda
+  `soft × neutral` = `bg-elevated text-default`, equivalente token-correcto del
+  antiguo `bg-muted`.
+- Mapeo legacy → nuevo (los valores viejos son error de validación):
+  - `flat` → `solid ` (fondo pleno; antes `bg-${color}` + `bg-opacity-30` removido)
+  - `tonal` → `soft`
+  - `outlined` → `outline` (antes `border border-current`; hoy `outline` añade `ring`)
+  - `text` → `ghost`
+- Si el consumidor pasa una clase `bg-*` por `$attrs`, no se aplica la matriz
+  (override manual explícito).
+- `border` ya no recibe colores de paleta: `true | 'default' | 'muted' | 'accented' | 'inverted'`
+  → `border border-<rol>` (tokens `--kun-border*`). Los avatares coloreados usan
+  `color`, no `border-$color`.
+
 
 ## Tamaños
 
@@ -669,17 +691,18 @@ import { KunCard } from 'adverich-kun-ui'
 | `subtitle` | `string \| null` | `null` | Subtítulo (atajo). |
 | `subTitleSize` | `string \| null` | `null` | Reservado. Actualmente sin efecto (no se propaga a KunCardTitle). |
 | `text` | `string \| null` | `null` | Texto del cuerpo (atajo; equivale al slot default). |
-| `flat` | `Boolean` | `false` | Sin sombra. |
+| `flat` | `Boolean` | `false` | Sin sombra. Deprecado: usar `variant="solid"` + `elevation="0"`. Solo afecta cuando la superficie lleva sombra. |
 | `rounded` | `KunCardRounded` | `true` | Redondeo: boolean o tamaño. |
-| `outlined` | `Boolean` | `false` | Con borde (`border border-default`). Redundante con `variant="outlined"`. |
+| `outlined` | `Boolean` | `false` | Con borde (`ring ring-default`). Deprecado: usar `variant="outline"`. |
 | `elevation` | `KunCardElevation` | `1` | Nivel de sombra (0-5, como string o número).<br/>Valores · Values: `0` `1` `2` `3` `4` `5` `` |
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link). |
 | `href` | `String` | `-` | URL externa (renderiza <a>). |
 | `replace` | `Boolean` | `-` | Navegación con replace (solo con `to`). |
 | `tag` | `String` | `'div'` | Tag del contenedor. |
+| `color` | `KunColor \| null` | `null` | Color semántico de la superficie; `null` hereda `kunTheme.configure({ defaults: { card } })` (fallback `neutral`). |
+| `variant` | `KunVariant \| null` | `null` | Variante estándar de superficie (`KunVariant`); `null` hereda theme (`card`, fallback `solid`). |
 | `disabled` | `Boolean` | `false` | Deshabilita interacción. |
 | `ripple` | `Boolean` | `true` | Efecto ripple al hacer click. |
-| `variant` | `KunCardVariant` | `'elevated'` | Variante visual.<br/>Valores · Values: `elevated` `outlined` `flat` `tonal` `text` `plain` |
 | `height` | `string \| null` | `null` | Altura fija (clase Tailwind). |
 | `width` | `string \| null` | `null` | Ancho fijo (clase Tailwind). |
 | `maxHeight` | `string \| null` | `null` | Altura máxima. |
@@ -715,6 +738,26 @@ import { KunCard } from 'adverich-kun-ui'
   `ring ring-default`: sobre `bg-elevated` el borde era invisible en dark
   (`--kun-border == --kun-bg-elevated == neutral-800`).
 - `tonal` sigue `bg-muted`; `text` sigue `bg-transparent`.
+
+## Color y variante (alineado a `KunColor` × `KunVariant`)
+
+- `color`: `KunColor | null` (prop > `theme.defaults.card` > `neutral`); alterna
+  la superficie tinta/plena vía `KUN_SURFACE_BG` (literal, en
+  `src/theme/kunVariants.ts`).
+- `variant`: estándar `KunVariant` (`null` hereda theme, fallback `solid`).
+  La sombra es propia de `solid` ( máxima recrea el antiguo `elevated`);
+  `soft/subtle/outline/ghost/link` renderizan `shadow-none` y `hover` sigue
+  sumando `hover:shadow-md`.
+- Caso especial `solid × neutral` conserva `bg-default` (el `bg-inverted` de la
+  matriz es de controles, no de páginas/tarjetas).
+- Mapeo legacy → nuevo (los valores viejos son error de validación):
+  - `elevated` → `solid` (default: `bg-default` + `shadow-elevation`)
+  - `outlined` → `outline` (`ring`, con el color resuelto)
+  - `flat` → `solid` + `elevation="0"` (la prop booleana `flat` queda deprecada)
+  - `tonal` → `soft` (`bg-${color}/10`, antes `bg-muted`)
+  - `text` / `plain` → `ghost` (`bg-transparent` + `shadow-none`)
+- La prop booleana `outlined` también queda deprecada: equivalía a
+  `ring ring-default`.
 
 ---
 
@@ -1205,9 +1248,9 @@ import { KunCheckbox } from 'adverich-kun-ui'
 | `ripple` | `Boolean \| Object` | `true` | Efecto ripple al hacer click. |
 | `density` | `KunCheckboxDensity` | `'default'` | Densidad del padding (escala el tamaño como KunAvatar: comfortable/compact reducen).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `direction` | `KunCheckboxDirection` | `'horizontal'` | Dirección del layout (label al lado o debajo).<br/>Valores · Values: `horizontal` `vertical` |
-| `color` | `String` | `-` | Color cuando está activo. |
-| `iconColor` | `String \| Boolean` | `-` | Color del ícono. |
-| `baseColor` | `String` | `-` | Color base cuando está inactivo. |
+| `color` | `KunColor \| null` | `null` | Color semántico de la caja activa; `null` usa el default (`bg-primary text-highlighted`). |
+| `iconColor` | `KunColor \| null` | `null` | Color semántico del glifo (✓) sobre la caja; gana sobre el texto heredado de `color`. |
+| `baseColor` | `KunColor \| null` | `null` | Color semántico de la caja inactiva (tinte suave); `null` usa `bg-elevated`. |
 | `trueIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado activo. Acepta alias `$`, componente o clase CSS. |
 | `falseIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado inactivo. Acepta alias `$`, componente o clase CSS. |
 | `indeterminateIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado indeterminado. Acepta alias `$`, componente o clase CSS. |
@@ -1249,9 +1292,23 @@ import { KunCheckbox } from 'adverich-kun-ui'
 
 ## Notas · Notes
 
-## Control con caja (rediseño)
+## Color alineado a `KunColor` (anula párrafos de arriba que hagan referencia a clases libres)
 
-Antes el estado estaba dibujado por el glifo (`lucide:square` /
+`color`, `iconColor` y `baseColor` ya **no** aceptan clases Tailwind crudas:
+
+- `color`: `KunColor | null` → caja activa con `KUN_SURFACE_BG[color].solid` +
+  `text-highlighted`; `null` conserva `bg-primary text-highlighted`.
+- `iconColor`: `KunColor | null` → glifo con `KUN_TEXT_COLORS[color]` (literal,
+  en `src/theme/kunVariants.ts`); con `iconColor` la caja queda neutra
+  (`bg-elevated`).
+- `baseColor`: `KunColor | null` → caja inactiva con tinte suave
+  (`KUN_SURFACE_BG[color].soft`); `null` conserva `bg-elevated`.
+
+El validador sólo acepta la unión `KunColor`; los strings libres
+(`bg-success text-highlighted`, `text-green-500`) son inválidos. Consumidores
+anteriores (`KunRelationMatrix`, `KunTable`) ya están migrados.
+
+## Control con caja (rediseño)Antes el estado estaba dibujado por el glifo (`lucide:square` /
 `square-check` / `square-minus`) y `color`/`baseColor` pintaban el **texto** del
 root.
 
@@ -4876,8 +4933,8 @@ import { KunToolbar } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `color` | `String` | `-` | Color de los ítems. |
-| `variant` | `KunToolbarItemsVariant` | `'text'` | Variante visual de los ítems.<br/>Valores · Values: `flat` `text` `elevated` `tonal` `outlined` `plain` |
+| `color` | `KunColor \| null` | `null` | Color semántico; `null` hereda `kunTheme.configure({ defaults: { 'toolbar-items' } })` (fallback `neutral`). |
+| `variant` | `KunVariant \| null` | `null` | Variante estándar de superficie (`KunVariant`); `null` hereda theme (`toolbar-items`, fallback `ghost`). |
 
 ### `kunToolbarTitleProps.ts`
 
@@ -4907,6 +4964,23 @@ import { KunToolbar } from 'adverich-kun-ui'
   usar `border-muted` explícito.
 - `KunToolbarItems` variante `outlined`: `ring ring-accented` (antes
   `border border-default`).
+
+## `KunToolbarItems` alineado a `KunColor` × `KunVariant`
+
+- `color`: `KunColor | null` (prop > `theme.defaults['toolbar-items']` > `neutral`).
+- `variant`: estándar `KunVariant` (`null` hereda theme, fallback `ghost`).
+- La superficie se pinta con `KUN_SURFACE_BG[resolvedColor][resolvedVariant]`
+  (patrón de `KunList`): fondo + ring, literales, sin encadenar al texto.
+- Mapeo legacy → nuevo (los valores viejos son error de validación):
+  - `flat` → `ghost` (`bg-transparent`, `shadow-none`)
+  - `text` → `ghost` (default actual)
+  - `elevated` → `solid` (fondo pleno del color)
+  - `tonal` → `soft` (`bg-${color}/10` en vez de `bg-muted`)
+  - `outlined` → `outline` (`ring`, igual al `bordered` de la lista)
+  - `plain` → `ghost`
+- Ruptura: con solo `color` y sin variante ya **no** se pinta `bg-${color}`;
+  la variante debe ser `solid` para fondo pleno (antes `variant="text"` +
+  `color` pintaba).
 
 ---
 

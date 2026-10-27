@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import KunCard from '../src/components/KunCard.vue'
-import type { KunCardVariant, KunCardDensity, KunCardRounded, KunCardElevation } from '../src/composables/kunCardProps.js'
+import type { KunCardDensity, KunCardRounded, KunCardElevation } from '../src/composables/kunCardProps.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import { KUN_COLORS, KUN_VARIANTS, type KunColor, type KunVariant } from '../../../theme/kunVariants.js'
 
 // ------------------------------------------------------------------
 // Contenido demo (datos genéricos)
@@ -19,15 +20,15 @@ const showImage = ref(true)
 // ------------------------------------------------------------------
 // Uniones cerradas -> KunSelect con refs tipadas
 // ------------------------------------------------------------------
-const variant = ref<KunCardVariant>('elevated')
+const variant = ref<KunVariant | null>(null)
 const variantOptions = ref([
-  { id: 'elevated', name: 'elevated' },
-  { id: 'outlined', name: 'outlined' },
-  { id: 'flat', name: 'flat' },
-  { id: 'tonal', name: 'tonal' },
-  { id: 'text', name: 'text' },
-  { id: 'plain', name: 'plain' },
+  { id: '', name: '(default: solid · neutral)' },
+  ...KUN_VARIANTS.map(v => ({ id: v, name: v })),
 ])
+
+const color = ref('')
+const colorOptions = ref([{ id: '', name: '(default: neutral)' }, ...KUN_COLORS.map(c => ({ id: c, name: c }))])
+const colorProp = computed<KunColor | null>(() => (color.value === '' ? null : color.value as KunColor))
 
 const density = ref<KunCardDensity>('default')
 const densityOptions = ref([
@@ -141,6 +142,7 @@ function logEvent(name: string, detail: unknown): void {
         :disabled="disabled"
         :ripple="ripple"
         :variant="variant"
+        :color="colorProp"
         :height="height || null"
         :width="width || null"
         :max-height="maxHeight || null"
@@ -218,6 +220,14 @@ function logEvent(name: string, detail: unknown): void {
           density="compact"
         />
         <KunSelect
+          v-model="color"
+          v-model:items="colorOptions"
+          label="Color"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
           v-model="density"
           v-model:items="densityOptions"
           label="Density"
@@ -266,8 +276,8 @@ function logEvent(name: string, detail: unknown): void {
         <KunSwitch v-model="replace" label="Replace (solo con to)" />
 
         <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Estado</p>
-        <KunSwitch v-model="flat" label="Flat (sin sombra)" />
-        <KunSwitch v-model="outlined" label="Outlined" />
+        <KunSwitch v-model="flat" label="Flat (deprecado: usa elevation 0)" />
+        <KunSwitch v-model="outlined" label="Outlined (deprecado: usa variant outline)" />
         <KunSwitch v-model="disabled" label="Disabled" />
         <KunSwitch v-model="ripple" label="Ripple" />
         <KunSwitch v-model="loading" label="Loading" />

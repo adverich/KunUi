@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.679",
+  "version": "0.1.681",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -860,18 +860,18 @@
         },
         {
           "name": "border",
-          "type": "String | Number | Boolean",
+          "type": "KunAvatarBorder",
           "default": "false",
           "values": [],
-          "description": "Borde: se renderiza como `border border-<valor>`.",
+          "description": "Borde con rol de token: `true` | `'default'` | `'muted'` | `'accented'` | `'inverted'` → `border border-<rol>`. Nunca un color de paleta crudo (eso lo porta `color`).",
           "source": "/var/www/kun-ui/src/components/KunAvatar/src/composables/kunAvatarProps.ts"
         },
         {
           "name": "color",
-          "type": "String",
-          "default": "-",
+          "type": "KunColor | null",
+          "default": "null",
           "values": [],
-          "description": "Sufijo de color de fondo (`bg-<color>`).",
+          "description": "Color semántico; `null` hereda `kunTheme.configure({ defaults: { avatar } })` (fallback `neutral`).",
           "source": "/var/www/kun-ui/src/components/KunAvatar/src/composables/kunAvatarProps.ts"
         },
         {
@@ -928,15 +928,10 @@
         },
         {
           "name": "variant",
-          "type": "KunAvatarVariant",
-          "default": "\"flat\"",
-          "values": [
-            "flat",
-            "outlined",
-            "tonal",
-            "text"
-          ],
-          "description": "Variante visual: 'flat' (fondo pleno) | 'outlined' (transparente con borde) | 'tonal' (fondo suave) | 'text' (transparente).",
+          "type": "KunVariant | null",
+          "default": "null",
+          "values": [],
+          "description": "Variante estándar (`KunVariant`): solid | outline | soft | subtle | ghost | link. Null hereda theme (`avatar`, fallback `soft`).",
           "source": "/var/www/kun-ui/src/components/KunAvatar/src/composables/kunAvatarProps.ts"
         }
       ],
@@ -1294,7 +1289,7 @@
           "type": "Boolean",
           "default": "false",
           "values": [],
-          "description": "Sin sombra.",
+          "description": "Sin sombra. Deprecado: usar `variant=\"solid\"` + `elevation=\"0\"`. Solo afecta cuando la superficie lleva sombra.",
           "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
         },
         {
@@ -1310,7 +1305,7 @@
           "type": "Boolean",
           "default": "false",
           "values": [],
-          "description": "Con borde (`border border-default`). Redundante con `variant=\"outlined\"`.",
+          "description": "Con borde (`ring ring-default`). Deprecado: usar `variant=\"outline\"`.",
           "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
         },
         {
@@ -1362,6 +1357,22 @@
           "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
         },
         {
+          "name": "color",
+          "type": "KunColor | null",
+          "default": "null",
+          "values": [],
+          "description": "Color semántico de la superficie; `null` hereda `kunTheme.configure({ defaults: { card } })` (fallback `neutral`).",
+          "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
+        },
+        {
+          "name": "variant",
+          "type": "KunVariant | null",
+          "default": "null",
+          "values": [],
+          "description": "Variante estándar de superficie (`KunVariant`); `null` hereda theme (`card`, fallback `solid`).",
+          "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
+        },
+        {
           "name": "disabled",
           "type": "Boolean",
           "default": "false",
@@ -1375,21 +1386,6 @@
           "default": "true",
           "values": [],
           "description": "Efecto ripple al hacer click.",
-          "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
-        },
-        {
-          "name": "variant",
-          "type": "KunCardVariant",
-          "default": "'elevated'",
-          "values": [
-            "elevated",
-            "outlined",
-            "flat",
-            "tonal",
-            "text",
-            "plain"
-          ],
-          "description": "Variante visual.",
           "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
         },
         {
@@ -2463,26 +2459,26 @@
         },
         {
           "name": "color",
-          "type": "String",
-          "default": "-",
+          "type": "KunColor | null",
+          "default": "null",
           "values": [],
-          "description": "Color cuando está activo.",
+          "description": "Color semántico de la caja activa; `null` usa el default (`bg-primary text-highlighted`).",
           "source": "/var/www/kun-ui/src/components/KunCheckbox/src/composables/kunCheckboxProps.ts"
         },
         {
           "name": "iconColor",
-          "type": "String | Boolean",
-          "default": "-",
+          "type": "KunColor | null",
+          "default": "null",
           "values": [],
-          "description": "Color del ícono.",
+          "description": "Color semántico del glifo (✓) sobre la caja; gana sobre el texto heredado de `color`.",
           "source": "/var/www/kun-ui/src/components/KunCheckbox/src/composables/kunCheckboxProps.ts"
         },
         {
           "name": "baseColor",
-          "type": "String",
-          "default": "-",
+          "type": "KunColor | null",
+          "default": "null",
           "values": [],
-          "description": "Color base cuando está inactivo.",
+          "description": "Color semántico de la caja inactiva (tinte suave); `null` usa `bg-elevated`.",
           "source": "/var/www/kun-ui/src/components/KunCheckbox/src/composables/kunCheckboxProps.ts"
         },
         {
@@ -10015,25 +10011,18 @@
         },
         {
           "name": "color",
-          "type": "String",
-          "default": "-",
+          "type": "KunColor | null",
+          "default": "null",
           "values": [],
-          "description": "Color de los ítems.",
+          "description": "Color semántico; `null` hereda `kunTheme.configure({ defaults: { 'toolbar-items' } })` (fallback `neutral`).",
           "source": "/var/www/kun-ui/src/components/KunToolbar/src/composables/kunToolbarItemsProps.ts"
         },
         {
           "name": "variant",
-          "type": "KunToolbarItemsVariant",
-          "default": "'text'",
-          "values": [
-            "flat",
-            "text",
-            "elevated",
-            "tonal",
-            "outlined",
-            "plain"
-          ],
-          "description": "Variante visual de los ítems.",
+          "type": "KunVariant | null",
+          "default": "null",
+          "values": [],
+          "description": "Variante estándar de superficie (`KunVariant`); `null` hereda theme (`toolbar-items`, fallback `ghost`).",
           "source": "/var/www/kun-ui/src/components/KunToolbar/src/composables/kunToolbarItemsProps.ts"
         },
         {

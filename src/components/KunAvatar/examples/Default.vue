@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import KunAvatar from '../src/components/KunAvatar.vue'
-import type { KunAvatarDensity, KunAvatarSize, KunAvatarVariant } from '../src/composables/kunAvatarProps.js'
+import { KUN_COLORS, KUN_VARIANTS, type KunColor, type KunVariant } from '../../../theme/kunVariants.js'
+import type { KunAvatarBorder, KunAvatarDensity, KunAvatarSize } from '../src/composables/kunAvatarProps.js'
 import KunBtn from '../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../KunIcon/src/components/KunIcon.vue'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
@@ -20,26 +21,36 @@ const iconRaw = ref('')
 const textRaw = ref('KU')
 const altRaw = ref('Avatar de ejemplo')
 const colorRaw = ref('')
+const colorOptions = ref([{ id: '', name: '(default: neutral · soft)' }, ...KUN_COLORS.map(c => ({ id: c, name: c }))])
+const colorProp = computed<KunColor | null>(() => (colorRaw.value === '' ? null : colorRaw.value as KunColor))
 const themeRaw = ref('')
 const tagRaw = ref('div')
 const borderRaw = ref('')
+const borderOptions = ref([
+  { id: '', name: '(sin borde)' },
+  { id: 'true', name: 'true (border-default)' },
+  { id: 'muted', name: 'muted' },
+  { id: 'accented', name: 'accented' },
+  { id: 'inverted', name: 'inverted' },
+])
+const borderProp = computed<KunAvatarBorder>(() => {
+  if (borderRaw.value === '') return false
+  if (borderRaw.value === 'true') return true
+  return borderRaw.value as KunAvatarBorder
+})
 
-const variant = ref<KunAvatarVariant>('flat')
+const variant = ref<KunVariant | null>(null)
 const variantOptions = ref([
-  { id: 'flat', name: 'flat (fondo pleno)' },
-  { id: 'outlined', name: 'outlined (transparente con borde)' },
-  { id: 'tonal', name: 'tonal (fondo suave)' },
-  { id: 'text', name: 'text (transparente)' },
+  { id: '', name: '(default: soft · neutral)' },
+  ...KUN_VARIANTS.map(v => ({ id: v, name: v })),
 ])
 
 const imageProp = computed(() => (imageRaw.value === '' ? undefined : imageRaw.value))
 const iconProp = computed(() => (iconRaw.value === '' ? undefined : iconRaw.value))
 const textProp = computed(() => (textRaw.value === '' ? undefined : textRaw.value))
 const altProp = computed(() => (altRaw.value === '' ? undefined : altRaw.value))
-const colorProp = computed(() => (colorRaw.value === '' ? undefined : colorRaw.value))
 const themeProp = computed(() => (themeRaw.value === '' ? undefined : themeRaw.value))
 const tagProp = computed(() => (tagRaw.value === '' ? 'div' : tagRaw.value))
-const borderProp = computed((): string | boolean => (borderRaw.value === '' ? false : borderRaw.value))
 
 const size = ref<KunAvatarSize>('md')
 const sizeOptions = ref([
@@ -214,8 +225,18 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="altRaw" label="Alt" density="compact" />
         <KunTextField v-model="iconRaw" label="Icon (vacío = sin icono)" density="compact" />
         <KunTextField v-model="textRaw" label="Text (vacío = slot)" density="compact" />
-        <KunTextField v-model="colorRaw" label="Color (bg-*, vacío = default)" density="compact" />
-        <KunTextField v-model="borderRaw" label="Border (vacío = false)" density="compact" />
+        <KunSelect
+          v-model="colorRaw"
+          v-model:items="colorOptions"
+          label="Color"
+          density="compact"
+        />
+        <KunSelect
+          v-model="borderRaw"
+          v-model:items="borderOptions"
+          label="Border (rol de token)"
+          density="compact"
+        />
         <KunTextField v-model="tagRaw" label="Tag" density="compact" />
         <KunSelect
           v-model="variant"

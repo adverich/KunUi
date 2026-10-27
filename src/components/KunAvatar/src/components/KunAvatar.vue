@@ -26,11 +26,22 @@ import {
   hasExplicitDimensionClass,
   type KunSize,
 } from '../../../../theme/kunSizes.js'
+import {
+  kunVariantClasses,
+  resolveKunColor,
+  resolveKunVariant,
+  type KunColor,
+  type KunVariant,
+} from '../../../../theme/kunVariants.js'
 
 const props = defineProps(kunAvatarProps);
 const attrs = useAttrs();
 
 defineEmits(["click", "hover", "contextmenu", "focus"]);
+
+// Color/variante estándar: prop > theme.defaults.avatar > (neutral, soft).
+const resolvedColor = computed<KunColor>(() => resolveKunColor(props.color, 'avatar'));
+const resolvedVariant = computed<KunVariant>(() => resolveKunVariant(props.variant, 'avatar'));
 
 /** Nombres de la escala anterior que conservan su px como alias deprecado. */
 const legacySizes: Record<string, KunSize | number> = {
@@ -118,20 +129,14 @@ const useKunIcon = computed(() => {
   return icon.startsWith('$') || s.startsWith('<svg');
 });
 
-const bgClass = computed(() => {
-  if (props.variant === 'outlined' || props.variant === 'text') return 'bg-transparent';
-  if (props.color) return `bg-${props.color}`;
-  return hasBackgroundClass.value ? '' : 'bg-muted';
-});
+const bgClass = computed(() =>
+  hasBackgroundClass.value ? '' : kunVariantClasses(resolvedColor.value, resolvedVariant.value),
+);
 
-const variantClasses = computed(() => {
-  switch (props.variant) {
-    case 'outlined': return 'border border-current';
-    case 'tonal': return 'bg-opacity-30';
-    case 'text':
-    case 'flat':
-    default: return '';
-  }
+// Borde con rol de token (nunca un color de paleta crudo).
+const borderClass = computed(() => {
+  if (!props.border) return '';
+  return props.border === true ? 'border border-default' : `border border-${props.border}`;
 });
 
 const computedClasses = computed(() => [
@@ -143,9 +148,8 @@ const computedClasses = computed(() => [
     : typeof props.rounded === "string" && props.rounded !== "full"
       ? `rounded-${props.rounded}`
       : "rounded-full",
-  props.border ? `border border-${props.border}` : "",
+  borderClass.value,
   bgClass.value,
-  variantClasses.value,
   props.theme ? `theme-${props.theme}` : "",
   props.start ? "ms-2" : "",
   props.end ? "me-2" : "",
@@ -156,7 +160,7 @@ const computedImageClasses = computed(() => [
 ]);
 
 const computedIconClasses = computed(() => [
-  "absolute text-highlighted",
+  "absolute",
 ]);
 
 const computedTextClasses = computed(() => [

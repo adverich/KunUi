@@ -6,6 +6,7 @@ import { useValidation } from '../composables/useValidation.js'
 import { kunCheckboxProps } from '../composables/kunCheckboxProps.js'
 import { vRipple } from '@/directives/ripple.js'
 import { icons } from '@/icons'
+import { isKunColor, kunSurfaceBg, kunTextClasses, type KunColor } from '../../../../theme/kunVariants.js'
 
 const emit = defineEmits([
   'update:modelValue',
@@ -41,32 +42,32 @@ const iconToRender = computed(() => {
     : (props.falseIcon || null)
 })
 
-/** `iconColor` solo tiene efecto con un string no vacío (el default es `undefined`). */
-const hasIconColor = computed(
-  () => typeof props.iconColor === 'string' && props.iconColor.trim().length > 0,
+/** `iconColor` solo tiene efecto con un color semántico (KunColor). */
+const resolvedIconColor = computed<KunColor | null>(
+  () => (isKunColor(props.iconColor) ? props.iconColor : null),
 )
 
 /**
  * Caja del control: contorno `ring ring-inset ring-accented`; inactiva usa
  * `bg-elevated` para que se lea sobre fondos oscuros (en dark `bg-default` se
- * confunde con la página). Activa: `color` libre del consumidor; con
- * `iconColor` la caja queda neutra para que el glifo coloreado contraste; por
- * defecto `bg-primary text-highlighted`.
+ * confunde con la página). Activa: color semántico vía matriz de superficie
+ * (`KUN_SURFACE_BG`, fondo pleno); con `iconColor` la caja queda neutra para
+ * que el glifo coloreado contraste; por defecto `bg-primary text-highlighted`.
  */
 const boxClass = computed(() => {
   const active = isChecked.value || props.indeterminate
   const classes = ['ring-1', 'ring-inset', 'rounded-sm', 'ring-accented']
 
   if (active) {
-    if (props.color) {
-      classes.push(props.color)
-    } else if (hasIconColor.value) {
+    if (resolvedIconColor.value) {
       classes.push('bg-elevated')
+    } else if (props.color) {
+      classes.push(kunSurfaceBg(props.color, 'solid'), 'text-highlighted')
     } else {
       classes.push('bg-primary', 'text-highlighted')
     }
   } else {
-    classes.push(props.baseColor || 'bg-elevated')
+    classes.push(props.baseColor ? kunSurfaceBg(props.baseColor, 'soft') : 'bg-elevated')
   }
 
   if (props.error || !isValid.value) classes.push('ring-error')
@@ -79,15 +80,10 @@ const iconInnerSizeClass = computed(() => ({
   lg: 'w-4 h-4'
 }[effectiveSize.value] || 'w-3.5 h-3.5'))
 
-const iconClass = computed(() => {
-  const color = hasIconColor.value
-    ? (props.iconColor as string).trim().replace(/^text-/, '')
-    : ''
-  return [
-    color ? `text-${color}` : '',
-    props.glow && isFocused.value ? 'drop-shadow-[0_0_5px_currentColor]' : '',
-  ]
-})
+const iconClass = computed(() => [
+  resolvedIconColor.value ? kunTextClasses(resolvedIconColor.value) : '',
+  props.glow && isFocused.value ? 'drop-shadow-[0_0_5px_currentColor]' : '',
+])
 
 // Escala de tamaño por densidad (como KunAvatar): comfortable -1, compact -2, piso en sm.
 const sizeOrder = ['sm', 'md', 'lg']

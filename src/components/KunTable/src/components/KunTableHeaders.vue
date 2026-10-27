@@ -19,7 +19,7 @@
           :ripple="false"
           :true-value="true"
           :false-value="false"
-          :color="someSelected && !allSelected && !moreThanPaginated ? 'text-warning' : allSelected || moreThanPaginated ? 'text-success' : ''"
+          :color="(someSelected && !allSelected && !moreThanPaginated ? 'warning' : (allSelected || moreThanPaginated) ? 'success' : null)"
           hide-details
         />
       </th>
