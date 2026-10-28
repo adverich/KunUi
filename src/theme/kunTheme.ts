@@ -69,7 +69,9 @@ const DEFAULT_PALETTES: Record<KunSemanticSlot, KunPaletteName> = {
     secondary: 'blue',
     success: 'green',
     info: 'blue',
-    warning: 'yellow',
+    // amber en vez de yellow: mismo rol de alerta, luminancia alineada con el
+    // resto de los semanticos al mismo stop (ver theme.css, capa 1).
+    warning: 'amber',
     error: 'red',
 };
 const DEFAULT_NEUTRAL: KunNeutralName = 'slate';

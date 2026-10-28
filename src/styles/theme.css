@@ -32,6 +32,7 @@
     --text-color-muted: var(--kun-text-muted);
     --text-color-toned: var(--kun-text-toned);
     --text-color-highlighted: var(--kun-text-highlighted);
+    --text-color-on-warning: var(--kun-text-on-warning);
     --text-color-inverted: var(--kun-text-inverted);
 
     --background-color-default: var(--kun-bg);
@@ -156,17 +157,21 @@
     --kun-color-info-900: var(--color-blue-900);
     --kun-color-info-950: var(--color-blue-950);
 
-    --kun-color-warning-50: var(--color-yellow-50);
-    --kun-color-warning-100: var(--color-yellow-100);
-    --kun-color-warning-200: var(--color-yellow-200);
-    --kun-color-warning-300: var(--color-yellow-300);
-    --kun-color-warning-400: var(--color-yellow-400);
-    --kun-color-warning-500: var(--color-yellow-500);
-    --kun-color-warning-600: var(--color-yellow-600);
-    --kun-color-warning-700: var(--color-yellow-700);
-    --kun-color-warning-800: var(--color-yellow-800);
-    --kun-color-warning-900: var(--color-yellow-900);
-    --kun-color-warning-950: var(--color-yellow-950);
+    /* Warning = amber: el hue yellow es perceptualmente demasiado luminoso
+       al mismo stop que el resto de los semanticos (yellow-400 ~ L 0.93 en
+       oklch vs sky-400 ~ 0.79); amber conserva el matiz de alerta pero entra
+       en la misma escala visual. */
+    --kun-color-warning-50: var(--color-amber-50);
+    --kun-color-warning-100: var(--color-amber-100);
+    --kun-color-warning-200: var(--color-amber-200);
+    --kun-color-warning-300: var(--color-amber-300);
+    --kun-color-warning-400: var(--color-amber-400);
+    --kun-color-warning-500: var(--color-amber-500);
+    --kun-color-warning-600: var(--color-amber-600);
+    --kun-color-warning-700: var(--color-amber-700);
+    --kun-color-warning-800: var(--color-amber-800);
+    --kun-color-warning-900: var(--color-amber-900);
+    --kun-color-warning-950: var(--color-amber-950);
 
     --kun-color-error-50: var(--color-red-50);
     --kun-color-error-100: var(--color-red-100);
@@ -212,6 +217,10 @@
     --kun-text: var(--kun-color-neutral-700);
     --kun-text-highlighted: var(--kun-color-neutral-900);
     --kun-text-inverted: white;
+    /* Texto sobre superficies warning solid (amber-500/400): el hue "beige"
+       flotante pide tinta oscura, el blanco queda ~2:1 (WCAG fail). Cuelga
+       de capa 1 (neutral-950), no de un HEX directo. */
+    --kun-text-on-warning: var(--kun-color-neutral-950);
     --kun-border: var(--kun-color-neutral-200);
     --kun-border-muted: var(--kun-color-neutral-200);
     --kun-border-accented: var(--kun-color-neutral-300);

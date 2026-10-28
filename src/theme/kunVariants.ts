@@ -60,7 +60,9 @@ export const KUN_VARIANT_CLASSES: Record<KunColor, Record<KunVariant, string>> =
         link: 'text-info hover:text-info/75 focus-visible:outline-3 focus-visible:outline-info/25',
     },
     warning: {
-        solid: 'text-highlighted bg-warning hover:bg-warning/75 active:bg-warning/75 focus-visible:outline-3 focus-visible:outline-warning/25',
+        /* Amber-500 (light) y amber-400 (dark) piden tinta oscura; el solid
+           usa `text-on-warning` en vez de `text-highlighted` (blanco ~2:1). */
+        solid: 'text-on-warning bg-warning hover:bg-warning/75 active:bg-warning/75 focus-visible:outline-3 focus-visible:outline-warning/25',
         outline: 'text-warning ring ring-warning/50 hover:bg-warning/10 focus-visible:outline-3 focus-visible:outline-warning/25',
         soft: 'text-warning bg-warning/10 hover:bg-warning/15 focus-visible:outline-3 focus-visible:outline-warning/25',
         subtle: 'text-warning bg-warning/10 ring ring-warning/25 hover:bg-warning/15 focus-visible:outline-3 focus-visible:outline-warning/25',
