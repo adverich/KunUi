@@ -45,7 +45,8 @@ import { KunFileInput } from 'adverich-kun-ui'
 | `appendInnerClass` | `String` | `-` | Clase del contenedor del ícono interno final. |
 | `clearIcon` | `String \| Object \| Function \| Array` | `-` | Ícono del botón limpiar. |
 | `iconSize` | `String` | `'size-4'` | Tamaño de los íconos (clase Tailwind, `size-4`). |
-| `variant` | `KunFileInputVariant` | `'filled'` | Variante visual del contenedor.<br/>Valores · Values: `filled` `outlined` `solo` |
+| `variant` | `KunVariant` | `'subtle'` | Variante canónica `KunVariant` de la matriz de la librería. |
+| `color` | `KunColor \| null` | `null` | Color semántico del field (`solid` pinta el fondo, `link` el texto, resto foco/error); `null` hereda `kunTheme.configure({ defaults: { input } })` (fallback `primary`). |
 | `rules` | `Array` | `() => []` | Reglas de validación: `(valor) => true \| string`. |
 
 ## Eventos · Events
@@ -83,10 +84,16 @@ Usa `inheritAttrs: false` y reenvía `$attrs` al contenedor interno: `@change`
 ## Bordes y radio
 
 - Contenedor `rounded-md`; chips con el nombre de archivo `rounded-sm`.
-- Contorno por rol: el control va sobre `bg-default` con `ring ring-inset ring-accented`
-  (variante `solo` → `bg-elevated` + ring). Antes `bg-muted` + `border border-default`,
-  que en dark quedaba invisible (`--kun-border == --kun-bg-muted == neutral-800`).
-  Foco `ring-2 ring-primary/25`; error `ring-error`.
+- Contorno por matriz `KunVariant` (con `color`, fallback
+  `kunTheme.defaults.input`): `subtle` → `bg-elevated ring ring-inset ring-accented`
+  (default); `outline` → `bg-default` + mismo ring; `soft` → `bg-elevated`;
+  `ghost`/`link` → transparente; `solid` → fondo pleno del color con texto
+  contrastado. Foco y error: ring literal por color (`KUN_FIELD_FOCUS_RING`
+  / `KUN_FIELD_ERROR_RING`, en `src/utils/kunFieldVariant.ts`). Antes
+  `bg-muted` + `border border-default`, que en dark quedaba invisible
+  (`--kun-border == --kun-bg-muted == neutral-800`).
+- Eje migrado: la unión `'filled' | 'outlined' | 'solo'` fue reemplazada
+  por el `KunVariant` canónico (los valores viejos son error de validación).
 
 ---
 

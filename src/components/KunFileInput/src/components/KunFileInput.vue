@@ -3,7 +3,8 @@
     <label
       v-if="label"
       :class="[
-        'absolute z-10 px-1 text-default transition-all duration-200 ease-in-out pointer-events-none select-none',
+        'absolute z-10 px-1 transition-all duration-200 ease-in-out pointer-events-none select-none',
+        textClass,
         labelLeftClass,
         isLabelActive ? '-top-2.25 text-xs opacity-80' : 'top-3 text-sm opacity-80',
       ]"
@@ -14,14 +15,12 @@
     <div
       class="flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer transition"
       :class="[
-        variant === 'outlined' ? 'bg-default ring ring-inset ring-accented' :
-        variant === 'solo' ? 'bg-elevated shadow-inner ring ring-inset ring-accented' :
-        'bg-default ring ring-inset ring-accented',
+        variantClass,
+        textClass,
         disabled ? 'cursor-not-allowed' : 'hover:ring-primary',
-        error || validationErrors.length || externalErrorList.length ? 'ring-error' : '',
-        isFocused ? 'ring-2 ring-primary/25' : '',
+        stateClass,
       ]"
-      v-bind="$attrs" 
+      v-bind="$attrs"
       @click="() => inputRef?.click()"
       @focusin="onFocus"
       @focusout="onBlur"
@@ -99,10 +98,26 @@
 import { ref, computed, watch, useSlots, type Ref, type ComputedRef } from 'vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { kunFileInputProps } from '../composables/kunFileInputProps.js'
+import { resolveKunColor, resolveKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js'
+import { kunFieldBaseClass, kunFieldTextClass, KUN_FIELD_ERROR_RING, KUN_FIELD_FOCUS_RING } from '@/utils/kunFieldVariant.js'
 
 defineOptions({ inheritAttrs: false })
 
 const props = defineProps(kunFileInputProps)
+
+// Color/variante canónicos: prop > theme.defaults.input > (primary, subtle para
+// este field). Foco/error resuelven ring literal por color (nunca interpolado).
+const resolvedColor = computed<KunColor>(() => resolveKunColor(props.color ?? null, 'input'))
+const resolvedVariant = computed<KunVariant>(() => resolveKunVariant(props.variant, 'input'))
+const variantClass = computed(() => kunFieldBaseClass(resolvedVariant.value, resolvedColor.value))
+const textClass = computed(() => kunFieldTextClass(resolvedVariant.value, resolvedColor.value))
+const stateClass = computed(() => {
+  if (props.disabled) return ''
+  const hasErrors = props.error || validationErrors.value.length || externalErrorList.value.length
+  if (hasErrors) return KUN_FIELD_ERROR_RING
+  if (isFocused.value) return KUN_FIELD_FOCUS_RING[resolvedColor.value]
+  return ''
+})
 
 const emit = defineEmits([
   'update:modelValue',

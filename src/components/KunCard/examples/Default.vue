@@ -93,8 +93,6 @@ const replace = ref(false)
 // ------------------------------------------------------------------
 // Booleanos -> KunSwitch
 // ------------------------------------------------------------------
-const flat = ref(false)
-const outlined = ref(true)
 const disabled = ref(false)
 const ripple = ref(true)
 const loading = ref(false)
@@ -131,9 +129,7 @@ function logEvent(name: string, detail: unknown): void {
         :title-size="titleSize || null"
         :subtitle="subtitle || null"
         :text="text || null"
-        :flat="flat"
         :rounded="rounded"
-        :outlined="outlined"
         :elevation="elevation"
         :to="toProp"
         :href="hrefProp"
@@ -276,8 +272,6 @@ function logEvent(name: string, detail: unknown): void {
         <KunSwitch v-model="replace" label="Replace (solo con to)" />
 
         <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Estado</p>
-        <KunSwitch v-model="flat" label="Flat (deprecado: usa elevation 0)" />
-        <KunSwitch v-model="outlined" label="Outlined (deprecado: usa variant outline)" />
         <KunSwitch v-model="disabled" label="Disabled" />
         <KunSwitch v-model="ripple" label="Ripple" />
         <KunSwitch v-model="loading" label="Loading" />

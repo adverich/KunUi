@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.683",
+  "version": "0.1.687",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -1285,27 +1285,11 @@
           "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
         },
         {
-          "name": "flat",
-          "type": "Boolean",
-          "default": "false",
-          "values": [],
-          "description": "Sin sombra. Deprecado: usar `variant=\"solid\"` + `elevation=\"0\"`. Solo afecta cuando la superficie lleva sombra.",
-          "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
-        },
-        {
           "name": "rounded",
           "type": "KunCardRounded",
           "default": "true",
           "values": [],
           "description": "Redondeo: boolean o tamaño.",
-          "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
-        },
-        {
-          "name": "outlined",
-          "type": "Boolean",
-          "default": "false",
-          "values": [],
-          "description": "Con borde (`ring ring-default`). Deprecado: usar `variant=\"outline\"`.",
           "source": "/var/www/kun-ui/src/components/KunCard/src/composables/kunCardProps.ts"
         },
         {
@@ -4370,14 +4354,18 @@
         },
         {
           "name": "variant",
-          "type": "KunFileInputVariant",
-          "default": "'filled'",
-          "values": [
-            "filled",
-            "outlined",
-            "solo"
-          ],
-          "description": "Variante visual del contenedor.",
+          "type": "KunVariant",
+          "default": "'subtle'",
+          "values": [],
+          "description": "Variante canónica `KunVariant` de la matriz de la librería.",
+          "source": "/var/www/kun-ui/src/components/KunFileInput/src/composables/kunFileInputProps.ts"
+        },
+        {
+          "name": "color",
+          "type": "KunColor | null",
+          "default": "null",
+          "values": [],
+          "description": "Color semántico del field (`solid` pinta el fondo, `link` el texto, resto foco/error); `null` hereda `kunTheme.configure({ defaults: { input } })` (fallback `primary`).",
           "source": "/var/www/kun-ui/src/components/KunFileInput/src/composables/kunFileInputProps.ts"
         },
         {
@@ -9046,15 +9034,18 @@
         },
         {
           "name": "variant",
-          "type": "KunTextareaVariant",
-          "default": "'outlined'",
-          "values": [
-            "filled",
-            "outlined",
-            "underlined",
-            "solo"
-          ],
-          "description": "Variante visual: 'filled' | 'outlined' | 'underlined' | 'solo'.",
+          "type": "KunVariant",
+          "default": "'outline'",
+          "values": [],
+          "description": "Variante canónica `KunVariant` de la matriz de la librería. El label flotante con muesca (notch) aplica en `outline`.",
+          "source": "/var/www/kun-ui/src/components/KunTextarea/src/composables/kunTextareaProps.ts"
+        },
+        {
+          "name": "color",
+          "type": "KunColor | null",
+          "default": "null",
+          "values": [],
+          "description": "Color semántico del field (`solid` pinta el fondo, `link` el texto, resto foco/error); `null` hereda `kunTheme.configure({ defaults: { input } })` (fallback `primary`).",
           "source": "/var/www/kun-ui/src/components/KunTextarea/src/composables/kunTextareaProps.ts"
         },
         {
@@ -9099,14 +9090,6 @@
           "default": "'rounded-md'",
           "values": [],
           "description": "Redondeo (clase de escala, `rounded-md` por defecto).",
-          "source": "/var/www/kun-ui/src/components/KunTextarea/src/composables/kunTextareaProps.ts"
-        },
-        {
-          "name": "flat",
-          "type": "Boolean",
-          "default": "-",
-          "values": [],
-          "description": "Sin sombra.",
           "source": "/var/www/kun-ui/src/components/KunTextarea/src/composables/kunTextareaProps.ts"
         },
         {

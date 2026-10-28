@@ -33,6 +33,9 @@
     --text-color-toned: var(--kun-text-toned);
     --text-color-highlighted: var(--kun-text-highlighted);
     --text-color-on-warning: var(--kun-text-on-warning);
+    /* Texto tonal de warning (soft/subtle/outline/ghost/link, glifos): stop
+       claro en dark porque la superficie solid va oscura. */
+    --text-color-warning-tonal: var(--kun-text-warning-tonal);
     --text-color-inverted: var(--kun-text-inverted);
 
     --background-color-default: var(--kun-bg);
@@ -204,6 +207,9 @@
     --kun-info: var(--kun-color-info-500);
     --kun-warning: var(--kun-color-warning-500);
     --kun-error: var(--kun-color-error-500);
+    /* Texto tonal de warning: clon del semantico en light; el split solo
+       importa en dark (superficie solid 700 vs texto tonal 400). */
+    --kun-text-warning-tonal: var(--kun-warning);
 
     /* Capa 3: roles neutros (cuelgan de capa 1, nunca de --color-slate-* directo) */
     --kun-bg: white;
@@ -217,9 +223,10 @@
     --kun-text: var(--kun-color-neutral-700);
     --kun-text-highlighted: var(--kun-color-neutral-900);
     --kun-text-inverted: white;
-    /* Texto sobre superficies warning solid (amber-500/400): el hue "beige"
-       flotante pide tinta oscura, el blanco queda ~2:1 (WCAG fail). Cuelga
-       de capa 1 (neutral-950), no de un HEX directo. */
+    /* Texto sobre superficies warning solid: en light el fondo es amber-500
+       (claro) y pide tinta oscura (blanco quedaria ~2:1, WCAG fail); en dark
+       el bloque dark redeclara el rol en tinta clara porque ahi el fondo es
+       amber-700. Cuelga de capa 1 (neutral-950), no de un HEX directo. */
     --kun-text-on-warning: var(--kun-color-neutral-950);
     --kun-border: var(--kun-color-neutral-200);
     --kun-border-muted: var(--kun-color-neutral-200);
@@ -233,13 +240,18 @@
 :root[data-theme="dark"] {
     color-scheme: dark;
 
-    /* Capa 2: semantica (dark = stop 400, los stops no se regeneran) */
+    /* Capa 2: semantica (dark = stop 400, los stops no se regeneran).
+       EXCEPCION warning: el hue ambar no soporta el 400 como superficie
+       (luminancia neon sobre neutral-900, tinta blanca ~2:1). Split:
+       superficie solid = 700 (#b45309, bronce tostado, blanco ~5:1) y
+       texto tonal = 400 (sobre bg-warning/10 en dark solo se lee claro). */
     --kun-primary: var(--kun-color-primary-400);
     --kun-secondary: var(--kun-color-secondary-400);
     --kun-success: var(--kun-color-success-400);
     --kun-info: var(--kun-color-info-400);
-    --kun-warning: var(--kun-color-warning-400);
+    --kun-warning: var(--kun-color-warning-700);
     --kun-error: var(--kun-color-error-400);
+    --kun-text-warning-tonal: var(--kun-color-warning-400);
 
     /* Capa 3: roles neutros en dark */
     --kun-bg: var(--kun-color-neutral-900);
@@ -252,6 +264,10 @@
     --kun-text-toned: var(--kun-color-neutral-300);
     --kun-text: var(--kun-color-neutral-200);
     --kun-text-highlighted: white;
+    /* Texto sobre warning solid en dark (bg = amber-700, oscuro): tinta
+       clara, espejo de --kun-text-inverted. En light el fondo es amber-500
+       y la tinta va oscura (definida en :root). */
+    --kun-text-on-warning: white;
     --kun-text-inverted: var(--kun-color-neutral-900);
     --kun-border: var(--kun-color-neutral-800);
     --kun-border-muted: var(--kun-color-neutral-700);

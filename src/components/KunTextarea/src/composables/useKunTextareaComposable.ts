@@ -293,7 +293,7 @@ export default function useTextarea(
 
     // -------- VALIDACIÓN ----------
     const hasError: ComputedRef<boolean> = computed(() => {
-        return !!((errorMessages.value.length || (props.errorMessages as unknown[] | undefined)?.length))
+        return !!((props as { error?: boolean }).error || errorMessages.value.length || (props.errorMessages as unknown[] | undefined)?.length)
     })
 
     const displayedMessages: ComputedRef<string[]> = computed(() => {

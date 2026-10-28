@@ -188,7 +188,7 @@ const colorClasses = computed(() => {
     },
     warning: {
       root: 'border-s-4 border-warning',
-      icon: 'text-warning'
+      icon: 'text-warning-tonal'
     },
     info: {
       root: 'border-s-4 border-primary',

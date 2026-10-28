@@ -17,16 +17,12 @@ export const kunCardProps = {
     subTitleSize: { type: String as PropType<string | null>, default: null },
     /** Texto del cuerpo (atajo; equivale al slot default). */
     text: { type: String as PropType<string | null>, default: null },
-    /** Sin sombra. Deprecado: usar `variant="solid"` + `elevation="0"`. Solo afecta cuando la superficie lleva sombra. */
-    flat: { type: Boolean, default: false },
     /** Redondeo: boolean o tamaño. */
     rounded: {
         type: [Boolean, String] as PropType<KunCardRounded>,
         default: true,
         validator: (v: unknown) => typeof v === 'boolean' || ['sm', 'md', 'lg', 'xl'].includes(v as string)
     },
-    /** Con borde (`ring ring-default`). Deprecado: usar `variant="outline"`. */
-    outlined: { type: Boolean, default: false },
     /** Nivel de sombra (0-5, como string o número). */
     elevation: {
         type: [String, Number] as PropType<KunCardElevation>,

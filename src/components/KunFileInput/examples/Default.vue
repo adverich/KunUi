@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import KunFileInput from '../src/components/KunFileInput.vue'
-import type { KunFileInputVariant } from '../src/composables/kunFileInputProps.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import { KUN_COLORS, KUN_VARIANTS, type KunColor, type KunVariant } from '../../../theme/kunVariants.js'
 
 // ------------------------------------------------------------------
 // v-model principal: NO se puede pre-fijar (File solo existe vía
@@ -22,12 +22,14 @@ const errorMessagesProp = computed(() => (errorMessagesRaw.value === '' ? undefi
 const counterStringRaw = ref('')
 const counterSizeStringRaw = ref('')
 
-const variant = ref<KunFileInputVariant>('filled')
+const variant = ref<KunVariant>('subtle')
 const variantOptions = ref([
-  { id: 'filled', name: 'filled' },
-  { id: 'outlined', name: 'outlined' },
-  { id: 'solo', name: 'solo' },
+  ...KUN_VARIANTS.map((v) => ({ id: v, name: v })),
 ])
+
+const color = ref('')
+const colorOptions = ref([{ id: '', name: '(default: primary)' }, ...KUN_COLORS.map((c: KunColor) => ({ id: c, name: c }))])
+const colorProp = computed<KunColor | null>(() => (color.value === '' ? null : color.value as KunColor))
 
 const showSize = ref<boolean | number>(false)
 const showSizeOptions = ref<Array<{ id: boolean | number; name: string }>>([
@@ -136,6 +138,7 @@ function describeChange(e: unknown): string {
         :clear-icon="clearIcon || undefined"
         :icon-size="iconSize"
         :variant="variant"
+        :color="colorProp"
         @update:model-value="logEvent('update:modelValue', describeFiles($event))"
         @click:clear="logEvent('click:clear', '')"
         @click:control="logEvent('click:control', '')"
@@ -175,7 +178,15 @@ function describeChange(e: unknown): string {
         <KunSelect
           v-model="variant"
           v-model:items="variantOptions"
-          label="Variant"
+          label="Variant (KunVariant)"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="color"
+          v-model:items="colorOptions"
+          label="Color"
           item-value="id"
           item-title="name"
           density="compact"

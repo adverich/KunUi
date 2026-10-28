@@ -27,9 +27,7 @@ import { KunCard } from 'adverich-kun-ui'
 | `subtitle` | `string \| null` | `null` | Subtítulo (atajo). |
 | `subTitleSize` | `string \| null` | `null` | Reservado. Actualmente sin efecto (no se propaga a KunCardTitle). |
 | `text` | `string \| null` | `null` | Texto del cuerpo (atajo; equivale al slot default). |
-| `flat` | `Boolean` | `false` | Sin sombra. Deprecado: usar `variant="solid"` + `elevation="0"`. Solo afecta cuando la superficie lleva sombra. |
 | `rounded` | `KunCardRounded` | `true` | Redondeo: boolean o tamaño. |
-| `outlined` | `Boolean` | `false` | Con borde (`ring ring-default`). Deprecado: usar `variant="outline"`. |
 | `elevation` | `KunCardElevation` | `1` | Nivel de sombra (0-5, como string o número).<br/>Valores · Values: `0` `1` `2` `3` `4` `5` `` |
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link). |
 | `href` | `String` | `-` | URL externa (renderiza <a>). |
@@ -70,10 +68,9 @@ import { KunCard } from 'adverich-kun-ui'
 ## Bordes y superficies
 
 - Superficie `bg-default` (antes `bg-elevated`), como la `card` de Nuxt UI.
-- `outlined`/`variant="outlined"` pasa de `border border-default` a
-  `ring ring-default`: sobre `bg-elevated` el borde era invisible en dark
+- El borde siempre es `variant="outline"` (`ring` con el color resuelto):
+  sobre `bg-elevated` un `border` era invisible en dark
   (`--kun-border == --kun-bg-elevated == neutral-800`).
-- `tonal` sigue `bg-muted`; `text` sigue `bg-transparent`.
 
 ## Color y variante (alineado a `KunColor` × `KunVariant`)
 
@@ -86,14 +83,16 @@ import { KunCard } from 'adverich-kun-ui'
   sumando `hover:shadow-md`.
 - Caso especial `solid × neutral` conserva `bg-default` (el `bg-inverted` de la
   matriz es de controles, no de páginas/tarjetas).
-- Mapeo legacy → nuevo (los valores viejos son error de validación):
+- Mapeo histórico de la migración previa (los valores viejos son error de
+  validación):
   - `elevated` → `solid` (default: `bg-default` + `shadow-elevation`)
   - `outlined` → `outline` (`ring`, con el color resuelto)
-  - `flat` → `solid` + `elevation="0"` (la prop booleana `flat` queda deprecada)
   - `tonal` → `soft` (`bg-${color}/10`, antes `bg-muted`)
   - `text` / `plain` → `ghost` (`bg-transparent` + `shadow-none`)
-- La prop booleana `outlined` también queda deprecada: equivalía a
-  `ring ring-default`.
+- Props booleanas `flat` y `outlined` **eliminadas** (fin de la migración):
+  sin reemplazo a nivel prop; `flat` → `variant="solid"` + `elevation="0"`;
+  `outlined` → `variant="outline"`. Pasarlas es un attr DOM anodino, no
+  comportamiento.
 
 ---
 

@@ -150,8 +150,9 @@ const textColor = computed(() =>
   (resolvedVariant.value === 'solid' && !isNeutralSolid.value) ? 'text-highlighted' : 'text-default',
 )
 // La sombra es propia de la variante plena (replica el antiguo `elevated`).
+// Sin sombra se logra con `elevation="0"`; el borde es `variant="outline"`.
 const shadowClass = computed(() => {
-  if (props.flat || resolvedVariant.value !== 'solid') return 'shadow-none'
+  if (resolvedVariant.value !== 'solid') return 'shadow-none'
   return `shadow-${props.elevation}`
 })
 
@@ -167,7 +168,6 @@ const cardClass = computed(() => {
     surfaceClass.value,
     textColor.value,
     props.disabled ? 'pointer-events-none opacity-50' : '',
-    props.outlined ? 'ring ring-default' : '',
     props.tile ? '' : props.rounded === true ? 'rounded-lg' : props.rounded ? `rounded-${props.rounded}` : '',
     shadowClass.value,
     props.hover ? 'hover:shadow-md transition-shadow' : '',

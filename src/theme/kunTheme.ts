@@ -51,6 +51,11 @@ export interface KunThemeOptions {
             color?: KunColor;
             variant?: KunVariant;
         };
+        /** Fields (KunTextarea, KunFileInput). */
+        input?: {
+            color?: KunColor;
+            variant?: KunVariant;
+        };
     };
 }
 
@@ -59,6 +64,7 @@ interface KunThemeState extends Required<Omit<KunThemeOptions, 'font' | 'default
     defaults: {
         button: { color: KunColor; variant: KunVariant };
         list: { color: KunColor; variant: KunVariant };
+        input: { color: KunColor; variant: KunVariant };
     };
 }
 
@@ -250,6 +256,7 @@ const state = reactive<KunThemeState>({    primary: DEFAULT_PALETTES.primary,
     defaults: {
         button: { color: 'primary', variant: 'solid' },
         list: { color: 'primary', variant: 'soft' },
+        input: { color: 'primary', variant: 'outline' },
     },
 });
 
@@ -383,6 +390,10 @@ export const kunTheme = {
             Object.assign(state.defaults.list, options.defaults.list);
             persist(STORE_KEYS.defaults, JSON.stringify(state.defaults));
         }
+        if (options.defaults?.input !== undefined) {
+            Object.assign(state.defaults.input, options.defaults.input);
+            persist(STORE_KEYS.defaults, JSON.stringify(state.defaults));
+        }
     },
 
     reset(): void {
@@ -420,6 +431,7 @@ export const kunTheme = {
             defaults: {
                 button: { color: 'primary' as KunColor, variant: 'solid' as KunVariant },
                 list: { color: 'primary' as KunColor, variant: 'soft' as KunVariant },
+                input: { color: 'primary' as KunColor, variant: 'outline' as KunVariant },
             },
         });
         applyColorMode('light');
@@ -553,16 +565,22 @@ export const kunTheme = {
                     variant?: KunVariant;
                     button?: { color?: KunColor; variant?: KunVariant };
                     list?: { color?: KunColor; variant?: KunVariant };
+                    input?: { color?: KunColor; variant?: KunVariant };
                 };
                 if (parsed && typeof parsed === 'object') {
                     // Formato viejo (plano) y nuevo (por componente).
                     const button = parsed.button ?? parsed;
                     const list = parsed.list;
+                    const input = parsed.input;
                     if (isButtonColor(button.color)) state.defaults.button.color = button.color;
                     if (isButtonVariant(button.variant)) state.defaults.button.variant = button.variant;
                     if (list) {
                         if (isButtonColor(list.color)) state.defaults.list.color = list.color;
                         if (isButtonVariant(list.variant)) state.defaults.list.variant = list.variant;
+                    }
+                    if (input) {
+                        if (isButtonColor(input.color)) state.defaults.input.color = input.color;
+                        if (isButtonVariant(input.variant)) state.defaults.input.variant = input.variant;
                     }
                 }
             } catch { /* valor corrupto */ }

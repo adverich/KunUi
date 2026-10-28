@@ -57,13 +57,13 @@ import { KunTextarea } from 'adverich-kun-ui'
 | `autocomplete` | `String` | `-` | Autocomplete nativo. |
 | `rows` | `Number \| String` | `5` | Filas visibles iniciales. |
 | `dirty` | `Boolean` | `-` | Marca el campo como tocado (flota el label). |
-| `variant` | `KunTextareaVariant` | `'outlined'` | Variante visual: 'filled' \| 'outlined' \| 'underlined' \| 'solo'.<br/>Valores · Values: `filled` `outlined` `underlined` `solo` |
+| `variant` | `KunVariant` | `'outline'` | Variante canónica `KunVariant` de la matriz de la librería. El label flotante con muesca (notch) aplica en `outline`. |
+| `color` | `KunColor \| null` | `null` | Color semántico del field (`solid` pinta el fondo, `link` el texto, resto foco/error); `null` hereda `kunTheme.configure({ defaults: { input } })` (fallback `primary`). |
 | `density` | `KunTextareaDensity` | `'default'` | Densidad del padding.<br/>Valores · Values: `default` `comfortable` `compact` |
 | `inputClass` | `String \| Array` | `-` | Clase extra del textarea. |
 | `wrapperClass` | `String \| Array` | `-` | Clase extra del contenedor. |
 | `tile` | `Boolean` | `-` | Sin redondeo. |
 | `rounded` | `String` | `'rounded-md'` | Redondeo (clase de escala, `rounded-md` por defecto). |
-| `flat` | `Boolean` | `-` | Sin sombra. |
 | `loadingColor` | `String` | `-` | Color de la barra de carga (clase `bg-*` del theme). |
 | `clearIcon` | `Boolean` | `-` | Muestra el botón limpiar (requiere `clearable` con valor). |
 | `debounceTime` | `Number` | `300` | Debounce en ms para emitir el modelo. |
@@ -104,7 +104,7 @@ import { KunTextarea } from 'adverich-kun-ui'
 
 ## Notas · Notes
 
-## Muesca del label flotante + desplazamiento por `rounded` (variante outlined)
+## Muesca del label flotante + desplazamiento por `rounded` (variante outline)
 
 Igual que `KunTextField`/`KunNumberField`, vía el composable compartido
 `useKunFieldNotch` (`src/utils/useKunFieldNotch.ts`): el overlay dibuja el
@@ -120,9 +120,20 @@ en cualquier fondo, sin `fieldset`/`legend`. El label flotante se desplaza
 - `textareaClasses` y el borde del fieldset derivan ahora de
   `fieldsetRoundedClass`, sin claves `rounded` / `rounded-none` paralelas.
 - La barra de carga interna usa `rounded-md`.
-- Contorno por rol: `filled` → `bg-default border-accented`; `outlined`/`underlined`
-  → `border-accented`; `solo` → `bg-elevated ring ring-inset ring-accented`; notch
-  `border-accented` (fin del hack `dark:border-muted`).
+- Contorno por rol de la matriz `KunVariant` (con `color` resuelto, fallback
+  `kunTheme.defaults.input`): `outline` → reposo `bg-default` con borde del
+  overlay (`accented`/foco/fondo pleno); `soft` → `bg-elevated`; `subtle` →
+  `bg-elevated ring ring-inset ring-accented`; `ghost`/`link` → transparente;
+  `solid` → fondo pleno del color con texto contrastado. Foco y error usan
+  ring literal por color (`KUN_FIELD_FOCUS_RING` / `KUN_FIELD_ERROR_RING`,
+  en `src/utils/kunFieldVariant.ts`).
+## Validación
+
+- `error` (boolean, "estado de error visual") ahora marca el estado de verdad
+  inmediatamente, incluso sin mensajes (además de `errorMessages` / `rules`).
+- Eje migrado: la unión `'filled' | 'outlined' | 'underlined' | 'solo'` fue
+  reemplazada por `KunVariant` canónico (los valores viejos son error de
+  validación). El label flotante con muesca queda atado a `outline`.
 
 ---
 

@@ -1,8 +1,8 @@
 import type { PropType } from 'vue';
+import { isKunColor, isKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js';
 
 export type KunTextareaTextAlign = 'left' | 'center' | 'right';
 export type KunTextareaFormatModel = 'auto' | 'json' | 'plain';
-export type KunTextareaVariant = 'filled' | 'outlined' | 'underlined' | 'solo';
 export type KunTextareaDensity = 'default' | 'comfortable' | 'compact';
 
 export const kunTextareaProps = {
@@ -104,12 +104,14 @@ export const kunTextareaProps = {
 
   /** Marca el campo como tocado (flota el label). */
   dirty: Boolean,
-  /** Variante visual: 'filled' | 'outlined' | 'underlined' | 'solo'. */
+  /** Variante canónica `KunVariant` de la matriz de la librería. El label flotante con muesca (notch) aplica en `outline`. */
   variant: {
-    type: String as PropType<KunTextareaVariant>,
-    default: 'outlined',
-    validator: (v: unknown) => ['filled', 'outlined', 'underlined', 'solo'].includes(v as string),
+    type: String as PropType<KunVariant>,
+    default: 'outline',
+    validator: isKunVariant,
   },
+  /** Color semántico del field (`solid` pinta el fondo, `link` el texto, resto foco/error); `null` hereda `kunTheme.configure({ defaults: { input } })` (fallback `primary`). */
+  color: { type: String as PropType<KunColor | null>, default: null, validator: (v: unknown) => v === null || isKunColor(v) },
   /** Densidad del padding. */
   density: {
     type: String as PropType<KunTextareaDensity>,
@@ -124,8 +126,6 @@ export const kunTextareaProps = {
   tile: Boolean,
   /** Redondeo (clase de escala, `rounded-md` por defecto). */
   rounded: { type: String, default: 'rounded-md' },
-  /** Sin sombra. */
-  flat: Boolean,
   /** Color de la barra de carga (clase `bg-*` del theme). */
   loadingColor: String,
   /** Muestra el botón limpiar (requiere `clearable` con valor). */

@@ -1,5 +1,5 @@
-// Muesca del borde con label flotante, compartida por los fields outlined
-// (KunTextField, KunNumberField, KunTextarea).
+// Muesca del borde con label flotante, compartida por los fields con variante
+// `outline` (KunTextField, KunNumberField, KunTextarea).
 //
 // Estrategia: el overlay dibuja el borde nativo completo (el navegador respeta
 // cualquier `rounded`, pill incluida, sin costuras ni arcos incompletos) y la

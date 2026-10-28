@@ -60,14 +60,16 @@ export const KUN_VARIANT_CLASSES: Record<KunColor, Record<KunVariant, string>> =
         link: 'text-info hover:text-info/75 focus-visible:outline-3 focus-visible:outline-info/25',
     },
     warning: {
-        /* Amber-500 (light) y amber-400 (dark) piden tinta oscura; el solid
-           usa `text-on-warning` en vez de `text-highlighted` (blanco ~2:1). */
+        /* La superficie solid es oscura en dark (amber-700) y clara en light
+           (amber-500): el texto va con `text-on-warning` (tinta clara/oscura por
+           modo). Las variantes tonales (y glifos) usan `text-warning-tonal`,
+           que en dark resuelve al stop 400 y en light al 500. */
         solid: 'text-on-warning bg-warning hover:bg-warning/75 active:bg-warning/75 focus-visible:outline-3 focus-visible:outline-warning/25',
-        outline: 'text-warning ring ring-warning/50 hover:bg-warning/10 focus-visible:outline-3 focus-visible:outline-warning/25',
-        soft: 'text-warning bg-warning/10 hover:bg-warning/15 focus-visible:outline-3 focus-visible:outline-warning/25',
-        subtle: 'text-warning bg-warning/10 ring ring-warning/25 hover:bg-warning/15 focus-visible:outline-3 focus-visible:outline-warning/25',
-        ghost: 'text-warning hover:bg-warning/10 focus-visible:outline-3 focus-visible:outline-warning/25',
-        link: 'text-warning hover:text-warning/75 focus-visible:outline-3 focus-visible:outline-warning/25',
+        outline: 'text-warning-tonal ring ring-warning/50 hover:bg-warning/10 focus-visible:outline-3 focus-visible:outline-warning/25',
+        soft: 'text-warning-tonal bg-warning/10 hover:bg-warning/15 focus-visible:outline-3 focus-visible:outline-warning/25',
+        subtle: 'text-warning-tonal bg-warning/10 ring ring-warning/25 hover:bg-warning/15 focus-visible:outline-3 focus-visible:outline-warning/25',
+        ghost: 'text-warning-tonal hover:bg-warning/10 focus-visible:outline-3 focus-visible:outline-warning/25',
+        link: 'text-warning-tonal hover:text-warning-tonal/75 focus-visible:outline-3 focus-visible:outline-warning/25',
     },
     error: {
         solid: 'text-highlighted bg-error hover:bg-error/75 active:bg-error/75 focus-visible:outline-3 focus-visible:outline-error/25',
@@ -172,7 +174,7 @@ export const KUN_SELECTED_CLASSES: Record<KunColor, string> = {
     secondary: 'bg-secondary/25! text-secondary ring ring-inset ring-secondary/50',
     success: 'bg-success/25! text-success ring ring-inset ring-success/50',
     info: 'bg-info/25! text-info ring ring-inset ring-info/50',
-    warning: 'bg-warning/25! text-warning ring ring-inset ring-warning/50',
+    warning: 'bg-warning/25! text-warning-tonal ring ring-inset ring-warning/50',
     error: 'bg-error/25! text-error ring ring-inset ring-error/50',
     neutral: 'bg-elevated! text-default ring ring-inset ring-accented',
 };
@@ -204,7 +206,9 @@ export const KUN_TEXT_COLORS: Record<KunColor, string> = {
     secondary: 'text-secondary',
     success: 'text-success',
     info: 'text-info',
-    warning: 'text-warning',
+    /* Warning va con el rol tonal: en dark la superficie solid es 700 y el
+       glifo/documento sobre bg oscuro se lee con el 400. */
+    warning: 'text-warning-tonal',
     error: 'text-error',
     neutral: 'text-default',
 };
@@ -215,7 +219,7 @@ export function kunTextClasses(color: KunColor): string {
 }
 
 /** Componentes con defaults de color/variante configurables vía `kunTheme.configure({ defaults })`. */
-export type KunThemeComponent = 'button' | 'list' | 'avatar' | 'card' | 'toolbar-items';
+export type KunThemeComponent = 'button' | 'list' | 'avatar' | 'card' | 'toolbar-items' | 'input';
 
 /** Fallback cuando no hay default configurado (ni prop). */
 const KUN_FALLBACK_COLOR: Record<KunThemeComponent, KunColor> = {
@@ -224,6 +228,7 @@ const KUN_FALLBACK_COLOR: Record<KunThemeComponent, KunColor> = {
     avatar: 'neutral',
     card: 'neutral',
     'toolbar-items': 'neutral',
+    input: 'primary',
 };
 
 /** Fallback de variante. */
@@ -233,12 +238,14 @@ const KUN_FALLBACK_VARIANT: Record<KunThemeComponent, KunVariant> = {
     avatar: 'soft',
     card: 'solid',
     'toolbar-items': 'ghost',
+    input: 'outline',
 };
 
 /**
  * Resuelve color/variante con fallback prop > `theme.defaults[component]` > default.
  * `null`/`undefined` en prop delega al theme global. `component` permite defaults
- * por componente (`button`, `list`, `avatar`, `card`, `toolbar-items`); default `'button'`.
+ * por componente (`button`, `list`, `avatar`, `card`, `toolbar-items`, `input`);
+ * default `'button'`.
  */
 export function resolveKunColor(prop: KunColor | null | undefined, component: KunThemeComponent = 'button'): KunColor {
     if (prop) return prop;

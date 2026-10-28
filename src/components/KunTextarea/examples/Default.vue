@@ -4,12 +4,12 @@ import KunTextarea from '../src/components/KunTextarea.vue'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import { KUN_COLORS, KUN_VARIANTS, type KunColor, type KunVariant } from '../../../theme/kunVariants.js'
 
 // ------------------------------------------------------------------
-// Tipos de unión (kunTextareaProps.ts no exporta tipos: se definen aquí
-// a partir de los valores documentados en cada prop)
+// Tipos de unión (kunTextareaProps.ts exporta los literales; KunVariant/
+// KunColor vienen de la matriz del theme)
 // ------------------------------------------------------------------
-type KunTextareaVariant = 'filled' | 'outlined' | 'underlined' | 'solo'
 type KunTextareaDensity = 'default' | 'comfortable' | 'compact'
 type KunTextareaTextAlign = 'left' | 'center' | 'right'
 type KunTextareaFormatModel = 'auto' | 'json' | 'plain'
@@ -40,13 +40,14 @@ const appendInnerIcon = ref('')
 
 const errorMessage = ref('')
 
-const variant = ref<KunTextareaVariant>('outlined')
+const variant = ref<KunVariant>('outline')
 const variantOptions = ref([
-  { id: 'filled', name: 'filled' },
-  { id: 'outlined', name: 'outlined' },
-  { id: 'underlined', name: 'underlined' },
-  { id: 'solo', name: 'solo' },
+  ...KUN_VARIANTS.map((v) => ({ id: v, name: v })),
 ])
+
+const color = ref('')
+const colorOptions = ref([{ id: '', name: '(default: primary)' }, ...KUN_COLORS.map((c: KunColor) => ({ id: c, name: c }))])
+const colorProp = computed<KunColor | null>(() => (color.value === '' ? null : color.value as KunColor))
 
 const density = ref<KunTextareaDensity>('default')
 const densityOptions = ref([
@@ -101,7 +102,6 @@ const autoGrow = ref(true)
 const noResize = ref(false)
 const dirty = ref(false)
 const tile = ref(false)
-const flat = ref(false)
 const clearIcon = ref(false)
 const disabled = ref(false)
 const readonly = ref(false)
@@ -164,10 +164,10 @@ function logEvent(name: string, detail: unknown): void {
         :rows="rowsProp"
         :dirty="dirty"
         :variant="variant"
+        :color="colorProp"
         :density="density"
         :rounded="rounded || undefined"
         :tile="tile"
-        :flat="flat"
         :loading-color="loadingColor || undefined"
         :clear-icon="clearIcon"
         :debounce-time="debounceProp"
@@ -208,7 +208,15 @@ function logEvent(name: string, detail: unknown): void {
         <KunSelect
           v-model="variant"
           v-model:items="variantOptions"
-          label="Variant"
+          label="Variant (KunVariant)"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="color"
+          v-model:items="colorOptions"
+          label="Color"
           item-value="id"
           item-title="name"
           density="compact"
@@ -277,7 +285,6 @@ function logEvent(name: string, detail: unknown): void {
         <KunSwitch v-model="error" label="Error" />
         <KunSwitch v-model="dirty" label="Dirty" />
         <KunSwitch v-model="tile" label="Tile" />
-        <KunSwitch v-model="flat" label="Flat" />
         <KunSwitch v-model="disabled" label="Disabled" />
         <KunSwitch v-model="readonly" label="Readonly" />
       </div>
