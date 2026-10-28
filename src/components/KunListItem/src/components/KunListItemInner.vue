@@ -36,10 +36,10 @@
       </slot>
     </div>
 
-    <!-- Append -->
-    <div v-if="hasAppend" class="shrink-0 flex items-center gap-2 ms-3">
+    <!-- Append (contenedor si hay prop de ícono/avatar O slot `append`) -->
+    <div v-if="hasAppend || $slots.append" class="shrink-0 flex items-center gap-2 ms-3">
       <slot name="append">
-        <img v-if="appendAvatar" :src="appendAvatar" class="w-8 h-8 rounded-full" />
+        <img v-if="appendAvatar" :src="appendAvatar" class="rounded-full" :class="appendClass" />
         <component v-if="isComponent(appendIcon)" :is="appendIcon" class="w-5 h-5" />
         <KunIcon v-else-if="typeof appendIcon === 'string'" :icon="appendIcon" :class="appendClass" />
       </slot>

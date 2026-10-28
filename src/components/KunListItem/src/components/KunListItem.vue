@@ -18,6 +18,7 @@
       :class="mergedItemClass" 
       @click="(e: MouseEvent) => handleClick(e, navigate)"
       @keydown.enter.prevent="(e: KeyboardEvent) => handleClick(e, navigate)"
+      @keydown.space.prevent="(e: KeyboardEvent) => handleClick(e, navigate)"
       v-bind="$attrs"
     >
       <KunListItemInner
@@ -56,6 +57,7 @@
     :class="[mergedItemClass]"
     @click="handleClick"
     @keydown.enter.prevent="handleClick"
+    @keydown.space.prevent="handleClick"
     v-bind="$attrs"
   >
     <KunListItemInner

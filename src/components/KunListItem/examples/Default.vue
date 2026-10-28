@@ -6,6 +6,7 @@ import { KUN_COLORS, KUN_VARIANTS, type KunColor } from '../../../theme/kunVaria
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import KunChip from '../../KunChip/src/components/KunChip.vue'
 
 // ------------------------------------------------------------------
 // Contenido (compartido por los 3 items)
@@ -123,6 +124,33 @@ function logEvent(name: string, detail: unknown): void {
         </ul>
         <p v-else class="text-xs text-muted">Hacé clic en un ítem para ver eventos…</p>
       </div>
+
+      <!-- Slots: ejercitan el reenvío sin props de ícono/avatar.
+           El `#append` solo, sin `appendIcon`/`appendAvatar`, es el caso
+           regresivo del contenedor de append. Enter y Space seleccionan. -->
+      <div class="rounded-lg border border-default divide-y divide-default overflow-hidden">
+        <KunListItem :value="'slot-append'" selectable v-model:selected="selectedItem" density="compact">
+          <template #default>
+            <div class="font-medium">Slot default + #append solo</div>
+            <div class="text-sm text-muted">Sin appendIcon: el chip debe verse</div>
+          </template>
+          <template #append>
+            <KunChip density="compact" variant="subtle" rounded="full" class="text-xs">append slot</KunChip>
+          </template>
+        </KunListItem>
+
+        <KunListItem :value="'slot-prepend'" selectable v-model:selected="selectedItem" density="compact">
+          <template #prepend>
+            <span aria-hidden="true" class="text-lg">⭐</span>
+          </template>
+          <template #title>Slot title</template>
+          <template #subtitle>Con slot #prepend (sin prependIcon)</template>
+          <template #append>
+            <KunChip color="info" density="compact" variant="subtle" rounded="full" class="text-xs">info</KunChip>
+          </template>
+        </KunListItem>
+      </div>
+      <p class="text-xs text-muted">Enter y Space seleccionan los ítems `selectable`.</p>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->

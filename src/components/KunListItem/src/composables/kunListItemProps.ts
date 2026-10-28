@@ -14,7 +14,6 @@ export const kunListItemProps = {
   href: String,
   /** Navegación con replace (solo con `to`). */
   replace: Boolean,
-  /** Coincidencia exacta de ruta activa. */
   /** Tag del contenedor. */
   tag: { type: String, default: 'li' },
   /** Deshabilita el ítem. */
