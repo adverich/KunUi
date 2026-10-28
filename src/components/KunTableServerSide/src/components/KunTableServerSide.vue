@@ -7,14 +7,14 @@
   >
     <div
       v-if="searchable || filterable || $slots.prependHeader || $slots.prependSearch || $slots.appendSearch"
-      class="p-2 bg-muted print:hidden flex w-full justify-between"
+      class="p-2 bg-muted print:hidden flex w-full flex-wrap items-center justify-between gap-y-2"
       :class="{ 'pointer-events-none opacity-60': loading }"
     >
-      <div class="w-full flex items-center" v-if="showSearchBtn || !isMobile">
+      <div class="flex items-center min-w-0" v-if="showSearchBtn || !isMobile">
         <slot name="prependHeader" />
       </div>
 
-      <div class="inline-flex items-center justify-center whitespace-nowrap" v-if="selectedItems.length && !hideSelected">
+      <div class="inline-flex items-center justify-center whitespace-nowrap shrink-0" v-if="selectedItems.length && !hideSelected">
         <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
         <span
           v-if="selectedItems.length"
@@ -25,7 +25,7 @@
         </span>
       </div>
 
-      <div class="min-w-1/3 flex h-full items-center" :class="[searchPositionClass]">
+      <div class="min-w-1/3 ml-auto flex h-full items-center" :class="[searchPositionClass]">
         <slot name="prependSearch" />
 
         <KunBtn v-if="filterable && filters.length"

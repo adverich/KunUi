@@ -89,6 +89,27 @@ const filters = [
 </KunTable>
 ```
 
+## Rendimiento de la selección
+
+- Toda la identidad de selección se resuelve con `Set`s (`useSelect.ts`):
+  claves resueltas comparables por valor (`resolveRowKeyValue`) y un
+  `Set` de referencias para items sin clave. Antes cada operación usaba
+  `Array.some` anidado (O(n²)): con ~5000 registros, «Seleccionar todo»
+  congelaba la UI por segundos. Ahora todas las operaciones son O(n):
+  seleccionar 5000 items toma ~20–30 ms (verificado en playground).
+  - `isSelected` consulta el `computed` `selectedIdentity` (O(1) por fila),
+    no re-escanea la selección en cada celda.
+  - La semántica no cambió: clave resuelta ⇒ comparación por valor
+    (`===`), sin clave ⇒ referencia de objeto; items sin clave siempre se
+    conservan al filtrar (igual que antes).
+  - El watch de sincronización con `filteredItems` es superficial
+    (sin `deep: true`): el computed ya produce un array nuevo por
+    reevaluación; el traverse profundo recorría todo el dataset en cada
+    flush de reactividad sin efecto observable.
+- El example incluye el switch «Estrés (5000 registros)» como harness de
+  rendimiento; el preview de ids seleccionados se trunca a 20 para no
+  serializar miles de ids en cada render.
+
 ## Bordes y radio
 
 - Wrapper `rounded-lg`; div de búsqueda y spans de acción `rounded-md` (antes
