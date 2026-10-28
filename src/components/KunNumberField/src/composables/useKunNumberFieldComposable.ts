@@ -257,6 +257,21 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         numberInput.value.value = inputValue.value;
     }
 
+    // Vacía el <input> nativo y el display en el MISMO tick del focus. Si la
+    // limpieza vive solo en el estado reactivo, la escritura al DOM queda
+    // diferida al próximo render de Vue y una tecla inmediata del usuario
+    // (cajero tipeando justo después de agregar el ítem) aterriza sobre el
+    // "0,00" residual con el caret al inicio → un "3" produce "30,00".
+    function clearDisplayNative(): void {
+        inputValue.value = '';
+        const el = numberInput.value;
+        if (!el) return;
+        el.value = '';
+        try {
+            el.setSelectionRange(0, 0);
+        } catch { /* noop */ }
+    }
+
     function handleFocusNatural(event: FocusEvent): void {
         isActive.value = true;
         if (!numberInput.value) return;
@@ -271,20 +286,14 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         const num = shown ? parseFormattedToNumber(shown) : Number(props.modelValue);
 
         if (isNaN(num)) {
-            inputValue.value = '';
+            clearDisplayNative();
             emits('focus');
             return;
         }
 
-        // Si es cero exacto → limpiar el input
+        // Si es cero exacto → limpiar el input (display + DOM nativo, mismo tick)
         if (num === 0) {
-            inputValue.value = '';
-            const focusEl = numberInput.value;
-            nextTick(() => {
-                try {
-                    focusEl?.setSelectionRange(0, 0);
-                } catch { }
-            });
+            clearDisplayNative();
             emits('focus');
             return;
         }
