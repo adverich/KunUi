@@ -143,8 +143,12 @@ function logEvent(name: string, detail: unknown): void {
           <template #prepend>
             <span aria-hidden="true" class="text-lg">⭐</span>
           </template>
-          <template #title>Slot title</template>
-          <template #subtitle>Con slot #prepend (sin prependIcon)</template>
+          <template #title>
+            <div class="font-medium">Slot title</div>
+          </template>
+          <template #subtitle>
+            <div class="text-sm text-muted">Con slot #prepend (sin prependIcon)</div>
+          </template>
           <template #append>
             <KunChip color="info" density="compact" variant="subtle" rounded="full" class="text-xs">info</KunChip>
           </template>
