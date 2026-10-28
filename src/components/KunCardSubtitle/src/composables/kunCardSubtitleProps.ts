@@ -14,7 +14,7 @@ export const kunCardSubtitleProps = {
     /** Color del texto. */
     color: {
         type: String,
-        default: 'text-ui-muted'
+        default: 'text-muted'
     },
     /** Peso del texto. */
     fontWeight: {

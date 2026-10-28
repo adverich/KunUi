@@ -9,21 +9,31 @@
           </slot>
         </div>
 
-      <div class="flex flex-row items-center w-full border relative" :class="[bgInput, rounded, containerDensity,
-        inputFocused ? 'border-ui-focus shadow-ui-focus' : borderColor,
-        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text', 
-        hasError ? 'bg-ui-error-soft' : ''
+      <div data-kun-input-box class="flex flex-row items-center w-full border border-transparent relative" :class="[bgInputClass, rounded, containerDensity,
+        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'
       ]">
+        <!-- Borde nativo completo (respeta cualquier `rounded`, pill incluido)
+             con la muesca del label recortada vía mask: hueco real en cualquier
+             fondo y sin fieldset/legend (idéntico en todos los navegadores). -->
+        <div
+          aria-hidden="true"
+          data-kun-notch="KunTextField"
+          ref="overlayRef"
+          class="absolute inset-0 pointer-events-none border"
+          :class="[rounded, notchBorderClass]"
+          :style="notchMaskStyle"
+        />
         <!-- Label centrado contra el contenedor del input (no contra el wrapper con details) -->
-        <label v-if="label" :for="uid" :class="[labelColorClass, labelLeftClass, labelClass,
+        <label ref="labelRef" v-if="label" :for="uid" :style="labelShiftStyle" :class="[labelColorClass, labelLeftClass, labelClass,
           'absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10 px-1',
           isFloating
-            ? [floatingLabelTop, floatingLabelSize, floatingLabelOpacity, 'translate-y-0']
+            ? [floatingLabelTop, floatingLabelSize, floatingLabelOpacity, '-translate-y-1/2']
             : ['top-1/2 -translate-y-1/2', labelSize, labelOpacity]
         ]">
           {{ label }}
         </label>
 
+        <div class="flex flex-row items-center w-full h-full flex-1 min-w-0">
         <div v-if="prefix" class="ml-2 shrink-0">{{ prefix }}</div>
 
         <div v-if="hasPrependInner" :class="prependInnerClass"
@@ -41,16 +51,16 @@
           :readonly="readonly" :inputmode="(inputmode as any)" :minlength="(minlength as number)" :maxlength="(maxlength as number)"
           :pattern="(pattern as string)" :spellcheck="(spellcheck as any)"
           class="min-w-12 flex-1 bg-transparent focus:outline-none leading-normal" :aria-invalid="hasError ? 'true' : 'false'"
-          :class="[inputDensity, inputTextSizeClass, inputWeightClass, textColor, placeholderColor, placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
+          :class="[inputDensity, inputTextSizeClass, inputWeightClass, 'text-default placeholder:text-muted', placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           :aria-describedby="hasError ? `error-${uid}` : undefined" 
-          @input="handleInput" @blur="handleBlur" @focus="focusInput" 
+          @input="handleInput" @change="handleChange" @animationstart="handleAnimationStart" @blur="handleBlur" @focus="focusInput" 
           @click.stop="emits('handleClick')" 
           @keydown="handleKeyDown" @keyup="emits('keyUp', $event)" 
         />
 
         <!-- Clearable -->
-         <KunIcon v-if="clearable && inputValue" @click="clearInput" size="small" color="error" :icon="icons.close"
-          class="mr-1 shrink-0" :class="textColor" :disabled="disabled || readonly" />
+         <KunIcon v-if="clearable && inputValue" @click="clearInput" size="size-4" :icon="icons.close"
+          class="mr-1 shrink-0 text-error" :disabled="disabled || readonly" />
       
         <slot />
       
@@ -64,6 +74,7 @@
           </slot>
         </div>
         <div v-if="suffix" class="mr-2 shrink-0">{{ suffix }}</div>
+        </div>
       </div>
 
       <!-- Append externo (fuera del borde) -->
@@ -76,17 +87,17 @@
 
       <div v-if="!hideDetails" class="h-[1.25rem]">
         <!-- Error -->
-        <div v-if="hasError" :id="`error-${uid}`" class="text-ui-error text-sm text-center">
+        <div v-if="hasError" :id="`error-${uid}`" class="text-error text-sm text-center">
           {{ validationError || errorMessage }}
         </div>
-  
+
         <!-- Hint -->
-        <div v-else-if="hint && (persistentHint || inputFocused)" class="text-xs text-center">
+        <div v-else-if="hint && (persistentHint || inputFocused)" class="text-xs text-center text-muted">
           {{ hint }}
         </div>
-  
+
         <!-- Counter -->
-        <div v-if="counter && maxlength" class="text-xs text-right">
+        <div v-if="counter && maxlength" class="text-xs text-right text-muted">
           {{ inputValue?.length || 0 }} / {{ maxlength }}
         </div>
       </div>
@@ -99,6 +110,7 @@ import { useId, useSlots, computed, ref, nextTick } from 'vue';
 import { icons } from '@/icons'
 import inputProps from '../composables/KunTextFieldProps.js';
 import useKunTextField from '../composables/useKunTextFieldComposable.js';
+import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 defineOptions({
@@ -125,6 +137,8 @@ const {
   validationError,
   hasError,
   handleInput,
+  handleChange,
+  handleAnimationStart,
   handleBlur,
   focusInput,
   validate,
@@ -189,15 +203,32 @@ const labelLeftClass = computed(() => {
   return 'left-2';
 });
 
-const labelColorClass = computed(() =>
-  isFloating.value ? (props.floatingLabelColor || props.labelColor) : props.labelColor
-);
+const labelColorClass = computed(() => {
+  if (hasError.value) return 'text-error';
+  return isFloating.value ? 'text-primary' : 'text-muted';
+});
 const labelSize = computed(() => props.labelSize);
 const floatingLabelSize = computed(() => props.floatingLabelSize);
 const labelOpacity = computed(() => props.labelOpacity);
 const floatingLabelOpacity = computed(() => props.floatingLabelOpacity);
 const floatingLabelTop = computed(() => props.floatingLabelTop);
 const labelClass = computed(() => props.labelClass);
+
+// Muesca del borde + desplazamiento del label (ver `useKunFieldNotch`).
+const { labelRef, overlayRef, notchMaskStyle, labelShiftStyle } = useKunFieldNotch(
+  {
+    isFloating: () => isFloating.value,
+    hasLabel: () => props.label,
+    labelLeftClass: () => labelLeftClass.value,
+    roundedClass: () => props.rounded,
+  },
+  [floatingLabelSize, labelSize, labelClass]
+);
+const notchBorderClass = computed(() => {
+  if (hasError.value) return 'border-error';
+  return inputFocused.value ? 'border-primary' : 'border-accented';
+});
+
 
 const showPass = ref(false);
 const passIcon = computed(() => showPass.value ? icons.eyeOffOutline : icons.eyeOutline);
@@ -228,5 +259,10 @@ const placeholderTextSizeClass = computed(() => {
 });
 
 const containerDensity = computed(() => props.density === "compact" ? "min-h-[32px]" : props.density === "comfortable" ? "min-h-[40px]" : "min-h-[48px]");
+
+// Fondo del contenedor. `bgInput` (clase Tailwind) gana si existe: permite
+// resaltar estados por el consumidor (ej. cajas de cobro). Sin ella:
+// `bg-default`, con `bg-error/10` automático en estado de error.
+const bgInputClass = computed(() => props.bgInput ?? (hasError.value ? 'bg-error/10' : 'bg-default'));
 </script>
 

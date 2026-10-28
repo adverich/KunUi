@@ -34,11 +34,11 @@ import type {
 // Controla el carousel principal (declarado debajo del panel).
 // ------------------------------------------------------------------
 const mainSlides = ref([
-  { id: 1, title: 'Slide 1', bg: 'bg-red-500' },
-  { id: 2, title: 'Slide 2', bg: 'bg-blue-500' },
-  { id: 3, title: 'Slide 3', bg: 'bg-green-500' },
-  { id: 4, title: 'Slide 4', bg: 'bg-amber-500' },
-  { id: 5, title: 'Slide 5', bg: 'bg-purple-500' },
+  { id: 1, title: 'Slide 1', bg: 'bg-error' },
+  { id: 2, title: 'Slide 2', bg: 'bg-info' },
+  { id: 3, title: 'Slide 3', bg: 'bg-success' },
+  { id: 4, title: 'Slide 4', bg: 'bg-warning' },
+  { id: 5, title: 'Slide 5', bg: 'bg-secondary' },
 ])
 
 const mainSelected = ref(0)
@@ -319,7 +319,7 @@ const visible = ref([])
       </p>
     </header>
 
-    <section class="rounded-xl border border-surface bg-surface-dark p-4 sm:p-5">
+    <section class="rounded-lg border border-muted bg-elevated p-4 sm:p-5">
       <h3 class="text-base font-semibold">Variante principal</h3>
       <p class="mt-1 text-sm opacity-70">
         Playground compacto: los conjuntos cerrados controlan el carousel principal de abajo.
@@ -387,7 +387,7 @@ const visible = ref([])
           :autoplay-direction="autoplayDirection"
         >
           <KunCarouselSlide v-for="s in mainSlides" :key="s.id">
-            <div :class="['flex h-56 items-center justify-center rounded-xl text-2xl font-bold text-white', s.bg]">
+            <div :class="['flex h-56 items-center justify-center rounded-lg text-2xl font-bold text-highlighted', s.bg]">
               {{ s.title }}
             </div>
           </KunCarouselSlide>
@@ -395,14 +395,14 @@ const visible = ref([])
       </div>
     </section>
 
-    <nav class="sticky top-0 z-20 -mx-4 space-y-2 bg-surface-dark/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6">
+    <nav class="sticky top-0 z-20 -mx-4 space-y-2 bg-elevated/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6">
       <div v-for="group in groups" :key="group.title" class="flex flex-wrap items-center gap-1.5">
         <span class="mr-1 text-[11px] font-semibold uppercase tracking-wide opacity-50">{{ group.title }}:</span>
         <a
           v-for="link in group.links"
           :key="link.id"
           :href="`#${link.id}`"
-          class="rounded-md border border-surface bg-surface-light px-2.5 py-1 text-xs transition hover:bg-surface"
+          class="rounded-md border border-muted bg-muted px-2.5 py-1 text-xs transition hover:bg-muted"
         >
           {{ link.label }}
         </a>

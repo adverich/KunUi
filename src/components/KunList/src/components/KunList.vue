@@ -6,16 +6,7 @@
     tabindex="-1"
     @keydown="onKeydown"
     @select="e => emit('click:select', (e as CustomEvent).detail)"
-    :class="[
-      bgList,
-      borderColor,
-      {
-        'space-y-1': !dense,
-        'space-y-0.5': dense,
-        'pl-4 border-l-2': sub,
-        'p-2 rounded-md': nav,
-      },
-    ]"
+    :class="containerClass"
     v-bind="$attrs"
   >
     <slot />
@@ -25,6 +16,7 @@
 <script setup lang="ts">
 import { ref, provide, computed, onUpdated, type Ref } from 'vue'
 import { kunListProps } from '../composables/kunListProps.js'
+import { KUN_SURFACE_BG, resolveKunColor, resolveKunVariant } from '../../../../theme/kunVariants.js'
 
 const props = defineProps(kunListProps)
 
@@ -33,8 +25,10 @@ const emit = defineEmits(['keyDown', 'click:select', 'update:selected'])
 const ulRef: Ref<HTMLUListElement | null> = ref(null)
 const itemRefs: Ref<HTMLElement[]> = ref([])
 
-const selectedItems = defineModel('selected', {
-  type: [Array, String, Number, Object, null],
+const selectedItems = defineModel<unknown[] | string | number | object | null>('selected', {
+  // `null`/`undefined` saltean la validación runtime si no es `required`;
+  // no se incluye `null` en el array (no es constructor válido).
+  type: [Array, String, Number, Object],
   default: () => [],
 })
 
@@ -67,7 +61,7 @@ function toggleItem(value: unknown): void {
     ? selectedArray.filter((v: unknown) => v !== value)
     : [...selectedArray, value]
   } else {
-    selectedItems.value = value
+    selectedItems.value = value as unknown[] | string | number | object | null
   }
 }
 
@@ -77,15 +71,39 @@ onUpdated(() => {
 
 function isSelected(value: unknown): boolean {
   if (!props.selectable || value == null) return false
+  const sel = selectedItems.value
   return isMultiple.value
-  ? selectedItems.value?.includes?.(value)
-  : selectedItems.value === value
+  ? Array.isArray(sel) && sel.includes(value)
+  : sel === value
 }
 
-// 🔴🔴 ESTE PROVIDE FALTABA
+// ------------------------------------------------------------------
+// Color/variante del contenedor (prop > theme.defaults.list > default).
+// Solo capa de superficie: fondo + ring; el texto lo colorean los items.
+// ------------------------------------------------------------------
+const resolvedColor = computed(() => resolveKunColor(props.color, 'list'))
+const resolvedVariant = computed(() => resolveKunVariant(props.variant, 'list'))
+// `bg` libre gana sobre color x variante para el fondo del contenedor.
+const surfaceClass = computed(() => props.bg ?? KUN_SURFACE_BG[resolvedColor.value][resolvedVariant.value])
+const containerClass = computed(() => [
+  props.fontSize,
+  surfaceClass.value,
+  'rounded-lg',
+  {
+    'space-y-1': !props.dense,
+    'space-y-0.5': props.dense,
+    'ps-4 border-s-2 border-primary': props.sub,
+    'p-2 rounded-md': props.nav,
+  },
+])
+
 provide('kunListContext', {
   toggleItem,
-  isSelected
+  isSelected,
+  /** Indica si la lista gestiona selección (selectable). */
+  gestiona: props.selectable,
+  /** Accesor reactivo: el item inyecta el color resuelto de la lista. */
+  get color() { return resolvedColor.value },
 })
 
 function onKeydown(e: KeyboardEvent): void {

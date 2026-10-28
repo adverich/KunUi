@@ -18,54 +18,29 @@
       :class="mergedItemClass" 
       @click="(e: MouseEvent) => handleClick(e, navigate)"
       @keydown.enter.prevent="(e: KeyboardEvent) => handleClick(e, navigate)"
+      @keydown.space.prevent="(e: KeyboardEvent) => handleClick(e, navigate)"
       v-bind="$attrs"
     >
-      <!-- CONTENIDO -->
-      <div class="flex w-full items-center">
-        <!-- Prepend -->
-        <div v-if="hasPrepend || $slots.prepend" class="shrink-0 flex items-center gap-2 me-2">
-          <slot name="prepend">
-            <img v-if="prependAvatar" :src="prependAvatar" class="rounded-full" :class="prependClass" />
-
-            <!-- Permitir componente personalizado -->
-            <component
-              v-else-if="isComponent(prependIcon)"
-              :is="prependIcon"
-              :class="prependClass"
-            />
-            
-            <!-- Si es string, lo pasás a KunIcon -->
-            <KunIcon
-              v-else-if="typeof prependIcon === 'string'"
-              :icon="prependIcon"
-              :class="prependClass"
-            />
-          </slot>
-        </div>
-
-        <!-- Contenido central -->
-        <div class="flex flex-col min-w-0 flex-1" :class="contentClass" v-bind="otherAttrs">
-          <slot>
-            <slot name="title">
-              <div v-if="title" class="truncate" :class="titleClass">{{ title }}</div>
-            </slot>
-            <slot name="subtitle">
-              <div v-if="subtitle" class="truncate" :class="subtitleClass">
-                {{ subtitle }}
-              </div>
-            </slot>
-          </slot>
-        </div>
-
-        <!-- Append -->
-        <div v-if="hasAppend" class="shrink-0 flex items-center gap-2 ms-3">
-          <slot name="append">
-            <img v-if="appendAvatar" :src="appendAvatar" class="w-8 h-8 rounded-full" />
-            <component v-if="isComponent(appendIcon)" :is="appendIcon" class="w-5 h-5" />
-            <i v-else-if="appendIcon" :class="appendClass" class="text-xl leading-none" />
-          </slot>
-        </div>
-      </div>
+      <KunListItemInner
+        :prepend-icon="prependIcon"
+        :prepend-avatar="prependAvatar"
+        :prepend-class="prependClass"
+        :append-icon="appendIcon"
+        :append-avatar="appendAvatar"
+        :append-class="appendClass"
+        :title="title"
+        :title-class="titleClass"
+        :subtitle="subtitle"
+        :subtitle-class="subtitleClass"
+        :content-class="contentClass"
+        :other-attrs="otherAttrs"
+      >
+        <template v-if="$slots.prepend" #prepend><slot name="prepend" /></template>
+        <template v-if="$slots.default" #default><slot /></template>
+        <template v-if="$slots.title" #title><slot name="title" /></template>
+        <template v-if="$slots.subtitle" #subtitle><slot name="subtitle" /></template>
+        <template v-if="$slots.append" #append><slot name="append" /></template>
+      </KunListItemInner>
     </component>
   </RouterLink>
 
@@ -82,70 +57,54 @@
     :class="[mergedItemClass]"
     @click="handleClick"
     @keydown.enter.prevent="handleClick"
+    @keydown.space.prevent="handleClick"
     v-bind="$attrs"
   >
-    <!-- CONTENIDO -->
-    <div class="flex w-full items-center">
-      <!-- Prepend -->
-      <div v-if="hasPrepend || $slots.prepend" class="shrink-0 flex items-center gap-2 me-2">
-        <slot name="prepend">
-          <img v-if="prependAvatar" :src="prependAvatar" class="rounded-full" :class="prependClass" />
-
-          <!-- Permitir componente personalizado -->
-          <component
-            v-else-if="isComponent(prependIcon)"
-            :is="prependIcon"
-            :class="prependClass"
-          />
-          
-          <!-- Si es string, lo pasás a KunIcon -->
-          <KunIcon
-            v-else-if="typeof prependIcon === 'string'"
-            :icon="prependIcon"
-            :class="prependClass"
-          />
-        </slot>
-      </div>
-
-      <!-- Contenido central -->
-      <div class="flex flex-col min-w-0 flex-1" :class="contentClass" v-bind="otherAttrs">
-        <slot>
-          <slot name="title">
-            <div v-if="title" class="truncate" :class="titleClass">{{ title }}</div>
-          </slot>
-          <slot name="subtitle">
-            <div v-if="subtitle" class="truncate" :class="subtitleClass">
-              {{ subtitle }}
-            </div>
-          </slot>
-        </slot>
-      </div>
-
-      <!-- Append -->
-      <div v-if="hasAppend" class="shrink-0 flex items-center gap-2 ms-3">
-        <slot name="append">
-          <img v-if="appendAvatar" :src="appendAvatar" class="w-8 h-8 rounded-full" />
-          <component v-if="isComponent(appendIcon)" :is="appendIcon" class="w-5 h-5" />
-          <i v-else-if="appendIcon" :class="appendClass" class="text-xl leading-none" />
-        </slot>
-      </div>
-    </div>
+    <KunListItemInner
+      :prepend-icon="prependIcon"
+      :prepend-avatar="prependAvatar"
+      :prepend-class="prependClass"
+      :append-icon="appendIcon"
+      :append-avatar="appendAvatar"
+      :append-class="appendClass"
+      :title="title"
+      :title-class="titleClass"
+      :subtitle="subtitle"
+      :subtitle-class="subtitleClass"
+      :content-class="contentClass"
+      :other-attrs="otherAttrs"
+    >
+      <template v-if="$slots.prepend" #prepend><slot name="prepend" /></template>
+      <template v-if="$slots.default" #default><slot /></template>
+      <template v-if="$slots.title" #title><slot name="title" /></template>
+      <template v-if="$slots.subtitle" #subtitle><slot name="subtitle" /></template>
+      <template v-if="$slots.append" #append><slot name="append" /></template>
+    </KunListItemInner>
   </component>
 </template>
 
 <script setup lang="ts">
 import { ref, inject, onMounted, onBeforeUnmount, computed, useAttrs, useId, type Ref, type ComponentPublicInstance } from 'vue'
-import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue';
+import KunListItemInner from './KunListItemInner.vue';
 import { RouterLink } from 'vue-router'
 import { kunListItemProps } from '../composables/kunListItemProps.js'
+import {
+  kunVariantClasses,
+  kunSelectedClasses,
+  kunHoverClasses,
+  type KunColor,
+} from '../../../../theme/kunVariants.js'
 
 interface KunListItemContext {
   toggleItem?: (value: unknown) => void;
   isSelected?: (value: unknown) => boolean;
+  /** La lista contenedora gestiona selección (selectable). */
+  gestiona?: boolean;
+  color?: string;
 }
 
 const attrs = useAttrs();
-const contentClass = computed(() => attrs.class)
+const contentClass = computed(() => attrs.class || undefined)
 const otherAttrs = computed(() => {
   const { class: _class, ...rest } = attrs
   return rest
@@ -169,10 +128,23 @@ onBeforeUnmount(() => {
   if (registerRef) registerRef(null)
 })
 
-const isComponent = (val: unknown): boolean => typeof val === 'object' || typeof val === 'function';
-const hasPrepend = computed(() => !!(props.prependIcon || props.prependAvatar));
-const hasAppend = computed(() => !!(props.appendIcon || props.appendAvatar));
-const isItemSelected = computed(() => listContext?.isSelected?.(props.value) ?? false);
+// ------------------------------------------------------------------
+// Selección por prioridad:
+// 1) KunList contenedora que gestiona selección (`gestiona`) → el
+//    estado lo decide `v-model:selected` de la lista (isSelected).
+// 2) `v-model:selected` propio del ítem: un solo valor (primitivo u
+//    objeto) compartido entre ítems hace que SOLO el que coincide
+//    quede resaltado (selección single).
+// 3) Sin v-model enlazado: cada ítem mantiene su propio valor interno
+//    (útil para menús flotantes y uso suelto).
+// ------------------------------------------------------------------
+// `any` es el patrón documentado de la librería para defineModel de
+// valor desconocido (ver AGENTS.md: `null` aceptado como vacío).
+const itemSelected = defineModel<any>('selected', {
+  type: [String, Number, Boolean, Object, Array],
+  default: undefined,
+})
+const isItemSelected = computed(() => listContext?.isSelected?.(props.value) || itemSelected.value === props.value);
 const isActive = computed(() => props.active);
 const isLink = computed(() => !!props.to);
 
@@ -192,8 +164,14 @@ function handleClick(e: MouseEvent | KeyboardEvent, navigateFn: ((e?: MouseEvent
     el.dispatchEvent(new CustomEvent('select', { detail: props.value, bubbles: true }))
   }
 
-if (listContext && props.selectable && props.value !== null) {
-    listContext.toggleItem?.(props.value)
+  if (props.selectable && props.value !== null && !props.disabled) {
+    if (listContext?.gestiona) {
+      listContext.toggleItem?.(props.value)
+    } else {
+      // Sin lista gestionando: v-model propio del ítem (o estado interno
+      // si nadie lo enlaza). Un solo valor compartido => single selection.
+      itemSelected.value = isItemSelected.value ? null : props.value
+    }
     if (el?.dispatchEvent) {
       el.dispatchEvent(new CustomEvent('selected', { detail: props.value, bubbles: true }))
     }
@@ -203,16 +181,12 @@ if (listContext && props.selectable && props.value !== null) {
 }
 
 const baseItemClass = 'w-full flex transition duration-150 ease-in-out'
-const variantClass = computed(() => {
-  switch (props.variant) {
-    case 'outlined': return 'border border-ui'
-    case 'elevated': return 'shadow-md'
-    case 'tonal': return 'bg-surface'
-    case 'flat': return 'bg-transparent'
-    case 'plain': return ''
-    default: return ''
-  }
-})
+
+// Color: prop > color resuelto de la lista contenedora > default.
+const resolvedColor = computed<KunColor>(() => props.color ?? (listContext?.color as KunColor | undefined) ?? 'primary')
+// La matriz KunColor x KunVariant provee TODAS las clases literales
+// (texto + fondo + ring + estados); nunca se construyen con template.
+const variantClass = computed(() => kunVariantClasses(resolvedColor.value, props.variant))
 const densityClass = computed(() => {
   switch (props.density) {
     case 'comfortable': return 'py-2'
@@ -223,10 +197,17 @@ const densityClass = computed(() => {
 const roundedClass = computed(() => {
   if (props.tile) return 'rounded-none'
   if (props.rounded === true) return 'rounded-md'
-  if (props.rounded === false) return ''
-  return `rounded-${props.rounded}`
+  return ''
 })
 const rippleClass = computed(() => props.ripple ? 'relative overflow-hidden' : '')
+const isActiveState = computed(() => isItemSelected.value || isActive.value)
+// Estado activo/seleccionado lleva `!` para ganarle al bg de la variante
+// (todas son literales; el orden del CSS generado no decide el estado).
+const stateClass = computed(() => (isActiveState.value ? kunSelectedClasses(resolvedColor.value) : ''))
+// Hover de seleccion con color del item (solo si no hay estado activo).
+const hoverClass = computed(() =>
+  (props.selectable && !props.disabled && !isActiveState.value) ? kunHoverClasses(resolvedColor.value) : ''
+)
 
 const mergedItemClass = computed(() => {
   return [
@@ -235,13 +216,12 @@ const mergedItemClass = computed(() => {
     densityClass.value,
     roundedClass.value,
     rippleClass.value,
-    props.textColor,
     props.itemPosition,
-    props.bgItems,
+    stateClass.value,
+    hoverClass.value,
     {
       'cursor-not-allowed opacity-50': props.disabled,
-      [`cursor-pointer ${props.hoverBg}`]: props.selectable && !props.disabled,
-      [props.activeClass]: isItemSelected.value || isActive.value,
+      'cursor-pointer': props.selectable && !props.disabled,
       'px-4': !props.noGutters,
     },
     props.containerClass,

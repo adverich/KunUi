@@ -7,10 +7,10 @@ import type { KunCarouselAlign } from '../../src/composables/kunCarouselProps.js
 const align = ref<KunCarouselAlign>('center')
 
 const slides = ref([
-  { id: 1, title: 'A', bg: 'bg-red-500' },
-  { id: 2, title: 'B', bg: 'bg-blue-500' },
-  { id: 3, title: 'C', bg: 'bg-green-500' },
-  { id: 4, title: 'D', bg: 'bg-amber-500' },
+  { id: 1, title: 'A', bg: 'bg-error' },
+  { id: 2, title: 'B', bg: 'bg-info' },
+  { id: 3, title: 'C', bg: 'bg-success' },
+  { id: 4, title: 'D', bg: 'bg-warning' },
 ])
 </script>
 
@@ -25,7 +25,7 @@ const slides = ref([
           'rounded-lg border px-3 py-1.5 text-sm transition',
           align === a
             ? 'border-primary bg-primary/20 font-semibold'
-            : 'border-surface bg-surface-light hover:bg-surface',
+            : 'border-muted bg-muted hover:bg-muted',
         ]"
         @click="align = a"
       >
@@ -34,7 +34,7 @@ const slides = ref([
     </div>
     <KunCarousel :align="align" slide-size="70%" :contain-scroll="false">
       <KunCarouselSlide v-for="s in slides" :key="s.id">
-        <div :class="['flex h-48 items-center justify-center rounded-xl text-2xl font-bold text-white', s.bg]">
+        <div :class="['flex h-48 items-center justify-center rounded-lg text-2xl font-bold text-highlighted', s.bg]">
           {{ s.title }}
         </div>
       </KunCarouselSlide>

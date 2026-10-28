@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import KunBtn from '../src/components/KunBtn.vue'
-import type { KunBtnVariant, KunBtnSize, KunBtnType } from '../src/composables/kunBtnProps.js'
+import type { KunBtnSize, KunBtnType, KunBtnRounded } from '../src/composables/kunBtnProps.js'
+import type { KunColor, KunVariant } from '../../../theme/kunVariants.js'
+import { KUN_SIZE_ORDER } from '../../../theme/kunSizes.js'
+import KunAvatar from '../../KunAvatar/src/components/KunAvatar.vue'
+import KunIcon from '../../KunIcon/src/components/KunIcon.vue'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
@@ -13,27 +17,56 @@ const clicks = ref(0)
 const lastEvent = ref('—')
 
 // ------------------------------------------------------------------
-// Controles del playground: uniones tipadas con los tipos exportados
+// Controles del playground: uniones tipadas ('__theme' = null = theme global)
 // ------------------------------------------------------------------
-const variant = ref<KunBtnVariant>('default')
-const variantOptions = ref([
-  { id: 'default', name: 'default' },
-  { id: 'tonal', name: 'tonal' },
-  { id: 'plain', name: 'plain' },
-  { id: 'outlined', name: 'outlined' },
-  { id: 'soft', name: 'soft' },
-  { id: 'text', name: 'text' },
+const colorRaw = ref<string>('primary')
+const colorOptions = ref([
+  { id: '__theme', name: 'theme (null)' },
+  { id: 'primary', name: 'primary' },
+  { id: 'secondary', name: 'secondary' },
+  { id: 'success', name: 'success' },
+  { id: 'info', name: 'info' },
+  { id: 'warning', name: 'warning' },
+  { id: 'error', name: 'error' },
+  { id: 'neutral', name: 'neutral' },
 ])
+const colorProp = computed<KunColor | null>(() =>
+  colorRaw.value === '__theme' ? null : (colorRaw.value as KunColor),
+)
+
+const variantRaw = ref<string>('solid')
+const variantOptions = ref([
+  { id: '__theme', name: 'theme (null)' },
+  { id: 'solid', name: 'solid' },
+  { id: 'outline', name: 'outline' },
+  { id: 'soft', name: 'soft' },
+  { id: 'subtle', name: 'subtle' },
+  { id: 'ghost', name: 'ghost' },
+  { id: 'link', name: 'link' },
+])
+const variantProp = computed<KunVariant | null>(() =>
+  variantRaw.value === '__theme' ? null : (variantRaw.value as KunVariant),
+)
+
+const roundedRaw = ref<string>('__inherit')
+const roundedOptions = ref([
+  { id: '__inherit', name: 'escala global (null)' },
+  { id: 'full', name: 'full' },
+  { id: 'none', name: 'none' },
+])
+const roundedProp = computed<KunBtnRounded | null>(() =>
+  roundedRaw.value === '__inherit' ? null : (roundedRaw.value as KunBtnRounded),
+)
 
 const size = ref<KunBtnSize>('md')
 const sizeOptions = ref([
-  { id: 'xxs', name: 'xxs' },
-  { id: 'xs', name: 'xs' },
-  { id: 'sm', name: 'sm' },
-  { id: 'md', name: 'md' },
-  { id: 'lg', name: 'lg' },
-  { id: 'xl', name: 'xl' },
-  { id: 'xxl', name: 'xxl' },
+  { id: 'xxs', name: 'xxs (24px)' },
+  { id: 'xs', name: 'xs (28px)' },
+  { id: 'sm', name: 'sm (32px)' },
+  { id: 'md', name: 'md (36px)' },
+  { id: 'lg', name: 'lg (40px)' },
+  { id: 'xl', name: 'xl (48px)' },
+  { id: 'xxl', name: 'xxl (56px)' },
 ])
 
 const type = ref<KunBtnType>('button')
@@ -48,10 +81,7 @@ const typeOptions = ref([
 // ------------------------------------------------------------------
 const minWidth = ref('min-w-[3rem]')
 const fontWeight = ref('font-medium')
-const rounded = ref('rounded-lg')
 const textAlign = ref('text-center')
-const bgColor = ref('bg-button')
-const textColor = ref('text-ui')
 
 // ------------------------------------------------------------------
 // Strings opcionales: '' = undefined (props sin default)
@@ -83,9 +113,6 @@ const appendIconProp = computed(() => (appendIconRaw.value === '' ? undefined : 
 const iconSizeRaw = ref('')
 const iconSizeProp = computed<string | undefined>(() => (iconSizeRaw.value === '' ? undefined : iconSizeRaw.value))
 
-const focusColorRaw = ref('')
-const focusColorProp = computed<string | undefined>(() => (focusColorRaw.value === '' ? undefined : focusColorRaw.value))
-
 // ------------------------------------------------------------------
 // Booleanos
 // ------------------------------------------------------------------
@@ -93,6 +120,7 @@ const loading = ref(false)
 const disabled = ref(false)
 const ring = ref(false)
 const replace = ref(false)
+const square = ref(false)
 
 // ------------------------------------------------------------------
 // Log de eventos en vivo
@@ -128,60 +156,107 @@ function handleClick(event: MouseEvent): void {
 
       <KunBtn
         :text="textProp"
-        :variant="variant"
+        :color="colorProp"
+        :variant="variantProp"
         :size="size"
         :type="type"
         :loading="loading"
         :disabled="disabled"
         :min-width="minWidth"
         :font-weight="fontWeight"
-        :rounded="rounded"
+        :rounded="roundedProp"
         :text-align="textAlign"
-        :bg-color="bgColor"
-        :text-color="textColor"
         :to="toProp"
         :href="hrefProp"
         :replace="replace"
         :target="targetProp"
         :ring="ring"
+        :square="square"
         :icon="iconProp"
         :prepend-icon="prependIconProp"
         :append-icon="appendIconProp"
         :icon-size="iconSizeProp"
-        :focus-color="focusColorProp"
         @click="handleClick"
         @keydown="logEvent('keydown', ($event as KeyboardEvent).key)"
         @keyup="logEvent('keyup', ($event as KeyboardEvent).key)"
         @keypress="logEvent('keypress', ($event as KeyboardEvent).key)"
       />
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">Clicks + último evento</div>
-        <div>{{ clicks }} clicks</div>
-        <div class="text-ui-muted text-xs mt-1">Último: {{ lastEvent }}</div>
+      <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Consistencia (mismo size = mismo px)</div>
+        <div class="flex flex-wrap items-end gap-3">
+          <div v-for="s in KUN_SIZE_ORDER" :key="s" class="flex flex-col items-center gap-1">
+            <div class="flex items-center gap-1">
+              <KunAvatar icon="$star" :size="s" />
+              <KunBtn :size="s" square color="primary">
+                <KunIcon icon="$star" :size="s" />
+              </KunBtn>
+            </div>
+            <span class="text-[10px] text-muted">{{ s }}</span>
+          </div>
+        </div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Icon-only por slot (siempre 1:1)</div>
+        <div class="flex flex-wrap items-center gap-3">
+          <KunBtn size="xxs" rounded="full" color="error">
+            <KunIcon icon="$close" size="xxs" />
+          </KunBtn>
+          <KunBtn size="sm" rounded="full" color="primary">
+            <KunIcon icon="$star" size="sm" />
+          </KunBtn>
+          <KunBtn size="md" rounded="full" color="success">
+            <KunIcon icon="$star" size="md" />
+          </KunBtn>
+          <KunBtn size="md" rounded="full" color="warning" class="h-16 w-16">
+            <KunIcon icon="$star" size="md" />
+          </KunBtn>
+        </div>
+      </div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">Clicks + último evento</div>
+        <div>{{ clicks }} clicks</div>
+        <div class="text-muted text-xs mt-1">Último: {{ lastEvent }}</div>
+      </div>
+
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Hacé click en el botón para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Hacé click en el botón para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el botón) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunSelect
-          v-model="variant"
+          v-model="colorRaw"
+          v-model:items="colorOptions"
+          label="Color (theme = null)"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="variantRaw"
           v-model:items="variantOptions"
-          label="Variant"
+          label="Variant (theme = null)"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="roundedRaw"
+          v-model:items="roundedOptions"
+          label="Rounded"
           item-value="id"
           item-title="name"
           density="compact"
@@ -206,10 +281,7 @@ function handleClick(event: MouseEvent): void {
         <KunTextField v-model="label" label="Text (label)" density="compact" />
         <KunTextField v-model="minWidth" label="Min width" density="compact" />
         <KunTextField v-model="fontWeight" label="Font weight" density="compact" />
-        <KunTextField v-model="rounded" label="Rounded" density="compact" />
         <KunTextField v-model="textAlign" label="Text align" density="compact" />
-        <KunTextField v-model="bgColor" label="Bg color" density="compact" />
-        <KunTextField v-model="textColor" label="Text color" density="compact" />
         <KunTextField v-model="toRaw" label="To (vacío = undefined)" density="compact" />
         <KunTextField v-model="hrefRaw" label="Href (vacío = undefined)" density="compact" />
         <KunTextField v-model="targetRaw" label="Target (vacío = undefined)" density="compact" />
@@ -217,12 +289,12 @@ function handleClick(event: MouseEvent): void {
         <KunTextField v-model="prependIconRaw" label="Prepend icon" density="compact" />
         <KunTextField v-model="appendIconRaw" label="Append icon" density="compact" />
         <KunTextField v-model="iconSizeRaw" label="Icon size (vacío = null)" density="compact" />
-        <KunTextField v-model="focusColorRaw" label="Focus color (vacío = null)" density="compact" />
 
         <KunSwitch v-model="loading" label="Loading" />
         <KunSwitch v-model="disabled" label="Disabled" />
         <KunSwitch v-model="ring" label="Ring" />
         <KunSwitch v-model="replace" label="Replace (solo con to)" />
+        <KunSwitch v-model="square" label="Square" />
       </div>
     </div>
   </div>

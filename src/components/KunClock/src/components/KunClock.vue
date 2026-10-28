@@ -41,7 +41,7 @@ onUnmounted(() => {
   position: fixed;
   top: 10px;
   right: 10px;
-  z-index: 9999;
+  z-index: var(--kun-z-loader);
   font-family: monospace;
   background-color: transparent;
   pointer-events: none; /* Allows clicking through it */

@@ -1,11 +1,11 @@
 <template>
   <component :is="props.tag" v-bind="$attrs" :class="computedClasses"
-    :style="numericSize ? { width: numericSize, height: numericSize } : undefined"
+    :style="numericStyle"
     @click="$emit('click', $event)"
     @mouseover="$emit('hover', $event)" @contextmenu="$emit('contextmenu', $event)" @focus="$emit('focus', $event)">
     <img v-if="props.image" :src="props.image" :alt="props.alt" :class="computedImageClasses" />
     <span v-else-if="props.icon" :class="computedIconClasses">
-      <KunIcon v-if="useKunIcon" :icon="(props.icon as any)" size="text-xl" />
+      <KunIcon v-if="useKunIcon" :icon="(props.icon as any)" :size="resolvedIconSize" />
       <template v-else>{{ props.icon }}</template>
     </span>
     <span v-else-if="props.text" :class="computedTextClasses">{{ props.text }}</span>
@@ -17,23 +17,46 @@
 import { computed, useAttrs } from "vue";
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { kunAvatarProps } from '../composables/kunAvatarProps.js'
+import {
+  isKunSize,
+  shiftKunSize,
+  KUN_ICON_SIZE,
+  KUN_SQUARE_SIZE,
+  KUN_TEXT_SIZE,
+  hasExplicitDimensionClass,
+  type KunSize,
+} from '../../../../theme/kunSizes.js'
+import {
+  kunVariantClasses,
+  resolveKunColor,
+  resolveKunVariant,
+  type KunColor,
+  type KunVariant,
+} from '../../../../theme/kunVariants.js'
 
 const props = defineProps(kunAvatarProps);
 const attrs = useAttrs();
 
 defineEmits(["click", "hover", "contextmenu", "focus"]);
 
-const sizes: Record<string, string> = {
-  "x-small": "w-6 h-6 text-xs",
-  small: "w-8 h-8 text-sm",
-  default: "w-12 h-12 text-base",
-  large: "w-16 h-16 text-lg",
-  "x-large": "w-24 h-24 text-xl",
+// Color/variante estándar: prop > theme.defaults.avatar > (neutral, soft).
+const resolvedColor = computed<KunColor>(() => resolveKunColor(props.color, 'avatar'));
+const resolvedVariant = computed<KunVariant>(() => resolveKunVariant(props.variant, 'avatar'));
+
+/** Nombres de la escala anterior que conservan su px como alias deprecado. */
+const legacySizes: Record<string, KunSize | number> = {
+  "3xs": "sm", // 32px
+  "2xs": "md", // 36px
+  "2xl": 72,
+  "3xl": 80,
 };
 
-// Orden de menor a mayor para escalar por densidad.
-const sizeOrder = ["x-small", "small", "default", "large", "x-large"];
 const densityOffset: Record<string, number> = { compact: -2, comfortable: -1, default: 0 };
+
+const legacyPx = computed(() => {
+  const legacy = legacySizes[String(props.size)];
+  return typeof legacy === "number" ? legacy : null;
+});
 
 // size numérico → dimensiones explícitas escaladas por densidad.
 const numericSize = computed(() => {
@@ -42,18 +65,53 @@ const numericSize = computed(() => {
       ? props.size
       : /^\d+$/.test(String(props.size ?? ""))
         ? Number(props.size)
-        : null;
+        : legacyPx.value;
   if (raw == null || !Number.isFinite(raw) || raw <= 0) return null;
   const scale = props.density === "compact" ? 0.75 : props.density === "comfortable" ? 0.875 : 1;
-  return `${Math.max(1, Math.round(raw * scale))}px`;
+  return Math.max(1, Math.round(raw * scale));
 });
 
-// size nominal → clase del mapa, desplazada por densidad (piso en x-small).
-const namedSizeClass = computed(() => {
-  let i = sizeOrder.indexOf(String(props.size));
-  if (i < 0) i = 2;
-  const off = densityOffset[String(props.density)] ?? 0;
-  return sizes[sizeOrder[Math.max(0, i + off)]] || sizes.default;
+const hasCustomDimension = computed(() => hasExplicitDimensionClass(attrs.class));
+
+const isCircular = computed(() =>
+  !props.tile &&
+  props.rounded !== false &&
+  props.rounded !== "none" &&
+  !(typeof props.rounded === "string" && props.rounded !== "full")
+);
+
+const numericStyle = computed(() => {
+  const px = numericSize.value;
+  if (px == null) return undefined;
+  return {
+    ...(hasCustomDimension.value ? {} : { width: `${px}px`, height: `${px}px` }),
+    fontSize: `${Math.max(10, Math.round(px * 0.4))}px`,
+  };
+});
+
+const effectiveSize = computed<KunSize>(() => {
+  const base = isKunSize(props.size)
+    ? props.size
+    : typeof legacySizes[String(props.size)] === "string"
+      ? (legacySizes[String(props.size)] as KunSize)
+      : "md";
+  return shiftKunSize(base, densityOffset[String(props.density)] ?? 0);
+});
+
+// size nominal → clase compartida (cuadrado + tipografía), desplazada por densidad.
+const namedSquareClass = computed(() =>
+  numericSize.value == null && !hasCustomDimension.value
+    ? KUN_SQUARE_SIZE[effectiveSize.value]
+    : "",
+);
+
+const namedTextClass = computed(() =>
+  numericSize.value == null ? KUN_TEXT_SIZE[effectiveSize.value] : "",
+);
+
+const resolvedIconSize = computed<string | number>(() => {
+  if (numericSize.value != null) return Math.max(10, Math.round(numericSize.value * 0.5));
+  return KUN_ICON_SIZE[effectiveSize.value];
 });
 
 const hasBackgroundClass = computed(() => {
@@ -71,31 +129,28 @@ const useKunIcon = computed(() => {
   return icon.startsWith('$') || s.startsWith('<svg');
 });
 
-const bgClass = computed(() => {
-  if (props.variant === 'outlined' || props.variant === 'text') return 'bg-transparent';
-  if (props.color) return `bg-${props.color}`;
-  return hasBackgroundClass.value ? '' : 'bg-ui-surface-subtle';
-});
+const bgClass = computed(() =>
+  hasBackgroundClass.value ? '' : kunVariantClasses(resolvedColor.value, resolvedVariant.value),
+);
 
-const variantClasses = computed(() => {
-  switch (props.variant) {
-    case 'outlined': return 'border border-current';
-    case 'tonal': return 'bg-opacity-30';
-    case 'text':
-    case 'flat':
-    default: return '';
-  }
+// Borde con rol de token (nunca un color de paleta crudo).
+const borderClass = computed(() => {
+  if (!props.border) return '';
+  return props.border === true ? 'border border-default' : `border border-${props.border}`;
 });
 
 const computedClasses = computed(() => [
-  "relative flex items-center justify-center overflow-hidden cursor-pointer transition-all",
-  numericSize.value ? "" : namedSizeClass.value,
-  props.rounded ? "rounded-full" : props.tile ? "rounded-none" : "rounded",
-  props.border ? `border border-${props.border}` : "",
+  "relative flex items-center justify-center overflow-hidden cursor-pointer transition-all shrink-0",
+  numericSize.value ? "" : [namedSquareClass.value, namedTextClass.value],
+  isCircular.value && hasCustomDimension.value ? "aspect-square" : "",
+  props.tile || props.rounded === false || props.rounded === 'none'
+    ? "rounded-none"
+    : typeof props.rounded === "string" && props.rounded !== "full"
+      ? `rounded-${props.rounded}`
+      : "rounded-full",
+  borderClass.value,
   bgClass.value,
-  variantClasses.value,
   props.theme ? `theme-${props.theme}` : "",
-  props.density === "compact" ? "p-1" : props.density === "comfortable" ? "p-2" : "p-3",
   props.start ? "ms-2" : "",
   props.end ? "me-2" : "",
 ]);
@@ -105,7 +160,7 @@ const computedImageClasses = computed(() => [
 ]);
 
 const computedIconClasses = computed(() => [
-  "absolute text-ui-inverse text-xl",
+  "absolute",
 ]);
 
 const computedTextClasses = computed(() => [

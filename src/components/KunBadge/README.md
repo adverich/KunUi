@@ -23,21 +23,79 @@ import { KunBadge } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `text` | `String \| Number` | `''` | Texto o número a mostrar dentro del badge. |
-| `bgColor` | `String` | `'bg-error'` | Color de fondo del badge. |
-| `textColor` | `String` | `'text-black dark:text-white'` | Color del texto. |
+| `color` | `KunColor` | `'error' as KunColor` | Color semántico del badge. |
 | `textSize` | `String` | `'text-xs'` | Tamaño del texto. |
 | `fontWeight` | `String` | `'font-bold'` | Peso del texto. |
-| `rounded` | `String` | `'rounded-full'` | Redondeo del badge. |
+| `rounded` | `'full' \| 'none' \| null` | `null` | Redondeo: 'full' \| 'none'. `null` = `rounded-sm` (redondeo propio de badge). |
+| `pill` | `Boolean` | `false` | Forma píldora (`rounded-full`). Por defecto el badge es `rounded-sm`. |
 | `dot` | `Boolean` | `false` | Modo punto (sin texto, solo indicador). |
 | `visible` | `Boolean` | `true` | Visibilidad del badge. |
 | `position` | `KunBadgePosition` | `'top right' as KunBadgePosition` | Posición relativa al contenido envuelto ("vertical horizontal"). |
-| `ejeX` | `Number \| String` | `25` | Desplazamiento horizontal en px respecto a la posición. |
-| `ejeY` | `Number \| String` | `-15` | Desplazamiento vertical en px respecto a la posición. |
+| `ejeX` | `Number` | `0` | Desplazamiento horizontal en px (se suma al anclaje al borde: default 0 = centrado en la esquina del contenido). |
+| `ejeY` | `Number` | `0` | Desplazamiento vertical en px (se suma al anclaje al borde: default 0 = centrado en la esquina del contenido). |
 | `cursor` | `String` | `'cursor-default'` | Cursor sobre el badge. |
 
 ## Slots
 
 - `#default`
+
+## Notas · Notes
+
+# KunBadge
+
+## Bordes y radio
+
+Vocabulario propio del badge (alineado con Nuxt UI):
+
+- Default: `rounded-sm`.
+- `pill` (prop nueva, `Boolean`) o `rounded="full"` → `rounded-full`.
+- `rounded="none"` → `rounded-none`.
+
+`rounded` dejó de aceptar clases Tailwind (p. ej. `'rounded-2xl'`): ahora es
+`'full' | 'none' | null` con `validator`. Es un cambio de API:
+
+- **Antes**: el badge era píldora por defecto (`rounded-full` fijo).
+- **Ahora**: píldora es opt-in.
+
+```vue
+<KunBadge pill color="error">Nuevo</KunBadge>
+```
+
+## Color
+
+`bgColor` / `textColor` se reemplazaron por `color`
+(`primary|secondary|success|info|warning|error|neutral`), resuelto con
+`kunVariantClasses` del theme global.
+
+## Círculo 1:1
+
+`rounded="full"` ya no es solo `rounded-full`: fuerza una caja cuadrada. Si el
+consumidor no fija dimensiones, el lado se calcula según el texto y
+`textSize`; si pasa `w-*`/`h-*`, se agrega `aspect-square`. `pill` sigue siendo
+píldora y `rounded="none"` sigue siendo cuadrado.
+
+```vue
+<KunBadge text="99" rounded="full" />
+```
+
+## Posicionamiento anclado al borde
+
+El badge se ancla al contenido con `absolute` en la esquina correspondiente y
+un único `transform` inline (estilo Nuxt UI): el **centro** del badge se apoya
+en la esquina del wrapper.
+
+- `top` → `top-0` + `translateY(-50%)`; `bottom` → `bottom-0` + `translateY(50%)`.
+- `left` → `left-0` + `translateX(-50%)`; `right` → `right-0` + `translateX(50%)`.
+- `center` (eje) → `left-1/2`/`top-1/2` + `translate*(−50%)`.
+
+Cambios de API menores:
+
+- `ejeX`/`ejeY` ahora son `Number` (antes `[Number, String]`) y su default es
+  `0` (antes `25`/`-15`): los px son un desvío sobre el anclaje, no la
+  posición. Un badge sin ejes centrado en `top right` queda apoyado en la
+  esquina superior derecha del contenido.
+- Se eliminó el doble sistema de transform (clases `-translate-x-1/2` que el
+  estilo inline pisaba): la única fuente de verdad es el `transform` inline.
 
 ---
 

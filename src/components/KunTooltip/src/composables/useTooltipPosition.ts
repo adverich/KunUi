@@ -1,4 +1,4 @@
-import { ref, onMounted, onBeforeUnmount, type Ref } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, type Ref } from 'vue'
 
 const MARGIN = 8
 
@@ -191,7 +191,13 @@ export function useTooltipPosition(
     scrollHandlers = []
   }
 
-  onMounted(() => startScrollTracking())
+  // Solo rastrear scroll/resize mientras el tooltip está visible:
+  // N instancias ocultas ya no dejan N listeners permanentes.
+  watch(isVisibleRef, (visible) => {
+    if (visible) startScrollTracking()
+    else stopScrollTracking()
+  })
+  onMounted(() => { if (isVisibleRef.value) startScrollTracking() })
   onBeforeUnmount(() => stopScrollTracking())
 
   return { tooltipStyle, updatePosition, startScrollTracking }

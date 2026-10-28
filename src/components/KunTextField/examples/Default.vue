@@ -47,24 +47,27 @@ const prependInnerClass = ref('')
 const appendInnerClass = ref('')
 
 // Estilo y diseño (clases Tailwind libres)
-const rounded = ref('rounded')
-const borderColor = ref('border-ui')
-const textColor = ref('text-ui')
-const labelColor = ref('text-ui')
-const floatingLabelColor = ref('')
+const rounded = ref('rounded-md')
+const bgInputRaw = ref('__default')
+const bgInputOptions = ref([
+  { id: '__default', name: 'default (null)' },
+  { id: 'bg-primary/20', name: 'bg-primary/20' },
+  { id: 'bg-success/20', name: 'bg-success/20' },
+  { id: 'bg-warning/20', name: 'bg-warning/20' },
+  { id: 'bg-error/20', name: 'bg-error/20' },
+])
+const bgInputProp = computed(() => (bgInputRaw.value === '__default' ? undefined : bgInputRaw.value))
 const labelSize = ref('text-sm')
 const floatingLabelSize = ref('text-xs')
 const labelOpacity = ref('opacity-60')
 const floatingLabelOpacity = ref('opacity-80')
 const labelLeft = ref('')
 const floatingLabelLeft = ref('left-2')
-const floatingLabelTop = ref('-top-2')
+const floatingLabelTop = ref('top-[-2px]')
 const labelClass = ref('')
-const placeholderColor = ref('placeholder-ui')
 const inputTextSize = ref('')
 const inputWeight = ref('')
 const placeholderTextSize = ref('')
-const bgInput = ref('bg-field-background')
 const inputStyle = ref('')
 
 // Atributos HTML nativos
@@ -147,10 +150,7 @@ function logEvent(name: string, detail: unknown): void {
         :prepend-inner-class="prependInnerClass"
         :append-inner-class="appendInnerClass"
         :rounded="rounded"
-        :border-color="borderColor"
-        :text-color="textColor"
-        :label-color="labelColor"
-        :floating-label-color="floatingLabelColor || undefined"
+        :bg-input="bgInputProp"
         :label-size="labelSize"
         :floating-label-size="floatingLabelSize"
         :label-opacity="labelOpacity"
@@ -159,11 +159,9 @@ function logEvent(name: string, detail: unknown): void {
         :floating-label-left="floatingLabelLeft"
         :floating-label-top="floatingLabelTop"
         :label-class="labelClass"
-        :placeholder-color="placeholderColor"
         :input-text-size="inputTextSize || undefined"
         :input-weight="inputWeight || undefined"
         :placeholder-text-size="placeholderTextSize || undefined"
-        :bg-input="bgInput"
         :input-style="inputStyle"
         :text-center="textCenter"
         :density="density"
@@ -195,26 +193,26 @@ function logEvent(name: string, detail: unknown): void {
         @key-down="logEvent('keyDown', ($event as KeyboardEvent).key)"
       />
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
-        <div>{{ JSON.stringify(value) }} <span class="text-ui-muted">({{ typeof value }})</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
+        <div>{{ JSON.stringify(value) }} <span class="text-muted">({{ typeof value }})</span></div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Interactuá con el campo para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Interactuá con el campo para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el field) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="label" label="Label" density="compact" />
@@ -267,11 +265,14 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="debounceRaw" label="Debounce ms" density="compact" inputmode="decimal" />
 
         <KunTextField v-model="rounded" label="Rounded" density="compact" />
-        <KunTextField v-model="borderColor" label="Border color" density="compact" />
-        <KunTextField v-model="textColor" label="Text color" density="compact" />
-        <KunTextField v-model="bgInput" label="Bg input" density="compact" />
-        <KunTextField v-model="labelColor" label="Label color" density="compact" />
-        <KunTextField v-model="floatingLabelColor" label="Floating label color" density="compact" />
+        <KunSelect
+          v-model="bgInputRaw"
+          v-model:items="bgInputOptions"
+          label="Bg input"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
         <KunTextField v-model="labelSize" label="Label size" density="compact" />
         <KunTextField v-model="floatingLabelSize" label="Floating label size" density="compact" />
         <KunTextField v-model="labelOpacity" label="Label opacity" density="compact" />
@@ -280,7 +281,6 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="floatingLabelLeft" label="Floating label left" density="compact" />
         <KunTextField v-model="floatingLabelTop" label="Floating label top" density="compact" />
         <KunTextField v-model="labelClass" label="Label class" density="compact" />
-        <KunTextField v-model="placeholderColor" label="Placeholder color" density="compact" />
         <KunTextField v-model="inputTextSize" label="Input text size" density="compact" />
         <KunTextField v-model="inputWeight" label="Input weight" density="compact" />
         <KunTextField v-model="placeholderTextSize" label="Placeholder text size" density="compact" />

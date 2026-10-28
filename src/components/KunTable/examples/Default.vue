@@ -9,10 +9,8 @@ import type { TableFilterDefinition } from '../src/composables/kunTableFilterPro
 import type { TableItem } from '../src/composables/useRowKey.js'
 import type { KunTableHeader } from '../../../utils/tableFormatters.js'
 
-// ------------------------------------------------------------------
-// Dataset demo: 9 usuarios { id, name, email, role, active }
-// ------------------------------------------------------------------
-const users = ref<TableItem[]>([
+// Dataset demo base: 9 usuarios { id, name, email, role, active }
+const demoUsers: TableItem[] = [
   { id: 1, name: 'Ana Gómez', email: 'ana.gomez@demo.com', role: 'admin', active: true },
   { id: 2, name: 'Bruno Díaz', email: 'bruno.diaz@demo.com', role: 'editor', active: true },
   { id: 3, name: 'Carla Ruiz', email: 'carla.ruiz@demo.com', role: 'viewer', active: false },
@@ -22,7 +20,22 @@ const users = ref<TableItem[]>([
   { id: 7, name: 'Gina López', email: 'gina.lopez@demo.com', role: 'editor', active: true },
   { id: 8, name: 'Hugo Castro', email: 'hugo.castro@demo.com', role: 'viewer', active: false },
   { id: 9, name: 'Iván Pérez', email: 'ivan.perez@demo.com', role: 'admin', active: true },
-])
+]
+
+// Dataset de estrés para verificar rendimiento de selección/filtrado
+const stressDataset = ref(false)
+const STRESS_COUNT = 5000
+const stressRoles = ['admin', 'editor', 'viewer']
+const users = computed<TableItem[]>(() => {
+  if (!stressDataset.value) return demoUsers
+  return Array.from({ length: STRESS_COUNT }, (_, i) => ({
+    id: i + 1,
+    name: `Usuario ${i + 1}`,
+    email: `usuario.${i + 1}@demo.com`,
+    role: stressRoles[i % stressRoles.length],
+    active: i % 2 === 0,
+  }))
+})
 
 // Una columna ordenable (name, id) + una filtrable por columna (role)
 const headers = ref<KunTableHeader[]>([
@@ -72,11 +85,15 @@ const filterable = ref(true)
 const showSelect = ref(true)
 const hideSelected = ref(false)
 const selectedItems = ref<TableItem[]>([])
-const selectedIds = computed(() => selectedItems.value.map((item) => item.id))
+const selectedCountText = computed(() => `${selectedItems.value.length} seleccionados`)
+const selectedIdsPreview = computed(() => {
+  const ids = selectedItems.value.slice(0, 20).map((item) => item.id)
+  return `${JSON.stringify(ids)}${selectedItems.value.length > 20 ? ` … (+${selectedItems.value.length - 20})` : ''}`
+})
 
 const showExpand = ref(true)
 const striped = ref(false)
-const stripedClassProp = computed(() => (striped.value ? 'bg-surface-dark' : ''))
+const stripedClassProp = computed(() => (striped.value ? 'bg-elevated' : ''))
 
 const itemsPerPageRaw = ref('5')
 const itemsPerPageProp = computed(() => {
@@ -145,18 +162,19 @@ const effectiveNoDataText = computed(() => (showLoading.value ? loadingText.valu
         </template>
       </KunTable>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model:selectedItems (ids)</div>
-        <div>{{ JSON.stringify(selectedIds) }} <span class="text-ui-muted">({{ selectedItems.length }} seleccionados)</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model:selectedItems (ids)</div>
+        <div class="text-muted text-xs mb-1">v-model:selectedItems (ids)</div>
+        <div>{{ selectedIdsPreview }} <span class="text-muted">({{ selectedCountText }})</span></div>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra la tabla) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3">
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Búsqueda</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Búsqueda</p>
         <KunSwitch v-model="searchable" label="Searchable" />
         <KunSelect
           v-model="searchPosition"
@@ -169,22 +187,25 @@ const effectiveNoDataText = computed(() => (showLoading.value ? loadingText.valu
         <KunTextField v-model="searchPlaceholder" label="Search placeholder" density="compact" />
         <KunTextField v-model="debounceRaw" label="Debounce (ms)" density="compact" inputmode="numeric" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Filtros por columna (rol)</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Filtros por columna (rol)</p>
         <KunSwitch v-model="filterable" label="Filterable (modal por columna)" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Selección</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Selección</p>
         <KunSwitch v-model="showSelect" label="Show select" />
         <KunSwitch v-model="hideSelected" label="Hide selected (aviso)" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Filas</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Dataset</p>
+        <KunSwitch v-model="stressDataset" label="Estrés (5000 registros)" />
+
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Filas</p>
         <KunSwitch v-model="showExpand" label="Show expand" />
         <KunSwitch v-model="striped" label="Striped (stripedClass)" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Paginación</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Paginación</p>
         <KunTextField v-model="itemsPerPageRaw" label="Items per page" density="compact" inputmode="numeric" />
         <KunTextField v-model="pageOptionsRaw" label="Page options (csv)" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Textos y estados</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Textos y estados</p>
         <KunTextField v-model="noDataText" label="No data text" density="compact" />
         <KunTextField v-model="loadingText" label="Loading text" density="compact" />
         <KunSwitch v-model="showEmpty" label="Sin datos (items = [])" />

@@ -27,7 +27,10 @@ import './styles/style.css'
 import './utils/utils.js'
 
 // Config global
-import { kunConfig, KUN_CONFIG_KEY, type KunConfigOptions } from './config/kunConfig.js'
+import { kunConfig, KUN_CONFIG_KEY, type KunConfigOptions } from './config/kunConfig.js';
+import { kunTheme, KUN_THEME_KEY, type KunThemeOptions } from './theme/kunTheme.js';
+import { getKunToast, KUN_TOAST_KEY } from './components/KunToast/src/composables/useToast.js';
+import { preloadKunIcons } from './icons/loader.js';
 
 // Asíncrono para uso manual
 const asyncModules = import.meta.glob('./components/**/src/components/*.vue');
@@ -47,11 +50,12 @@ export const components = Object.fromEntries(
 export interface KunUIInstallOptions {
     skipIfRegistered?: boolean;
     config?: KunConfigOptions;
+    theme?: KunThemeOptions;
 }
 
 // Registro global
 export function install(app: App, options: KunUIInstallOptions = {}): void {
-  const { skipIfRegistered = true, config = {} } = options;
+  const { skipIfRegistered = true, config = {}, theme = {} } = options;
 
   // Aplicar configuración global si se proporciona
   if (Object.keys(config).length > 0) {
@@ -60,6 +64,21 @@ export function install(app: App, options: KunUIInstallOptions = {}): void {
 
   // Proveer config a toda la app para injection
   app.provide(KUN_CONFIG_KEY, kunConfig.current);
+
+  // Theme: reponer lo persistido y aplicar opciones (light-only si no hay nada).
+  kunTheme.restore();
+  if (Object.keys(theme).length > 0) {
+    kunTheme.configure(theme);
+  }
+  app.provide(KUN_THEME_KEY, kunTheme.current);
+
+  // Toasts: sistema global compartido (patrón Nuxt) — `useToast()` en toda la app.
+  app.provide(KUN_TOAST_KEY, getKunToast());
+
+  // Íconos: precarga el runtime de `@iconify/vue` (chunk aparte) y registra el
+  // subconjunto `lucide` propio para que los íconos internos rendericen sin
+  // parpadeo ni red.
+  preloadKunIcons();
 
   const allComponents = import.meta.glob('./components/**/src/components/*.vue', { eager: true });
 
@@ -74,10 +93,62 @@ export function install(app: App, options: KunUIInstallOptions = {}): void {
 export * from './components/index.js';
 
 // Set de iconos propios (`$nombre` en KunIcon y props *Icon).
-export { icons } from './icons/index.js';
+export { icons, kunIconAliases, KUN_ICON_COLLECTION } from './icons/index.js';
+// Runtime de íconos Iconify (lazy) + helpers de precarga/registro offline.
+export { ensureKunIcons, preloadKunIcons, registerKunIcons } from './icons/loader.js';
 
 // Exportar config para uso externo
 export { kunConfig, useKunConfig, resolveConfigValue } from './config/kunConfig.js';
+export {
+    kunTheme,
+    useKunTheme,
+    contrastOnWhite,
+    KUN_THEME_KEY,
+    KUN_PALETTE_CATALOG,
+    KUN_NEUTRAL_CATALOG,
+    customPaletteName,
+} from './theme/kunTheme.js';
+export type {
+    KunPaletteName,
+    KunNeutralName,
+    KunSemanticSlot,
+    KunColorMode,
+    KunFontOptions,
+    KunThemeOptions,
+} from './theme/kunTheme.js';
+export {
+    KUN_COLORS,
+    KUN_VARIANTS,
+    KUN_VARIANT_CLASSES,
+    isKunColor,
+    isKunVariant,
+    kunVariantClasses,
+    resolveKunColor,
+    resolveKunVariant,
+} from './theme/kunVariants.js';
+export type { KunColor, KunVariant } from './theme/kunVariants.js';
+export {
+    KUN_SIZE_ORDER,
+    KUN_SIZE_PX,
+    KUN_ICON_PX,
+    KUN_SQUARE_SIZE,
+    KUN_CONTROL_HEIGHT,
+    KUN_ICON_SIZE,
+    KUN_TEXT_SIZE,
+    KUN_CONTROL_PADDING,
+    KUN_CONTROL_GAP,
+    KUN_LOADER_WIDTH,
+    isKunSize,
+    resolveKunSize,
+    shiftKunSize,
+} from './theme/kunSizes.js';
+export type { KunSize } from './theme/kunSizes.js';
+export {
+    KUN_Z_LAYERS,
+    zIndexVar,
+    zIndexStyle,
+} from './theme/kunZIndex.js';
+export type { KunZLayer } from './theme/kunZIndex.js';
 export { kunDocumentConfig } from './config/kunDocumentConfig.js';
 
 // Composables headless
@@ -92,13 +163,16 @@ export {
 export {
   createKunToast,
   provideKunToast,
+  getKunToast,
   useToast,
+  KUN_TOAST_KEY,
 } from './components/KunToast/src/composables/useToast.js';
 export type {
   ToastAction,
   ToastConfig,
   ToastItem,
   KunToastSystem,
+  KunToastOptions,
 } from './components/KunToast/src/composables/useToast.js';
 
 // 4. Exportación por defecto
@@ -157,7 +231,6 @@ declare module 'vue' {
     KunListSubheader: typeof import('./components/KunListSubheader/src/components/KunListSubheader.vue')['default'];
     KunLoaderCircular: typeof import('./components/KunLoaderCircular/src/components/KunLoaderCircular.vue')['default'];
     KunMenu: typeof import('./components/KunMenu/src/components/KunMenu.vue')['default'];
-    KunModalFooter: typeof import('./components/KunModalFooter/src/components/KunModalFooter.vue')['default'];
     KunNumberField: typeof import('./components/KunNumberField/src/components/KunNumberField.vue')['default'];
     KunRadio: typeof import('./components/KunRadio/src/components/KunRadio.vue')['default'];
     KunRadioGroup: typeof import('./components/KunRadioGroup/src/components/KunRadioGroup.vue')['default'];
@@ -180,5 +253,7 @@ declare module 'vue' {
   }
 }
 // === AUTO-GENERATED:GLOBAL-COMPONENTS:END ===
+
+
 
 

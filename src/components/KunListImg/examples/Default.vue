@@ -16,7 +16,6 @@ const srcRaw = ref(fallbackImg)
 const srcProp = computed(() => srcRaw.value || fallbackImg)
 
 const alt = ref('Foto de Ada Lovelace')
-const bgColor = ref('bg-surface')
 </script>
 
 <template>
@@ -25,29 +24,28 @@ const bgColor = ref('bg-surface')
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunListImg</h2>
 
-      <ul class="space-y-2 rounded-lg bg-surface p-3">
+      <ul class="space-y-2 rounded-lg bg-muted p-3">
         <li class="flex items-center gap-3">
-          <KunListImg :src="srcProp" :alt="alt" :bg-color="bgColor" class="h-12 w-12 shrink-0" />
+          <KunListImg :src="srcProp" :alt="alt" class="h-12 w-12 shrink-0" />
           <div class="min-w-0">
             <p class="truncate font-medium">Ada Lovelace</p>
-            <p class="truncate text-sm text-ui-muted">Ingeniera de software</p>
+            <p class="truncate text-sm text-muted">Ingeniera de software</p>
           </div>
         </li>
         <li class="flex items-center gap-3">
-          <KunListImg :src="srcProp" :alt="alt" :bg-color="bgColor" class="h-8 w-8 shrink-0" />
+          <KunListImg :src="srcProp" :alt="alt" class="h-8 w-8 shrink-0" />
           <span class="truncate text-sm">Vista compacta</span>
         </li>
       </ul>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="srcRaw" label="Src (data-URI, vacío = demo)" density="compact" class="col-span-2" />
         <KunTextField v-model="alt" label="Alt" density="compact" />
-        <KunTextField v-model="bgColor" label="Background color" density="compact" />
       </div>
     </div>
   </div>

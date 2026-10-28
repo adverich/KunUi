@@ -102,19 +102,18 @@ const elevationClass = computed(() =>
 
 const roundedClass = computed(() => {
   if (props.tile) return 'rounded-none'
-  if (props.rounded === true) return 'rounded'
-  if (typeof props.rounded === 'string') return props.rounded
+  if (props.rounded === true) return 'rounded-lg'
   return ''
 })
 
 const mergedClass = computed(() => [
-    props.bgColor ? props.bgColor : 'bg-transparent',
+    'bg-transparent text-default',
     props.theme ? `theme-${props.theme}` : '',
     props.floating ? 'inline-flex' : '',
     props.flat ? '' : `shadow-md`,
     props.absolute ? 'absolute inset-0' : '',
     roundedClass.value,
-    props.bordered ? props.borderColor : 'border-b border-ui',
+    props.bordered ? 'border-b border-default' : '',
     heightClass.value,
     elevationClass.value
 ])

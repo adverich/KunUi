@@ -33,7 +33,6 @@ import { KunDialog } from 'adverich-kun-ui'
 | `xPosition` | `KunDialogXPosition` | `'center'` | Posición horizontal.<br/>Valores · Values: `start` `center` `end` |
 | `yPosition` | `KunDialogYPosition` | `'center'` | Posición vertical.<br/>Valores · Values: `top` `center` `bottom` |
 | `contentClass` | `String` | `''` | Clase extra del contenido. |
-| `bgColor` | `String` | `'bg-surface-dark'` | Color de fondo. |
 | `minHeight` | `String` | `'h-fit'` | Altura mínima. |
 | `height` | `String` | `'h-fit'` | Altura. |
 | `maxHeight` | `String` | `'max-h-dvh'` | Altura máxima. |
@@ -48,7 +47,6 @@ import { KunDialog } from 'adverich-kun-ui'
 | `fullscreen` | `Boolean` | `-` | Pantalla completa. |
 | `scrollable` | `Boolean` | `-` | Contenido con scroll interno. |
 | `contentClass` | `String` | `-` | Clase extra del contenido. |
-| `bgColor` | `String` | `-` | Color de fondo del diálogo. |
 | `minWidth` | `String` | `-` | Ancho mínimo. |
 | `width` | `String` | `-` | Ancho. |
 | `maxWidth` | `String` | `-` | Ancho máximo. |
@@ -68,6 +66,14 @@ import { KunDialog } from 'adverich-kun-ui'
 ## Slots
 
 - `#default`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- `KunDialogContent` pasa a `bg-default` + `ring ring-default` (el ring solo en
+  modo no-`fullscreen`). Antes `bg-elevated` sin contorno: el modal no se
+  distinguía de la página en dark (`--kun-bg-elevated == neutral-800`).
 
 ---
 

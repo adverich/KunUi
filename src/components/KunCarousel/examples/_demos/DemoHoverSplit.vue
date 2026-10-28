@@ -1,3 +1,4 @@
+<!-- theme-exempt: demo (estética fija de la demo, no usa el theme) -->
 <script setup lang="ts">
 import { ref } from 'vue'
 import KunCarousel from '../../src/components/KunCarousel.vue'
@@ -12,7 +13,7 @@ const steps = ref([
     label: 'CLEANSE',
     product: 'pineapple refresh',
     detail: 'PGA daily cleanser',
-    productBg: 'bg-amber-300',
+    productBg: 'bg-warning',
     mediaBg: 'bg-stone-600',
     mediaLabel: 'Glazed morning',
   },
@@ -69,23 +70,23 @@ function stepNumber(i: number): string {
     <div class="flex flex-wrap gap-2">
       <button
         type="button"
-        class="rounded-md border px-3 py-1 text-xs font-medium"
-        :class="stepsPosition === 'bottom' ? 'border-primary bg-primary/10' : 'border-surface'"
+        class="rounded-md border border-default px-3 py-1 text-xs font-medium"
+        :class="stepsPosition === 'bottom' ? 'border-primary bg-primary/10' : 'border-muted'"
         @click="stepsPosition = 'bottom'"
       >
         Números abajo
       </button>
       <button
         type="button"
-        class="rounded-md border px-3 py-1 text-xs font-medium"
-        :class="stepsPosition === 'side' ? 'border-primary bg-primary/10' : 'border-surface'"
+        class="rounded-md border border-default px-3 py-1 text-xs font-medium"
+        :class="stepsPosition === 'side' ? 'border-primary bg-primary/10' : 'border-muted'"
         @click="stepsPosition = 'side'"
       >
         Números al costado
       </button>
     </div>
 
-    <div class="overflow-hidden rounded-xl border border-surface">
+    <div class="overflow-hidden rounded-lg border border-muted">
       <div
         class="grid h-[min(28rem,68vh)] min-h-[22rem] grid-cols-1 md:grid-cols-2"
       >
@@ -155,10 +156,10 @@ function stepNumber(i: number): string {
                       <p class="text-sm font-semibold">{{ s.product }}</p>
                       <p class="mt-0.5 text-xs text-white/55">{{ s.detail }}</p>
                     </div>
-                    <div class="mx-1 h-px w-8 bg-white/50 sm:w-10" aria-hidden="true" />
+                    <div class="mx-1 h-px w-8 bg-elevated/50 sm:w-10" aria-hidden="true" />
                     <div
                       :class="[
-                        'flex h-28 w-28 items-center justify-center rounded text-center text-xs font-semibold text-neutral-800 shadow-lg',
+                        'flex h-28 w-28 items-center justify-center rounded-md text-center text-xs font-semibold text-neutral-800 shadow-lg',
                         s.productBg,
                       ]"
                     >

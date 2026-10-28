@@ -18,7 +18,7 @@ function onAction(title: string): void {
 <template>
   <div class="p-4 max-w-lg space-y-3">
     <h2 class="text-lg font-medium">Drag handle</h2>
-    <p class="text-sm text-ui-muted">
+    <p class="text-sm text-muted">
       Con <code>drag-handle="[data-kun-dnd-handle]"</code> solo se inicia el drag desde el agarre.
     </p>
     <KunDragAndDrop v-model="items" drag-handle="[data-kun-dnd-handle]">
@@ -27,14 +27,14 @@ function onAction(title: string): void {
           :item="(item as any)"
           :index="index"
           :item-key="(item as any).id"
-          class="rounded-lg border border-surface bg-surface-light px-3 py-2"
+          class="rounded-lg border border-muted bg-muted px-3 py-2"
         >
           <div class="flex items-center gap-2">
             <KunDragAndDropHandle />
             <span class="flex-1 truncate">{{ (item as any).title }}</span>
             <button
               type="button"
-              class="text-xs px-2 py-1 rounded bg-button"
+              class="text-xs px-2 py-1 rounded-md bg-primary"
               data-no-drag
               @click="onAction((item as any).title)"
             >

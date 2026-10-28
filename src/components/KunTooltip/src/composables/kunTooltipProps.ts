@@ -30,12 +30,8 @@ export const kunTooltipProps = {
   delay: { type: [Number, String], default: 0 },
   /** Retraso en ms antes de ocultar. */
   closeDelay: { type: [Number, String], default: 100 },
-  /** Color del texto. */
-  textColor: { type: String, default: 'text-ui' },
-  /** Color de fondo. */
-  bgColor: { type: String, default: 'bg-surface-dark' },
-  /** Redondeo. */
-  rounded: { type: String, default: 'rounded' },
+  /** Redondeo (clase de escala, `rounded-sm` por defecto). */
+  rounded: { type: String, default: 'rounded-sm' },
   /** Tamaño del texto. */
   textSize: { type: String, default: 'text-sm' },
   /** Offset extra `{ x, y }` o número (simétrico: aplica a `x` e `y`). */

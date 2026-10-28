@@ -6,18 +6,14 @@ export type KunToolbarDensity = 'default' | 'prominent' | 'comfortable' | 'compa
 export const kunToolbarProps = {
   /** Posicionamiento absoluto. */
   absolute: Boolean,
-  /** Color de fondo. */
-  bgColor: String,
   /** Posición del título. */
   titlePosition: {
     type: String as PropType<KunToolbarTitlePosition>,
     default: 'left',
     validator: (v: unknown) => ['left', 'center', 'right'].includes(v as string),
   },
-  /** Muestra borde inferior. */
-  bordered: { type: Boolean, default: false },
-  /** Color del borde. */
-  borderColor: String,
+  /** Muestra borde inferior (`border-b border-default`). Por defecto `true`. */
+  bordered: { type: Boolean, default: true },
   /** Colapsa el toolbar (solo extensión). */
   collapse: Boolean,
   /** Densidad del padding. */
@@ -43,8 +39,8 @@ export const kunToolbarProps = {
   height: [String, Number],
   /** URL de imagen de fondo. */
   image: String,
-  /** Redondeo (true = default). */
-  rounded: [String, Boolean],
+  /** Redondeo (`rounded-lg`). `tile` lo anula. */
+  rounded: Boolean,
   /** Tag del contenedor. */
   tag: { type: String, default: 'header' },
   /** Tema de color (hook de clase `theme-<valor>` para CSS del consumidor). */

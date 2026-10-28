@@ -1,4 +1,5 @@
 import type { PropType } from 'vue';
+import { isKunColor, isKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js';
 
 export type KunAlertPosition =
   | 'tl' | 'tc' | 'tr'
@@ -24,24 +25,26 @@ export const kunAlertProps = {
   },
   /** Ícono a mostrar (clase o nombre con `$`). */
   icon: { type: String as PropType<string | null>, default: null },
-  /** Tamaño del ícono (clase Tailwind de texto). */
-  iconSize: { type: String, default: 'text-2xl' },
-  /** Color de fondo del contenedor del ícono. */
-  iconBgColor: { type: String, default: 'bg-error' },
-  /** Color de fondo de la alerta. */
-  bgColor: { type: String, default: 'bg-error' },
-  /** Color del texto. */
-  textColor: { type: String, default: 'text-ui-inverse' },
-  /** Color del borde (vacío = sin borde visible). */
-  borderColor: { type: String, default: '' },
+  /** Tamaño del ícono (clase Tailwind, `size-6`). */
+  iconSize: { type: String, default: 'size-6' },
+  /** Color semántico de la alerta. */
+  color: {
+    type: String as PropType<KunColor>,
+    default: 'error' as KunColor,
+    validator: (v: unknown) => isKunColor(v)
+  },
+  /** Variante visual: 'solid' | 'outline' | 'soft' | 'subtle' | 'ghost' | 'link'. */
+  variant: {
+    type: String as PropType<KunVariant>,
+    default: 'solid' as KunVariant,
+    validator: (v: unknown) => isKunVariant(v)
+  },
   /** Clases del título. */
   titleClass: { type: String, default: 'text-2xl font-bold' },
   /** Clases del mensaje. */
   messageClass: { type: String, default: 'text-base font-normal' },
   /** Muestra botón de cierre. */
   closable: { type: Boolean, default: false },
-  /** Z-index del contenedor flotante. */
-  zIndex: { type: [String, Number], default: 2500 },
   /** Clases de transición de entrada/salida. */
   transition: { type: String, default: 'transition-opacity duration-300 ease-in-out' },
   /** Clases del contenedor de la alerta. */

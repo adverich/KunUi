@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import KunNumberField from '../src/components/KunNumberField.vue'
 import type { KunNumberFieldDensity, KunNumberFieldControlVariant, KunNumberFieldFormatMode } from '../src/composables/KunNumberFieldProps.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
+import KunBtn from '../../KunBtn/src/components/KunBtn.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 
@@ -67,6 +68,7 @@ const stepProp = computed(() => (stepRaw.value === '' ? undefined : Number(stepR
 const useGrouping = ref(true)
 const textCenter = ref(false)
 const clearable = ref(true)
+const hideZero = ref(true)
 const disabled = ref(false)
 const readonly = ref(false)
 const noArrows = ref(false)
@@ -75,15 +77,13 @@ const hideDetails = ref(false)
 // ------------------------------------------------------------------
 // Etiqueta · estilo
 // ------------------------------------------------------------------
-const labelColor = ref('text-ui')
-const floatingLabelColor = ref('')
 const labelSize = ref('text-sm')
 const floatingLabelSize = ref('text-xs')
 const labelOpacity = ref('opacity-60')
 const floatingLabelOpacity = ref('opacity-80')
 const labelLeft = ref('')
 const floatingLabelLeft = ref('left-2')
-const floatingLabelTop = ref('-top-2')
+const floatingLabelTop = ref('top-[-2px]')
 const labelClass = ref('')
 const dirty = ref(false)
 
@@ -100,15 +100,20 @@ const appendInnerClass = ref('')
 // ------------------------------------------------------------------
 // Colores y texto
 // ------------------------------------------------------------------
-const rounded = ref('rounded')
-const borderColor = ref('border-ui')
-const textColor = ref('text-ui')
+const rounded = ref('rounded-md')
+const bgInputRaw = ref('__default')
+const bgInputOptions = ref([
+  { id: '__default', name: 'default (null)' },
+  { id: 'bg-primary/20', name: 'bg-primary/20' },
+  { id: 'bg-success/20', name: 'bg-success/20' },
+  { id: 'bg-warning/20', name: 'bg-warning/20' },
+  { id: 'bg-error/20', name: 'bg-error/20' },
+])
+const bgInputProp = computed(() => (bgInputRaw.value === '__default' ? null : bgInputRaw.value))
 const inputTextSize = ref('')
 const inputWeight = ref('')
-const placeholderColor = ref('placeholder-ui')
 const placeholderTextSize = ref('')
 const inputStyle = ref('')
-const bgInput = ref('bg-field-background')
 const controlClass = ref('')
 const controlStartClass = ref('')
 const controlEndClass = ref('')
@@ -177,12 +182,11 @@ function logEvent(name: string, detail: unknown): void {
         :use-grouping="useGrouping"
         :text-center="textCenter"
         :clearable="clearable"
+        :hide-zero="hideZero"
         :disabled="disabled"
         :readonly="readonly"
         :no-arrows="noArrows"
         :hide-details="hideDetails"
-        :label-color="labelColor"
-        :floating-label-color="floatingLabelColor || null"
         :label-size="labelSize"
         :floating-label-size="floatingLabelSize"
         :label-opacity="labelOpacity"
@@ -199,14 +203,11 @@ function logEvent(name: string, detail: unknown): void {
         :prepend-inner-class="prependInnerClass || undefined"
         :append-inner-class="appendInnerClass || undefined"
         :rounded="rounded"
-        :border-color="borderColor"
-        :text-color="textColor"
+        :bg-input="bgInputProp"
         :input-text-size="inputTextSize || null"
         :input-weight="inputWeight || null"
-        :placeholder-color="placeholderColor"
         :placeholder-text-size="placeholderTextSize || null"
         :input-style="inputStyle"
-        :bg-input="bgInput"
         :control-class="controlClass || undefined"
         :control-start-class="controlStartClass || undefined"
         :control-end-class="controlEndClass || undefined"
@@ -230,26 +231,31 @@ function logEvent(name: string, detail: unknown): void {
         @key-down="logEvent('keyDown', ($event as KeyboardEvent).key)"
       />
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
-        <div>{{ JSON.stringify(value) }} <span class="text-ui-muted">({{ typeof value }})</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
+        <div>{{ JSON.stringify(value) }} <span class="text-muted">({{ typeof value }})</span></div>
+        <div class="mt-2 flex flex-wrap gap-2">
+          <KunBtn size="sm" @click="value = 0">Poner 0</KunBtn>
+          <KunBtn size="sm" @click="value = null">Poner null</KunBtn>
+          <KunBtn size="sm" @click="value = 1234.5">Poner 1234,5</KunBtn>
+        </div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Interactuá con el campo para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Interactuá con el campo para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el field) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="label" label="Label" density="compact" />
@@ -303,9 +309,7 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="minRaw" label="Min (vacío = sin límite)" density="compact" inputmode="decimal" />
         <KunTextField v-model="maxRaw" label="Max (vacío = sin límite)" density="compact" inputmode="decimal" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Etiqueta · estilo</p>
-        <KunTextField v-model="labelColor" label="Label color" density="compact" />
-        <KunTextField v-model="floatingLabelColor" label="Floating label color (vacío = labelColor)" density="compact" />
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Etiqueta · estilo</p>
         <KunTextField v-model="labelSize" label="Label size" density="compact" />
         <KunTextField v-model="floatingLabelSize" label="Floating label size" density="compact" />
         <KunTextField v-model="labelOpacity" label="Label opacity" density="compact" />
@@ -316,7 +320,7 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="labelClass" label="Label class" density="compact" />
         <KunSwitch v-model="dirty" label="Dirty (flota label)" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Iconos</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Iconos</p>
         <KunTextField v-model="prependIcon" label="Prepend icon" density="compact" />
         <KunTextField v-model="appendIcon" label="Append icon" density="compact" />
         <KunTextField v-model="prependInnerIcon" label="Prepend inner icon" density="compact" />
@@ -324,18 +328,22 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="prependInnerClass" label="Prepend inner class" density="compact" />
         <KunTextField v-model="appendInnerClass" label="Append inner class" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Colores y texto</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Colores y texto</p>
         <KunTextField v-model="rounded" label="Rounded" density="compact" />
-        <KunTextField v-model="borderColor" label="Border color" density="compact" />
-        <KunTextField v-model="textColor" label="Text color" density="compact" />
+        <KunSelect
+          v-model="bgInputRaw"
+          v-model:items="bgInputOptions"
+          label="Bg input"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
         <KunTextField v-model="inputTextSize" label="Input text size (vacío = text-sm)" density="compact" />
         <KunTextField v-model="inputWeight" label="Input weight (vacío = hereda)" density="compact" />
-        <KunTextField v-model="placeholderColor" label="Placeholder color" density="compact" />
         <KunTextField v-model="placeholderTextSize" label="Placeholder text size" density="compact" />
         <KunTextField v-model="inputStyle" label="Input style" density="compact" />
-        <KunTextField v-model="bgInput" label="Background" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Estado y ayuda</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Estado y ayuda</p>
         <KunSwitch v-model="error" label="Error" />
         <KunTextField v-model="errorMessage" label="Error messages" density="compact" />
         <KunTextField v-model="hint" label="Hint" density="compact" />
@@ -344,7 +352,7 @@ function logEvent(name: string, detail: unknown): void {
         <KunSwitch v-model="counter" label="Counter" />
         <KunSwitch v-model="validateOnBlur" label="Validate on blur" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Nativo</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Nativo</p>
         <KunTextField v-model="idRaw" label="Id" density="compact" />
         <KunTextField v-model="nameRaw" label="Name" density="compact" />
         <KunTextField v-model="autocomplete" label="Autocomplete" density="compact" />
@@ -352,13 +360,14 @@ function logEvent(name: string, detail: unknown): void {
         <KunTextField v-model="maxlengthRaw" label="Maxlength (vacío = sin límite)" density="compact" inputmode="decimal" />
         <KunTextField v-model="debounceRaw" label="Debounce (ms)" density="compact" inputmode="decimal" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Densidad y controles</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Densidad y controles</p>
         <KunTextField v-model="controlClass" label="Control class (ej. px-4)" density="compact" />
         <KunTextField v-model="controlStartClass" label="Control start class (ej. pl-4)" density="compact" />
         <KunTextField v-model="controlEndClass" label="Control end class (ej. pr-4)" density="compact" />
         <KunSwitch v-model="useGrouping" label="Grouping" />
         <KunSwitch v-model="textCenter" label="Centrado" />
         <KunSwitch v-model="clearable" label="Clearable" />
+        <KunSwitch v-model="hideZero" label="Hide zero (vacío en 0)" />
         <KunSwitch v-model="hideDetails" label="Sin details" />
         <KunSwitch v-model="disabled" label="Disabled" />
         <KunSwitch v-model="readonly" label="Readonly" />

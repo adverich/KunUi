@@ -1,7 +1,7 @@
 <template>
   <div
     class="kun-list-item-avatar"
-    :class="[sizeClass, rounded, bgColor, textColor, fontWeight]"
+    :class="[sizeClass, rounded === 'none' ? 'rounded-none' : 'rounded-full', 'bg-muted text-default', fontWeight]"
     v-bind="$attrs"
   >
     <slot>
@@ -11,16 +11,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useAttrs } from 'vue'
 import { kunListItemAvatarProps } from '../composables/kunListItemAvatarProps.js'
+import { resolveKunSize, KUN_SQUARE_SIZE, KUN_TEXT_SIZE, hasExplicitDimensionClass } from '../../../../theme/kunSizes.js'
 
 const props = defineProps(kunListItemAvatarProps)
+const attrs = useAttrs()
 
-const sizeClass = computed(() => ({
-  sm: 'w-6 h-6 text-xs',
-  md: 'w-8 h-8 text-sm',
-  lg: 'w-10 h-10 text-base'
-} as Record<string, string>)[props.size] || 'w-8 h-8 text-sm')
+const hasCustomDimension = computed(() => hasExplicitDimensionClass(attrs.class))
+const isCircular = computed(() => props.rounded !== 'none')
+
+const sizeClass = computed(() => {
+  const size = resolveKunSize(props.size)
+  const side = hasCustomDimension.value
+    ? (isCircular.value ? 'aspect-square' : '')
+    : KUN_SQUARE_SIZE[size]
+  return [side, KUN_TEXT_SIZE[size]].filter(Boolean).join(' ')
+})
 </script>
 
 <style scoped>

@@ -1,40 +1,49 @@
 <template>
-  <Teleport to="body">
+  <Teleport :to="teleportTo" :disabled="teleportDisabled">
     <div
+      ref="containerRef"
       :class="[containerClass, positionClass]"
-      :style="{ zIndex }"
+      :style="toastZIndex"
       class="fixed pointer-events-none flex flex-col gap-3 p-4 max-h-screen overflow-hidden"
+      role="region"
+      aria-label="Notificaciones"
     >
       <TransitionGroup
         :name="transitionName"
         tag="div"
         class="flex flex-col gap-3 pointer-events-auto"
+        @mouseenter="onEnter"
+        @mouseleave="onLeave"
+        @focusin="onFocusIn"
+        @focusout="onFocusOut"
       >
         <div
           v-for="toast in displayedToasts"
           :key="toast.id"
-          class="transition-all"
+          :class="['transition-all', toast.onClick ? 'cursor-pointer' : '']"
+          :data-expanded="expanded"
+          @click="onToastClick(toast)"
         >
           <KunToast
             :toast-id="toast.id"
             :title="toast.title"
             :description="toast.description"
-            :icon="(toast.icon as string)"
+            :avatar="toast.avatar || ''"
+            :icon="toast.icon"
             :color="toast.color"
             :orientation="toast.orientation"
             :duration="toast.duration"
-            :progress="toast.progress"
-            :progress-color="(toast.progressColor as string)"
+            :progress="toast.progress !== false"
+            :progress-color="toast.progressColor"
             :closable="toast.closable"
-            :close-icon="(toast.closeIcon as string)"
+            :close-icon="toast.closeIcon"
             :actions="toast.actions"
             :type="toast.type"
             :is-paused="toast.isPaused"
             :is-pulsing="toast.isPulsing"
+            :remaining-time="toast.remainingTime"
             :ui="(toast.ui as Record<string, string>)"
             @close="onToastClose(toast.id)"
-            @pause="onToastPause(toast.id)"
-            @resume="onToastResume(toast.id)"
           >
             <template v-if="$slots.leading" #leading="slotProps">
               <slot name="leading" v-bind="slotProps" :toast="toast" />
@@ -59,27 +68,60 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { kunToasterProps } from '../composables/kunToasterProps.js'
-import { useToast, provideKunToast, createKunToast } from '../composables/useToast.js'
+import { zIndexStyle } from '../../../../theme/kunZIndex.js'
+import { useToast, type ToastItem } from '../composables/useToast.js'
 import KunToast from './KunToast.vue'
 
 const props = defineProps(kunToasterProps)
-const emit = defineEmits(['update:max'])
 
-// Crear el sistema de toasts localmente
-const toastSystem = createKunToast({
-  duration: props.duration,
-  max: props.max
+const toastZIndex = zIndexStyle('notification')
+
+// Sistema global compartido (patrón Nuxt): `useToast()` en cualquier parte de
+// la app agrega a esta fuente. Si hay un `provideKunToast` ancestro, se usa ese.
+const toastSystem = useToast()
+
+// Reconfigura el sistema en caliente cuando cambian las props globales.
+watch(
+  () => [props.duration, props.max, props.progress] as const,
+  ([duration, max, progress]) => {
+    toastSystem.configure({ duration, max, progress })
+  },
+  { immediate: true }
+)
+
+// Colapsado: solo el más nuevo; hover/focus (o `expand`) los muestra todos.
+// Hover y focus se trackean por separado: cerrar un toast con la cruz dispara
+// un `focusout` (el botón se elimina del DOM) que NO debe reanudar mientras el
+// puntero siga sobre el toaster.
+const hovered = ref(false)
+const focused = ref(false)
+const containerRef = ref<HTMLElement | null>(null)
+const interacting = computed(() => hovered.value || focused.value)
+const expanded = computed(() => props.expand || interacting.value)
+
+watch(interacting, (active) => {
+  if (active) {
+    toastSystem.pauseAll()
+  } else {
+    toastSystem.resumeAll()
+  }
 })
 
-// Exponer vía provide/inject
-provideKunToast(toastSystem)
+const visibleToasts = computed(() => toastSystem.toasts.value.slice(-props.max))
+const displayedToasts = computed(() =>
+  expanded.value ? visibleToasts.value : visibleToasts.value.slice(-1)
+)
 
-// Toasts a mostrar (respetando el máximo)
-const displayedToasts = computed(() => {
-  return toastSystem.toasts.value.slice(-props.max)
+// Portal destino
+const teleportTo = computed(() => {
+  const p = props.portal
+  if (typeof p === 'string') return p
+  if (p && typeof p === 'object') return p as unknown as string
+  return 'body'
 })
+const teleportDisabled = computed(() => props.portal === false)
 
 // Clase de posición
 const positionClass = computed(() => {
@@ -97,10 +139,7 @@ const positionClass = computed(() => {
 // Transición
 const transitionName = computed(() => {
   const isTop = props.position.includes('top')
-  if (isTop) {
-    return 'toast-slide-down'
-  }
-  return 'toast-slide-up'
+  return isTop ? 'toast-slide-down' : 'toast-slide-up'
 })
 
 // Handlers
@@ -108,19 +147,42 @@ const onToastClose = (id: string | number): void => {
   toastSystem.remove(id)
 }
 
-const onToastPause = (id: string | number): void => {
-  toastSystem.pause(id)
+// Hover/focus sobre el toaster: congela los temporizadores de TODOS los toasts
+// (para poder leerlos) y expande el apilado colapsado.
+const onEnter = (): void => {
+  hovered.value = true
 }
 
-const onToastResume = (id: string | number): void => {
-  toastSystem.resume(id)
+// `mouseleave` puede dispararse al eliminar el toast que está bajo el puntero
+// (aunque el mouse no se haya movido). Re-verificamos en el siguiente frame si
+// el puntero sigue dentro del toaster antes de marcarlo como "fuera".
+const onLeave = (e: MouseEvent): void => {
+  const x = e.clientX
+  const y = e.clientY
+  requestAnimationFrame(() => {
+    const el = containerRef.value
+    if (!el) {
+      hovered.value = false
+      return
+    }
+    const under = document.elementFromPoint(x, y)
+    if (!under || !el.contains(under)) {
+      hovered.value = false
+    }
+  })
 }
 
-// Watch max prop
-watch(() => props.max, (newVal) => {
-  // El límite se maneja en el createKunToast, pero podemos emitir
-  emit('update:max', newVal)
-})
+const onFocusIn = (): void => {
+  focused.value = true
+}
+
+const onFocusOut = (): void => {
+  focused.value = false
+}
+
+const onToastClick = (toast: ToastItem): void => {
+  toast.onClick?.(toast)
+}
 
 // Cleanup
 onBeforeUnmount(() => {
@@ -182,4 +244,3 @@ defineExpose({
   transition: transform 0.3s ease;
 }
 </style>
-

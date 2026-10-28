@@ -9,7 +9,6 @@ import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
 // ------------------------------------------------------------------
 const text = ref('Usuarios')
 const fontSize = ref('text-xs')
-const textColor = ref('text-ui-muted')
 const fontWeight = ref('font-semibold')
 </script>
 
@@ -19,11 +18,10 @@ const fontWeight = ref('font-semibold')
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunListSubheader</h2>
 
-      <ul class="space-y-1 rounded-lg bg-surface p-2">
+      <ul class="space-y-1 rounded-lg bg-muted p-2">
         <KunListSubheader
           :text="text"
           :font-size="fontSize"
-          :text-color="textColor"
           :font-weight="fontWeight"
         />
         <KunListItem value="ada">Ada Lovelace</KunListItem>
@@ -35,13 +33,12 @@ const fontWeight = ref('font-semibold')
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="text" label="Text" density="compact" />
         <KunTextField v-model="fontSize" label="Font size" density="compact" />
-        <KunTextField v-model="textColor" label="Text color" density="compact" />
         <KunTextField v-model="fontWeight" label="Font weight" density="compact" />
       </div>
     </div>

@@ -16,14 +16,14 @@ const modules = ref([
 <template>
   <div class="p-4 space-y-3">
     <h2 class="text-lg font-medium">Layout grid</h2>
-    <p class="text-sm text-ui-muted">El orden sigue el array; <code>layout="grid"</code> solo afecta CSS.</p>
+    <p class="text-sm text-muted">El orden sigue el array; <code>layout="grid"</code> solo afecta CSS.</p>
     <KunDragAndDrop v-model="modules" layout="grid">
       <template #item="{ item, index }">
         <KunDragAndDropItem
           :item="(item as any)"
           :index="index"
           :item-key="(item as any).id"
-          class="rounded-xl border border-surface bg-surface-light p-4 text-center shadow-sm"
+          class="rounded-lg border border-muted bg-muted p-4 text-center shadow-sm"
         >
           <div class="text-xs opacity-50 mb-1">#{{ index + 1 }}</div>
           <div class="font-medium truncate">{{ (item as any).title }}</div>

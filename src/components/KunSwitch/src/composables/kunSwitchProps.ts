@@ -23,9 +23,9 @@ export const kunSwitchProps = {
   /** Color del track en estado activo. */
   onColor: { type: String, default: 'bg-success' },
   /** Color del track en estado inactivo. */
-  offColor: { type: String, default: 'bg-surface-light' },
+  offColor: { type: String, default: 'bg-accented' },
   /** Color del thumb. */
-  iconColor: { type: String, default: 'bg-ui-surface-raised' },
+  iconColor: { type: String, default: 'bg-inverted' },
   /** Thumb hundido en el track. */
   inset: Boolean,
   /** Oculta el área de detalles. */

@@ -3,7 +3,6 @@
     :class="[
       'relative w-full',
       direction === 'vertical' ? 'flex flex-col' : 'flex',
-      bgColor,
     ]"
     :style="{ height: heightPx }"
     v-bind="$attrs"
@@ -12,7 +11,7 @@
     <KunBtn
       v-if="showArrows && showPrev"
       :icon="prevIcon"
-      variant="text"
+      variant="ghost"
       size="sm"
       @click="scrollPrev"
     />
@@ -43,7 +42,7 @@
     <KunBtn
       v-if="showArrows && showNext"
       :icon="nextIcon"
-      variant="text"
+      variant="ghost"
       size="sm"
       @click="scrollNext"
     />
@@ -97,7 +96,7 @@ const alignTabsClass = computed(() => {
   }[props.alignTabs] || 'justify-start'
 })
 
-// Contexto para KunTab y KunTabWindow
+// Contexto para KunTab (`KunTabWindow` usa solo su prop `modelValue`, no inyecta).
 provide('modelValue', computed(() => props.modelValue))
 provide('updateModelValue', select)
 provide('registerTab', registerTab)

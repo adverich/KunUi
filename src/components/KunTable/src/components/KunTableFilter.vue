@@ -2,13 +2,13 @@
     <KunDialog v-if="filterDialog" v-model="filterDialog" yPosition="top" maxWidth="max-w-1/2">
         <div class="w-full">
             <div class="flex justify-end px-1">
-                <KunBtn @click="closeDialog" rounded="rounded-full" size="xxs" bgColor="bg-transparent">
-                    <KunIcon color="text-error" :icon="IconClose" size="text-lg" />
+                <KunBtn @click="closeDialog" rounded="full" size="xxs" variant="ghost" color="neutral">
+                    <KunIcon class="text-error" icon="$close" size="size-4.5" />
                 </KunBtn>
             </div>
             <KunRow>
                 <KunCol cols="4" v-for="filter in filters" class="px-2">
-                    <KunAutocomplete multiple v-model="selectedFilters[filter.value]" :items="filter.items ?? []" z-index="z-250" 
+                    <KunAutocomplete multiple v-model="selectedFilters[filter.value]" :items="filter.items ?? []" 
                         :item-value="filter['item-value'] ?? 'id'" :item-title="filter.title ?? filter.text" :item-text="filter.text" :label="filter.label ?? ''"
                         :text-no-items="filter.textNoItem ?? `No hay ${filter.name ?? 'elementos' } disponibles`"
                         :placeholder-text="filter.placeholderText ?? 'Seleccionar'"
@@ -42,7 +42,6 @@ import KunCol from '../../../KunCol/src/components/KunCol.vue';
 import KunAutocomplete from '../../../KunAutocomplete/src/components/KunAutocomplete.vue';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
-import IconClose from '../../../../icons/IconClose.vue';
 import { kunTableFilterProps, type TableFilterDefinition } from '../composables/kunTableFilterProps.js'
 
 const props = defineProps(kunTableFilterProps)

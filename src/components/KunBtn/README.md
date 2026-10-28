@@ -23,26 +23,25 @@ import { KunBtn } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `text` | `String` | `-` | Texto del botón (alternativa al slot default). |
-| `size` | `KunBtnSize` | `'md'` | Tamaño: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'.<br/>Valores · Values: `xxs` `xs` `sm` `md` `lg` `xl` `xxl` |
+| `size` | `KunBtnSize` | `'md'` | Tamaño: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'. |
 | `minWidth` | `String` | `'min-w-[3rem]'` | Ancho mínimo (clase Tailwind). Solo aplica si no hay ancho custom. |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |
-| `rounded` | `String` | `'rounded-lg'` | Redondeo de bordes. |
+| `rounded` | `KunBtnRounded \| null \| undefined` | `null` | Redondeo propio: 'full' \| 'none'. `undefined` hereda la escala global. |
 | `textAlign` | `String` | `'text-center'` | Alineación del texto. |
-| `variant` | `KunBtnVariant` | `'default'` | Variante visual: 'default' \| 'tonal' \| 'plain' \| 'outlined' \| 'soft' \| 'text'.<br/>Valores · Values: `default` `tonal` `plain` `outlined` `soft` `text` |
+| `color` | `KunColor \| null` | `null` | Color semántico: 'primary' \| 'secondary' \| 'success' \| 'info' \| 'warning' \| 'error' \| 'neutral'. `null` delega al theme global. |
+| `variant` | `KunVariant \| null` | `null` | Variante visual: 'solid' \| 'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'link'. `null` delega al theme global. |
 | `disabled` | `Boolean` | `-` | Deshabilita el botón (también cuando loading). |
 | `loading` | `Boolean` | `-` | Muestra loader y bloquea interacción. |
-| `bgColor` | `String` | `'bg-button'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link en vez de button). |
 | `href` | `String` | `-` | URL externa (renderiza <a> en vez de button). |
 | `replace` | `Boolean` | `-` | Navegación con replace (solo con `to`). |
 | `target` | `String` | `-` | Target del enlace (solo con `to`/`href`). |
-| `ring` | `Boolean` | `-` | Anillo de foco accesible. |
+| `ring` | `Boolean` | `-` | Anillo de foco accesible extra (además del outline del sistema). |
+| `square` | `Boolean` | `-` | Fuerza botón cuadrado: `aspect-square` + padding uniforme por tamaño (sin aplicar `minWidth`). Pensado para contenido por slot (p. ej. un solo ícono central); los botones con prop `icon` ya son cuadrados automáticos. |
 | `icon` | `Boolean \| String \| Function \| Object \| Array` | `-` | Ícono central (solo visible si no hay `text` ni slot default). |
 | `prependIcon` | `String \| Function \| Object \| Array` | `-` | Ícono a la izquierda del contenido. |
 | `appendIcon` | `String \| Function \| Object \| Array` | `-` | Ícono a la derecha del contenido. |
 | `iconSize` | `string \| null` | `null` | Tamaño del ícono (sobrescribe el calculado por `size`). |
-| `focusColor` | `string \| null` | `null` | Color extra en estado de foco. |
 
 ## Eventos · Events
 
@@ -61,6 +60,47 @@ import { KunBtn } from 'adverich-kun-ui'
 ## Métodos expuestos · Exposed
 
 - `focus()`
+
+## Notas · Notes
+
+# KunBtn — Notas
+
+## Tamaños
+
+Escala canónica compartida (`src/theme/kunSizes.ts`): `xxs` (24px) · `xs`
+(28px) · `sm` (32px) · `md` (36px, default) · `lg` (40px) · `xl` (48px) ·
+`xxl` (56px).
+
+- Botón de texto: altura fija (`h-6`…`h-14`) + padding horizontal por tamaño.
+- Botón icon-only / `square`: lado fijo (`size-6`…`size-14`), sin padding ni
+  `aspect-square`. Coincide exactamente con `KunAvatar` del mismo `size`.
+- Ícono: 50% del lado (`12|14|16|18|20|24|28`). `iconSize` sigue teniendo
+  prioridad para casos puntuales.
+
+## Botones de solo icono
+
+Un único `KunIcon` en el slot default ahora activa automáticamente el modo
+icon-only, igual que la prop `icon` o un texto de un caracter. La prop `square`
+sigue disponible para forzarlo con cualquier otro contenido.
+
+Regla 1:1: un botón icon-only siempre mide lo mismo de ancho y alto.
+
+- Sin clases de dimension: usa el lado canónico del `size` (`size-6`...`size-14`).
+- Con `w-*`, `h-*` o `size-*`: respeta la clase del consumidor y agrega
+  `aspect-square` para completar el lado faltante.
+- `rounded="full"` sobre un icon-only da un círculo real, nunca un óvalo.
+- Los botones con texto conservan la altura de control y pueden seguir siendo
+  píldoras si se usa `rounded="full"`.
+
+```vue
+<KunBtn size="xxs" rounded="full" color="error">
+  <KunIcon icon="$close" size="xxs" />
+</KunBtn>
+
+<KunBtn size="md" rounded="full" class="h-16 w-16">
+  <KunIcon icon="$star" size="md" />
+</KunBtn>
+```
 
 ---
 

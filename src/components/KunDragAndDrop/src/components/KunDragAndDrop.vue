@@ -18,7 +18,7 @@
           :index="index"
           :item-key="(resolveKey(item, index) as string)"
           :disabled="isItemDisabled(item)"
-          class="rounded-lg border border-surface bg-surface-light px-3 py-2"
+          class="rounded-lg border border-muted bg-muted px-3 py-2"
         >
           <div class="flex items-center gap-2 min-w-0">
             <slot name="handle" :item="item" :index="index">
@@ -34,7 +34,7 @@
       </slot>
     </template>
     <slot v-else name="empty">
-      <div data-kun-dnd-placeholder data-kun-dnd-item="false" class="text-sm text-ui-muted opacity-70 py-2">
+      <div data-kun-dnd-placeholder data-kun-dnd-item="false" class="text-sm text-muted opacity-70 py-2">
         Sin elementos
       </div>
     </slot>
@@ -194,7 +194,8 @@ provide(KUN_DRAG_AND_DROP_KEY, {
   dropZoneClass: computed(() => props.dropZoneClass),
   disabled: computed(() => props.disabled),
   sortable: computed(() => props.sortable),
-  itemDraggable: props.itemDraggable,
+  // Forwarder (no snapshot): si el padre cambia el callback, el ítem ve el nuevo.
+  itemDraggable: (item: unknown, index: number) => props.itemDraggable?.(item, index) ?? true,
 })
 </script>
 

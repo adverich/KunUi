@@ -3,7 +3,7 @@
     :class="[
       'kun-list-subheader',
       'px-4 py-2 uppercase tracking-wider',
-      fontSize, textColor, fontWeight
+      fontSize, 'text-muted', fontWeight
     ]"
     v-bind="$attrs"
     role="separator"

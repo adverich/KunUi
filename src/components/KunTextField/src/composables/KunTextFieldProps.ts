@@ -33,16 +33,10 @@ export default {
   appendInnerClass: String,
 
   // Estilo y diseño
-  /** Redondeo del contenedor. */
-  rounded: { type: String, default: 'rounded' },
-  /** Color del borde. */
-  borderColor: { type: String, default: 'border-ui' },
-  /** Color del texto del valor. */
-  textColor: { type: String, default: 'text-ui' },
-  /** Color del label en reposo. */
-  labelColor: { type: String, default: 'text-ui' },
-  /** Color del label flotando (null = usa `labelColor`). */
-  floatingLabelColor: { type: String as PropType<string | null>, default: null },
+  /** Redondeo del contenedor (clase de escala, `rounded-md` por defecto). */
+  rounded: { type: String, default: 'rounded-md' },
+  /** Color de fondo del contenedor (clase Tailwind, p. ej. `bg-success/20`). `null` = `bg-default`, con `bg-error/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error). */
+  bgInput: { type: String as PropType<string | null>, default: null },
   /** Tamaño del label en reposo. */
   labelSize: { type: String, default: 'text-sm' },
   /** Tamaño del label flotando. */
@@ -55,20 +49,16 @@ export default {
   labelLeft: { type: String as PropType<string | null>, default: null },
   /** Offset izquierdo del label flotando. */
   floatingLabelLeft: { type: String, default: 'left-2' },
-  /** Posición superior del label flotando. */
-  floatingLabelTop: { type: String, default: '-top-2' },
+  /** Posición superior del label flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). */
+  floatingLabelTop: { type: String, default: 'top-[-2px]' },
   /** Clase libre para el label. */
   labelClass: { type: String, default: '' },
-  /** Color del placeholder. */
-  placeholderColor: { type: String, default: 'placeholder-ui' },
   /** Tamaño del texto del valor (null = 'text-sm'). */
   inputTextSize: { type: String as PropType<string | null>, default: null },
   /** Peso del texto del valor (null = hereda). */
   inputWeight: { type: String as PropType<string | null>, default: null },
   /** Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). */
   placeholderTextSize: { type: String as PropType<string | null>, default: null },
-  /** Color de fondo del contenedor. */
-  bgInput: { type: String, default: 'bg-field-background' },
   /** Clase libre para el input. */
   inputStyle: { type: String, default: '' },
   /** Centra el texto del valor. */

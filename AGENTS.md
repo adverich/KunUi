@@ -23,6 +23,7 @@ No uses npm ni yarn.
 | `pnpm run build` | Build de producción (JS + `.d.ts`) |
 | `pnpm run typecheck` | `vue-tsc --noEmit` (debe estar en cero) |
 | `pnpm run generate:barrel` | Regenera `src/components/index.ts` + `GlobalComponents` |
+| `pnpm run generate:icons` | Regenera `src/icons/lucide.generated.ts` (subset lucide offline) |
 | `pnpm run generate:docs` | Regenera READMEs + `registry.json` + `llms.txt` + `llms-full.txt` |
 
 ---
@@ -46,11 +47,46 @@ No uses npm ni yarn.
 
 ## Convenciones de la librería
 
-- **Estilo con clases Tailwind**: `bgColor`, `textColor`, `rounded`,
-  `inputTextSize`, etc. Tamaños: `xxs|xs|sm|md|lg|xl|xxl`.
+- **Estilo con clases Tailwind**: los props de clase (`inputTextSize`,
+  `fontWeight`, `rounded`, `borderColor`, …) reciben **utilidades Tailwind**;
+  los colores semánticos van por `color`
+  (`primary|secondary|success|info|warning|error|neutral`) y `variant`
+  (`solid|outline|soft|subtle|ghost|link`), nunca como clase.
+  Tamaños: `xxs|xs|sm|md|lg|xl|xxl` (fuente única: `src/theme/kunSizes.ts`).
+  Mismo `size` = mismo px en todos los componentes: cuadrado/altura
+  `24|28|32|36|40|48|56` e ícono 50% del cuadrado (`12|14|16|18|20|24|28`).
+  Excepciones de forma: `KunSwitch` (track rectangular) y `KunCheckbox` (caja).
+  KunAvatar admite además los alias legacy `3xs|2xs|2xl|3xl`.
   Densidad: `default|comfortable|compact`.
+- **Bordes y radio** (detalle en `docs/refactor/borders-radius.md`):
+  - **Color**: siempre un rol de token — `border-default|muted|accented|inverted`.
+    Nunca `border-gray-200` ni `border` pelado (salvo `border-current` /
+    `border-white` intencionales). Tokens en `src/styles/theme.css`
+    (`--kun-border*`, valores alineados con Nuxt UI).
+  - **Radio**: **nunca `rounded` pelado** (Tailwind lo fija en 4px y no sigue
+    `--kun-radius`). Escala: `rounded-sm` (badge, tooltip, kbd), `rounded-md`
+    (controles e ítems), `rounded-lg` (contenedores y paneles), `rounded-full`
+    (avatar, chip, switch, radio, slider).
+  - **Forma circular**: si un componente declara `rounded-full` (o el default
+    circular de avatar/icono), la caja debe ser 1:1. Nunca un óvalo. Con
+    dimensiones custom (`w-*`/`h-*`/`size-*`) se omite el lado canónico y se
+    agrega `aspect-square`; los botones con texto pueden seguir siendo píldoras.
+  - **Lados direccionales** en lógico: `border-s/e`, `rounded-s/e`, `ps/pe`
+    (excepción: flecha de `KunTooltip`, aristas físicas por rotación).
+  - **Ubicación del contorno** (en dark `--kun-border == --kun-bg-muted ==
+    --kun-bg-elevated == neutral-800`): nunca `border-default`/`ring-default`
+    sobre `bg-muted`/`bg-elevated` (mismo color ⇒ invisible). Superficies
+    flotantes y chrome → `bg-default` + `ring ring-default` / `border-*`;
+    controles → `ring ring-inset ring-accented` (o notch `border-accented`);
+    separadores dentro de superficies elevadas → `border-muted`.
 - **Slots de iconos**: prop `*Icon` → slot sin sufijo
   (`prependIcon` → `#prepend`, `appendInnerIcon` → `#append-inner`).
+- **Íconos**: se resuelven con `@iconify/vue` (dependencia de la lib) contra
+  la colección `lucide`. Los alias van en `kunIconAliases`
+  (`src/icons/index.ts`, valor `lucide:*`); los componentes usan `"$alias"`
+  (nunca el nombre Iconify directo) para que `kunConfig.icons` pueda
+  pisarlos. Al agregar/editar alias: `pnpm run generate:icons`. No re-crear
+  SFCs `Icon*.vue`.
 - **`v-model` acepta `null`** como "vacío" en `KunRadio`/`KunRadioGroup`,
   `KunCheckbox`, `KunFileInput` (su `clearable` emite `null` en modo simple),
   `KunSelect`/`KunAutocomplete`. Tipea `ref<string | null>(null)`.

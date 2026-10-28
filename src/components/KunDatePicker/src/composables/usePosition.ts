@@ -118,7 +118,7 @@ export function usePosition(
             pointerEvents: 'auto',
             transform: 'scale(1)',
             transformOrigin: origin,
-            zIndex: '99999',
+            zIndex: 'var(--kun-z-overlay)',
             maxWidth: `${viewportWidth - (margin * 2)}px`,
             // Essential for scrolling: Restrict max-height to available space
             maxHeight: `${allowedHeight}px`,

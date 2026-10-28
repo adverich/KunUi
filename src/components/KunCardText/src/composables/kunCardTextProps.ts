@@ -4,7 +4,7 @@ export const kunCardTextProps = {
     /** Texto del cuerpo (alternativa al slot). */
     text: { type: [String, Number] as PropType<string | number | null>, default: null },
     /** Color del texto. */
-    color: { type: String, default: 'text-ui' },
+    color: { type: String, default: 'text-default' },
     /** Reduce el padding. */
     dense: { type: Boolean, default: false },
     /** Opacidad del texto. */

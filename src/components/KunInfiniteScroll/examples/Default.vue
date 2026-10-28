@@ -2,14 +2,14 @@
   <div class="p-4 space-y-6">
     <div class="flex items-center gap-4">
       <button
-        class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        class="px-4 py-2 bg-success text-highlighted rounded-md hover:bg-success/75"
         @click="useVirtual = !useVirtual"
       >
         Toggle Virtual Scroll ({{ useVirtual ? 'ON' : 'OFF' }})
       </button>
 
       <button
-        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        class="px-4 py-2 bg-primary text-highlighted rounded-md hover:bg-primary/75"
         @click="scrollTo(50)"
       >
         Scroll to Item #50
@@ -35,7 +35,7 @@
     >
       <template #default="{ item, index }">
         <div
-          class="border-b border-gray-200 py-2 px-4"
+          class="border-b border-default py-2 px-4"
           :style="{ height: (index as number) % 2 === 0 ? '40px' : '60px' }"
         >
           <strong>#{{ index }}</strong> — {{ (item as any).label }}

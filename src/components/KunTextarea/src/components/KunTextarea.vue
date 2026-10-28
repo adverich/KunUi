@@ -1,12 +1,12 @@
 <template>
   <div :class="wrapperClasses" ref="rootRef" v-bind="restAttrs">
-    <!-- Label -->
-    <slot name="label" :for="uid" v-bind="labelSlotBindings">
+    <!-- Label (variantes no outline: posición contra el wrapper) -->
+    <slot v-if="!isOutline" name="label" :for="uid" v-bind="labelSlotBindings">
       <label
         v-if="label"
         :for="uid"
         class="absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10"
-        :class="[labelLeftClass, labelPositionClass]"
+        :class="[fieldTextColorClass, labelLeftClass, labelPositionClass]"
       >
         {{ label }}
       </label>
@@ -15,7 +15,7 @@
     <div class="relative ">
 
       <!-- Prepend Icon -->
-      <div v-if="prependIcon || $slots.prepend" class="absolute left-2 top-2 flex items-center">
+      <div v-if="prependIcon || $slots.prepend" class="absolute left-2 top-2 flex items-center z-10">
         <slot name="prepend" v-bind="prependSlotBindings">
           <div @click="handleIconClick($event, 'prepend')">
             <component :is="renderIconSlot(prependIcon)" />
@@ -24,7 +24,7 @@
       </div>
 
       <!-- Prepend-inner Icon -->
-      <div v-if="prependInnerIcon || $slots['prepend-inner']" class="absolute left-2 top-2 ml-1">
+      <div v-if="prependInnerIcon || $slots['prepend-inner']" class="absolute left-2 top-2 ml-1 z-10">
         <slot name="prepend-inner">
           <div @click="handleIconClick($event, 'prependInner')">
             <component :is="renderIconSlot(prependInnerIcon)" />
@@ -32,8 +32,35 @@
         </slot>
       </div>
 
-      <!-- Textarea Mejorado -->
+      <!-- Variante outline: el textarea lleva borde transparente propio (métricas),
+           un overlay dibuja el borde con muesca medida (sin fieldset/legend:
+           idéntico en todos los navegadores), y el label flota sobre el hueco. -->
+      <template v-if="isOutline">
+        <div
+          aria-hidden="true"
+          data-kun-notch="KunTextarea"
+          ref="overlayRef"
+          class="absolute inset-0 pointer-events-none border bg-transparent transition-colors duration-150"
+          :class="[fieldsetRoundedClass, notchBorderClass]"
+          :style="notchMaskStyle"
+        />
+        <slot name="label" :for="uid" v-bind="labelSlotBindings">
+          <label
+            ref="labelRef"
+            v-if="label && !$slots.label"
+            :for="uid"
+            :style="labelShiftStyle"
+            class="absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10"
+            :class="[fieldTextColorClass, labelLeftClass, labelPositionClass]"
+          >
+            {{ label }}
+          </label>
+        </slot>
+      </template>
+
+      <!-- Textarea (outline: borde transparente, el visible lo da el fieldset) -->
       <textarea
+        v-if="isOutline"
         ref="textareaRef"
         :id="uid"
         :value="internalValue"
@@ -43,13 +70,39 @@
         :placeholder="placeholder"
         :maxlength="maxLength"
         @input="handleInput"
+        @change="handleChange"
+        @animationstart="handleAnimationStart"
         @focus="handleFocus"
         @blur="handleBlur"
         @keydown.enter="handleJsonEnter"
         @click="$emit('click:control', $event)"
         @mousedown="$emit('mousedown:control', $event)"
-        class="bg-field-background"
-        :class="[textareaClasses]"
+        class="bg-transparent border border-transparent"
+        :class="[fieldTextColorClass, textareaOutlinedInnerClasses]"
+        style="width: 100%; box-sizing: border-box;"
+        :style="autoGrow ? 'overflow-y: hidden;' : 'overflow-y: auto;'"
+      ></textarea>
+
+      <!-- Textarea (variantes no outline: con su propio borde/fondo) -->
+      <textarea
+        v-else
+        ref="textareaRef"
+        :id="uid"
+        :value="internalValue"
+        :rows="rows"
+        :disabled="disabled"
+        :readonly="readonly"
+        :placeholder="placeholder"
+        :maxlength="maxLength"
+        @input="handleInput"
+        @change="handleChange"
+        @animationstart="handleAnimationStart"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @keydown.enter="handleJsonEnter"
+        @click="$emit('click:control', $event)"
+        @mousedown="$emit('mousedown:control', $event)"
+        :class="[fieldTextColorClass, textareaClasses]"
         style="width: 100%; box-sizing: border-box;"
         :style="autoGrow ? 'overflow-y: hidden;' : 'overflow-y: auto;'"
       ></textarea>
@@ -61,7 +114,7 @@
         :class="clearIconClasses"
       >
         <slot name="clear" v-bind="clearSlotBindings">
-          <button type="button" @click="handleClear" class="text-ui-muted hover:text-ui" v-if="clearIcon">
+          <button type="button" @click="handleClear" class="text-muted hover:text-default" v-if="clearIcon">
             <component :is="renderIconSlot(clearIcon)" />
           </button>
         </slot>
@@ -88,7 +141,7 @@
       <!-- Loader -->
       <div v-if="loading" class="mt-1">
         <slot name="loader" :color="loadingColor" :isActive="true">
-          <div class="h-1 w-full bg-field-background rounded overflow-hidden">
+          <div class="h-1 w-full bg-muted rounded-md overflow-hidden">
             <div
               class="h-full transition-all duration-300"
               :class="[loadingColor]"
@@ -102,7 +155,7 @@
       <div
         v-if="!hideDetails || (hideDetails === 'auto' && (displayedMessages.length || hint))"
         class="text-xs mt-1 space-y-1"
-        :class="{ 'text-ui-error': hasError, 'text-ui-muted': !hasError }"
+        :class="{ 'text-error': hasError, 'text-muted': !hasError }"
       >
         <slot name="details">
           <template v-if="hasError">
@@ -121,7 +174,7 @@
       </div>
 
       <!-- Counter -->
-      <div v-if="counterVisible" class="text-xs text-right mt-1 text-ui-disabled">
+      <div v-if="counterVisible" class="text-xs text-right mt-1 text-muted">
         <slot name="counter" :counter="valueLength" :max="counterMax" :value="valueLength">
           {{ valueLength }}<span v-if="counterMax"> / {{ counterMax }}</span>
         </slot>
@@ -131,15 +184,32 @@
 </template>
 
 <script setup lang="ts">
-import { useAttrs, computed, ref, useId, useSlots, type Ref } from 'vue'
+import { useAttrs, computed, ref, useId, useSlots, nextTick, type Ref } from 'vue'
 import { kunTextareaProps } from '../composables/kunTextareaProps.js'
 import useTextarea from '../composables/useKunTextareaComposable.js'
+import { resolveKunColor, resolveKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js'
+import {
+  kunFieldBaseClass,
+  kunFieldTextClass,
+  KUN_FIELD_FOCUS_BORDER,
+  KUN_FIELD_ERROR_RING,
+  KUN_FIELD_FOCUS_RING,
+} from '@/utils/kunFieldVariant.js'
+import { isAutofillAnimation } from '@/utils/kunAutofill.js'
 import { renderIconSlot } from '@/utils/renderIcon.js'
+import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js'
 import { debounce } from '@/utils/utils.js';
 
 const props = defineProps({ ...kunTextareaProps })
 const emits = defineEmits(['update:modelValue', 'click:clear', 'click:control', 'update:focused', 'mousedown:control'])
 const attrs = useAttrs()
+
+// Color/variante canónicos: prop > theme.defaults.input > (primary, outline).
+const resolvedColor = computed<KunColor>(() => resolveKunColor(props.color ?? null, 'input'))
+const resolvedVariant = computed<KunVariant>(() => resolveKunVariant(props.variant, 'input'))
+// Solo `outline` lleva label flotante con muesca (borde transparente propio).
+const isOutline = computed(() => resolvedVariant.value === 'outline')
+const fieldTextColorClass = computed(() => kunFieldTextClass(resolvedVariant.value, resolvedColor.value))
 
 const textareaRef: Ref<HTMLTextAreaElement | null> = ref(null)
 const uid = props.id || `textarea-${useId()}`
@@ -148,6 +218,7 @@ const {
   isFocused,
   internalValue,
   updateModel,
+  syncFromDom,
   validate,
   reset,
   resetValidation,
@@ -232,19 +303,38 @@ const debouncedUpdateModel = debounce((val: unknown) => {
 }, Number(props.debounceTime ?? 300))
 
 const handleFocus = () => {
+  // Por si el navegador rellenó sin eventos (autofill): el padre recibe el
+  // valor ahora.
+  syncFromDom()
   isFocused.value = true
   emits('update:focused', true)
 }
 
 const handleBlur = () => {
+  // Sincronizar antes de apagar el foco para que el label quede arriba si hay
+  // texto autocompletado.
+  syncFromDom()
   isFocused.value = false
   emits('update:focused', false)
+}
+
+// Chrome dispara `change` (pero no `input`) al autocompletar.
+const handleChange = () => {
+  syncFromDom()
+}
+
+// `animationstart` de `kun-autofill-*` (ver `style.css`): autofill de WebKit.
+const handleAnimationStart = (e: Event) => {
+  if (!isAutofillAnimation(e)) return
+  nextTick(() => {
+    syncFromDom()
+  })
 }
 
 const isActive = computed(() => isFocused.value || !!internalValue.value || props.dirty)
 const isSingleRow = computed(() => Number(props.rows) === 1)
 const labelPositionClass = computed(() => {
-  if (isActive.value || props.placeholder) return '-top-2.25 text-xs opacity-80'
+  if (isActive.value || props.placeholder) return 'top-[-2px] -translate-y-1/2 text-xs opacity-80'
   // Con 1 fila se centra verticalmente como KunTextField; con más filas se ancla arriba
   if (isSingleRow.value) return 'top-1/2 -translate-y-1/2 text-sm opacity-80'
   return 'top-3 text-sm opacity-80'
@@ -265,20 +355,15 @@ const clearIconClasses = computed(() =>
   props.persistentClear ? 'opacity-100' : 'hover:opacity-100 opacity-0 transition-opacity duration-200'
 )
 
-const variantClass = computed(() => {
-  const bg = props.bgColor ? '' : props.variant === 'filled' ? 'bg-field-background' : ''
-  switch (props.variant) {
-    case 'filled':
-      return [bg, 'border border-transparent']
-    case 'outlined':
-      return 'border border-ui bg-transparent'
-    case 'underlined':
-      return 'border-b border-ui bg-transparent rounded-none'
-    case 'solo':
-      return [bg || 'bg-ui-surface-raised', 'shadow-md border-transparent']
-    default:
-      return ''
-  }
+// Fondo/estructura de reposo por variante (tokens de superficie, nunca
+// interpolados) + estado de foco/error con ring literal por color. En
+// `outline` el borde visible lo dibuja el overlay (`notchBorderClass`).
+const fieldBaseClass = computed(() => kunFieldBaseClass(resolvedVariant.value, resolvedColor.value, { overlayBorder: true }))
+const fieldStateClass = computed(() => {
+  if (props.disabled) return ''
+  if (hasError.value) return KUN_FIELD_ERROR_RING
+  if (isFocused.value) return KUN_FIELD_FOCUS_RING[resolvedColor.value]
+  return ''
 })
 
 const densityClass = computed(() =>
@@ -297,28 +382,61 @@ const textAlignClass = computed(() => {
 
 const textareaClasses = computed(() => [
   'block w-full resize-none transition-colors duration-150 leading-normal',
-  props.textColor || 'text-ui',
   textAlignClass.value,
   props.inputClass,
+  fieldsetRoundedClass.value,
   {
-    'rounded': !props.tile,
-    'rounded-none': props.tile,
-    ...(typeof props.rounded === 'string' || typeof props.rounded === 'number'
-      ? { [`rounded-${props.rounded}`]: true }
-      : {}),
-    'shadow-md': props.variant === 'solo' && !props.flat,
-    'shadow-none': props.flat,
-    ...(props.bgColor ? { [props.bgColor as string]: true } : {}),
-    'text-ui-disabled bg-surface': props.disabled,
+    'text-disabled': props.disabled,
     'focus:outline-none focus:ring-1': !props.disabled,
-    [`${props.focusRingColor}`]: props.focusRingColor && !props.disabled && !hasError.value,
-    'border-error ring-ui-focus': hasError.value,
     'resize-none': props.noResize || props.autoGrow,
     'resize': !props.noResize && !props.autoGrow,
   },
-  variantClass.value,
+  fieldBaseClass.value,
+  fieldStateClass.value,
   densityClass.value,
 ])
+
+// Redondeo del fieldset (outline): replica la lógica del textarea para que
+// el borde con notch herede `tile` / `rounded`.
+const fieldsetRoundedClass = computed(() => {
+  if (props.tile) return 'rounded-none'
+  return props.rounded || 'rounded-md'
+})
+
+// Clases del textarea en variante `outline`: borde transparente propio
+// (métricas), tipografía, densidad y foco. El borde visible (con muesca) lo
+// dibuja el overlay (hermano posterior en el DOM, pinta encima).
+const textareaOutlinedInnerClasses = computed(() => [
+  'block w-full resize-none transition-colors duration-150 leading-normal',
+  textAlignClass.value,
+  props.inputClass,
+  fieldsetRoundedClass.value,
+  {
+    'text-disabled': props.disabled,
+    'focus:outline-none': !props.disabled,
+    'resize-none': props.noResize || props.autoGrow,
+    'resize': !props.noResize && !props.autoGrow,
+  },
+  densityClass.value,
+])
+
+// Muesca del borde (`outline`) + desplazamiento del label (ver `useKunFieldNotch`).
+// `roundedClass` es la clase resuelta del overlay (`fieldsetRoundedClass`).
+const { labelRef, overlayRef, notchMaskStyle, labelShiftStyle } = useKunFieldNotch(
+  {
+    isFloating: () => isLabelFloating.value,
+    hasLabel: () => props.label,
+    labelLeftClass: () => labelLeftClass.value,
+    roundedClass: () => fieldsetRoundedClass.value,
+  },
+  [() => props.variant]
+);
+// Color del borde del overlay: error > foco (color resuelto) > reposo accent.
+const notchBorderClass = computed(() => {
+  if (hasError.value) return 'border-error'
+  if (isFocused.value && !props.disabled) return KUN_FIELD_FOCUS_BORDER[resolvedColor.value]
+  return 'border-accented'
+})
 
 const labelSlotBindings = {
   label: props.label,

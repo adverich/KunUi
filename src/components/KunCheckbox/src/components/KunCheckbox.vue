@@ -6,6 +6,7 @@ import { useValidation } from '../composables/useValidation.js'
 import { kunCheckboxProps } from '../composables/kunCheckboxProps.js'
 import { vRipple } from '@/directives/ripple.js'
 import { icons } from '@/icons'
+import { isKunColor, kunSurfaceBg, kunTextClasses, type KunColor } from '../../../../theme/kunVariants.js'
 
 const emit = defineEmits([
   'update:modelValue',
@@ -35,15 +36,53 @@ const {
 defineExpose({ validate, resetValidation })
 
 const iconToRender = computed(() => {
-  if (props.indeterminate) return props.indeterminateIcon || icons.checkboxIndeterminate
+  if (props.indeterminate) return props.indeterminateIcon || icons.minus
   return isChecked.value
-    ? (props.trueIcon || icons.checkboxOn)
-    : (props.falseIcon || icons.checkboxBlank)
+    ? (props.trueIcon || icons.check)
+    : (props.falseIcon || null)
 })
 
+/** `iconColor` solo tiene efecto con un color semántico (KunColor). */
+const resolvedIconColor = computed<KunColor | null>(
+  () => (isKunColor(props.iconColor) ? props.iconColor : null),
+)
+
+/**
+ * Caja del control: contorno `ring ring-inset ring-accented`; inactiva usa
+ * `bg-elevated` para que se lea sobre fondos oscuros (en dark `bg-default` se
+ * confunde con la página). Activa: color semántico vía matriz de superficie
+ * (`KUN_SURFACE_BG`, fondo pleno); con `iconColor` la caja queda neutra para
+ * que el glifo coloreado contraste; por defecto `bg-primary text-highlighted`.
+ */
+const boxClass = computed(() => {
+  const active = isChecked.value || props.indeterminate
+  const classes = ['ring-1', 'ring-inset', 'rounded-sm', 'ring-accented']
+
+  if (active) {
+    if (resolvedIconColor.value) {
+      classes.push('bg-elevated')
+    } else if (props.color) {
+      classes.push(kunSurfaceBg(props.color, 'solid'), 'text-highlighted')
+    } else {
+      classes.push('bg-primary', 'text-highlighted')
+    }
+  } else {
+    classes.push(props.baseColor ? kunSurfaceBg(props.baseColor, 'soft') : 'bg-elevated')
+  }
+
+  if (props.error || !isValid.value) classes.push('ring-error')
+  return classes
+})
+
+const iconInnerSizeClass = computed(() => ({
+  sm: 'w-3 h-3',
+  md: 'w-3.5 h-3.5',
+  lg: 'w-4 h-4'
+}[effectiveSize.value] || 'w-3.5 h-3.5'))
+
 const iconClass = computed(() => [
-  typeof props.iconColor === 'string' ? `text-${props.iconColor}` : '',
-  props.glow && isFocused.value ? 'opacity-100' : 'opacity-70',
+  resolvedIconColor.value ? kunTextClasses(resolvedIconColor.value) : '',
+  props.glow && isFocused.value ? 'drop-shadow-[0_0_5px_currentColor]' : '',
 ])
 
 // Escala de tamaño por densidad (como KunAvatar): comfortable -1, compact -2, piso en sm.
@@ -67,8 +106,7 @@ const iconSizeClass = computed(() => ({
     :class="[
       'kun-checkbox',
       'flex flex-col',
-      isChecked ? props.color : (props.baseColor || props.color),
-      { 'text-ui-error': props.error || !isValid }
+      { 'text-error': props.error || !isValid }
     ]"
     :style="{
       width: props.width && `${props.width}px`,
@@ -110,11 +148,11 @@ const iconSizeClass = computed(() => ({
       </div>
 
       <div
-        class="relative inline-flex items-center justify-center"
-        :class="[iconSizeClass]"
+        class="relative inline-flex items-center justify-center transition-colors"
+        :class="[iconSizeClass, boxClass]"
         v-ripple="props.ripple"
       >
-        <KunIcon :icon="iconToRender" :class="[...iconClass, iconSizeClass]" />
+        <KunIcon v-if="iconToRender" :icon="iconToRender" :class="[...iconClass, iconInnerSizeClass]" />
         <slot name="input" />
       </div>
 
@@ -130,7 +168,7 @@ const iconSizeClass = computed(() => ({
 
     <div
       v-if="!props.hideDetails && (errorMessages?.length || props.hint || props.persistentHint)"
-      class="text-xs text-ui-muted mt-1"
+      class="text-xs text-muted mt-1"
     >
       <slot name="details">
         <div v-if="(props.error || !isValid) && errorMessages?.length">

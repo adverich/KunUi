@@ -1,12 +1,12 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
-@import "./colors.css";
-@import "./clases.css";
+@import "./theme.css";
 
-body {
-    background-color: var(--background);
-    color: var(--on-color);
+@layer base {
+    body {
+        @apply antialiased font-sans text-default bg-default scheme-light dark:scheme-dark;
+    }
 }
 
 .ripple {
@@ -24,4 +24,21 @@ body {
         transform: scale(4);
         opacity: 0;
     }
+}
+
+/* Detección de autofill del navegador (ver `src/utils/kunAutofill.ts`).
+   Chrome/Edge/Safari rellenan inputs/textarea con `:-webkit-autofill` sin
+   disparar `input` en Vue: el estado interno quedaría vacío y el label
+   flotante no subiría sobre el texto autocompletado. La animación (duración
+   mínima, sin efecto visual) hace que el navegador emita `animationstart`,
+   que los fields escuchan para sincronizar el valor nativo al estado. */
+@keyframes kun-autofill-start {
+    from {}
+    to {}
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill {
+    animation-name: kun-autofill-start;
+    animation-duration: 0.01s;
 }

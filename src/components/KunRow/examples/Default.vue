@@ -39,28 +39,28 @@ const colsProp = computed(() => (colsRaw.value === '' ? undefined : Number(colsR
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunRow</h2>
 
-      <div class="rounded-xl border border-ui p-3">
+      <div class="rounded-lg border border-default p-3">
         <KunRow :align="align" :justify="justify" :no-gutters="noGutters" :dense="dense" :cols="colsProp">
           <KunCol :cols="3">
-            <div class="flex h-10 items-center justify-center rounded bg-primary/20 border border-primary text-sm font-medium">A</div>
+            <div class="flex h-10 items-center justify-center rounded-md bg-primary/20 border border-primary text-sm font-medium">A</div>
           </KunCol>
           <KunCol :cols="3">
-            <div class="flex h-20 items-center justify-center rounded bg-success/20 border border-success text-sm font-medium">B</div>
+            <div class="flex h-20 items-center justify-center rounded-md bg-success/20 border border-success text-sm font-medium">B</div>
           </KunCol>
           <KunCol :cols="3">
-            <div class="flex h-14 items-center justify-center rounded bg-warning/20 border border-warning text-sm font-medium">C</div>
+            <div class="flex h-14 items-center justify-center rounded-md bg-warning/20 border border-warning text-sm font-medium">C</div>
           </KunCol>
         </KunRow>
       </div>
 
-      <p class="font-mono text-xs text-ui-muted">
+      <p class="font-mono text-xs text-muted">
         align={{ align }} justify={{ justify }} cols={{ colsRaw || '12' }}
       </p>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunSelect
@@ -85,7 +85,7 @@ const colsProp = computed(() => (colsRaw.value === '' ? undefined : Number(colsR
           <KunSwitch v-model="dense" label="Dense" />
         </div>
 
-        <p class="col-span-2 text-xs text-ui-muted">
+        <p class="col-span-2 text-xs text-muted">
           Las celdas usan 9 de 12 columnas (para que justify se note) con alturas distintas (para que align se note).
         </p>
       </div>

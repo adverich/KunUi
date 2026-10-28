@@ -30,8 +30,6 @@ export const kunDialogProps = {
   },
   /** Clase extra del contenido. */
   contentClass: { type: String, default: '' },
-  /** Color de fondo. */
-  bgColor: { type: String, default: 'bg-surface-dark' },
   /** Altura mínima. */
   minHeight: { type: String, default: 'h-fit' },
   /** Altura. */

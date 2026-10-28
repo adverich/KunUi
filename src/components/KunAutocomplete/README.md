@@ -22,7 +22,7 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `label` | `String` | `-` | Etiqueta del campo de búsqueda. |
+| `label` | `String` | `''` | Etiqueta del campo de búsqueda. |
 | `itemValue` | `string \| null` | `null` | Campo del ítem usado como valor (null = primer valor del objeto). |
 | `itemTitle` | `string \| unknown[] \| null` | `null` | Campo(s) a mostrar (string, array o ruta `a.b`). |
 | `itemText` | `string \| unknown[] \| null` | `null` | Alias de `itemTitle`. |
@@ -42,25 +42,24 @@ import { KunAutocomplete } from 'adverich-kun-ui'
 | `textNoItems` | `String` | `"No hay elementos"` | Texto cuando no hay ítems. |
 | `hasCreateItem` | `Boolean` | `false` | Muestra botón para crear un ítem (emite `createItem`). |
 | `btnCreateClass` | `String` | `"w-full"` | Clase del botón crear. |
-| `btnCreateBg` | `String` | `"bg-success"` | Color del botón crear. |
+| `btnCreateColor` | `KunColor` | `'success'` | Color semántico del botón crear. |
 | `btnCreateText` | `String` | `"Crear item"` | Texto del botón crear. |
 | `multiple` | `Boolean` | `false` | Selección múltiple (chips). |
 | `required` | `Boolean` | `false` | Marca el campo como requerido (asterisco). |
 | `disabled` | `Boolean` | `false` | Deshabilita el campo y sus acciones. |
-| `height` | `any` | `"h-[500px]"` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
-| `maxHeight` | `String \| Number` | `-` | Altura máxima del menú. |
+| `readonly` | `Boolean` | `false` | Solo lectura (no cambia el valor). |
+| `height` | `string \| number \| null` | `"h-[500px]"` | ***** STYLE ***** // NOTA: `height` está en desuso (el menú ocupa el espacio disponible). El límite lo controla `maxHeight`: undefined = todo el espacio disponible hasta el borde del viewport; con valor se aplica min(valor, espacio disponible). Acepta Number (px), CSS o clase Tailwind. |
+| `maxHeight` | `string \| number \| null \| undefined` | `-` | Altura máxima del menú. |
+| `fontSize` | `String` | `'text-base'` | Tamaño de fuente del campo (clase Tailwind, se reenvía al KunTextField). |
+| `itemFontSize` | `String` | `'text-base'` | Tamaño de fuente del título de cada opción (clase Tailwind). |
+| `subtitleFontSize` | `String` | `'text-xs'` | Tamaño de fuente del subtítulo de cada opción (clase Tailwind). |
 | `density` | `KunTextFieldDensity` | `"default"` | Densidad del campo (se reenvía al KunTextField). |
-| `zIndex` | `String` | `"z-250"` | Z-index del menú. |
 | `hideDetails` | `Boolean` | `true` | Oculta el área de detalles. |
 | `hasIcons` | `Boolean` | `true` | Muestra iconos de estado (limpiar/desplegar). |
 | `textFieldProps` | `Object` | `() => ({})` | Props visuales y atributos que se reenvían al KunTextField interno. |
-| `iconColor` | `String` | `'text-ui-primary'` | Color del ícono desplegar. |
-| `requiredIconColor` | `String` | `'text-ui-primary'` | Color del asterisco de requerido. |
-| `emptyTextClass` | `String` | `'text-ui-muted'` | Clase del texto "sin elementos". |
-| `bgMenuColor` | `String` | `"bg-menu"` | Color de fondo del menú. |
-| `bgItemListColor` | `String` | `"bg-transparent"` | Color de fondo de cada opción. |
-| `selectedItemListColor` | `String` | `"bg-ui-selection text-ui-selection"` | Clase de la opción seleccionada. |
-| `hoverItemListColor` | `String` | `"hover:bg-ui-selection-hover"` | Clase hover de cada opción. |
+| `iconColor` | `String` | `'text-primary'` | Color del ícono desplegar. |
+| `requiredIconColor` | `String` | `'text-error'` | Color del asterisco de requerido. |
+| `emptyTextClass` | `String` | `'text-muted'` | Clase del texto "sin elementos". |
 | `attach` | `Boolean` | `false` | Reservado (no se reenvía al KunMenu interno). Actualmente sin efecto. |
 | `rules` | `Array` | `() => []` | Reglas de validación: `(valor) => true \| string`. |
 

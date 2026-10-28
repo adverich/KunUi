@@ -2,7 +2,7 @@
   <KunSlider v-model="value" label="Con Thumb personalizado">
     <template #thumb="{ value, style }">
       <div
-        class="absolute z-40 w-6 h-6 flex items-center justify-center rounded-full bg-purple-600 text-white text-xs font-bold"
+        class="absolute z-40 w-6 h-6 flex items-center justify-center rounded-full bg-secondary text-highlighted text-xs font-bold"
         :style="style"
       >
         🔥{{ value }}

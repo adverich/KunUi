@@ -38,7 +38,6 @@ const scrimOptions = ref([
 
 const width = ref('w-[256px]')
 const railWidth = ref('w-[56px]')
-const color = ref('bg-surface-dark')
 const tag = ref('nav')
 const swipeTransition = ref('transition-transform duration-300 ease-in-out')
 const scrimTransition = ref('opacity 200ms ease')
@@ -49,10 +48,8 @@ const imageRaw = ref('')
 const imageProp = computed<string | undefined>(() => (imageRaw.value === '' ? undefined : imageRaw.value))
 const elevationRaw = ref('')
 const elevationProp = computed<string | undefined>(() => (elevationRaw.value === '' ? undefined : elevationRaw.value))
-const borderRaw = ref('')
-const borderProp = computed<string | undefined>(() => (borderRaw.value === '' ? undefined : borderRaw.value))
-const roundedRaw = ref('')
-const roundedProp = computed<string | undefined>(() => (roundedRaw.value === '' ? undefined : roundedRaw.value))
+const border = ref(false)
+const rounded = ref(false)
 
 const temporary = ref(false)
 const absolute = ref(false)
@@ -121,12 +118,11 @@ function onUpdateModelValue(value: boolean): void {
         :persistent="persistent"
         :rail="rail"
         :rail-width="railWidth"
-        :color="color"
         :elevation="elevationProp"
         :floating="floating"
         :image="imageProp"
-        :border="borderProp"
-        :rounded="roundedProp"
+        :border="border"
+        :rounded="rounded"
         :tag="tag"
         :full-height="fullHeight"
         :scrollable="scrollable"
@@ -148,46 +144,46 @@ function onUpdateModelValue(value: boolean): void {
         <template #prepend>
           <div class="flex items-center justify-between p-4">
             <span class="font-semibold">Navegación</span>
-            <KunBtn variant="tonal" @click="open = false">
+            <KunBtn variant="subtle" @click="open = false">
               Cerrar
             </KunBtn>
           </div>
         </template>
 
         <nav class="space-y-1 p-4 pt-0">
-          <a href="#" class="block rounded-lg px-3 py-2 text-sm hover:bg-surface" @click.prevent="logEvent('nav', 'Inicio')">
+          <a href="#" class="block rounded-lg px-3 py-2 text-sm hover:bg-muted" @click.prevent="logEvent('nav', 'Inicio')">
             Inicio
           </a>
-          <a href="#" class="block rounded-lg px-3 py-2 text-sm hover:bg-surface" @click.prevent="logEvent('nav', 'Componentes')">
+          <a href="#" class="block rounded-lg px-3 py-2 text-sm hover:bg-muted" @click.prevent="logEvent('nav', 'Componentes')">
             Componentes
           </a>
-          <a href="#" class="block rounded-lg px-3 py-2 text-sm hover:bg-surface" @click.prevent="logEvent('nav', 'Guías')">
+          <a href="#" class="block rounded-lg px-3 py-2 text-sm hover:bg-muted" @click.prevent="logEvent('nav', 'Guías')">
             Guías
           </a>
         </nav>
 
         <template #append>
-          <div class="p-4 text-xs text-ui-muted">
+          <div class="p-4 text-xs text-muted">
             Contenido genérico del slot append.
           </div>
         </template>
       </KunDrawer>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Abrí el drawer para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Abrí el drawer para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el drawer) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunSelect
@@ -209,12 +205,11 @@ function onUpdateModelValue(value: boolean): void {
 
         <KunTextField v-model="width" label="Width" density="compact" />
         <KunTextField v-model="railWidth" label="Rail width" density="compact" />
-        <KunTextField v-model="color" label="Color" density="compact" />
         <KunTextField v-model="tag" label="Tag" density="compact" />
         <KunTextField v-model="imageRaw" label="Image (vacío = sin imagen)" density="compact" />
         <KunTextField v-model="elevationRaw" label="Elevation (vacío = ninguna)" density="compact" />
-        <KunTextField v-model="borderRaw" label="Border (vacío = ninguno)" density="compact" />
-        <KunTextField v-model="roundedRaw" label="Rounded (vacío = ninguno)" density="compact" />
+        <KunSwitch v-model="border" label="Border" />
+        <KunSwitch v-model="rounded" label="Rounded lateral" />
 
         <KunTextField v-model="swipeTransition" label="Swipe transition" density="compact" />
         <KunTextField v-model="scrimTransition" label="Scrim transition" density="compact" />

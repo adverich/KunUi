@@ -114,6 +114,7 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { kunCardProps } from '../composables/kunCardProps.js'
+import { KUN_SURFACE_BG, resolveKunColor, resolveKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js'
 
 import KunCardItem from '../../../KunCardItem/src/components/KunCardItem.vue'
 import KunCardTitle from '../../../KunCardTitle/src/components/KunCardTitle.vue'
@@ -133,6 +134,28 @@ function handleClick(e: MouseEvent | KeyboardEvent, navigate?: () => void): void
   navigate?.()
 }
 
+// ------------------------------------------------------------------
+// Color/variante estándar: prop > theme.defaults.card > (neutral, solid).
+// Superficie vía `KUN_SURFACE_BG` (fondo + ring, literales). El caso
+// especial `solid` × `neutral` conserva la superficie de página
+// `bg-default` (el `bg-inverted` de la matriz es para controles).
+// ------------------------------------------------------------------
+const resolvedColor = computed<KunColor>(() => resolveKunColor(props.color, 'card'))
+const resolvedVariant = computed<KunVariant>(() => resolveKunVariant(props.variant, 'card'))
+const isNeutralSolid = computed(() => resolvedColor.value === 'neutral' && resolvedVariant.value === 'solid')
+const surfaceClass = computed(() =>
+  isNeutralSolid.value ? 'bg-default' : KUN_SURFACE_BG[resolvedColor.value][resolvedVariant.value],
+)
+const textColor = computed(() =>
+  (resolvedVariant.value === 'solid' && !isNeutralSolid.value) ? 'text-highlighted' : 'text-default',
+)
+// La sombra es propia de la variante plena (replica el antiguo `elevated`).
+// Sin sombra se logra con `elevation="0"`; el borde es `variant="outline"`.
+const shadowClass = computed(() => {
+  if (resolvedVariant.value !== 'solid') return 'shadow-none'
+  return `shadow-${props.elevation}`
+})
+
 const cardClass = computed(() => {
   const base = [
     'relative',
@@ -142,12 +165,11 @@ const cardClass = computed(() => {
     'w-full',
     isLink.value ? 'cursor-pointer' : '',
     props.scrollable ? 'h-full' : '',
-    props.bgColor,
-    props.textColor,
+    surfaceClass.value,
+    textColor.value,
     props.disabled ? 'pointer-events-none opacity-50' : '',
-    props.outlined ? `border ${props.outlineColor}` : '',
     props.tile ? '' : props.rounded === true ? 'rounded-lg' : props.rounded ? `rounded-${props.rounded}` : '',
-    props.flat ? 'shadow-none' : `shadow-${props.elevation}`,
+    shadowClass.value,
     props.hover ? 'hover:shadow-md transition-shadow' : '',
     props.height ? `h-[${props.height}]` : '',
     props.width ? `w-[${props.width}]` : '',
@@ -155,12 +177,7 @@ const cardClass = computed(() => {
     props.maxWidth ? `max-w-[${props.maxWidth}]` : '',
     props.minHeight ? `min-h-[${props.minHeight}]` : '',
     props.minWidth ? `min-w-[${props.minWidth}]` : '',
-    props.position ? props.position : '',
-    props.variant === 'outlined' ? 'border' : '',
-    props.variant === 'flat' ? 'shadow-none' : '',
-    props.variant === 'tonal' ? 'bg-surface-dark' : '',
-    props.variant === 'text' ? 'bg-transparent shadow-none' : '',
-    props.variant === 'plain' ? '' : ''
+    props.position ? props.position : ''
   ]
   return base.filter(Boolean).join(' ')
 })

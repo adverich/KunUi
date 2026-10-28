@@ -30,6 +30,15 @@ function copyDocsPlugin() {
         fs.copyFileSync(srcReadme, destReadme);
         console.log('✓ README.md copiado a dist/README.md');
       }
+
+      // Copiar theme.css fuente para apps con Tailwind v4 propio
+      const srcTheme = path.resolve(import.meta.dirname, 'src', 'styles', 'theme.css');
+      const destTheme = path.resolve(import.meta.dirname, 'dist', 'theme.css');
+
+      if (fs.existsSync(srcTheme)) {
+        fs.copyFileSync(srcTheme, destTheme);
+        console.log('✓ theme.css copiado a dist/theme.css');
+      }
     }
   };
 }
@@ -56,7 +65,7 @@ export default defineConfig({
       fileName: (format) => `kun-ui.${format}.js`,
     },
     rollupOptions: {
-      external: ['vue', 'vue-router'],
+      external: ['vue', 'vue-router', '@iconify/vue'],
       output: {
         globals: {
           vue: 'Vue',

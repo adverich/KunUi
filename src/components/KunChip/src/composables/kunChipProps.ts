@@ -1,7 +1,8 @@
 import type { PropType } from 'vue';
+import { isKunColor, isKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js';
 
-export type KunChipVariant = 'default' | 'outlined' | 'flat' | 'pill';
 export type KunChipDensity = 'default' | 'comfortable' | 'compact';
+export type KunChipRounded = 'full' | 'none';
 
 export const kunChipProps = {
     /** Visibilidad del chip (v-model). En `false` con `closable` muestra botón cerrar. */
@@ -24,18 +25,28 @@ export const kunChipProps = {
         type: String as PropType<string | null>,
         default: null as string | null,
     },
-    /** Color de fondo. */
-    color: { type: String, default: 'bg-button' },
-    /** Color del texto. */
-    textColor: {
-        type: String,
-        default: 'text-ui',
+    /** Color semántico. `null` delega al theme global. */
+    color: {
+        type: String as PropType<KunColor | null>,
+        default: null,
+        validator: (v: unknown) => v === null || isKunColor(v),
     },
-    /** Variante visual: 'default' | 'outlined' | 'flat' | 'pill'. */
+    /** Variante visual: 'solid' | 'outline' | 'soft' | 'subtle' | 'ghost' | 'link'. `null` delega al theme global. */
     variant: {
-        type: String as PropType<KunChipVariant>,
-        default: 'default' as KunChipVariant,
-        validator: (v: unknown): boolean => ['default', 'outlined', 'flat', 'pill'].includes(v as string),
+        type: String as PropType<KunVariant | null>,
+        default: null,
+        validator: (v: unknown): boolean => v === null || isKunVariant(v),
+    },
+    /** Reservado. El chip es siempre `rounded-full` (forma píldora), sin efecto. */
+    pill: {
+        type: Boolean,
+        default: false,
+    },
+    /** `full` = círculo 1:1; `none` = esquinas rectas; `null` = píldora por defecto. */
+    rounded: {
+        type: String as PropType<KunChipRounded | null>,
+        default: null,
+        validator: (v: unknown) => v === null || ['full', 'none'].includes(v as string),
     },
     /** Clickable (cursor pointer y hover). */
     clickable: {

@@ -17,13 +17,13 @@ const baseClass = computed(() => {
   }
 
   const overflowClass = props.scrollable ? 'overflow-y-auto' : 'overflow-visible';
-  return `relative rounded-xl shadow-xl transition-all ${overflowClass}`;
+  return `relative rounded-lg shadow-xl ring ring-default transition-all ${overflowClass}`;
 });
 
 const mergedClass = computed(() => [
   baseClass.value,
+  'bg-default text-default',
   props.contentClass,
-  props.bgColor,
   props.minWidth,
   props.width,
   props.maxWidth,

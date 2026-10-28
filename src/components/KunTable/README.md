@@ -29,15 +29,16 @@ import { KunTable } from 'adverich-kun-ui'
 | `headers` | `KunTableHeader[]` | `() => [] as KunTableHeader[]` | Configuración de columnas `{ key, value, label, sortable, ... }`. |
 | `hasActions` | `Boolean` | `false` | Muestra columna de acciones (slot `item.actions`). |
 | `actionLabel` | `String` | `'Acciones'` | Etiqueta del header de acciones. |
-| `actionsAlign` | `KunTableActionsAlign` | `-` | Alineación de acciones: 'left' \| 'center' \| 'right'.<br/>Valores · Values: `left` `center` `right` |
+| `actionsAlign` | `KunTableActionsAlign` | `'center' as KunTableActionsAlign` | Alineación de acciones: 'left' \| 'center' \| 'right'.<br/>Valores · Values: `left` `center` `right` |
 | `actionLoadingMap` | `Record<string, unknown>` | `() => ({})` | Mapa de loading por rowKey para la columna de acciones. |
 | `filterable` | `Boolean` | `-` | Habilita filtros avanzados por columna (modal). |
 | `filters` | `TableFilterDefinition[]` | `() => [] as TableFilterDefinition[]` | Configuración de filtros por columna. |
 | `customFilter` | `((item: TableItem, key: string, value: unknown, header: KunTableHeader \| undefined) => boolean) \| null` | `null` | Función de filtrado personalizada `(item, key, value, header) => boolean`. |
 | `itemsPerPage` | `Number \| String` | `10` | Ítems por página. |
 | `page` | `Number \| String` | `1` | Página actual. |
-| `sortBy` | `string \| { key: string; order: string }[]` | `() => [] as { key: string; order: string }[]` | Criterio de orden (v-model): string, objeto o array. |
+| `sortBy` | `string \| string[] \| Record<string, unknown> \| { key: string; order: string }[]` | `() => [] as unknown[]` | Criterio de orden (v-model): string, objeto o array. |
 | `mutliSort` | `Boolean` | `-` | Habilita ordenar por múltiples columnas. |
+| `multiSort` | `Boolean` | `-` | Alias de `mutliSort` (nombre corregido). Usar este en código nuevo. |
 | `pageOptions` | `number[]` | `() => [5, 10, 25, 50, 100]` | Opciones del selector de ítems por página. |
 | `searchable` | `Boolean` | `false` | Habilita barra de búsqueda. |
 | `search` | `String` | `''` | Término de búsqueda (v-model). |
@@ -59,7 +60,7 @@ import { KunTable } from 'adverich-kun-ui'
 | `trClass` | `String` | `''` | Clase de las filas. |
 | `thClass` | `String` | `''` | Clase de los headers. |
 | `tdClass` | `string \| ((item: TableItem) => string)` | `''` | Clase de las celdas (string o `(item) => clase`). |
-| `selectedClass` | `String` | `'bg-ui-selection text-ui-selection'` | Clase de filas seleccionadas. |
+| `selectedClass` | `String` | `'bg-accented text-default'` | Clase de filas seleccionadas. |
 | `stripedClass` | `String` | `''` | Clase de filas alternas. |
 | `tfootClass` | `String` | `''` | Clase del `<tfoot>`. |
 | `rowClass` | `String` | `''` | Clase adicional para filas. |
@@ -125,7 +126,7 @@ import { KunTable } from 'adverich-kun-ui'
 | `loading` | `Boolean \| Object` | `false` | Estado de carga de las acciones. |
 | `rowClass` | `String` | `-` | Clase del contenedor. |
 | `selectedClass` | `String` | `-` | Clase cuando está seleccionada. |
-| `border` | `String` | `'border border-ui'` | Borde de la tarjeta. |
+| `border` | `String` | `'border border-default'` | Borde de la tarjeta. |
 | `rounded` | `String` | `'rounded-sm'` | Redondeo de la tarjeta. |
 | `rowClassCondition` | `String \| Function` | `-` | Clase condicional por ítem (string o `(item) => clase\|false`). |
 | `customSlots` | `Object` | `-` | Celdas custom por columna (`item.<key>` → componente). |
@@ -197,6 +198,7 @@ import { KunTable } from 'adverich-kun-ui'
 - `update:itemsPerPage`
 - `update:sortBy`
 - `update:search`
+- `update:selectedItems`
 - `focusOnSearch`
 
 ## Slots
@@ -270,6 +272,18 @@ const filters = [
 - **Búsqueda global:** filtra en columnas `sortable` o `searchableKeys`.
 - **Ordenamiento:** simple o múltiple (`multiSort`); strings, números y fechas.
 - **Selección:** individual, por página o todos los filtrados.
+- **Barra de selección:** siempre visible con ≥1 registro (`hideSelected` la
+  oculta). Mensaje con plural («Se ha seleccionado 1 registro.» / «Se han
+  seleccionado N registros.»). Cuando hay más ítems filtrados fuera de la
+  página actual muestra «Seleccionar todo» (selecciona todo el dataset
+  filtrado via `selectCompleteAll`, aunque la página no esté completa); al
+  seleccionarse todo, el botón pasa a «Anular selección». Si los filtrados
+  caben en una página, no se muestra ninguno de los dos (el checkbox del
+  header ya cubre ese caso). En la barra, el bloque de selección se alinea al
+  comienzo (`shrink-0`, el wrapper del slot `prependHeader` ya no tiene
+  `w-full`) y la búsqueda queda anclada a la derecha con `ml-auto`; si no
+  alcanza el ancho, la barra hace `flex-wrap` y la búsqueda salta a la
+  siguiente fila manteniendo su alineación a la derecha.
 - **Responsive:** en móvil se transforma a tarjetas (`KunTableIterators`).
 - **Serialización:** `functionMap` para columnas `function` dinámicas.
 
@@ -282,7 +296,7 @@ const filters = [
   v-model:selected-items="seleccionados" :items-per-page="15"
 >
   <template #item.estado="{ value }">
-    <KunBadge :color="value === 'activo' ? 'bg-green-500' : 'bg-red-500'" :text="value" />
+    <KunBadge :color="value === 'activo' ? 'success' : 'error'" :text="value" />
   </template>
   <template #item.actions="{ item, loading }">
     <KunBtn icon="mdi-pencil" size="xs" :loading="loading" @click="editar(item)" />
@@ -292,6 +306,43 @@ const filters = [
   </template>
 </KunTable>
 ```
+
+## Rendimiento de la selección
+
+- Toda la identidad de selección se resuelve con `Set`s (`useSelect.ts`):
+  claves resueltas comparables por valor (`resolveRowKeyValue`) y un
+  `Set` de referencias para items sin clave. Antes cada operación usaba
+  `Array.some` anidado (O(n²)): con ~5000 registros, «Seleccionar todo»
+  congelaba la UI por segundos. Ahora todas las operaciones son O(n):
+  seleccionar 5000 items toma ~20–30 ms (verificado en playground).
+  - `isSelected` consulta el `computed` `selectedIdentity` (O(1) por fila),
+    no re-escanea la selección en cada celda.
+  - La semántica no cambió: clave resuelta ⇒ comparación por valor
+    (`===`), sin clave ⇒ referencia de objeto; items sin clave siempre se
+    conservan al filtrar (igual que antes).
+  - El watch de sincronización con `filteredItems` es superficial
+    (sin `deep: true`): el computed ya produce un array nuevo por
+    reevaluación; el traverse profundo recorría todo el dataset en cada
+    flush de reactividad sin efecto observable.
+- El example incluye el switch «Estrés (5000 registros)» como harness de
+  rendimiento; el preview de ids seleccionados se trunca a 20 para no
+  serializar miles de ids en cada render.
+
+## Bordes y radio
+
+- Wrapper `rounded-lg`; div de búsqueda y spans de acción `rounded-md` (antes
+  `rounded` pelado, que no escalaba con `--kun-radius`).
+- Superficies: wrapper `bg-default ring ring-default`; thead `bg-elevated` con
+  `border-b border-muted`; filas `bg-default` (igual que el contenedor de
+  scroll, también `bg-default`: fila y fondo comparten color) con separador
+  `border-t border-muted` y hover `bg-elevated/50`.
+  La caja de búsqueda es un control: `ring ring-inset ring-accented` (antes
+  `border border-default`, que sobre `bg-muted`/`bg-elevated` desaparecía en dark).
+- El hover de fila debe cambiar el color sobre `bg-default`; usar token
+  `border-muted` para separadores porque `border-default` es `neutral-800`
+  en dark y se confunde con `bg-muted`/`bg-elevated`. La fila seleccionada
+  (`selectedClass`, `bg-accented`) no recibe la clase de hover, así el
+  hover nunca pisa el background de la selección.
 
 ---
 

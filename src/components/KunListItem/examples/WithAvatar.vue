@@ -9,7 +9,7 @@
         <KunListItemSubtitle>Administrador</KunListItemSubtitle>
       </KunListItem>
 
-      <KunListItem active active-class="bg-blue-100 text-blue-600">
+      <KunListItem active>
         <KunListItemAvatar>
           <img src="https://i.pravatar.cc/40 " alt="Avatar" class="w-full h-full object-cover" />
         </KunListItemAvatar>

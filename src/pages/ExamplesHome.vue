@@ -43,13 +43,13 @@ function clearSearch(): void {
   <div class="examples-home min-h-full">
     <div class="p-6 max-w-7xl mx-auto space-y-8">
       <!-- Hero -->
-      <div class="hero rounded-2xl border border-ui-subtle bg-surface-light px-6 py-8 text-center shadow">
+      <div class="hero rounded-2xl border border-muted bg-muted px-6 py-8 text-center shadow">
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Playground</p>
         <h1 class="mt-2 text-3xl font-bold">KunUI Examples</h1>
-        <p class="mt-2 text-sm text-ui-muted">
+        <p class="mt-2 text-sm text-muted">
           Previsualizá componentes desde <code class="text-xs">/examples/...</code>
         </p>
-        <p class="mt-3 inline-block text-xs font-medium px-3 py-1 rounded-full border border-ui-subtle bg-surface">
+        <p class="mt-3 inline-block text-xs font-medium px-3 py-1 rounded-full border border-muted bg-muted">
           {{ filtered.length }} / {{ grouped.length }} componentes
         </p>
       </div>
@@ -63,7 +63,7 @@ function clearSearch(): void {
           density="compact"
           clearable
           hide-details
-          class="w-full max-w-md"
+          class="w-full"
         />
       </div>
 
@@ -80,16 +80,16 @@ function clearSearch(): void {
           <KunCard
             :title="group.component"
             :subtitle="`${group.examples.length} example${group.examples.length === 1 ? '' : 's'}`"
-            bg-color="bg-surface-light"
+            bg-color="bg-muted"
             :elevation="2"
             hover
-            class="examples-card h-full text-center border border-ui-subtle"
+            class="examples-card h-full text-center border border-muted"
           >
             <div class="flex flex-col items-center gap-3 px-5 pb-5 pt-3">
               <span class="avatar" aria-hidden="true">{{ initials(group.component) }}</span>
               <div class="flex flex-wrap justify-center gap-2">
                 <KunBtn
-                  v-for="ex in group.examples"
+                  v-for="ex in group.examples" variant="subtle"
                   :key="ex.path"
                   :to="ex.path"
                   size="sm"
@@ -103,9 +103,9 @@ function clearSearch(): void {
       </KunRow>
 
       <!-- Vacío -->
-      <div v-else class="rounded-2xl border border-ui-subtle bg-surface-light p-10 text-center shadow">
+      <div v-else class="rounded-2xl border border-muted bg-muted p-10 text-center shadow">
         <p class="text-lg font-semibold">Sin coincidencias</p>
-        <p class="mt-1 text-sm text-ui-muted">No hay componentes que coincidan con “{{ search }}”.</p>
+        <p class="mt-1 text-sm text-muted">No hay componentes que coincidan con “{{ search }}”.</p>
         <KunBtn size="sm" class="mt-4" @click="clearSearch">
           Limpiar búsqueda
         </KunBtn>
@@ -123,7 +123,7 @@ function clearSearch(): void {
 <style scoped>
 .examples-home {
   background:
-    radial-gradient(60rem 20rem at 50% -6rem, var(--surface-light) 0%, transparent 70%);
+    radial-gradient(60rem 20rem at 50% -6rem, var(--kun-color-neutral-100) 0%, transparent 70%);
 }
 
 .hero {
@@ -136,7 +136,7 @@ function clearSearch(): void {
 
 .examples-card:hover {
   transform: translateY(-4px);
-  border-color: var(--primary);
+  border-color: var(--kun-primary);
   box-shadow: 0 16px 32px -16px rgb(0 0 0 / 0.5);
 }
 
@@ -151,7 +151,7 @@ function clearSearch(): void {
   font-size: 1rem;
   letter-spacing: 0.05em;
   color: #fff;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--button) 100%);
+  background: linear-gradient(135deg, var(--kun-primary) 0%, var(--kun-secondary) 100%);
   box-shadow: 0 8px 16px -8px rgb(0 0 0 / 0.5);
 }
 </style>

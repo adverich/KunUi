@@ -14,8 +14,11 @@ export const kunToastProps = {
   /** Descripción (string o VNode). */
   description: { type: [String, Object, Function], default: '' },
 
-  /** Ícono principal (null = según `color`). */
-  icon: { type: [String, Object, Function] as PropType<string | Record<string, any> | Function | null>, default: null },
+  /** URL de imagen para el avatar (tiene prioridad visual sobre `icon`). Ignorado si el slot `#leading` está presente. */
+  avatar: { type: String, default: '' },
+
+  /** Ícono principal (null = según `color`). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`. */
+  icon: { type: [String, Object, Function, Array, Boolean] as PropType<string | Record<string, any> | Function | unknown[] | boolean | null>, default: null },
 
   /** Variante de color. */
   color: {
@@ -31,7 +34,7 @@ export const kunToastProps = {
     validator: (v: unknown) => ['vertical', 'horizontal'].includes(v as string)
   },
 
-  /** Duración en ms (0 = sin auto-dismiss, null = global del Toaster). */
+  /** Duración en ms (0 = sin auto-dismiss; null = duración global del Toaster). */
   duration: { type: Number as PropType<number | null>, default: null },
 
   /** Barra de progreso del timeout. */
@@ -43,8 +46,8 @@ export const kunToastProps = {
   /** Botón de cierre. */
   closable: { type: Boolean, default: true },
 
-  /** Ícono del botón de cierre (null = default). */
-  closeIcon: { type: [String, Object, Function] as PropType<string | Record<string, any> | Function | null>, default: null },
+  /** Ícono del botón de cierre (null = default). Acepta alias `$`, componente, SVG, clase o `[icono, tamaño]`. */
+  closeIcon: { type: [String, Object, Function, Array, Boolean] as PropType<string | Record<string, any> | Function | unknown[] | boolean | null>, default: null },
 
   /** Botones de acción `{ label, icon, variant, onClick, closeOnClick }`. */
   actions: { type: Array as PropType<ToastAction[]>, default: () => [] as ToastAction[] },
@@ -60,6 +63,8 @@ export const kunToastProps = {
   isPaused: { type: Boolean, default: false },
   /** Estado interno: aplica `animate-pulse` al aparecer/actualizar (gestionado por useToast). No pasar manualmente. */
   isPulsing: { type: Boolean, default: false },
+  /** Estado interno: ms restantes del auto-dismiss; de aquí se deriva la barra de progreso (gestionado por KunToaster). No pasar manualmente. */
+  remainingTime: { type: Number, default: 0 },
 
   /** Clases por slot: root, wrapper, title, description, icon, actions, progress, close. */
   ui: {

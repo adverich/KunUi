@@ -1,6 +1,5 @@
 import type { PropType } from 'vue';
-
-export type KunFileInputVariant = 'filled' | 'outlined' | 'solo';
+import { isKunColor, isKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js';
 
 export const kunFileInputProps = {
   /** Archivo(s) seleccionado(s) (v-model): File único o array con `multiple`. `null` = sin selección (lo emite `clearable` en modo simple). */
@@ -50,16 +49,22 @@ export const kunFileInputProps = {
   appendInnerClass: String,
   /** Ícono del botón limpiar. */
   clearIcon: [String, Object, Function, Array],
-  /** Tamaño de los íconos. */
+  /** Tamaño de los íconos (clase Tailwind, `size-4`). */
   iconSize: {
     type: String,
-    default: 'text-base',
+    default: 'size-4',
   },
-  /** Variante visual del contenedor. */
+  /** Variante canónica `KunVariant` de la matriz de la librería. */
   variant: {
-    type: String as PropType<KunFileInputVariant>,
-    default: 'filled',
-    validator: (v: unknown) => ['filled', 'outlined', 'solo'].includes(v as string),
+    type: String as PropType<KunVariant>,
+    default: 'subtle',
+    validator: isKunVariant,
+  },
+  /** Color semántico del field (`solid` pinta el fondo, `link` el texto, resto foco/error); `null` hereda `kunTheme.configure({ defaults: { input } })` (fallback `primary`). */
+  color: {
+    type: String as PropType<KunColor | null>,
+    default: null,
+    validator: (v: unknown) => v === null || isKunColor(v),
   },
   /** Reglas de validación: `(valor) => true | string`. */
   rules: {

@@ -12,16 +12,6 @@ export const kunCardTitleProps = {
     prepend: [String, Object, Function],
     /** Contenido al final (componente o icono). */
     append: [String, Object, Function],
-    /** Color de fondo. */
-    bgColor: {
-        type: String,
-        default: 'bg-transparent'
-    },
-    /** Color del texto. */
-    textColor: {
-        type: String,
-        default: 'text-ui'
-    },
     /** Reduce el padding. */
     dense: {
         type: Boolean,

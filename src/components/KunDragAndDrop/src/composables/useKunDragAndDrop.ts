@@ -516,7 +516,7 @@ export function useKunDragAndDrop(initialOrOptions?: unknown[] | KunDragAndDropB
           boxSizing: 'border-box',
           pointerEvents: 'none',
           opacity: '1',
-          zIndex: '9999',
+          zIndex: 'var(--kun-z-loader)',
           transform: 'none',
         })
         clone.classList.remove(

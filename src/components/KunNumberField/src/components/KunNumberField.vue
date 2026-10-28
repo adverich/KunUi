@@ -2,32 +2,44 @@
   <div class="w-full flex flex-col relative h-fit" ref="rootRef">
     <div class="w-full flex flex-col justify-center relative">
       <div
-        class="flex items-center w-full h-full border"
-        :class="[bgInput, rounded, containerDensity,
-          focus ? 'border-ui-focus shadow-ui-focus' : borderColor,
-          disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text',
-          error ? 'bg-ui-error-soft' : ''
+        class="flex items-center w-full h-full border border-transparent relative"
+        :class="[bgInputClass, rounded, containerDensity,
+          disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'
         ]"
       >
+        <!-- Borde nativo completo (respeta cualquier `rounded`, pill incluido)
+             con la muesca del label recortada vía mask (ver `useKunFieldNotch`):
+             hueco real en cualquier fondo, sin fieldset/legend. -->
+        <div
+          aria-hidden="true"
+          data-kun-notch="KunNumberField"
+          ref="overlayRef"
+          class="absolute inset-0 pointer-events-none border"
+          :class="[rounded, notchBorderClass]"
+          :style="notchMaskStyle"
+        />
         <!-- Label flotante (centrado en reposo, arriba en foco/valor) -->
         <label
+          ref="labelRef"
           v-if="label"
           :for="uid"
+          :style="labelShiftStyle"
           :class="[labelColorClass, labelLeftClass, labelClass,
             'absolute transition-all duration-200 ease-in-out pointer-events-none select-none z-10 px-1',
             isFloating
-              ? [floatingLabelTop, floatingLabelSize, floatingLabelOpacity, 'translate-y-0']
+              ? [floatingLabelTop, floatingLabelSize, floatingLabelOpacity, '-translate-y-1/2']
               : ['top-1/2 -translate-y-1/2', labelSize, labelOpacity]
           ]"
         >
           {{ label }}
         </label>
 
+        <div class="flex items-center w-full h-full flex-1 min-w-0">
         <!-- Control - (SPLIT start) -->
         <div v-if="!noArrows && controlVariant === 'split'" class="flex self-stretch shrink-0 items-stretch">
           <button
             type="button"
-            :class="[controlPadding, controlStartRounded, controlClass, controlStartClass, 'flex items-center justify-center text-lg border-r border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
+            :class="[controlPadding, controlStartRounded, controlClass, controlStartClass, 'flex items-center justify-center text-lg border-e border-default text-muted disabled:opacity-50 cursor-pointer hover:opacity-80']"
             @click="onDecrement"
             :disabled="disabled || readonly"
           >−</button>
@@ -36,13 +48,13 @@
         <!-- Prefix -->
         <div v-if="prefix" class="mx-2">{{ prefix }}</div>
 
-        <!-- Prepend -->
+        <!-- Prepend (`#prepend`, alias legacy `#prepend-icon`) -->
         <div v-if="prependIcon || prependIconSlot" class="flex items-center justify-center h-full pl-2">
           <template v-if="prependIcon">
             <KunIcon :icon="prependIcon" />
           </template>
           <template v-else>
-            <slot name="prepend-icon" />
+            <slot name="prepend"><slot name="prepend-icon" /></slot>
           </template>
         </div>
 
@@ -75,12 +87,14 @@
           :min="nativeMin"
           :max="nativeMax"
           :step="step"
-          class="w-full h-full bg-transparent rounded focus:outline-none"
+          class="w-full h-full bg-transparent focus:outline-none"
           :aria-invalid="error ? 'true' : 'false'"
-          :class="[inputDensity, inputTextSizeClass, inputWeightClass, textColor, placeholderColor, placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
+          :class="[inputDensity, inputTextSizeClass, inputWeightClass, 'text-default placeholder:text-muted', placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           @blur="handleBlur"
           @focus="handleFocus"
           @input="handleInput"
+          @change="handleChange"
+          @animationstart="handleAnimationStart"
           @click.stop="emits('handleClick')"
           @keydown="handleKeyDown"
           @keyup="emits('keyUp', $event)"
@@ -88,16 +102,16 @@
           pattern="[0-9]+([\.,][0-9]+)?"
         />
 
-        <!-- Clearable -->
-        <div v-if="clearable && inputValue != null" class="px-2">
+        <!-- Clearable (oculto con display vacío: evita la ✕ sobre el placeholder de hideZero) -->
+        <div v-if="clearable && inputValue != null && inputValue !== ''" class="px-2">
           <KunBtn
             @click="onClear"
-            rounded="rounded-full"
-            bgColor="bg-error"
+            rounded="full"
+            color="error"
             :disabled="disabled || readonly"
             class="h-6 w-6"
           >
-            <KunIcon :icon="IconClose" size="text-xs" />
+            <KunIcon icon="$close" size="size-3" />
           </KunBtn>
         </div>
 
@@ -106,32 +120,32 @@
           <div v-if="controlVariant === 'default'" class="flex items-center h-full">
             <button
               type="button"
-              :class="[controlPadding, controlClass, 'flex items-center border-l border-ui justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
+              :class="[controlPadding, controlClass, 'flex items-center border-s border-default justify-center text-muted disabled:opacity-50 cursor-pointer hover:opacity-80']"
               @click="onIncrement"
               :disabled="disabled || readonly"
             >▲</button>
 
             <button
               type="button"
-              :class="[controlPadding, controlClass, 'flex items-center border-l border-ui justify-center text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
+              :class="[controlPadding, controlClass, 'flex items-center border-s border-default justify-center text-muted disabled:opacity-50 cursor-pointer hover:opacity-80']"
               @click="onDecrement"
               :disabled="disabled || readonly"
             >▼</button>
           </div>
 
           <!-- Controls: STACKED -->
-          <div v-if="controlVariant === 'stacked'" class="flex flex-col items-center justify-center border-l border-ui">
-            <div :class="[controlPx, controlClass, 'border-b border-ui pb-1 flex hover:opacity-80 cursor-pointer']" @click="onIncrement">
+          <div v-if="controlVariant === 'stacked'" class="flex flex-col items-center justify-center border-s border-default">
+            <div :class="[controlPx, controlClass, 'border-b border-default pb-1 flex hover:opacity-80 cursor-pointer']" @click="onIncrement">
               <button
                 type="button"
-                class="text-xs text-ui disabled:opacity-50 cursor-pointer"
+                class="text-xs text-muted disabled:opacity-50 cursor-pointer"
                 :disabled="disabled || readonly"
               >▲</button>
             </div>
-            <div :class="[controlPx, controlClass, 'border-t border-ui pt-1 flex hover:opacity-80 cursor-pointer']" @click="onDecrement">
+            <div :class="[controlPx, controlClass, 'border-t border-default pt-1 flex hover:opacity-80 cursor-pointer']" @click="onDecrement">
               <button
                 type="button"
-                class="text-xs text-ui disabled:opacity-50 cursor-pointer"
+                class="text-xs text-muted disabled:opacity-50 cursor-pointer"
                 :disabled="disabled || readonly"
               >▼</button>
             </div>
@@ -145,13 +159,13 @@
           </slot>
         </div>
 
-        <!-- Append icon -->
+        <!-- Append (`#append`, alias legacy `#append-icon`) -->
         <div v-if="appendIcon || appendIconSlot" class="flex items-center justify-center h-full pr-1">
           <template v-if="appendIcon">
             <KunIcon :icon="appendIcon" />
           </template>
           <template v-else>
-            <slot name="append-icon" />
+            <slot name="append"><slot name="append-icon" /></slot>
           </template>
         </div>
 
@@ -159,7 +173,7 @@
         <div v-if="!noArrows && controlVariant === 'split'" class="flex self-stretch shrink-0 items-stretch">
           <button
             type="button"
-            :class="[controlPadding, controlEndRounded, controlClass, controlEndClass, 'flex items-center justify-center text-lg border-l border-ui text-ui disabled:opacity-50 cursor-pointer hover:opacity-80']"
+            :class="[controlPadding, controlEndRounded, controlClass, controlEndClass, 'flex items-center justify-center text-lg border-s border-default text-muted disabled:opacity-50 cursor-pointer hover:opacity-80']"
             @click="onIncrement"
             :disabled="disabled || readonly"
           >+</button>
@@ -167,25 +181,26 @@
 
         <!-- Suffix -->
         <div v-if="suffix" class="ml-2">{{ suffix }}</div>
+        </div>
       </div>
 
       <!-- Details -->
       <div v-if="!hideDetails" class="h-[1.25rem]">
-        <div v-if="error || errorMessages" class="text-ui-error text-sm text-center">
+        <div v-if="error || errorMessages" class="text-error text-sm text-center">
           <div v-if="Array.isArray(errorMessages)">
             <div v-for="(msg, i) in errorMessages" :key="i">{{ msg }}</div>
           </div>
           <div v-else-if="typeof errorMessages === 'string'">{{ errorMessages }}</div>
         </div>
-        <div v-else-if="internalError" class="text-ui-error text-sm text-center">
+        <div v-else-if="internalError" class="text-error text-sm text-center">
           {{ internalError }}
         </div>
-        <div v-else-if="hint && (persistentHint || focus)" class="text-xs text-center">
+        <div v-else-if="hint && (persistentHint || focus)" class="text-xs text-center text-muted">
           {{ hint }}
         </div>
 
         <!-- Counter -->
-        <div v-if="counter && maxlength" class="text-xs text-right">
+        <div v-if="counter && maxlength" class="text-xs text-right text-muted">
           {{ inputValue?.length || 0 }} / {{ maxlength }}
         </div>
       </div>
@@ -194,12 +209,12 @@
 </template>
 
 <script setup lang="ts">
-import { useId, computed, nextTick, useSlots } from 'vue';
+import { useId, computed, nextTick, ref, useSlots } from 'vue';
 import { KunNumberFieldProps } from '../composables/KunNumberFieldProps.js';
 import { useKunNumberField } from '../composables/useKunNumberFieldComposable.js';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
-import IconClose from '../../../../icons/IconClose.vue';
+import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js';
 
 const props = defineProps(KunNumberFieldProps);
 const emits = defineEmits([
@@ -215,8 +230,8 @@ const emits = defineEmits([
 
 const uid = props.id || `number-input-${useId()}`;
 const slots = useSlots();
-const prependIconSlot = !!slots['prepend-icon'];
-const appendIconSlot = !!slots['append-icon'];
+const prependIconSlot = !!slots['prepend-icon'] || !!slots['prepend'];
+const appendIconSlot = !!slots['append-icon'] || !!slots['append'];
 const hasPrependInner = computed(() => !!slots['prepend-inner'] || !!props.prependInnerIcon);
 const hasAppendInner = computed(() => !!slots['append-inner'] || !!props.appendInnerIcon);
 const hasPrefix = computed(() => !!props.prefix);
@@ -245,6 +260,8 @@ const {
   handleFocus,
   handleBlur,
   handleInput,
+  handleChange,
+  handleAnimationStart,
   internalError
 } = useKunNumberField(props, emits);
 
@@ -303,9 +320,10 @@ const labelLeftClass = computed(() => {
   return 'left-2';
 });
 
-const labelColorClass = computed(() =>
-  isFloating.value ? (props.floatingLabelColor || props.labelColor) : props.labelColor
-);
+const labelColorClass = computed(() => {
+  if (props.error) return 'text-error';
+  return isFloating.value ? 'text-primary' : 'text-muted';
+});
 const labelSize = computed(() => props.labelSize);
 const floatingLabelSize = computed(() => props.floatingLabelSize);
 const labelOpacity = computed(() => props.labelOpacity);
@@ -313,12 +331,31 @@ const floatingLabelOpacity = computed(() => props.floatingLabelOpacity);
 const floatingLabelTop = computed(() => props.floatingLabelTop);
 const labelClass = computed(() => props.labelClass);
 
+// Muesca del borde + desplazamiento del label (ver `useKunFieldNotch`).
+const { labelRef, overlayRef, notchMaskStyle, labelShiftStyle } = useKunFieldNotch(
+  {
+    isFloating: () => isFloating.value,
+    hasLabel: () => props.label,
+    labelLeftClass: () => labelLeftClass.value,
+    roundedClass: () => props.rounded,
+  },
+  [floatingLabelSize, labelSize, labelClass]
+);
+const notchBorderClass = computed(() => {
+  if (props.error) return 'border-error';
+  return focus.value ? 'border-primary' : 'border-accented';
+});
 // Misma escala que KunTextField: altura mínima del contenedor por densidad
 const containerDensity = computed(() =>
   props.density === "compact" ? "min-h-[32px]" :
   props.density === "comfortable" ? "min-h-[40px]" :
   "min-h-[48px]"
 );
+
+// Fondo del contenedor. `bgInput` (clase Tailwind) gana si existe: permite
+// resaltar estados por el consumidor (ej. control de caja). Sin ella:
+// `bg-default`, con `bg-error/10` automático en estado de error.
+const bgInputClass = computed(() => props.bgInput ?? (props.error ? 'bg-error/10' : 'bg-default'));
 
 // Padding de los botones de incremento/decremento por densidad.
 // Sin esto, el `p-3`/`px-3` fijo de los botones impone la altura del
@@ -336,8 +373,8 @@ const controlEndClass = computed(() => props.controlEndClass || '');
 // El botón split es cuadrado por defecto y taparía el pill del contenedor
 // (`rounded-full`). Heredar el redondeo solo en el extremo externo mantiene
 // la esquina exterior redonda y el divisor interno recto.
-const controlStartRounded = computed(() => props.rounded ? 'rounded-l-[inherit]' : '');
-const controlEndRounded = computed(() => props.rounded ? 'rounded-r-[inherit]' : '');
+const controlStartRounded = computed(() => props.rounded ? 'rounded-s-[inherit]' : '');
+const controlEndRounded = computed(() => props.rounded ? 'rounded-e-[inherit]' : '');
 const controlPx = computed(() =>
   props.density === "compact" ? "px-1" :
   props.density === "comfortable" ? "px-2" :
