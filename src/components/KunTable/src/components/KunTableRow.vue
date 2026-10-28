@@ -102,7 +102,7 @@ function resolveTdClass(item: TableItem | undefined, index: number | undefined):
   return (result as string)?.trim() || '';
 }
 
-const baseRowClass = 'hover:bg-elevated/50 border-t border-default';
+const baseRowClass = 'border-t border-muted transition-colors duration-150 hover:bg-elevated/50';
 const rowClass = computed(() => props.rowClass || baseRowClass);
 
 const actionsAlignClass = computed(() => {
@@ -113,15 +113,23 @@ const actionsAlignClass = computed(() => {
   }
   return alignMap[props.actionsAlign as string] || 'text-center'
 });
-const baseTrClass = 'bg-default';
-const trClass = computed(() => props.trClass || baseTrClass);
+// El `<tr>` no pinta background por defecto: hereda el `bg-default` del
+// contenedor. Un background estático en la fila pelea en la cascada con
+// `selectedClass`/`stripedClass`/`hover:bg-elevated/50` (utilidades del mismo
+// nivel; `bg-default` ganaba y anulaba el highlight de selección).
+const trClass = computed(() => props.trClass || '');
 const conditionalRowClass = computed(() => resolveTdClass(props.item, props.index));
 
+// Clase de fila seleccionada (fallback si el consumidor no define `selectedClass`)
+const selectedRowClass = computed(() => props.selectedClass || 'bg-accented text-default');
+
 // Combina todas las clases: base + striped + seleccionada + condicional
+// La fila seleccionada no recibe `rowClass` ni `stripedClass` para que su
+// background (y no el hover) gane el estado `:hover`; conserva el separador.
 const mergedTableClass = computed(() => [
-  rowClass.value,
-  props.stripedClass,
-  props.isSelected ? props.selectedClass : '',
+  props.isSelected ? selectedRowClass.value : rowClass.value,
+  props.isSelected ? 'border-t border-muted' : '',
+  props.isSelected ? '' : props.stripedClass,
   conditionalRowClass.value || trClass.value
 ]);
 </script>

@@ -122,7 +122,7 @@ const getSortIcon = (header: KunTableHeader) => {
 }
 
 // --- Clases Base ---
-const baseTheadClass = 'bg-elevated sticky top-0 z-5';
+const baseTheadClass = 'bg-elevated border-b border-muted sticky top-0 z-5';
 const mergedTheadClass = [baseTheadClass, props.theadClass];
 
 const baseTrClass = '';

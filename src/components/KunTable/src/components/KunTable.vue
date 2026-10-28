@@ -3,21 +3,23 @@
     <!-- Barra de búsqueda -->
     <div
       v-if="searchable || filterable || $slots.prependHeader || $slots.prependSearch || $slots.appendSearch"
-      class="p-2 bg-muted print:hidden flex w-full justify-between"
+      class="p-2 bg-muted print:hidden flex w-full flex-wrap items-center justify-between gap-y-2"
     >
-      <div class="w-full flex items-center" v-if="showSearchBtn || !isMobile">
+      <div class="flex items-center min-w-0" v-if="showSearchBtn || !isMobile">
         <slot name="prependHeader" />
       </div>
 
-      <div class="inline-flex items-center justify-center whitespace-nowrap" v-if="selectedItems.length && !hideSelected">
-        <span class="pr-2">Se han seleccionado {{ selectedItems.length }} registros.</span>
+      <div class="inline-flex items-center justify-center whitespace-nowrap shrink-0" v-if="selectedItems.length && !hideSelected">
+        <span class="pr-2">
+          {{ selectedItems.length === 1 ? 'Se ha seleccionado 1 registro.' : `Se han seleccionado ${selectedItems.length} registros.` }}
+        </span>
         <template v-if="paginatedItems.length !== filteredItems.length">
-          <span v-if="allSelected && !allFilteredSelected" @click="selectCompleteAll"
+          <span v-if="!allFilteredSelected" @click="selectCompleteAll"
             class="bg-secondary hover:bg-primary rounded-md cursor-pointer px-2 ml-2"
           >
-            Seleccionar todos los {{ filteredItems.length }} registros
+            Seleccionar todo
           </span>
-          <span v-if="allFilteredSelected" @click="clearSelection" 
+          <span v-else @click="clearSelection"
             class="bg-secondary hover:bg-primary rounded-md cursor-pointer px-2 ml-2"
           >
             Anular selección
@@ -25,7 +27,7 @@
         </template>
       </div>
 
-      <div class="min-w-1/3 flex h-full items-center" :class="[searchPositionClass]">
+      <div class="min-w-1/3 ml-auto flex h-full items-center" :class="[searchPositionClass]">
         <slot name="prependSearch" />
 
         <KunBtn v-if="filterable && filters.length" 
@@ -53,7 +55,7 @@
       </div>
     </div>
 
-    <div class="flex-1 overflow-auto bg-muted">
+    <div class="flex-1 overflow-auto bg-default">
       <table :class="mergedTableClass" v-if="paginatedItems.length">
         <template v-if="$slots.colgroup && !isMobile">
           <colgroup><slot name="colgroup" v-bind="slotProps" /></colgroup>

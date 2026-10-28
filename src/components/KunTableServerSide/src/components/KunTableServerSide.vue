@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div class="relative flex-1 overflow-auto bg-muted">
+    <div class="relative flex-1 overflow-auto bg-default">
       <table :class="mergedTableClass" v-if="rows.length">
         <template v-if="$slots.colgroup && !isMobile">
           <colgroup><slot name="colgroup" v-bind="slotProps" /></colgroup>
