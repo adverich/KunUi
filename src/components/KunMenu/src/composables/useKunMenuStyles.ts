@@ -17,6 +17,7 @@ export interface MenuPositionStyle {
     width?: string;
     top?: string;
     bottom?: string;
+    zIndex?: string;
 }
 
 interface ScrollHandlerEntry {
@@ -406,6 +407,9 @@ export function useKunMenuStyles(
                 position: 'fixed',
                 left: `${left}px`,
                 width: props.width === 'w-full' ? `${parentRect.width}px` : undefined,
+                // Mismo token que el path anchor: sin esto el menú queda en
+                // auto y el dialog fullscreen (overlay 2000) lo tapa.
+                zIndex: 'var(--kun-z-overlay)',
             };
 
             if (placeAbove) {
