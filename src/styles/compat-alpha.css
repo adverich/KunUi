@@ -1,0 +1,720 @@
+/**
+ * Alfas reales para modificadores de opacidad (`bg-primary/10`, etc.).
+ *
+ * Tailwind v4 emite fallback sólido (`var(--kun-primary)`) cuando no hay
+ * `color-mix`. Eso pinta el botón entero del color semántico y esconde el
+ * ícono (`currentColor` = mismo hex). Aquí:
+ * 1) variables `--kun-*-{pct}` con rgba (defaults + runtime vía kunTheme)
+ * 2) overrides de utilidades solo si `color-mix` no existe
+ * Los navegadores con color-mix siguen usando oklab; la estética no cambia.
+ * Regenerar: `pnpm exec tsx scripts/generate-color-compat.ts`
+ */
+
+:root {
+  --kun-primary-10: rgba(0, 166, 244, 0.1);
+  --kun-primary-15: rgba(0, 166, 244, 0.15);
+  --kun-primary-20: rgba(0, 166, 244, 0.2);
+  --kun-primary-25: rgba(0, 166, 244, 0.25);
+  --kun-primary-30: rgba(0, 166, 244, 0.3);
+  --kun-primary-40: rgba(0, 166, 244, 0.4);
+  --kun-primary-50: rgba(0, 166, 244, 0.5);
+  --kun-primary-75: rgba(0, 166, 244, 0.75);
+  --kun-primary-90: rgba(0, 166, 244, 0.9);
+  --kun-secondary-10: rgba(43, 127, 255, 0.1);
+  --kun-secondary-15: rgba(43, 127, 255, 0.15);
+  --kun-secondary-20: rgba(43, 127, 255, 0.2);
+  --kun-secondary-25: rgba(43, 127, 255, 0.25);
+  --kun-secondary-30: rgba(43, 127, 255, 0.3);
+  --kun-secondary-40: rgba(43, 127, 255, 0.4);
+  --kun-secondary-50: rgba(43, 127, 255, 0.5);
+  --kun-secondary-75: rgba(43, 127, 255, 0.75);
+  --kun-secondary-90: rgba(43, 127, 255, 0.9);
+  --kun-success-10: rgba(0, 201, 80, 0.1);
+  --kun-success-15: rgba(0, 201, 80, 0.15);
+  --kun-success-20: rgba(0, 201, 80, 0.2);
+  --kun-success-25: rgba(0, 201, 80, 0.25);
+  --kun-success-30: rgba(0, 201, 80, 0.3);
+  --kun-success-40: rgba(0, 201, 80, 0.4);
+  --kun-success-50: rgba(0, 201, 80, 0.5);
+  --kun-success-75: rgba(0, 201, 80, 0.75);
+  --kun-success-90: rgba(0, 201, 80, 0.9);
+  --kun-info-10: rgba(43, 127, 255, 0.1);
+  --kun-info-15: rgba(43, 127, 255, 0.15);
+  --kun-info-20: rgba(43, 127, 255, 0.2);
+  --kun-info-25: rgba(43, 127, 255, 0.25);
+  --kun-info-30: rgba(43, 127, 255, 0.3);
+  --kun-info-40: rgba(43, 127, 255, 0.4);
+  --kun-info-50: rgba(43, 127, 255, 0.5);
+  --kun-info-75: rgba(43, 127, 255, 0.75);
+  --kun-info-90: rgba(43, 127, 255, 0.9);
+  --kun-warning-10: rgba(254, 154, 0, 0.1);
+  --kun-warning-15: rgba(254, 154, 0, 0.15);
+  --kun-warning-20: rgba(254, 154, 0, 0.2);
+  --kun-warning-25: rgba(254, 154, 0, 0.25);
+  --kun-warning-30: rgba(254, 154, 0, 0.3);
+  --kun-warning-40: rgba(254, 154, 0, 0.4);
+  --kun-warning-50: rgba(254, 154, 0, 0.5);
+  --kun-warning-75: rgba(254, 154, 0, 0.75);
+  --kun-warning-90: rgba(254, 154, 0, 0.9);
+  --kun-error-10: rgba(251, 44, 54, 0.1);
+  --kun-error-15: rgba(251, 44, 54, 0.15);
+  --kun-error-20: rgba(251, 44, 54, 0.2);
+  --kun-error-25: rgba(251, 44, 54, 0.25);
+  --kun-error-30: rgba(251, 44, 54, 0.3);
+  --kun-error-40: rgba(251, 44, 54, 0.4);
+  --kun-error-50: rgba(251, 44, 54, 0.5);
+  --kun-error-75: rgba(251, 44, 54, 0.75);
+  --kun-error-90: rgba(251, 44, 54, 0.9);
+  --kun-text-warning-tonal-10: rgba(254, 154, 0, 0.1);
+  --kun-text-warning-tonal-15: rgba(254, 154, 0, 0.15);
+  --kun-text-warning-tonal-20: rgba(254, 154, 0, 0.2);
+  --kun-text-warning-tonal-25: rgba(254, 154, 0, 0.25);
+  --kun-text-warning-tonal-30: rgba(254, 154, 0, 0.3);
+  --kun-text-warning-tonal-40: rgba(254, 154, 0, 0.4);
+  --kun-text-warning-tonal-50: rgba(254, 154, 0, 0.5);
+  --kun-text-warning-tonal-75: rgba(254, 154, 0, 0.75);
+  --kun-text-warning-tonal-90: rgba(254, 154, 0, 0.9);
+  --kun-bg-elevated-50: rgba(241, 245, 249, 0.5);
+  --kun-bg-elevated-80: rgba(241, 245, 249, 0.8);
+  --kun-bg-elevated-95: rgba(241, 245, 249, 0.95);
+  --kun-bg-accented-75: rgba(226, 232, 240, 0.75);
+  --kun-bg-inverted-90: rgba(15, 23, 43, 0.9);
+  --kun-border-inverted-25: rgba(15, 23, 43, 0.25);
+}
+
+:root.dark,
+:root[data-theme="dark"] {
+  --kun-primary-10: rgba(0, 188, 255, 0.1);
+  --kun-primary-15: rgba(0, 188, 255, 0.15);
+  --kun-primary-20: rgba(0, 188, 255, 0.2);
+  --kun-primary-25: rgba(0, 188, 255, 0.25);
+  --kun-primary-30: rgba(0, 188, 255, 0.3);
+  --kun-primary-40: rgba(0, 188, 255, 0.4);
+  --kun-primary-50: rgba(0, 188, 255, 0.5);
+  --kun-primary-75: rgba(0, 188, 255, 0.75);
+  --kun-primary-90: rgba(0, 188, 255, 0.9);
+  --kun-secondary-10: rgba(81, 162, 255, 0.1);
+  --kun-secondary-15: rgba(81, 162, 255, 0.15);
+  --kun-secondary-20: rgba(81, 162, 255, 0.2);
+  --kun-secondary-25: rgba(81, 162, 255, 0.25);
+  --kun-secondary-30: rgba(81, 162, 255, 0.3);
+  --kun-secondary-40: rgba(81, 162, 255, 0.4);
+  --kun-secondary-50: rgba(81, 162, 255, 0.5);
+  --kun-secondary-75: rgba(81, 162, 255, 0.75);
+  --kun-secondary-90: rgba(81, 162, 255, 0.9);
+  --kun-success-10: rgba(5, 223, 114, 0.1);
+  --kun-success-15: rgba(5, 223, 114, 0.15);
+  --kun-success-20: rgba(5, 223, 114, 0.2);
+  --kun-success-25: rgba(5, 223, 114, 0.25);
+  --kun-success-30: rgba(5, 223, 114, 0.3);
+  --kun-success-40: rgba(5, 223, 114, 0.4);
+  --kun-success-50: rgba(5, 223, 114, 0.5);
+  --kun-success-75: rgba(5, 223, 114, 0.75);
+  --kun-success-90: rgba(5, 223, 114, 0.9);
+  --kun-info-10: rgba(81, 162, 255, 0.1);
+  --kun-info-15: rgba(81, 162, 255, 0.15);
+  --kun-info-20: rgba(81, 162, 255, 0.2);
+  --kun-info-25: rgba(81, 162, 255, 0.25);
+  --kun-info-30: rgba(81, 162, 255, 0.3);
+  --kun-info-40: rgba(81, 162, 255, 0.4);
+  --kun-info-50: rgba(81, 162, 255, 0.5);
+  --kun-info-75: rgba(81, 162, 255, 0.75);
+  --kun-info-90: rgba(81, 162, 255, 0.9);
+  --kun-warning-10: rgba(187, 77, 0, 0.1);
+  --kun-warning-15: rgba(187, 77, 0, 0.15);
+  --kun-warning-20: rgba(187, 77, 0, 0.2);
+  --kun-warning-25: rgba(187, 77, 0, 0.25);
+  --kun-warning-30: rgba(187, 77, 0, 0.3);
+  --kun-warning-40: rgba(187, 77, 0, 0.4);
+  --kun-warning-50: rgba(187, 77, 0, 0.5);
+  --kun-warning-75: rgba(187, 77, 0, 0.75);
+  --kun-warning-90: rgba(187, 77, 0, 0.9);
+  --kun-error-10: rgba(255, 100, 103, 0.1);
+  --kun-error-15: rgba(255, 100, 103, 0.15);
+  --kun-error-20: rgba(255, 100, 103, 0.2);
+  --kun-error-25: rgba(255, 100, 103, 0.25);
+  --kun-error-30: rgba(255, 100, 103, 0.3);
+  --kun-error-40: rgba(255, 100, 103, 0.4);
+  --kun-error-50: rgba(255, 100, 103, 0.5);
+  --kun-error-75: rgba(255, 100, 103, 0.75);
+  --kun-error-90: rgba(255, 100, 103, 0.9);
+  --kun-text-warning-tonal-10: rgba(255, 185, 0, 0.1);
+  --kun-text-warning-tonal-15: rgba(255, 185, 0, 0.15);
+  --kun-text-warning-tonal-20: rgba(255, 185, 0, 0.2);
+  --kun-text-warning-tonal-25: rgba(255, 185, 0, 0.25);
+  --kun-text-warning-tonal-30: rgba(255, 185, 0, 0.3);
+  --kun-text-warning-tonal-40: rgba(255, 185, 0, 0.4);
+  --kun-text-warning-tonal-50: rgba(255, 185, 0, 0.5);
+  --kun-text-warning-tonal-75: rgba(255, 185, 0, 0.75);
+  --kun-text-warning-tonal-90: rgba(255, 185, 0, 0.9);
+  --kun-bg-elevated-50: rgba(29, 41, 61, 0.5);
+  --kun-bg-elevated-80: rgba(29, 41, 61, 0.8);
+  --kun-bg-elevated-95: rgba(29, 41, 61, 0.95);
+  --kun-bg-accented-75: rgba(49, 65, 88, 0.75);
+  --kun-bg-inverted-90: rgba(255, 255, 255, 0.9);
+  --kun-border-inverted-25: rgba(255, 255, 255, 0.25);
+}
+
+@supports not (color: color-mix(in lab, red, red)) {
+  .bg-primary\/10 { background-color: var(--kun-primary-10); }
+  .bg-primary\/10\! { background-color: var(--kun-primary-10) !important; }
+  .hover\:bg-primary\/10:hover { background-color: var(--kun-primary-10); }
+  .active\:bg-primary\/10:active { background-color: var(--kun-primary-10); }
+  .text-primary\/10 { color: var(--kun-primary-10); }
+  .hover\:text-primary\/10:hover { color: var(--kun-primary-10); }
+  .ring-primary\/10 { --tw-ring-color: var(--kun-primary-10); }
+  .ring-primary\/10\! { --tw-ring-color: var(--kun-primary-10) !important; }
+  .outline-primary\/10 { outline-color: var(--kun-primary-10); }
+  .focus-visible\:outline-primary\/10:focus-visible { outline-color: var(--kun-primary-10); }
+  .bg-primary\/15 { background-color: var(--kun-primary-15); }
+  .bg-primary\/15\! { background-color: var(--kun-primary-15) !important; }
+  .hover\:bg-primary\/15:hover { background-color: var(--kun-primary-15); }
+  .active\:bg-primary\/15:active { background-color: var(--kun-primary-15); }
+  .text-primary\/15 { color: var(--kun-primary-15); }
+  .hover\:text-primary\/15:hover { color: var(--kun-primary-15); }
+  .ring-primary\/15 { --tw-ring-color: var(--kun-primary-15); }
+  .ring-primary\/15\! { --tw-ring-color: var(--kun-primary-15) !important; }
+  .outline-primary\/15 { outline-color: var(--kun-primary-15); }
+  .focus-visible\:outline-primary\/15:focus-visible { outline-color: var(--kun-primary-15); }
+  .bg-primary\/20 { background-color: var(--kun-primary-20); }
+  .bg-primary\/20\! { background-color: var(--kun-primary-20) !important; }
+  .hover\:bg-primary\/20:hover { background-color: var(--kun-primary-20); }
+  .active\:bg-primary\/20:active { background-color: var(--kun-primary-20); }
+  .text-primary\/20 { color: var(--kun-primary-20); }
+  .hover\:text-primary\/20:hover { color: var(--kun-primary-20); }
+  .ring-primary\/20 { --tw-ring-color: var(--kun-primary-20); }
+  .ring-primary\/20\! { --tw-ring-color: var(--kun-primary-20) !important; }
+  .outline-primary\/20 { outline-color: var(--kun-primary-20); }
+  .focus-visible\:outline-primary\/20:focus-visible { outline-color: var(--kun-primary-20); }
+  .bg-primary\/25 { background-color: var(--kun-primary-25); }
+  .bg-primary\/25\! { background-color: var(--kun-primary-25) !important; }
+  .hover\:bg-primary\/25:hover { background-color: var(--kun-primary-25); }
+  .active\:bg-primary\/25:active { background-color: var(--kun-primary-25); }
+  .text-primary\/25 { color: var(--kun-primary-25); }
+  .hover\:text-primary\/25:hover { color: var(--kun-primary-25); }
+  .ring-primary\/25 { --tw-ring-color: var(--kun-primary-25); }
+  .ring-primary\/25\! { --tw-ring-color: var(--kun-primary-25) !important; }
+  .outline-primary\/25 { outline-color: var(--kun-primary-25); }
+  .focus-visible\:outline-primary\/25:focus-visible { outline-color: var(--kun-primary-25); }
+  .bg-primary\/30 { background-color: var(--kun-primary-30); }
+  .bg-primary\/30\! { background-color: var(--kun-primary-30) !important; }
+  .hover\:bg-primary\/30:hover { background-color: var(--kun-primary-30); }
+  .active\:bg-primary\/30:active { background-color: var(--kun-primary-30); }
+  .text-primary\/30 { color: var(--kun-primary-30); }
+  .hover\:text-primary\/30:hover { color: var(--kun-primary-30); }
+  .ring-primary\/30 { --tw-ring-color: var(--kun-primary-30); }
+  .ring-primary\/30\! { --tw-ring-color: var(--kun-primary-30) !important; }
+  .outline-primary\/30 { outline-color: var(--kun-primary-30); }
+  .focus-visible\:outline-primary\/30:focus-visible { outline-color: var(--kun-primary-30); }
+  .bg-primary\/40 { background-color: var(--kun-primary-40); }
+  .bg-primary\/40\! { background-color: var(--kun-primary-40) !important; }
+  .hover\:bg-primary\/40:hover { background-color: var(--kun-primary-40); }
+  .active\:bg-primary\/40:active { background-color: var(--kun-primary-40); }
+  .text-primary\/40 { color: var(--kun-primary-40); }
+  .hover\:text-primary\/40:hover { color: var(--kun-primary-40); }
+  .ring-primary\/40 { --tw-ring-color: var(--kun-primary-40); }
+  .ring-primary\/40\! { --tw-ring-color: var(--kun-primary-40) !important; }
+  .outline-primary\/40 { outline-color: var(--kun-primary-40); }
+  .focus-visible\:outline-primary\/40:focus-visible { outline-color: var(--kun-primary-40); }
+  .bg-primary\/50 { background-color: var(--kun-primary-50); }
+  .bg-primary\/50\! { background-color: var(--kun-primary-50) !important; }
+  .hover\:bg-primary\/50:hover { background-color: var(--kun-primary-50); }
+  .active\:bg-primary\/50:active { background-color: var(--kun-primary-50); }
+  .text-primary\/50 { color: var(--kun-primary-50); }
+  .hover\:text-primary\/50:hover { color: var(--kun-primary-50); }
+  .ring-primary\/50 { --tw-ring-color: var(--kun-primary-50); }
+  .ring-primary\/50\! { --tw-ring-color: var(--kun-primary-50) !important; }
+  .outline-primary\/50 { outline-color: var(--kun-primary-50); }
+  .focus-visible\:outline-primary\/50:focus-visible { outline-color: var(--kun-primary-50); }
+  .bg-primary\/75 { background-color: var(--kun-primary-75); }
+  .bg-primary\/75\! { background-color: var(--kun-primary-75) !important; }
+  .hover\:bg-primary\/75:hover { background-color: var(--kun-primary-75); }
+  .active\:bg-primary\/75:active { background-color: var(--kun-primary-75); }
+  .text-primary\/75 { color: var(--kun-primary-75); }
+  .hover\:text-primary\/75:hover { color: var(--kun-primary-75); }
+  .ring-primary\/75 { --tw-ring-color: var(--kun-primary-75); }
+  .ring-primary\/75\! { --tw-ring-color: var(--kun-primary-75) !important; }
+  .outline-primary\/75 { outline-color: var(--kun-primary-75); }
+  .focus-visible\:outline-primary\/75:focus-visible { outline-color: var(--kun-primary-75); }
+  .bg-primary\/90 { background-color: var(--kun-primary-90); }
+  .bg-primary\/90\! { background-color: var(--kun-primary-90) !important; }
+  .hover\:bg-primary\/90:hover { background-color: var(--kun-primary-90); }
+  .active\:bg-primary\/90:active { background-color: var(--kun-primary-90); }
+  .text-primary\/90 { color: var(--kun-primary-90); }
+  .hover\:text-primary\/90:hover { color: var(--kun-primary-90); }
+  .ring-primary\/90 { --tw-ring-color: var(--kun-primary-90); }
+  .ring-primary\/90\! { --tw-ring-color: var(--kun-primary-90) !important; }
+  .outline-primary\/90 { outline-color: var(--kun-primary-90); }
+  .focus-visible\:outline-primary\/90:focus-visible { outline-color: var(--kun-primary-90); }
+  .from-primary\/40 { --tw-gradient-from: var(--kun-primary-40); }
+  .bg-secondary\/10 { background-color: var(--kun-secondary-10); }
+  .bg-secondary\/10\! { background-color: var(--kun-secondary-10) !important; }
+  .hover\:bg-secondary\/10:hover { background-color: var(--kun-secondary-10); }
+  .active\:bg-secondary\/10:active { background-color: var(--kun-secondary-10); }
+  .text-secondary\/10 { color: var(--kun-secondary-10); }
+  .hover\:text-secondary\/10:hover { color: var(--kun-secondary-10); }
+  .ring-secondary\/10 { --tw-ring-color: var(--kun-secondary-10); }
+  .ring-secondary\/10\! { --tw-ring-color: var(--kun-secondary-10) !important; }
+  .outline-secondary\/10 { outline-color: var(--kun-secondary-10); }
+  .focus-visible\:outline-secondary\/10:focus-visible { outline-color: var(--kun-secondary-10); }
+  .bg-secondary\/15 { background-color: var(--kun-secondary-15); }
+  .bg-secondary\/15\! { background-color: var(--kun-secondary-15) !important; }
+  .hover\:bg-secondary\/15:hover { background-color: var(--kun-secondary-15); }
+  .active\:bg-secondary\/15:active { background-color: var(--kun-secondary-15); }
+  .text-secondary\/15 { color: var(--kun-secondary-15); }
+  .hover\:text-secondary\/15:hover { color: var(--kun-secondary-15); }
+  .ring-secondary\/15 { --tw-ring-color: var(--kun-secondary-15); }
+  .ring-secondary\/15\! { --tw-ring-color: var(--kun-secondary-15) !important; }
+  .outline-secondary\/15 { outline-color: var(--kun-secondary-15); }
+  .focus-visible\:outline-secondary\/15:focus-visible { outline-color: var(--kun-secondary-15); }
+  .bg-secondary\/20 { background-color: var(--kun-secondary-20); }
+  .bg-secondary\/20\! { background-color: var(--kun-secondary-20) !important; }
+  .hover\:bg-secondary\/20:hover { background-color: var(--kun-secondary-20); }
+  .active\:bg-secondary\/20:active { background-color: var(--kun-secondary-20); }
+  .text-secondary\/20 { color: var(--kun-secondary-20); }
+  .hover\:text-secondary\/20:hover { color: var(--kun-secondary-20); }
+  .ring-secondary\/20 { --tw-ring-color: var(--kun-secondary-20); }
+  .ring-secondary\/20\! { --tw-ring-color: var(--kun-secondary-20) !important; }
+  .outline-secondary\/20 { outline-color: var(--kun-secondary-20); }
+  .focus-visible\:outline-secondary\/20:focus-visible { outline-color: var(--kun-secondary-20); }
+  .bg-secondary\/25 { background-color: var(--kun-secondary-25); }
+  .bg-secondary\/25\! { background-color: var(--kun-secondary-25) !important; }
+  .hover\:bg-secondary\/25:hover { background-color: var(--kun-secondary-25); }
+  .active\:bg-secondary\/25:active { background-color: var(--kun-secondary-25); }
+  .text-secondary\/25 { color: var(--kun-secondary-25); }
+  .hover\:text-secondary\/25:hover { color: var(--kun-secondary-25); }
+  .ring-secondary\/25 { --tw-ring-color: var(--kun-secondary-25); }
+  .ring-secondary\/25\! { --tw-ring-color: var(--kun-secondary-25) !important; }
+  .outline-secondary\/25 { outline-color: var(--kun-secondary-25); }
+  .focus-visible\:outline-secondary\/25:focus-visible { outline-color: var(--kun-secondary-25); }
+  .bg-secondary\/30 { background-color: var(--kun-secondary-30); }
+  .bg-secondary\/30\! { background-color: var(--kun-secondary-30) !important; }
+  .hover\:bg-secondary\/30:hover { background-color: var(--kun-secondary-30); }
+  .active\:bg-secondary\/30:active { background-color: var(--kun-secondary-30); }
+  .text-secondary\/30 { color: var(--kun-secondary-30); }
+  .hover\:text-secondary\/30:hover { color: var(--kun-secondary-30); }
+  .ring-secondary\/30 { --tw-ring-color: var(--kun-secondary-30); }
+  .ring-secondary\/30\! { --tw-ring-color: var(--kun-secondary-30) !important; }
+  .outline-secondary\/30 { outline-color: var(--kun-secondary-30); }
+  .focus-visible\:outline-secondary\/30:focus-visible { outline-color: var(--kun-secondary-30); }
+  .bg-secondary\/40 { background-color: var(--kun-secondary-40); }
+  .bg-secondary\/40\! { background-color: var(--kun-secondary-40) !important; }
+  .hover\:bg-secondary\/40:hover { background-color: var(--kun-secondary-40); }
+  .active\:bg-secondary\/40:active { background-color: var(--kun-secondary-40); }
+  .text-secondary\/40 { color: var(--kun-secondary-40); }
+  .hover\:text-secondary\/40:hover { color: var(--kun-secondary-40); }
+  .ring-secondary\/40 { --tw-ring-color: var(--kun-secondary-40); }
+  .ring-secondary\/40\! { --tw-ring-color: var(--kun-secondary-40) !important; }
+  .outline-secondary\/40 { outline-color: var(--kun-secondary-40); }
+  .focus-visible\:outline-secondary\/40:focus-visible { outline-color: var(--kun-secondary-40); }
+  .bg-secondary\/50 { background-color: var(--kun-secondary-50); }
+  .bg-secondary\/50\! { background-color: var(--kun-secondary-50) !important; }
+  .hover\:bg-secondary\/50:hover { background-color: var(--kun-secondary-50); }
+  .active\:bg-secondary\/50:active { background-color: var(--kun-secondary-50); }
+  .text-secondary\/50 { color: var(--kun-secondary-50); }
+  .hover\:text-secondary\/50:hover { color: var(--kun-secondary-50); }
+  .ring-secondary\/50 { --tw-ring-color: var(--kun-secondary-50); }
+  .ring-secondary\/50\! { --tw-ring-color: var(--kun-secondary-50) !important; }
+  .outline-secondary\/50 { outline-color: var(--kun-secondary-50); }
+  .focus-visible\:outline-secondary\/50:focus-visible { outline-color: var(--kun-secondary-50); }
+  .bg-secondary\/75 { background-color: var(--kun-secondary-75); }
+  .bg-secondary\/75\! { background-color: var(--kun-secondary-75) !important; }
+  .hover\:bg-secondary\/75:hover { background-color: var(--kun-secondary-75); }
+  .active\:bg-secondary\/75:active { background-color: var(--kun-secondary-75); }
+  .text-secondary\/75 { color: var(--kun-secondary-75); }
+  .hover\:text-secondary\/75:hover { color: var(--kun-secondary-75); }
+  .ring-secondary\/75 { --tw-ring-color: var(--kun-secondary-75); }
+  .ring-secondary\/75\! { --tw-ring-color: var(--kun-secondary-75) !important; }
+  .outline-secondary\/75 { outline-color: var(--kun-secondary-75); }
+  .focus-visible\:outline-secondary\/75:focus-visible { outline-color: var(--kun-secondary-75); }
+  .bg-secondary\/90 { background-color: var(--kun-secondary-90); }
+  .bg-secondary\/90\! { background-color: var(--kun-secondary-90) !important; }
+  .hover\:bg-secondary\/90:hover { background-color: var(--kun-secondary-90); }
+  .active\:bg-secondary\/90:active { background-color: var(--kun-secondary-90); }
+  .text-secondary\/90 { color: var(--kun-secondary-90); }
+  .hover\:text-secondary\/90:hover { color: var(--kun-secondary-90); }
+  .ring-secondary\/90 { --tw-ring-color: var(--kun-secondary-90); }
+  .ring-secondary\/90\! { --tw-ring-color: var(--kun-secondary-90) !important; }
+  .outline-secondary\/90 { outline-color: var(--kun-secondary-90); }
+  .focus-visible\:outline-secondary\/90:focus-visible { outline-color: var(--kun-secondary-90); }
+  .from-secondary\/40 { --tw-gradient-from: var(--kun-secondary-40); }
+  .bg-success\/10 { background-color: var(--kun-success-10); }
+  .bg-success\/10\! { background-color: var(--kun-success-10) !important; }
+  .hover\:bg-success\/10:hover { background-color: var(--kun-success-10); }
+  .active\:bg-success\/10:active { background-color: var(--kun-success-10); }
+  .text-success\/10 { color: var(--kun-success-10); }
+  .hover\:text-success\/10:hover { color: var(--kun-success-10); }
+  .ring-success\/10 { --tw-ring-color: var(--kun-success-10); }
+  .ring-success\/10\! { --tw-ring-color: var(--kun-success-10) !important; }
+  .outline-success\/10 { outline-color: var(--kun-success-10); }
+  .focus-visible\:outline-success\/10:focus-visible { outline-color: var(--kun-success-10); }
+  .bg-success\/15 { background-color: var(--kun-success-15); }
+  .bg-success\/15\! { background-color: var(--kun-success-15) !important; }
+  .hover\:bg-success\/15:hover { background-color: var(--kun-success-15); }
+  .active\:bg-success\/15:active { background-color: var(--kun-success-15); }
+  .text-success\/15 { color: var(--kun-success-15); }
+  .hover\:text-success\/15:hover { color: var(--kun-success-15); }
+  .ring-success\/15 { --tw-ring-color: var(--kun-success-15); }
+  .ring-success\/15\! { --tw-ring-color: var(--kun-success-15) !important; }
+  .outline-success\/15 { outline-color: var(--kun-success-15); }
+  .focus-visible\:outline-success\/15:focus-visible { outline-color: var(--kun-success-15); }
+  .bg-success\/20 { background-color: var(--kun-success-20); }
+  .bg-success\/20\! { background-color: var(--kun-success-20) !important; }
+  .hover\:bg-success\/20:hover { background-color: var(--kun-success-20); }
+  .active\:bg-success\/20:active { background-color: var(--kun-success-20); }
+  .text-success\/20 { color: var(--kun-success-20); }
+  .hover\:text-success\/20:hover { color: var(--kun-success-20); }
+  .ring-success\/20 { --tw-ring-color: var(--kun-success-20); }
+  .ring-success\/20\! { --tw-ring-color: var(--kun-success-20) !important; }
+  .outline-success\/20 { outline-color: var(--kun-success-20); }
+  .focus-visible\:outline-success\/20:focus-visible { outline-color: var(--kun-success-20); }
+  .bg-success\/25 { background-color: var(--kun-success-25); }
+  .bg-success\/25\! { background-color: var(--kun-success-25) !important; }
+  .hover\:bg-success\/25:hover { background-color: var(--kun-success-25); }
+  .active\:bg-success\/25:active { background-color: var(--kun-success-25); }
+  .text-success\/25 { color: var(--kun-success-25); }
+  .hover\:text-success\/25:hover { color: var(--kun-success-25); }
+  .ring-success\/25 { --tw-ring-color: var(--kun-success-25); }
+  .ring-success\/25\! { --tw-ring-color: var(--kun-success-25) !important; }
+  .outline-success\/25 { outline-color: var(--kun-success-25); }
+  .focus-visible\:outline-success\/25:focus-visible { outline-color: var(--kun-success-25); }
+  .bg-success\/30 { background-color: var(--kun-success-30); }
+  .bg-success\/30\! { background-color: var(--kun-success-30) !important; }
+  .hover\:bg-success\/30:hover { background-color: var(--kun-success-30); }
+  .active\:bg-success\/30:active { background-color: var(--kun-success-30); }
+  .text-success\/30 { color: var(--kun-success-30); }
+  .hover\:text-success\/30:hover { color: var(--kun-success-30); }
+  .ring-success\/30 { --tw-ring-color: var(--kun-success-30); }
+  .ring-success\/30\! { --tw-ring-color: var(--kun-success-30) !important; }
+  .outline-success\/30 { outline-color: var(--kun-success-30); }
+  .focus-visible\:outline-success\/30:focus-visible { outline-color: var(--kun-success-30); }
+  .bg-success\/40 { background-color: var(--kun-success-40); }
+  .bg-success\/40\! { background-color: var(--kun-success-40) !important; }
+  .hover\:bg-success\/40:hover { background-color: var(--kun-success-40); }
+  .active\:bg-success\/40:active { background-color: var(--kun-success-40); }
+  .text-success\/40 { color: var(--kun-success-40); }
+  .hover\:text-success\/40:hover { color: var(--kun-success-40); }
+  .ring-success\/40 { --tw-ring-color: var(--kun-success-40); }
+  .ring-success\/40\! { --tw-ring-color: var(--kun-success-40) !important; }
+  .outline-success\/40 { outline-color: var(--kun-success-40); }
+  .focus-visible\:outline-success\/40:focus-visible { outline-color: var(--kun-success-40); }
+  .bg-success\/50 { background-color: var(--kun-success-50); }
+  .bg-success\/50\! { background-color: var(--kun-success-50) !important; }
+  .hover\:bg-success\/50:hover { background-color: var(--kun-success-50); }
+  .active\:bg-success\/50:active { background-color: var(--kun-success-50); }
+  .text-success\/50 { color: var(--kun-success-50); }
+  .hover\:text-success\/50:hover { color: var(--kun-success-50); }
+  .ring-success\/50 { --tw-ring-color: var(--kun-success-50); }
+  .ring-success\/50\! { --tw-ring-color: var(--kun-success-50) !important; }
+  .outline-success\/50 { outline-color: var(--kun-success-50); }
+  .focus-visible\:outline-success\/50:focus-visible { outline-color: var(--kun-success-50); }
+  .bg-success\/75 { background-color: var(--kun-success-75); }
+  .bg-success\/75\! { background-color: var(--kun-success-75) !important; }
+  .hover\:bg-success\/75:hover { background-color: var(--kun-success-75); }
+  .active\:bg-success\/75:active { background-color: var(--kun-success-75); }
+  .text-success\/75 { color: var(--kun-success-75); }
+  .hover\:text-success\/75:hover { color: var(--kun-success-75); }
+  .ring-success\/75 { --tw-ring-color: var(--kun-success-75); }
+  .ring-success\/75\! { --tw-ring-color: var(--kun-success-75) !important; }
+  .outline-success\/75 { outline-color: var(--kun-success-75); }
+  .focus-visible\:outline-success\/75:focus-visible { outline-color: var(--kun-success-75); }
+  .bg-success\/90 { background-color: var(--kun-success-90); }
+  .bg-success\/90\! { background-color: var(--kun-success-90) !important; }
+  .hover\:bg-success\/90:hover { background-color: var(--kun-success-90); }
+  .active\:bg-success\/90:active { background-color: var(--kun-success-90); }
+  .text-success\/90 { color: var(--kun-success-90); }
+  .hover\:text-success\/90:hover { color: var(--kun-success-90); }
+  .ring-success\/90 { --tw-ring-color: var(--kun-success-90); }
+  .ring-success\/90\! { --tw-ring-color: var(--kun-success-90) !important; }
+  .outline-success\/90 { outline-color: var(--kun-success-90); }
+  .focus-visible\:outline-success\/90:focus-visible { outline-color: var(--kun-success-90); }
+  .from-success\/40 { --tw-gradient-from: var(--kun-success-40); }
+  .bg-info\/10 { background-color: var(--kun-info-10); }
+  .bg-info\/10\! { background-color: var(--kun-info-10) !important; }
+  .hover\:bg-info\/10:hover { background-color: var(--kun-info-10); }
+  .active\:bg-info\/10:active { background-color: var(--kun-info-10); }
+  .text-info\/10 { color: var(--kun-info-10); }
+  .hover\:text-info\/10:hover { color: var(--kun-info-10); }
+  .ring-info\/10 { --tw-ring-color: var(--kun-info-10); }
+  .ring-info\/10\! { --tw-ring-color: var(--kun-info-10) !important; }
+  .outline-info\/10 { outline-color: var(--kun-info-10); }
+  .focus-visible\:outline-info\/10:focus-visible { outline-color: var(--kun-info-10); }
+  .bg-info\/15 { background-color: var(--kun-info-15); }
+  .bg-info\/15\! { background-color: var(--kun-info-15) !important; }
+  .hover\:bg-info\/15:hover { background-color: var(--kun-info-15); }
+  .active\:bg-info\/15:active { background-color: var(--kun-info-15); }
+  .text-info\/15 { color: var(--kun-info-15); }
+  .hover\:text-info\/15:hover { color: var(--kun-info-15); }
+  .ring-info\/15 { --tw-ring-color: var(--kun-info-15); }
+  .ring-info\/15\! { --tw-ring-color: var(--kun-info-15) !important; }
+  .outline-info\/15 { outline-color: var(--kun-info-15); }
+  .focus-visible\:outline-info\/15:focus-visible { outline-color: var(--kun-info-15); }
+  .bg-info\/20 { background-color: var(--kun-info-20); }
+  .bg-info\/20\! { background-color: var(--kun-info-20) !important; }
+  .hover\:bg-info\/20:hover { background-color: var(--kun-info-20); }
+  .active\:bg-info\/20:active { background-color: var(--kun-info-20); }
+  .text-info\/20 { color: var(--kun-info-20); }
+  .hover\:text-info\/20:hover { color: var(--kun-info-20); }
+  .ring-info\/20 { --tw-ring-color: var(--kun-info-20); }
+  .ring-info\/20\! { --tw-ring-color: var(--kun-info-20) !important; }
+  .outline-info\/20 { outline-color: var(--kun-info-20); }
+  .focus-visible\:outline-info\/20:focus-visible { outline-color: var(--kun-info-20); }
+  .bg-info\/25 { background-color: var(--kun-info-25); }
+  .bg-info\/25\! { background-color: var(--kun-info-25) !important; }
+  .hover\:bg-info\/25:hover { background-color: var(--kun-info-25); }
+  .active\:bg-info\/25:active { background-color: var(--kun-info-25); }
+  .text-info\/25 { color: var(--kun-info-25); }
+  .hover\:text-info\/25:hover { color: var(--kun-info-25); }
+  .ring-info\/25 { --tw-ring-color: var(--kun-info-25); }
+  .ring-info\/25\! { --tw-ring-color: var(--kun-info-25) !important; }
+  .outline-info\/25 { outline-color: var(--kun-info-25); }
+  .focus-visible\:outline-info\/25:focus-visible { outline-color: var(--kun-info-25); }
+  .bg-info\/30 { background-color: var(--kun-info-30); }
+  .bg-info\/30\! { background-color: var(--kun-info-30) !important; }
+  .hover\:bg-info\/30:hover { background-color: var(--kun-info-30); }
+  .active\:bg-info\/30:active { background-color: var(--kun-info-30); }
+  .text-info\/30 { color: var(--kun-info-30); }
+  .hover\:text-info\/30:hover { color: var(--kun-info-30); }
+  .ring-info\/30 { --tw-ring-color: var(--kun-info-30); }
+  .ring-info\/30\! { --tw-ring-color: var(--kun-info-30) !important; }
+  .outline-info\/30 { outline-color: var(--kun-info-30); }
+  .focus-visible\:outline-info\/30:focus-visible { outline-color: var(--kun-info-30); }
+  .bg-info\/40 { background-color: var(--kun-info-40); }
+  .bg-info\/40\! { background-color: var(--kun-info-40) !important; }
+  .hover\:bg-info\/40:hover { background-color: var(--kun-info-40); }
+  .active\:bg-info\/40:active { background-color: var(--kun-info-40); }
+  .text-info\/40 { color: var(--kun-info-40); }
+  .hover\:text-info\/40:hover { color: var(--kun-info-40); }
+  .ring-info\/40 { --tw-ring-color: var(--kun-info-40); }
+  .ring-info\/40\! { --tw-ring-color: var(--kun-info-40) !important; }
+  .outline-info\/40 { outline-color: var(--kun-info-40); }
+  .focus-visible\:outline-info\/40:focus-visible { outline-color: var(--kun-info-40); }
+  .bg-info\/50 { background-color: var(--kun-info-50); }
+  .bg-info\/50\! { background-color: var(--kun-info-50) !important; }
+  .hover\:bg-info\/50:hover { background-color: var(--kun-info-50); }
+  .active\:bg-info\/50:active { background-color: var(--kun-info-50); }
+  .text-info\/50 { color: var(--kun-info-50); }
+  .hover\:text-info\/50:hover { color: var(--kun-info-50); }
+  .ring-info\/50 { --tw-ring-color: var(--kun-info-50); }
+  .ring-info\/50\! { --tw-ring-color: var(--kun-info-50) !important; }
+  .outline-info\/50 { outline-color: var(--kun-info-50); }
+  .focus-visible\:outline-info\/50:focus-visible { outline-color: var(--kun-info-50); }
+  .bg-info\/75 { background-color: var(--kun-info-75); }
+  .bg-info\/75\! { background-color: var(--kun-info-75) !important; }
+  .hover\:bg-info\/75:hover { background-color: var(--kun-info-75); }
+  .active\:bg-info\/75:active { background-color: var(--kun-info-75); }
+  .text-info\/75 { color: var(--kun-info-75); }
+  .hover\:text-info\/75:hover { color: var(--kun-info-75); }
+  .ring-info\/75 { --tw-ring-color: var(--kun-info-75); }
+  .ring-info\/75\! { --tw-ring-color: var(--kun-info-75) !important; }
+  .outline-info\/75 { outline-color: var(--kun-info-75); }
+  .focus-visible\:outline-info\/75:focus-visible { outline-color: var(--kun-info-75); }
+  .bg-info\/90 { background-color: var(--kun-info-90); }
+  .bg-info\/90\! { background-color: var(--kun-info-90) !important; }
+  .hover\:bg-info\/90:hover { background-color: var(--kun-info-90); }
+  .active\:bg-info\/90:active { background-color: var(--kun-info-90); }
+  .text-info\/90 { color: var(--kun-info-90); }
+  .hover\:text-info\/90:hover { color: var(--kun-info-90); }
+  .ring-info\/90 { --tw-ring-color: var(--kun-info-90); }
+  .ring-info\/90\! { --tw-ring-color: var(--kun-info-90) !important; }
+  .outline-info\/90 { outline-color: var(--kun-info-90); }
+  .focus-visible\:outline-info\/90:focus-visible { outline-color: var(--kun-info-90); }
+  .from-info\/40 { --tw-gradient-from: var(--kun-info-40); }
+  .bg-warning\/10 { background-color: var(--kun-warning-10); }
+  .bg-warning\/10\! { background-color: var(--kun-warning-10) !important; }
+  .hover\:bg-warning\/10:hover { background-color: var(--kun-warning-10); }
+  .active\:bg-warning\/10:active { background-color: var(--kun-warning-10); }
+  .text-warning\/10 { color: var(--kun-warning-10); }
+  .hover\:text-warning\/10:hover { color: var(--kun-warning-10); }
+  .ring-warning\/10 { --tw-ring-color: var(--kun-warning-10); }
+  .ring-warning\/10\! { --tw-ring-color: var(--kun-warning-10) !important; }
+  .outline-warning\/10 { outline-color: var(--kun-warning-10); }
+  .focus-visible\:outline-warning\/10:focus-visible { outline-color: var(--kun-warning-10); }
+  .bg-warning\/15 { background-color: var(--kun-warning-15); }
+  .bg-warning\/15\! { background-color: var(--kun-warning-15) !important; }
+  .hover\:bg-warning\/15:hover { background-color: var(--kun-warning-15); }
+  .active\:bg-warning\/15:active { background-color: var(--kun-warning-15); }
+  .text-warning\/15 { color: var(--kun-warning-15); }
+  .hover\:text-warning\/15:hover { color: var(--kun-warning-15); }
+  .ring-warning\/15 { --tw-ring-color: var(--kun-warning-15); }
+  .ring-warning\/15\! { --tw-ring-color: var(--kun-warning-15) !important; }
+  .outline-warning\/15 { outline-color: var(--kun-warning-15); }
+  .focus-visible\:outline-warning\/15:focus-visible { outline-color: var(--kun-warning-15); }
+  .bg-warning\/20 { background-color: var(--kun-warning-20); }
+  .bg-warning\/20\! { background-color: var(--kun-warning-20) !important; }
+  .hover\:bg-warning\/20:hover { background-color: var(--kun-warning-20); }
+  .active\:bg-warning\/20:active { background-color: var(--kun-warning-20); }
+  .text-warning\/20 { color: var(--kun-warning-20); }
+  .hover\:text-warning\/20:hover { color: var(--kun-warning-20); }
+  .ring-warning\/20 { --tw-ring-color: var(--kun-warning-20); }
+  .ring-warning\/20\! { --tw-ring-color: var(--kun-warning-20) !important; }
+  .outline-warning\/20 { outline-color: var(--kun-warning-20); }
+  .focus-visible\:outline-warning\/20:focus-visible { outline-color: var(--kun-warning-20); }
+  .bg-warning\/25 { background-color: var(--kun-warning-25); }
+  .bg-warning\/25\! { background-color: var(--kun-warning-25) !important; }
+  .hover\:bg-warning\/25:hover { background-color: var(--kun-warning-25); }
+  .active\:bg-warning\/25:active { background-color: var(--kun-warning-25); }
+  .text-warning\/25 { color: var(--kun-warning-25); }
+  .hover\:text-warning\/25:hover { color: var(--kun-warning-25); }
+  .ring-warning\/25 { --tw-ring-color: var(--kun-warning-25); }
+  .ring-warning\/25\! { --tw-ring-color: var(--kun-warning-25) !important; }
+  .outline-warning\/25 { outline-color: var(--kun-warning-25); }
+  .focus-visible\:outline-warning\/25:focus-visible { outline-color: var(--kun-warning-25); }
+  .bg-warning\/30 { background-color: var(--kun-warning-30); }
+  .bg-warning\/30\! { background-color: var(--kun-warning-30) !important; }
+  .hover\:bg-warning\/30:hover { background-color: var(--kun-warning-30); }
+  .active\:bg-warning\/30:active { background-color: var(--kun-warning-30); }
+  .text-warning\/30 { color: var(--kun-warning-30); }
+  .hover\:text-warning\/30:hover { color: var(--kun-warning-30); }
+  .ring-warning\/30 { --tw-ring-color: var(--kun-warning-30); }
+  .ring-warning\/30\! { --tw-ring-color: var(--kun-warning-30) !important; }
+  .outline-warning\/30 { outline-color: var(--kun-warning-30); }
+  .focus-visible\:outline-warning\/30:focus-visible { outline-color: var(--kun-warning-30); }
+  .bg-warning\/40 { background-color: var(--kun-warning-40); }
+  .bg-warning\/40\! { background-color: var(--kun-warning-40) !important; }
+  .hover\:bg-warning\/40:hover { background-color: var(--kun-warning-40); }
+  .active\:bg-warning\/40:active { background-color: var(--kun-warning-40); }
+  .text-warning\/40 { color: var(--kun-warning-40); }
+  .hover\:text-warning\/40:hover { color: var(--kun-warning-40); }
+  .ring-warning\/40 { --tw-ring-color: var(--kun-warning-40); }
+  .ring-warning\/40\! { --tw-ring-color: var(--kun-warning-40) !important; }
+  .outline-warning\/40 { outline-color: var(--kun-warning-40); }
+  .focus-visible\:outline-warning\/40:focus-visible { outline-color: var(--kun-warning-40); }
+  .bg-warning\/50 { background-color: var(--kun-warning-50); }
+  .bg-warning\/50\! { background-color: var(--kun-warning-50) !important; }
+  .hover\:bg-warning\/50:hover { background-color: var(--kun-warning-50); }
+  .active\:bg-warning\/50:active { background-color: var(--kun-warning-50); }
+  .text-warning\/50 { color: var(--kun-warning-50); }
+  .hover\:text-warning\/50:hover { color: var(--kun-warning-50); }
+  .ring-warning\/50 { --tw-ring-color: var(--kun-warning-50); }
+  .ring-warning\/50\! { --tw-ring-color: var(--kun-warning-50) !important; }
+  .outline-warning\/50 { outline-color: var(--kun-warning-50); }
+  .focus-visible\:outline-warning\/50:focus-visible { outline-color: var(--kun-warning-50); }
+  .bg-warning\/75 { background-color: var(--kun-warning-75); }
+  .bg-warning\/75\! { background-color: var(--kun-warning-75) !important; }
+  .hover\:bg-warning\/75:hover { background-color: var(--kun-warning-75); }
+  .active\:bg-warning\/75:active { background-color: var(--kun-warning-75); }
+  .text-warning\/75 { color: var(--kun-warning-75); }
+  .hover\:text-warning\/75:hover { color: var(--kun-warning-75); }
+  .ring-warning\/75 { --tw-ring-color: var(--kun-warning-75); }
+  .ring-warning\/75\! { --tw-ring-color: var(--kun-warning-75) !important; }
+  .outline-warning\/75 { outline-color: var(--kun-warning-75); }
+  .focus-visible\:outline-warning\/75:focus-visible { outline-color: var(--kun-warning-75); }
+  .bg-warning\/90 { background-color: var(--kun-warning-90); }
+  .bg-warning\/90\! { background-color: var(--kun-warning-90) !important; }
+  .hover\:bg-warning\/90:hover { background-color: var(--kun-warning-90); }
+  .active\:bg-warning\/90:active { background-color: var(--kun-warning-90); }
+  .text-warning\/90 { color: var(--kun-warning-90); }
+  .hover\:text-warning\/90:hover { color: var(--kun-warning-90); }
+  .ring-warning\/90 { --tw-ring-color: var(--kun-warning-90); }
+  .ring-warning\/90\! { --tw-ring-color: var(--kun-warning-90) !important; }
+  .outline-warning\/90 { outline-color: var(--kun-warning-90); }
+  .focus-visible\:outline-warning\/90:focus-visible { outline-color: var(--kun-warning-90); }
+  .from-warning\/40 { --tw-gradient-from: var(--kun-warning-40); }
+  .bg-error\/10 { background-color: var(--kun-error-10); }
+  .bg-error\/10\! { background-color: var(--kun-error-10) !important; }
+  .hover\:bg-error\/10:hover { background-color: var(--kun-error-10); }
+  .active\:bg-error\/10:active { background-color: var(--kun-error-10); }
+  .text-error\/10 { color: var(--kun-error-10); }
+  .hover\:text-error\/10:hover { color: var(--kun-error-10); }
+  .ring-error\/10 { --tw-ring-color: var(--kun-error-10); }
+  .ring-error\/10\! { --tw-ring-color: var(--kun-error-10) !important; }
+  .outline-error\/10 { outline-color: var(--kun-error-10); }
+  .focus-visible\:outline-error\/10:focus-visible { outline-color: var(--kun-error-10); }
+  .bg-error\/15 { background-color: var(--kun-error-15); }
+  .bg-error\/15\! { background-color: var(--kun-error-15) !important; }
+  .hover\:bg-error\/15:hover { background-color: var(--kun-error-15); }
+  .active\:bg-error\/15:active { background-color: var(--kun-error-15); }
+  .text-error\/15 { color: var(--kun-error-15); }
+  .hover\:text-error\/15:hover { color: var(--kun-error-15); }
+  .ring-error\/15 { --tw-ring-color: var(--kun-error-15); }
+  .ring-error\/15\! { --tw-ring-color: var(--kun-error-15) !important; }
+  .outline-error\/15 { outline-color: var(--kun-error-15); }
+  .focus-visible\:outline-error\/15:focus-visible { outline-color: var(--kun-error-15); }
+  .bg-error\/20 { background-color: var(--kun-error-20); }
+  .bg-error\/20\! { background-color: var(--kun-error-20) !important; }
+  .hover\:bg-error\/20:hover { background-color: var(--kun-error-20); }
+  .active\:bg-error\/20:active { background-color: var(--kun-error-20); }
+  .text-error\/20 { color: var(--kun-error-20); }
+  .hover\:text-error\/20:hover { color: var(--kun-error-20); }
+  .ring-error\/20 { --tw-ring-color: var(--kun-error-20); }
+  .ring-error\/20\! { --tw-ring-color: var(--kun-error-20) !important; }
+  .outline-error\/20 { outline-color: var(--kun-error-20); }
+  .focus-visible\:outline-error\/20:focus-visible { outline-color: var(--kun-error-20); }
+  .bg-error\/25 { background-color: var(--kun-error-25); }
+  .bg-error\/25\! { background-color: var(--kun-error-25) !important; }
+  .hover\:bg-error\/25:hover { background-color: var(--kun-error-25); }
+  .active\:bg-error\/25:active { background-color: var(--kun-error-25); }
+  .text-error\/25 { color: var(--kun-error-25); }
+  .hover\:text-error\/25:hover { color: var(--kun-error-25); }
+  .ring-error\/25 { --tw-ring-color: var(--kun-error-25); }
+  .ring-error\/25\! { --tw-ring-color: var(--kun-error-25) !important; }
+  .outline-error\/25 { outline-color: var(--kun-error-25); }
+  .focus-visible\:outline-error\/25:focus-visible { outline-color: var(--kun-error-25); }
+  .bg-error\/30 { background-color: var(--kun-error-30); }
+  .bg-error\/30\! { background-color: var(--kun-error-30) !important; }
+  .hover\:bg-error\/30:hover { background-color: var(--kun-error-30); }
+  .active\:bg-error\/30:active { background-color: var(--kun-error-30); }
+  .text-error\/30 { color: var(--kun-error-30); }
+  .hover\:text-error\/30:hover { color: var(--kun-error-30); }
+  .ring-error\/30 { --tw-ring-color: var(--kun-error-30); }
+  .ring-error\/30\! { --tw-ring-color: var(--kun-error-30) !important; }
+  .outline-error\/30 { outline-color: var(--kun-error-30); }
+  .focus-visible\:outline-error\/30:focus-visible { outline-color: var(--kun-error-30); }
+  .bg-error\/40 { background-color: var(--kun-error-40); }
+  .bg-error\/40\! { background-color: var(--kun-error-40) !important; }
+  .hover\:bg-error\/40:hover { background-color: var(--kun-error-40); }
+  .active\:bg-error\/40:active { background-color: var(--kun-error-40); }
+  .text-error\/40 { color: var(--kun-error-40); }
+  .hover\:text-error\/40:hover { color: var(--kun-error-40); }
+  .ring-error\/40 { --tw-ring-color: var(--kun-error-40); }
+  .ring-error\/40\! { --tw-ring-color: var(--kun-error-40) !important; }
+  .outline-error\/40 { outline-color: var(--kun-error-40); }
+  .focus-visible\:outline-error\/40:focus-visible { outline-color: var(--kun-error-40); }
+  .bg-error\/50 { background-color: var(--kun-error-50); }
+  .bg-error\/50\! { background-color: var(--kun-error-50) !important; }
+  .hover\:bg-error\/50:hover { background-color: var(--kun-error-50); }
+  .active\:bg-error\/50:active { background-color: var(--kun-error-50); }
+  .text-error\/50 { color: var(--kun-error-50); }
+  .hover\:text-error\/50:hover { color: var(--kun-error-50); }
+  .ring-error\/50 { --tw-ring-color: var(--kun-error-50); }
+  .ring-error\/50\! { --tw-ring-color: var(--kun-error-50) !important; }
+  .outline-error\/50 { outline-color: var(--kun-error-50); }
+  .focus-visible\:outline-error\/50:focus-visible { outline-color: var(--kun-error-50); }
+  .bg-error\/75 { background-color: var(--kun-error-75); }
+  .bg-error\/75\! { background-color: var(--kun-error-75) !important; }
+  .hover\:bg-error\/75:hover { background-color: var(--kun-error-75); }
+  .active\:bg-error\/75:active { background-color: var(--kun-error-75); }
+  .text-error\/75 { color: var(--kun-error-75); }
+  .hover\:text-error\/75:hover { color: var(--kun-error-75); }
+  .ring-error\/75 { --tw-ring-color: var(--kun-error-75); }
+  .ring-error\/75\! { --tw-ring-color: var(--kun-error-75) !important; }
+  .outline-error\/75 { outline-color: var(--kun-error-75); }
+  .focus-visible\:outline-error\/75:focus-visible { outline-color: var(--kun-error-75); }
+  .bg-error\/90 { background-color: var(--kun-error-90); }
+  .bg-error\/90\! { background-color: var(--kun-error-90) !important; }
+  .hover\:bg-error\/90:hover { background-color: var(--kun-error-90); }
+  .active\:bg-error\/90:active { background-color: var(--kun-error-90); }
+  .text-error\/90 { color: var(--kun-error-90); }
+  .hover\:text-error\/90:hover { color: var(--kun-error-90); }
+  .ring-error\/90 { --tw-ring-color: var(--kun-error-90); }
+  .ring-error\/90\! { --tw-ring-color: var(--kun-error-90) !important; }
+  .outline-error\/90 { outline-color: var(--kun-error-90); }
+  .focus-visible\:outline-error\/90:focus-visible { outline-color: var(--kun-error-90); }
+  .from-error\/40 { --tw-gradient-from: var(--kun-error-40); }
+  .text-warning-tonal\/75 { color: var(--kun-text-warning-tonal-75); }
+  .hover\:text-warning-tonal\/75:hover { color: var(--kun-text-warning-tonal-75); }
+  .bg-elevated\/50 { background-color: var(--kun-bg-elevated-50); }
+  .hover\:bg-elevated\/50:hover { background-color: var(--kun-bg-elevated-50); }
+  .bg-elevated\/80 { background-color: var(--kun-bg-elevated-80); }
+  .hover\:bg-elevated\/80:hover { background-color: var(--kun-bg-elevated-80); }
+  .bg-elevated\/95 { background-color: var(--kun-bg-elevated-95); }
+  .hover\:bg-elevated\/95:hover { background-color: var(--kun-bg-elevated-95); }
+  .bg-accented\/75 { background-color: var(--kun-bg-accented-75); }
+  .hover\:bg-accented\/75:hover { background-color: var(--kun-bg-accented-75); }
+  .bg-inverted\/90 { background-color: var(--kun-bg-inverted-90); }
+  .hover\:bg-inverted\/90:hover { background-color: var(--kun-bg-inverted-90); }
+  .active\:bg-inverted\/90:active { background-color: var(--kun-bg-inverted-90); }
+  .outline-inverted\/25 { outline-color: var(--kun-border-inverted-25); }
+  .focus-visible\:outline-inverted\/25:focus-visible { outline-color: var(--kun-border-inverted-25); }
+}

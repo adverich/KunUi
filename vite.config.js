@@ -31,13 +31,15 @@ function copyDocsPlugin() {
         console.log('✓ README.md copiado a dist/README.md');
       }
 
-      // Copiar theme.css fuente para apps con Tailwind v4 propio
-      const srcTheme = path.resolve(import.meta.dirname, 'src', 'styles', 'theme.css');
-      const destTheme = path.resolve(import.meta.dirname, 'dist', 'theme.css');
-
-      if (fs.existsSync(srcTheme)) {
-        fs.copyFileSync(srcTheme, destTheme);
-        console.log('✓ theme.css copiado a dist/theme.css');
+      // Copiar theme.css fuente + compat para apps con Tailwind v4 propio
+      const stylesDir = path.resolve(import.meta.dirname, 'src', 'styles');
+      const distDir = path.resolve(import.meta.dirname, 'dist');
+      for (const file of ['theme.css', 'compat-oklch.css', 'compat-alpha.css']) {
+        const src = path.join(stylesDir, file);
+        if (fs.existsSync(src)) {
+          fs.copyFileSync(src, path.join(distDir, file));
+          console.log(`✓ ${file} copiado a dist/${file}`);
+        }
       }
     }
   };

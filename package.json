@@ -24,7 +24,8 @@
     "generate:barrel": "node scripts/generate-barrel.ts",
     "generate:icons": "node scripts/generate-icons.ts",
     "generate:docs": "node scripts/generate-docs.ts",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:color-compat": "node --experimental-strip-types scripts/generate-color-compat.ts"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.147",

@@ -8,7 +8,11 @@
  * - Capas: 1 primitiva (alias a paleta Tailwind) / 2 semantica (500 light, 400 dark)
  *   / 3 roles neutros + `on-*` + overlay.
  * - Ningun componente consume capa 1 ni HEX directos.
+ * - Compat navegadores sin oklch/color-mix: ver compat-oklch.css + compat-alpha.css.
  */
+
+@import "./compat-oklch.css";
+@import "./compat-alpha.css";
 
 /* === Catalogo completo (22 paletas x 11 paradas) ===
  * `setPrimary`/`setNeutral` alias a `var(--color-{paleta}-{stop})`, asi que la

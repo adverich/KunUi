@@ -8,6 +8,11 @@
  */
 import { reactive, readonly, inject, type InjectionKey, type DeepReadonly } from 'vue';
 import type { KunColor, KunVariant } from './kunVariants.js';
+import {
+    KUN_COLOR_CATALOG_HEX,
+    type KunCatalogHexStop,
+    type KunCatalogPaletteName,
+} from './kunColorCatalogHex.js';
 
 /** Nombres de Tailwind con escala `50-950` (black/white excluidos, como Nuxt). */
 export const KUN_PALETTE_CATALOG = [
@@ -278,12 +283,81 @@ function applyAlias(slot: string, palette: string): void {
     if (!el) return;
     const prefix = isCatalog(palette) ? `--color-${palette}-` : `--kun-palette-${palette}-`;
     for (const stop of STOPS) setVar(el, stopVar(slot, stop), `var(${prefix}${stop})`);
+    publishAlphaVars();
 }
 function applyNeutralAlias(palette: string): void {
     const el = root();
     if (!el) return;
     const prefix = isCatalog(palette) ? `--color-${palette}-` : `--kun-palette-${palette}-`;
     for (const stop of STOPS) setVar(el, `--kun-color-neutral-${stop}`, `var(${prefix}${stop})`);
+    publishAlphaVars();
+}
+
+/** Opacidades que emiten las utilidades de `kunVariants` / superficies. */
+const ALPHA_PCTS = [10, 15, 20, 25, 30, 40, 50, 75, 90] as const;
+
+function hexToRgba(hex: string, pct: number): string {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return 'transparent';
+    const alpha = pct / 100;
+    const alphaStr = Number.isInteger(alpha) ? String(alpha) : String(Math.round(alpha * 100) / 100);
+    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alphaStr})`;
+}
+
+function resolvePaletteHex(palette: string, stop: number): string | null {
+    if (isCatalog(palette)) {
+        const scale = KUN_COLOR_CATALOG_HEX[palette as KunCatalogPaletteName];
+        return scale?.[stop as KunCatalogHexStop] ?? null;
+    }
+    const list = paletteStops.get(palette);
+    if (!list) return null;
+    const idx = STOPS.indexOf(stop as (typeof STOPS)[number]);
+    return idx >= 0 ? list[idx]! : null;
+}
+
+function isDocumentDark(): boolean {
+    const el = root();
+    if (!el) return false;
+    return el.classList.contains('dark') || el.getAttribute('data-theme') === 'dark';
+}
+
+/**
+ * Publica `--kun-{token}-{pct}` en rgba para el fallback sin `color-mix`
+ * (`compat-alpha.css`). Los navegadores con color-mix ignoran esas utilidades
+ * override y siguen en oklab; esto solo alimenta el camino legacy.
+ */
+function publishAlphaVars(): void {
+    const el = root();
+    if (!el) return;
+    const dark = isDocumentDark();
+
+    for (const slot of SLOTS) {
+        const stop = slot === 'warning' ? (dark ? 700 : 500) : dark ? 400 : 500;
+        const hex = resolvePaletteHex(state[slot], stop);
+        if (!hex) continue;
+        for (const pct of ALPHA_PCTS) setVar(el, `--kun-${slot}-${pct}`, hexToRgba(hex, pct));
+    }
+
+    const tonalHex = resolvePaletteHex(state.warning, dark ? 400 : 500);
+    if (tonalHex) {
+        for (const pct of ALPHA_PCTS) {
+            setVar(el, `--kun-text-warning-tonal-${pct}`, hexToRgba(tonalHex, pct));
+        }
+    }
+
+    const elevated = resolvePaletteHex(state.neutral, dark ? 800 : 100);
+    const accented = resolvePaletteHex(state.neutral, dark ? 700 : 200);
+    const inverted = dark ? '#ffffff' : resolvePaletteHex(state.neutral, 900);
+    if (elevated) {
+        for (const pct of [50, 80, 95] as const) {
+            setVar(el, `--kun-bg-elevated-${pct}`, hexToRgba(elevated, pct));
+        }
+    }
+    if (accented) setVar(el, '--kun-bg-accented-75', hexToRgba(accented, 75));
+    if (inverted) {
+        setVar(el, '--kun-bg-inverted-90', hexToRgba(inverted, 90));
+        setVar(el, '--kun-border-inverted-25', hexToRgba(inverted, 25));
+    }
 }
 function persistedValue(name: string): string {
     const source = paletteSource.get(name);
@@ -331,6 +405,7 @@ function applyColorMode(mode: KunColorMode): void {
         el.setAttribute('data-theme', dark ? 'dark' : 'light');
         el.classList.toggle('dark', dark);
     }
+    publishAlphaVars();
     if (mode === 'system' && typeof window !== 'undefined') {
         mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         mediaListener = (e) => {
@@ -338,6 +413,7 @@ function applyColorMode(mode: KunColorMode): void {
             if (!doc) return;
             doc.setAttribute('data-theme', e.matches ? 'dark' : 'light');
             doc.classList.toggle('dark', e.matches);
+            publishAlphaVars();
         };
         mediaQuery.addEventListener('change', mediaListener);
     }
@@ -491,6 +567,8 @@ export const kunTheme = {
             for (let i = 0; i < STOPS.length; i++) {
                 setVar(el, `--kun-palette-${name}-${STOPS[i]}`, list[i]!);
             }
+            // Si la paleta recién publicada está en uso, refrescar alfas rgba.
+            publishAlphaVars();
         }
         return true;
     },
