@@ -50,7 +50,7 @@ const colorFrom = ref('bg-accented')
           :color-from="colorFrom || undefined"
         >
           <div class="flex items-center gap-3">
-            <div class="h-10 w-10 rounded-full bg-success/30" />
+            <div class="h-10 w-10 rounded-full bg-success-tint/30" />
             <div>
               <p class="text-sm font-medium">Contenido real</p>
               <p class="text-xs text-muted">Visible cuando loading=false</p>

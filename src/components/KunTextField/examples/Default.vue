@@ -51,16 +51,21 @@ const rounded = ref('rounded-md')
 const bgInputRaw = ref('__default')
 const bgInputOptions = ref([
   { id: '__default', name: 'default (null)' },
-  { id: 'bg-primary/20', name: 'bg-primary/20' },
-  { id: 'bg-success/20', name: 'bg-success/20' },
-  { id: 'bg-warning/20', name: 'bg-warning/20' },
-  { id: 'bg-error/20', name: 'bg-error/20' },
+  { id: 'bg-primary-tint/20', name: 'bg-primary-tint/20' },
+  { id: 'bg-success-tint/20', name: 'bg-success-tint/20' },
+  { id: 'bg-warning-tint/20', name: 'bg-warning-tint/20' },
+  { id: 'bg-error-tint/20', name: 'bg-error-tint/20' },
+  // Superficies sólidas: activan la tinta automática `text-on-*`.
+  { id: 'bg-primary', name: 'bg-primary (sólido)' },
+  { id: 'bg-success', name: 'bg-success (sólido)' },
+  { id: 'bg-warning', name: 'bg-warning (sólido)' },
+  { id: 'bg-error', name: 'bg-error (sólido)' },
 ])
 const bgInputProp = computed(() => (bgInputRaw.value === '__default' ? undefined : bgInputRaw.value))
 const labelSize = ref('text-sm')
 const floatingLabelSize = ref('text-xs')
-const labelOpacity = ref('opacity-60')
-const floatingLabelOpacity = ref('opacity-80')
+const labelOpacity = ref('opacity-100')
+const floatingLabelOpacity = ref('opacity-100')
 const labelLeft = ref('')
 const floatingLabelLeft = ref('left-2')
 const floatingLabelTop = ref('top-[-2px]')

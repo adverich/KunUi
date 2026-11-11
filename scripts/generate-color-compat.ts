@@ -155,14 +155,23 @@ function writeAlphaCss(palettes: Record<string, Record<number, string>>): void {
     ':root {',
   ];
 
-  for (const [slot, pal] of Object.entries(DEFAULTS)) {
-    const hex = palettes[pal]![500]!;
-    for (const pct of ALPHAS) lines.push(`  --kun-${slot}-${pct}: ${rgba(hex, pct)};`);
-  }
-  const warnTonal = palettes.amber![500]!;
-  for (const pct of ALPHAS) {
-    lines.push(`  --kun-text-warning-tonal-${pct}: ${rgba(warnTonal, pct)};`);
-  }
+  // Superficie (`bg-{slot}/75`, hovers solidos) y tonal (texto/trazo/tintes):
+  // mismos stops que theme.css capa 2.
+  const STOP = {
+    light: { surface: 400, tonal: 700, tint: 400 },
+    dark: { surface: 700, tonal: 300, tint: 300 },
+  } as const;
+  const pushSlotAlphas = (mode: 'light' | 'dark') => {
+    for (const [slot, pal] of Object.entries(DEFAULTS)) {
+      const surface = palettes[pal]![STOP[mode].surface]!;
+      const tonal = palettes[pal]![STOP[mode].tonal]!;
+      for (const pct of ALPHAS) lines.push(`  --kun-${slot}-${pct}: ${rgba(surface, pct)};`);
+      for (const pct of ALPHAS) lines.push(`  --kun-${slot}-tonal-${pct}: ${rgba(tonal, pct)};`);
+      const tint = palettes[pal]![STOP[mode].tint]!;
+      for (const pct of ALPHAS) lines.push(`  --kun-${slot}-tint-${pct}: ${rgba(tint, pct)};`);
+    }
+  };
+  pushSlotAlphas('light');
   const rolesLight: Record<string, { hex: string; pcts: number[] }> = {
     'bg-elevated': { hex: palettes[NEUTRAL]![100]!, pcts: [50, 80, 95] },
     'bg-accented': { hex: palettes[NEUTRAL]![200]!, pcts: [75] },
@@ -174,15 +183,7 @@ function writeAlphaCss(palettes: Record<string, Record<number, string>>): void {
   }
   lines.push('}', '', ':root.dark,', ':root[data-theme="dark"] {');
 
-  for (const [slot, pal] of Object.entries(DEFAULTS)) {
-    const stop = slot === 'warning' ? 700 : 400;
-    const hex = palettes[pal]![stop]!;
-    for (const pct of ALPHAS) lines.push(`  --kun-${slot}-${pct}: ${rgba(hex, pct)};`);
-  }
-  const warnTonalDark = palettes.amber![400]!;
-  for (const pct of ALPHAS) {
-    lines.push(`  --kun-text-warning-tonal-${pct}: ${rgba(warnTonalDark, pct)};`);
-  }
+  pushSlotAlphas('dark');
   const rolesDark: Record<string, { hex: string; pcts: number[] }> = {
     'bg-elevated': { hex: palettes[NEUTRAL]![800]!, pcts: [50, 80, 95] },
     'bg-accented': { hex: palettes[NEUTRAL]![700]!, pcts: [75] },
@@ -200,24 +201,29 @@ function writeAlphaCss(palettes: Record<string, Record<number, string>>): void {
 
   for (const color of SEMANTIC) {
     for (const pct of ALPHAS) {
-      add(`.bg-${color}\\/${pct}`, `background-color: var(--kun-${color}-${pct})`);
-      add(`.bg-${color}\\/${pct}\\!`, `background-color: var(--kun-${color}-${pct}) !important`);
-      add(`.hover\\:bg-${color}\\/${pct}:hover`, `background-color: var(--kun-${color}-${pct})`);
-      add(`.active\\:bg-${color}\\/${pct}:active`, `background-color: var(--kun-${color}-${pct})`);
-      add(`.text-${color}\\/${pct}`, `color: var(--kun-${color}-${pct})`);
-      add(`.hover\\:text-${color}\\/${pct}:hover`, `color: var(--kun-${color}-${pct})`);
-      add(`.ring-${color}\\/${pct}`, `--tw-ring-color: var(--kun-${color}-${pct})`);
-      add(`.ring-${color}\\/${pct}\\!`, `--tw-ring-color: var(--kun-${color}-${pct}) !important`);
-      add(`.outline-${color}\\/${pct}`, `outline-color: var(--kun-${color}-${pct})`);
-      add(
-        `.focus-visible\\:outline-${color}\\/${pct}:focus-visible`,
-        `outline-color: var(--kun-${color}-${pct})`,
-      );
+      const surface = `var(--kun-${color}-${pct})`;
+      const tonal = `var(--kun-${color}-tonal-${pct})`;
+      const tint = `var(--kun-${color}-tint-${pct})`;
+      // `bg-{slot}/NN` = superficie (hovers de solid); `bg-{slot}-tint/NN` = tinte.
+      add(`.bg-${color}\\/${pct}`, `background-color: ${surface}`);
+      add(`.hover\\:bg-${color}\\/${pct}:hover`, `background-color: ${surface}`);
+      add(`.active\\:bg-${color}\\/${pct}:active`, `background-color: ${surface}`);
+      add(`.bg-${color}-tint\\/${pct}`, `background-color: ${tint}`);
+      add(`.bg-${color}-tint\\/${pct}\\!`, `background-color: ${tint} !important`);
+      add(`.hover\\:bg-${color}-tint\\/${pct}:hover`, `background-color: ${tint}`);
+      // Texto/trazo resuelven al tonal (override de namespace en theme.css).
+      add(`.text-${color}\\/${pct}`, `color: ${tonal}`);
+      add(`.hover\\:text-${color}\\/${pct}:hover`, `color: ${tonal}`);
+      add(`.ring-${color}\\/${pct}`, `--tw-ring-color: ${tonal}`);
+      add(`.ring-${color}\\/${pct}\\!`, `--tw-ring-color: ${tonal} !important`);
+      add(`.outline-${color}\\/${pct}`, `outline-color: ${tonal}`);
+      add(`.focus-visible\\:outline-${color}\\/${pct}:focus-visible`, `outline-color: ${tonal}`);
     }
     add(`.from-${color}\\/40`, `--tw-gradient-from: var(--kun-${color}-40)`);
   }
-  add(`.text-warning-tonal\\/75`, `color: var(--kun-text-warning-tonal-75)`);
-  add(`.hover\\:text-warning-tonal\\/75:hover`, `color: var(--kun-text-warning-tonal-75)`);
+  // Alias legacy `text-warning-tonal` (== `text-warning`).
+  add(`.text-warning-tonal\\/75`, `color: var(--kun-warning-tonal-75)`);
+  add(`.hover\\:text-warning-tonal\\/75:hover`, `color: var(--kun-warning-tonal-75)`);
   for (const pct of [50, 80, 95]) {
     add(`.bg-elevated\\/${pct}`, `background-color: var(--kun-bg-elevated-${pct})`);
     add(`.hover\\:bg-elevated\\/${pct}:hover`, `background-color: var(--kun-bg-elevated-${pct})`);

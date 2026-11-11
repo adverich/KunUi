@@ -27,8 +27,8 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `label` | `String` | `''` | Etiqueta flotante (mismo sistema que KunTextField). |
 | `labelSize` | `String` | `'text-sm'` | Tamaño del label en reposo. |
 | `floatingLabelSize` | `String` | `'text-xs'` | Tamaño del label flotando. |
-| `labelOpacity` | `String` | `'opacity-60'` | Opacidad del label en reposo. |
-| `floatingLabelOpacity` | `String` | `'opacity-80'` | Opacidad del label flotando. |
+| `labelOpacity` | `String` | `'opacity-100'` | Opacidad del label en reposo (clase Tailwind). Default `opacity-100`: el color `text-muted` ya marca la jerarquía; atenuar más rompe el contraste AA. |
+| `floatingLabelOpacity` | `String` | `'opacity-100'` | Opacidad del label flotando (clase Tailwind). Default `opacity-100`: el label flotante usa el tono `text-primary` (tonal, AA sobre `bg-default`). |
 | `labelLeft` | `string \| null` | `null` | Offset izquierdo en reposo (null = automático según iconos). |
 | `floatingLabelLeft` | `String` | `'left-2'` | Offset izquierdo flotando. |
 | `floatingLabelTop` | `String` | `'top-[-2px]'` | Posición superior flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). |
@@ -43,7 +43,7 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `prependInnerClass` | `String` | `-` | Clase del contenedor del ícono interno inicial. |
 | `appendInnerClass` | `String` | `-` | Clase del contenedor del ícono interno final. |
 | `rounded` | `String` | `'rounded-md'` | Redondeo del contenedor (clase de escala, `rounded-md` por defecto). |
-| `bgInput` | `string \| null` | `null` | Color de fondo del contenedor (clase Tailwind, p. ej. `bg-success/20`). `null` = `bg-default`, con `bg-error/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error). |
+| `bgInput` | `string \| null` | `null` | Color de fondo del contenedor (clase Tailwind: `bg-success` sólido o un tinte `bg-success-tint/20`). `null` = `bg-default`, con `bg-error-tint/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error). Con una superficie semántica sólida (`bg-{color}`) el valor, el prefijo y el label pasan a la tinta `text-on-{color}`. |
 | `inputTextSize` | `string \| null` | `null` | Tamaño del texto del valor (null = 'text-sm'). |
 | `inputWeight` | `string \| null` | `null` | Peso del texto del valor (null = hereda). |
 | `placeholderTextSize` | `string \| null` | `null` | Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). |
@@ -185,6 +185,12 @@ se muestra el `0` formateado (comportamiento histórico).
   split (antes `border-l/r` físicos).
 - Contorno por rol: contenedor `bg-default` y notch `border-accented` (antes
   `bg-muted` + `border-default`, invisible en dark).
+- Contraste (ver `docs/refactor/color-contrast.md`): labels a `opacity-100` por
+  defecto (`labelOpacity` / `floatingLabelOpacity`; antes 60/80, que llevaba el
+  label flotante a ~2.3:1). Con `bgInput` sólido semántico (`bg-error`,
+  `bg-success`, … sin `/NN`) el valor, el prefijo y el label usan la tinta
+  `text-on-{color}` del slot (detector `kunOnSurfaceTextFromBg`). Los tintes van
+  con `bg-{color}-tint/NN`; el error automático es `bg-error-tint/10`.
 
 ---
 

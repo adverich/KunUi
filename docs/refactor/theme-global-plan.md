@@ -1,6 +1,8 @@
 # Plan de refactor: Theme global KunUI estilo Nuxt UI
 
 > Solo planificación. No modifica código de `src/`.
+>
+> **Actualización (2026-11):** la capa 2 ya no usa un único stop (500/400). Cada slot separa superficie (400/700), tonal (700/300), tint (400/300) y tinta `on-*`. Ver `docs/refactor/color-contrast.md`; los stops citados abajo son históricos.
 > Alcance: tokens globales (color, radio, fuente, easing), dark/light opt-in, alias en runtime a una paleta Tailwind completa para `@pos`, y un contrato único de variantes para que la librería se vea igual en todas las apps.
 > Icons: fuera de alcance.
 

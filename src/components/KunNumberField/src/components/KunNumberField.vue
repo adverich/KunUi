@@ -3,7 +3,7 @@
     <div class="w-full flex flex-col justify-center relative">
       <div
         class="flex items-center w-full h-full border border-transparent relative"
-        :class="[bgInputClass, rounded, containerDensity,
+        :class="[bgInputClass, solidInk, rounded, containerDensity,
           disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'
         ]"
       >
@@ -89,7 +89,7 @@
           :step="step"
           class="w-full h-full bg-transparent focus:outline-none"
           :aria-invalid="error ? 'true' : 'false'"
-          :class="[inputDensity, inputTextSizeClass, inputWeightClass, 'text-default placeholder:text-muted', placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
+          :class="[inputDensity, inputTextSizeClass, inputWeightClass, solidInk ?? 'text-default', 'placeholder:text-muted', placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           @blur="handleBlur"
           @focus="handleFocus"
           @input="handleInput"
@@ -215,6 +215,7 @@ import { useKunNumberField } from '../composables/useKunNumberFieldComposable.js
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js';
+import { kunOnSurfaceTextFromBg } from '../../../../theme/kunVariants.js';
 
 const props = defineProps(KunNumberFieldProps);
 const emits = defineEmits([
@@ -320,7 +321,12 @@ const labelLeftClass = computed(() => {
   return 'left-2';
 });
 
+// Sobre una superficie semántica sólida (`bgInput="bg-error"`) valor, prefijo
+// y label usan la tinta `text-on-*` del slot (AA en ambos modos); el label en
+// error sigue en `text-error` salvo que el fondo ya sea sólido.
+const solidInk = computed(() => kunOnSurfaceTextFromBg(props.bgInput));
 const labelColorClass = computed(() => {
+  if (solidInk.value) return solidInk.value;
   if (props.error) return 'text-error';
   return isFloating.value ? 'text-primary' : 'text-muted';
 });
@@ -354,8 +360,8 @@ const containerDensity = computed(() =>
 
 // Fondo del contenedor. `bgInput` (clase Tailwind) gana si existe: permite
 // resaltar estados por el consumidor (ej. control de caja). Sin ella:
-// `bg-default`, con `bg-error/10` automático en estado de error.
-const bgInputClass = computed(() => props.bgInput ?? (props.error ? 'bg-error/10' : 'bg-default'));
+// `bg-default`, con `bg-error-tint/10` automático en estado de error.
+const bgInputClass = computed(() => props.bgInput ?? (props.error ? 'bg-error-tint/10' : 'bg-default'));
 
 // Padding de los botones de incremento/decremento por densidad.
 // Sin esto, el `p-3`/`px-3` fijo de los botones impone la altura del

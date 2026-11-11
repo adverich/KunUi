@@ -54,7 +54,7 @@ export const kunCheckboxProps = {
     default: 'horizontal',
     validator: (v: unknown) => ['horizontal', 'vertical'].includes(v as string)
   },
-  /** Color semántico de la caja activa; `null` usa el default (`bg-primary text-highlighted`). */
+  /** Color semántico de la caja activa; `null` usa el default (`bg-primary text-on-primary`). */
   color: { type: String as PropType<KunColor | null>, default: null, validator: (v: unknown) => v === null || isKunColor(v) },
   /** Color semántico del glifo (✓) sobre la caja; gana sobre el texto heredado de `color`. */
   iconColor: { type: String as PropType<KunColor | null>, default: null, validator: (v: unknown) => v === null || isKunColor(v) },

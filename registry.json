@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.687",
+  "version": "0.1.691",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -2446,7 +2446,7 @@
           "type": "KunColor | null",
           "default": "null",
           "values": [],
-          "description": "Color semántico de la caja activa; `null` usa el default (`bg-primary text-highlighted`).",
+          "description": "Color semántico de la caja activa; `null` usa el default (`bg-primary text-on-primary`).",
           "source": "/var/www/kun-ui/src/components/KunCheckbox/src/composables/kunCheckboxProps.ts"
         },
         {
@@ -5676,17 +5676,17 @@
         {
           "name": "labelOpacity",
           "type": "String",
-          "default": "'opacity-60'",
+          "default": "'opacity-100'",
           "values": [],
-          "description": "Opacidad del label en reposo.",
+          "description": "Opacidad del label en reposo (clase Tailwind). Default `opacity-100`: el color `text-muted` ya marca la jerarquía; atenuar más rompe el contraste AA.",
           "source": "/var/www/kun-ui/src/components/KunNumberField/src/composables/KunNumberFieldProps.ts"
         },
         {
           "name": "floatingLabelOpacity",
           "type": "String",
-          "default": "'opacity-80'",
+          "default": "'opacity-100'",
           "values": [],
-          "description": "Opacidad del label flotando.",
+          "description": "Opacidad del label flotando (clase Tailwind). Default `opacity-100`: el label flotante usa el tono `text-primary` (tonal, AA sobre `bg-default`).",
           "source": "/var/www/kun-ui/src/components/KunNumberField/src/composables/KunNumberFieldProps.ts"
         },
         {
@@ -5806,7 +5806,7 @@
           "type": "string | null",
           "default": "null",
           "values": [],
-          "description": "Color de fondo del contenedor (clase Tailwind, p. ej. `bg-success/20`). `null` = `bg-default`, con `bg-error/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error).",
+          "description": "Color de fondo del contenedor (clase Tailwind: `bg-success` sólido o un tinte `bg-success-tint/20`). `null` = `bg-default`, con `bg-error-tint/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error). Con una superficie semántica sólida (`bg-{color}`) el valor, el prefijo y el label pasan a la tinta `text-on-{color}`.",
           "source": "/var/www/kun-ui/src/components/KunNumberField/src/composables/KunNumberFieldProps.ts"
         },
         {
@@ -9264,7 +9264,7 @@
           "type": "string | null",
           "default": "null",
           "values": [],
-          "description": "Color de fondo del contenedor (clase Tailwind, p. ej. `bg-success/20`). `null` = `bg-default`, con `bg-error/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error).",
+          "description": "Color de fondo del contenedor (clase Tailwind: `bg-success` sólido o un tinte `bg-success-tint/20`). `null` = `bg-default`, con `bg-error-tint/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error). Con una superficie semántica sólida (`bg-{color}`) el valor, el prefijo y el label pasan a la tinta `text-on-{color}`.",
           "source": "/var/www/kun-ui/src/components/KunTextField/src/composables/KunTextFieldProps.ts"
         },
         {
@@ -9286,17 +9286,17 @@
         {
           "name": "labelOpacity",
           "type": "String",
-          "default": "'opacity-60'",
+          "default": "'opacity-100'",
           "values": [],
-          "description": "Opacidad del label en reposo.",
+          "description": "Opacidad del label en reposo (clase Tailwind). Default `opacity-100`: el color `text-muted` ya marca la jerarquía; atenuar más rompe el contraste AA.",
           "source": "/var/www/kun-ui/src/components/KunTextField/src/composables/KunTextFieldProps.ts"
         },
         {
           "name": "floatingLabelOpacity",
           "type": "String",
-          "default": "'opacity-80'",
+          "default": "'opacity-100'",
           "values": [],
-          "description": "Opacidad del label flotando.",
+          "description": "Opacidad del label flotando (clase Tailwind). Default `opacity-100`: el label flotante usa el tono `text-primary` (tonal, AA sobre `bg-default`).",
           "source": "/var/www/kun-ui/src/components/KunTextField/src/composables/KunTextFieldProps.ts"
         },
         {

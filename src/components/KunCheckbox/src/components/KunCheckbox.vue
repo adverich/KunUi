@@ -6,7 +6,7 @@ import { useValidation } from '../composables/useValidation.js'
 import { kunCheckboxProps } from '../composables/kunCheckboxProps.js'
 import { vRipple } from '@/directives/ripple.js'
 import { icons } from '@/icons'
-import { isKunColor, kunSurfaceBg, kunTextClasses, type KunColor } from '../../../../theme/kunVariants.js'
+import { isKunColor, kunSurfaceBg, kunOnSurfaceText, kunTextClasses, type KunColor } from '../../../../theme/kunVariants.js'
 
 const emit = defineEmits([
   'update:modelValue',
@@ -52,7 +52,7 @@ const resolvedIconColor = computed<KunColor | null>(
  * `bg-elevated` para que se lea sobre fondos oscuros (en dark `bg-default` se
  * confunde con la página). Activa: color semántico vía matriz de superficie
  * (`KUN_SURFACE_BG`, fondo pleno); con `iconColor` la caja queda neutra para
- * que el glifo coloreado contraste; por defecto `bg-primary text-highlighted`.
+ * que el glifo coloreado contraste; por defecto `bg-primary text-on-primary`.
  */
 const boxClass = computed(() => {
   const active = isChecked.value || props.indeterminate
@@ -62,9 +62,9 @@ const boxClass = computed(() => {
     if (resolvedIconColor.value) {
       classes.push('bg-elevated')
     } else if (props.color) {
-      classes.push(kunSurfaceBg(props.color, 'solid'), 'text-highlighted')
+      classes.push(kunSurfaceBg(props.color, 'solid'), kunOnSurfaceText(props.color))
     } else {
-      classes.push('bg-primary', 'text-highlighted')
+      classes.push('bg-primary', 'text-on-primary')
     }
   } else {
     classes.push(props.baseColor ? kunSurfaceBg(props.baseColor, 'soft') : 'bg-elevated')

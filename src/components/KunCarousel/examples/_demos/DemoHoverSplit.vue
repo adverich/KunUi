@@ -71,7 +71,7 @@ function stepNumber(i: number): string {
       <button
         type="button"
         class="rounded-md border border-default px-3 py-1 text-xs font-medium"
-        :class="stepsPosition === 'bottom' ? 'border-primary bg-primary/10' : 'border-muted'"
+        :class="stepsPosition === 'bottom' ? 'border-primary bg-primary-tint/10' : 'border-muted'"
         @click="stepsPosition = 'bottom'"
       >
         Números abajo
@@ -79,7 +79,7 @@ function stepNumber(i: number): string {
       <button
         type="button"
         class="rounded-md border border-default px-3 py-1 text-xs font-medium"
-        :class="stepsPosition === 'side' ? 'border-primary bg-primary/10' : 'border-muted'"
+        :class="stepsPosition === 'side' ? 'border-primary bg-primary-tint/10' : 'border-muted'"
         @click="stepsPosition = 'side'"
       >
         Números al costado

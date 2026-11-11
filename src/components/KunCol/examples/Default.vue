@@ -27,7 +27,7 @@ const xlRaw = ref('')
             :lg="lgRaw || undefined"
             :xl="xlRaw || undefined"
           >
-            <div class="rounded-lg border border-primary bg-primary/20 p-3 text-center text-sm font-medium">A (demo)</div>
+            <div class="rounded-lg border border-primary bg-primary-tint/20 p-3 text-center text-sm font-medium">A (demo)</div>
           </KunCol>
           <KunCol :cols="6">
             <div class="rounded-lg ring ring-accented bg-muted p-3 text-center text-sm text-muted">B (fija, cols=6)</div>

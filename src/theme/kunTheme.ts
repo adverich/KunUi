@@ -296,6 +296,37 @@ function applyNeutralAlias(palette: string): void {
 /** Opacidades que emiten las utilidades de `kunVariants` / superficies. */
 const ALPHA_PCTS = [10, 15, 20, 25, 30, 40, 50, 75, 90] as const;
 
+/**
+ * Stops de capa 2 por modo (espejo de `theme.css`): superficie solida
+ * (`bg-{slot}`), rol tonal (texto y trazo) y tint (`bg-{slot}-tint/NN`).
+ */
+const SEMANTIC_STOPS = {
+    light: { surface: 400, tonal: 700, tint: 400 },
+    dark: { surface: 700, tonal: 300, tint: 300 },
+} as const;
+
+/**
+ * Publica `--kun-on-{slot}-light|dark`: la tinta (blanca o `neutral-950`)
+ * con mayor contraste WCAG contra la superficie de cada modo. `theme.css`
+ * la consume con fallback, asi que no depende del modo activo (un toggle
+ * de `.dark` hecho por fuera de kunTheme sigue siendo correcto).
+ */
+function publishOnInk(el: HTMLElement): void {
+    const inkHex = resolvePaletteHex(state.neutral, 950);
+    if (!inkHex) return;
+    const inkLum = luminance(inkHex);
+    for (const slot of SLOTS) {
+        for (const modeName of ['light', 'dark'] as const) {
+            const surfaceHex = resolvePaletteHex(state[slot], SEMANTIC_STOPS[modeName].surface);
+            if (!surfaceHex) continue;
+            const bg = luminance(surfaceHex);
+            const onWhite = 1.05 / (bg + 0.05);
+            const onInk = (Math.max(bg, inkLum) + 0.05) / (Math.min(bg, inkLum) + 0.05);
+            setVar(el, `--kun-on-${slot}-${modeName}`, onWhite >= onInk ? 'white' : 'var(--kun-color-neutral-950)');
+        }
+    }
+}
+
 function hexToRgba(hex: string, pct: number): string {
     const rgb = hexToRgb(hex);
     if (!rgb) return 'transparent';
@@ -331,19 +362,22 @@ function publishAlphaVars(): void {
     if (!el) return;
     const dark = isDocumentDark();
 
+    const mode = dark ? SEMANTIC_STOPS.dark : SEMANTIC_STOPS.light;
     for (const slot of SLOTS) {
-        const stop = slot === 'warning' ? (dark ? 700 : 500) : dark ? 400 : 500;
-        const hex = resolvePaletteHex(state[slot], stop);
-        if (!hex) continue;
-        for (const pct of ALPHA_PCTS) setVar(el, `--kun-${slot}-${pct}`, hexToRgba(hex, pct));
-    }
-
-    const tonalHex = resolvePaletteHex(state.warning, dark ? 400 : 500);
-    if (tonalHex) {
-        for (const pct of ALPHA_PCTS) {
-            setVar(el, `--kun-text-warning-tonal-${pct}`, hexToRgba(tonalHex, pct));
+        const surfaceHex = resolvePaletteHex(state[slot], mode.surface);
+        if (surfaceHex) {
+            for (const pct of ALPHA_PCTS) setVar(el, `--kun-${slot}-${pct}`, hexToRgba(surfaceHex, pct));
+        }
+        const tonalHex = resolvePaletteHex(state[slot], mode.tonal);
+        if (tonalHex) {
+            for (const pct of ALPHA_PCTS) setVar(el, `--kun-${slot}-tonal-${pct}`, hexToRgba(tonalHex, pct));
+        }
+        const tintHex = resolvePaletteHex(state[slot], mode.tint);
+        if (tintHex) {
+            for (const pct of ALPHA_PCTS) setVar(el, `--kun-${slot}-tint-${pct}`, hexToRgba(tintHex, pct));
         }
     }
+    publishOnInk(el);
 
     const elevated = resolvePaletteHex(state.neutral, dark ? 800 : 100);
     const accented = resolvePaletteHex(state.neutral, dark ? 700 : 200);
@@ -488,6 +522,10 @@ export const kunTheme = {
         if (el) {
             for (const slot of [...SLOTS, 'neutral']) {
                 for (const stop of STOPS) el.style.removeProperty(stopVar(slot, stop));
+            }
+            for (const slot of SLOTS) {
+                el.style.removeProperty(`--kun-on-${slot}-light`);
+                el.style.removeProperty(`--kun-on-${slot}-dark`);
             }
             for (const name of paletteStops.keys()) {
                 for (const stop of STOPS) el.style.removeProperty(`--kun-palette-${name}-${stop}`);

@@ -69,3 +69,9 @@ desborda la caja se comporta como pill → último escalón).
 - Contorno por rol: contenedor `bg-default` y notch `border-accented` (foco
   `border-primary`, error `border-error`). Antes `bg-muted` + `border-default`,
   invisible en dark (`--kun-border == --kun-bg-muted == neutral-800`).
+- Contraste (ver `docs/refactor/color-contrast.md`): labels a `opacity-100` por
+  defecto (`labelOpacity` / `floatingLabelOpacity`; antes 60/80, que llevaba el
+  label flotante a ~2.3:1). Con `bgInput` sólido semántico (`bg-error`,
+  `bg-success`, … sin `/NN`) el valor, el prefijo y el label usan la tinta
+  `text-on-{color}` del slot (detector `kunOnSurfaceTextFromBg`). Los tintes van
+  con `bg-{color}-tint/NN`; el error automático es `bg-error-tint/10`.

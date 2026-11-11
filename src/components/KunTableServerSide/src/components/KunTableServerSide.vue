@@ -19,7 +19,7 @@
         <span
           v-if="selectedItems.length"
           @click="clearSelection"
-          class="bg-accented hover:bg-primary rounded-md cursor-pointer px-2 ml-2"
+          class="bg-accented hover:bg-primary hover:text-on-primary rounded-md cursor-pointer px-2 ml-2"
         >
           Anular selección
         </span>

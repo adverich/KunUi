@@ -8,6 +8,14 @@
  * `text-white dark:text-neutral-900`. Ningun componente aplica
  * `text-inverted`: ese token queda exclusivamente para uso manual del
  * consumidor.
+ *
+ * Roles de color (ver `theme.css`, capa 2):
+ * - `solid`: superficie `bg-{color}` + tinta `text-on-{color}` (AA por modo).
+ * - texto/ring/outline (`text-{color}`, `ring-{color}/NN`): rol tonal por
+ *   override de namespace (700 light / 300 dark).
+ * - tintes translucidos: siempre `bg-{color}-tint/NN`, nunca `bg-{color}/NN`
+ *   (la superficie dark es 700 y un tinte de ella seria invisible; el tint
+ *   es 400 en light y 300 en dark). Seleccionado: tint /20 + ring /50.
  */
 import { kunTheme } from './kunTheme.js';
 
@@ -28,55 +36,51 @@ export function isKunVariant(value: unknown): value is KunVariant {
 
 export const KUN_VARIANT_CLASSES: Record<KunColor, Record<KunVariant, string>> = {
     primary: {
-        solid: 'text-highlighted bg-primary hover:bg-primary/75 active:bg-primary/75 focus-visible:outline-3 focus-visible:outline-primary/25',
-        outline: 'text-primary ring ring-primary/50 hover:bg-primary/10 focus-visible:outline-3 focus-visible:outline-primary/25',
-        soft: 'text-primary bg-primary/10 hover:bg-primary/15 focus-visible:outline-3 focus-visible:outline-primary/25',
-        subtle: 'text-primary bg-primary/10 ring ring-primary/25 hover:bg-primary/15 focus-visible:outline-3 focus-visible:outline-primary/25',
-        ghost: 'text-primary hover:bg-primary/10 focus-visible:outline-3 focus-visible:outline-primary/25',
+        solid: 'text-on-primary bg-primary hover:bg-primary/75 active:bg-primary/75 focus-visible:outline-3 focus-visible:outline-primary/25',
+        outline: 'text-primary ring ring-primary/50 hover:bg-primary-tint/10 focus-visible:outline-3 focus-visible:outline-primary/25',
+        soft: 'text-primary bg-primary-tint/10 hover:bg-primary-tint/15 focus-visible:outline-3 focus-visible:outline-primary/25',
+        subtle: 'text-primary bg-primary-tint/10 ring ring-primary/40 hover:bg-primary-tint/15 focus-visible:outline-3 focus-visible:outline-primary/25',
+        ghost: 'text-primary hover:bg-primary-tint/10 focus-visible:outline-3 focus-visible:outline-primary/25',
         link: 'text-primary hover:text-primary/75 focus-visible:outline-3 focus-visible:outline-primary/25',
     },
     secondary: {
-        solid: 'text-highlighted bg-secondary hover:bg-secondary/75 active:bg-secondary/75 focus-visible:outline-3 focus-visible:outline-secondary/25',
-        outline: 'text-secondary ring ring-secondary/50 hover:bg-secondary/10 focus-visible:outline-3 focus-visible:outline-secondary/25',
-        soft: 'text-secondary bg-secondary/10 hover:bg-secondary/15 focus-visible:outline-3 focus-visible:outline-secondary/25',
-        subtle: 'text-secondary bg-secondary/10 ring ring-secondary/25 hover:bg-secondary/15 focus-visible:outline-3 focus-visible:outline-secondary/25',
-        ghost: 'text-secondary hover:bg-secondary/10 focus-visible:outline-3 focus-visible:outline-secondary/25',
+        solid: 'text-on-secondary bg-secondary hover:bg-secondary/75 active:bg-secondary/75 focus-visible:outline-3 focus-visible:outline-secondary/25',
+        outline: 'text-secondary ring ring-secondary/50 hover:bg-secondary-tint/10 focus-visible:outline-3 focus-visible:outline-secondary/25',
+        soft: 'text-secondary bg-secondary-tint/10 hover:bg-secondary-tint/15 focus-visible:outline-3 focus-visible:outline-secondary/25',
+        subtle: 'text-secondary bg-secondary-tint/10 ring ring-secondary/40 hover:bg-secondary-tint/15 focus-visible:outline-3 focus-visible:outline-secondary/25',
+        ghost: 'text-secondary hover:bg-secondary-tint/10 focus-visible:outline-3 focus-visible:outline-secondary/25',
         link: 'text-secondary hover:text-secondary/75 focus-visible:outline-3 focus-visible:outline-secondary/25',
     },
     success: {
-        solid: 'text-highlighted bg-success hover:bg-success/75 active:bg-success/75 focus-visible:outline-3 focus-visible:outline-success/25',
-        outline: 'text-success ring ring-success/50 hover:bg-success/10 focus-visible:outline-3 focus-visible:outline-success/25',
-        soft: 'text-success bg-success/10 hover:bg-success/15 focus-visible:outline-3 focus-visible:outline-success/25',
-        subtle: 'text-success bg-success/10 ring ring-success/25 hover:bg-success/15 focus-visible:outline-3 focus-visible:outline-success/25',
-        ghost: 'text-success hover:bg-success/10 focus-visible:outline-3 focus-visible:outline-success/25',
+        solid: 'text-on-success bg-success hover:bg-success/75 active:bg-success/75 focus-visible:outline-3 focus-visible:outline-success/25',
+        outline: 'text-success ring ring-success/50 hover:bg-success-tint/10 focus-visible:outline-3 focus-visible:outline-success/25',
+        soft: 'text-success bg-success-tint/10 hover:bg-success-tint/15 focus-visible:outline-3 focus-visible:outline-success/25',
+        subtle: 'text-success bg-success-tint/10 ring ring-success/40 hover:bg-success-tint/15 focus-visible:outline-3 focus-visible:outline-success/25',
+        ghost: 'text-success hover:bg-success-tint/10 focus-visible:outline-3 focus-visible:outline-success/25',
         link: 'text-success hover:text-success/75 focus-visible:outline-3 focus-visible:outline-success/25',
     },
     info: {
-        solid: 'text-highlighted bg-info hover:bg-info/75 active:bg-info/75 focus-visible:outline-3 focus-visible:outline-info/25',
-        outline: 'text-info ring ring-info/50 hover:bg-info/10 focus-visible:outline-3 focus-visible:outline-info/25',
-        soft: 'text-info bg-info/10 hover:bg-info/15 focus-visible:outline-3 focus-visible:outline-info/25',
-        subtle: 'text-info bg-info/10 ring ring-info/25 hover:bg-info/15 focus-visible:outline-3 focus-visible:outline-info/25',
-        ghost: 'text-info hover:bg-info/10 focus-visible:outline-3 focus-visible:outline-info/25',
+        solid: 'text-on-info bg-info hover:bg-info/75 active:bg-info/75 focus-visible:outline-3 focus-visible:outline-info/25',
+        outline: 'text-info ring ring-info/50 hover:bg-info-tint/10 focus-visible:outline-3 focus-visible:outline-info/25',
+        soft: 'text-info bg-info-tint/10 hover:bg-info-tint/15 focus-visible:outline-3 focus-visible:outline-info/25',
+        subtle: 'text-info bg-info-tint/10 ring ring-info/40 hover:bg-info-tint/15 focus-visible:outline-3 focus-visible:outline-info/25',
+        ghost: 'text-info hover:bg-info-tint/10 focus-visible:outline-3 focus-visible:outline-info/25',
         link: 'text-info hover:text-info/75 focus-visible:outline-3 focus-visible:outline-info/25',
     },
     warning: {
-        /* La superficie solid es oscura en dark (amber-700) y clara en light
-           (amber-500): el texto va con `text-on-warning` (tinta clara/oscura por
-           modo). Las variantes tonales (y glifos) usan `text-warning-tonal`,
-           que en dark resuelve al stop 400 y en light al 500. */
         solid: 'text-on-warning bg-warning hover:bg-warning/75 active:bg-warning/75 focus-visible:outline-3 focus-visible:outline-warning/25',
-        outline: 'text-warning-tonal ring ring-warning/50 hover:bg-warning/10 focus-visible:outline-3 focus-visible:outline-warning/25',
-        soft: 'text-warning-tonal bg-warning/10 hover:bg-warning/15 focus-visible:outline-3 focus-visible:outline-warning/25',
-        subtle: 'text-warning-tonal bg-warning/10 ring ring-warning/25 hover:bg-warning/15 focus-visible:outline-3 focus-visible:outline-warning/25',
-        ghost: 'text-warning-tonal hover:bg-warning/10 focus-visible:outline-3 focus-visible:outline-warning/25',
-        link: 'text-warning-tonal hover:text-warning-tonal/75 focus-visible:outline-3 focus-visible:outline-warning/25',
+        outline: 'text-warning ring ring-warning/50 hover:bg-warning-tint/10 focus-visible:outline-3 focus-visible:outline-warning/25',
+        soft: 'text-warning bg-warning-tint/10 hover:bg-warning-tint/15 focus-visible:outline-3 focus-visible:outline-warning/25',
+        subtle: 'text-warning bg-warning-tint/10 ring ring-warning/40 hover:bg-warning-tint/15 focus-visible:outline-3 focus-visible:outline-warning/25',
+        ghost: 'text-warning hover:bg-warning-tint/10 focus-visible:outline-3 focus-visible:outline-warning/25',
+        link: 'text-warning hover:text-warning/75 focus-visible:outline-3 focus-visible:outline-warning/25',
     },
     error: {
-        solid: 'text-highlighted bg-error hover:bg-error/75 active:bg-error/75 focus-visible:outline-3 focus-visible:outline-error/25',
-        outline: 'text-error ring ring-error/50 hover:bg-error/10 focus-visible:outline-3 focus-visible:outline-error/25',
-        soft: 'text-error bg-error/10 hover:bg-error/15 focus-visible:outline-3 focus-visible:outline-error/25',
-        subtle: 'text-error bg-error/10 ring ring-error/25 hover:bg-error/15 focus-visible:outline-3 focus-visible:outline-error/25',
-        ghost: 'text-error hover:bg-error/10 focus-visible:outline-3 focus-visible:outline-error/25',
+        solid: 'text-on-error bg-error hover:bg-error/75 active:bg-error/75 focus-visible:outline-3 focus-visible:outline-error/25',
+        outline: 'text-error ring ring-error/50 hover:bg-error-tint/10 focus-visible:outline-3 focus-visible:outline-error/25',
+        soft: 'text-error bg-error-tint/10 hover:bg-error-tint/15 focus-visible:outline-3 focus-visible:outline-error/25',
+        subtle: 'text-error bg-error-tint/10 ring ring-error/40 hover:bg-error-tint/15 focus-visible:outline-3 focus-visible:outline-error/25',
+        ghost: 'text-error hover:bg-error-tint/10 focus-visible:outline-3 focus-visible:outline-error/25',
         link: 'text-error hover:text-error/75 focus-visible:outline-3 focus-visible:outline-error/25',
     },
     neutral: {
@@ -104,48 +108,48 @@ export const KUN_SURFACE_BG: Record<KunColor, Record<KunVariant, string>> = {
     primary: {
         solid: 'bg-primary',
         outline: 'bg-default ring ring-default',
-        soft: 'bg-primary/10',
-        subtle: 'bg-primary/10 ring ring-primary/25',
+        soft: 'bg-primary-tint/10',
+        subtle: 'bg-primary-tint/10 ring ring-primary/40',
         ghost: '',
         link: '',
     },
     secondary: {
         solid: 'bg-secondary',
         outline: 'bg-default ring ring-default',
-        soft: 'bg-secondary/10',
-        subtle: 'bg-secondary/10 ring ring-secondary/25',
+        soft: 'bg-secondary-tint/10',
+        subtle: 'bg-secondary-tint/10 ring ring-secondary/40',
         ghost: '',
         link: '',
     },
     success: {
         solid: 'bg-success',
         outline: 'bg-default ring ring-default',
-        soft: 'bg-success/10',
-        subtle: 'bg-success/10 ring ring-success/25',
+        soft: 'bg-success-tint/10',
+        subtle: 'bg-success-tint/10 ring ring-success/40',
         ghost: '',
         link: '',
     },
     info: {
         solid: 'bg-info',
         outline: 'bg-default ring ring-default',
-        soft: 'bg-info/10',
-        subtle: 'bg-info/10 ring ring-info/25',
+        soft: 'bg-info-tint/10',
+        subtle: 'bg-info-tint/10 ring ring-info/40',
         ghost: '',
         link: '',
     },
     warning: {
         solid: 'bg-warning',
         outline: 'bg-default ring ring-default',
-        soft: 'bg-warning/10',
-        subtle: 'bg-warning/10 ring ring-warning/25',
+        soft: 'bg-warning-tint/10',
+        subtle: 'bg-warning-tint/10 ring ring-warning/40',
         ghost: '',
         link: '',
     },
     error: {
         solid: 'bg-error',
         outline: 'bg-default ring ring-default',
-        soft: 'bg-error/10',
-        subtle: 'bg-error/10 ring ring-error/25',
+        soft: 'bg-error-tint/10',
+        subtle: 'bg-error-tint/10 ring ring-error/40',
         ghost: '',
         link: '',
     },
@@ -170,12 +174,12 @@ export function kunSurfaceBg(color: KunColor, variant: KunVariant): string {
  * el orden del CSS generado no puede decidir el estado).
  */
 export const KUN_SELECTED_CLASSES: Record<KunColor, string> = {
-    primary: 'bg-primary/25! text-primary ring ring-inset ring-primary/50',
-    secondary: 'bg-secondary/25! text-secondary ring ring-inset ring-secondary/50',
-    success: 'bg-success/25! text-success ring ring-inset ring-success/50',
-    info: 'bg-info/25! text-info ring ring-inset ring-info/50',
-    warning: 'bg-warning/25! text-warning-tonal ring ring-inset ring-warning/50',
-    error: 'bg-error/25! text-error ring ring-inset ring-error/50',
+    primary: 'bg-primary-tint/20! text-primary ring ring-inset ring-primary/50',
+    secondary: 'bg-secondary-tint/20! text-secondary ring ring-inset ring-secondary/50',
+    success: 'bg-success-tint/20! text-success ring ring-inset ring-success/50',
+    info: 'bg-info-tint/20! text-info ring ring-inset ring-info/50',
+    warning: 'bg-warning-tint/20! text-warning ring ring-inset ring-warning/50',
+    error: 'bg-error-tint/20! text-error ring ring-inset ring-error/50',
     neutral: 'bg-elevated! text-default ring ring-inset ring-accented',
 };
 
@@ -186,12 +190,12 @@ export function kunSelectedClasses(color: KunColor): string {
 
 /** Hover neutro para items seleccionables (sin estado activo), por color. */
 export const KUN_HOVER_CLASSES: Record<KunColor, string> = {
-    primary: 'hover:bg-primary/15',
-    secondary: 'hover:bg-secondary/15',
-    success: 'hover:bg-success/15',
-    info: 'hover:bg-info/15',
-    warning: 'hover:bg-warning/15',
-    error: 'hover:bg-error/15',
+    primary: 'hover:bg-primary-tint/15',
+    secondary: 'hover:bg-secondary-tint/15',
+    success: 'hover:bg-success-tint/15',
+    info: 'hover:bg-info-tint/15',
+    warning: 'hover:bg-warning-tint/15',
+    error: 'hover:bg-error-tint/15',
     neutral: 'hover:bg-elevated',
 };
 
@@ -200,15 +204,47 @@ export function kunHoverClasses(color: KunColor): string {
     return KUN_HOVER_CLASSES[color];
 }
 
+/**
+ * Tinta sobre la superficie solida de un color (`kunSurfaceBg(color, 'solid')`).
+ * Para glifos/texto sobre `bg-{color}`: nunca `text-highlighted` fijo, porque
+ * la superficie cambia de luminancia por modo y por paleta.
+ */
+export const KUN_ON_SURFACE_TEXT: Record<KunColor, string> = {
+    primary: 'text-on-primary',
+    secondary: 'text-on-secondary',
+    success: 'text-on-success',
+    info: 'text-on-info',
+    warning: 'text-on-warning',
+    error: 'text-on-error',
+    neutral: 'text-white dark:text-neutral-900',
+};
+
+/** Clase literal de tinta sobre la superficie solida de un color. */
+export function kunOnSurfaceText(color: KunColor): string {
+    return KUN_ON_SURFACE_TEXT[color];
+}
+
+const SOLID_BG_RE = /(?:^|\s)bg-(primary|secondary|success|info|warning|error)(?=\s|$)/;
+
+/**
+ * Si una cadena de clases pinta una superficie semantica solida (`bg-error`,
+ * no `bg-error/10` ni `hover:bg-error`), devuelve su tinta `text-on-*`; si no,
+ * `null`. Lo usan los campos con `bgInput` para que valor, prefijo y label se
+ * lean sobre el fondo elegido por el consumidor.
+ */
+export function kunOnSurfaceTextFromBg(classes: string | null | undefined): string | null {
+    if (!classes) return null;
+    const match = SOLID_BG_RE.exec(classes);
+    return match ? KUN_ON_SURFACE_TEXT[match[1] as KunColor] : null;
+}
+
 /** Solo la capa de texto de un color (para glifos dentro de controles: ✓ del checkbox). */
 export const KUN_TEXT_COLORS: Record<KunColor, string> = {
     primary: 'text-primary',
     secondary: 'text-secondary',
     success: 'text-success',
     info: 'text-info',
-    /* Warning va con el rol tonal: en dark la superficie solid es 700 y el
-       glifo/documento sobre bg oscuro se lee con el 400. */
-    warning: 'text-warning-tonal',
+    warning: 'text-warning',
     error: 'text-error',
     neutral: 'text-default',
 };

@@ -16,7 +16,7 @@ const klass = ref('')
 
       <div class="rounded-lg border border-default p-3">
         <KunContainer :fluid="fluid" :class="klass || undefined">
-          <div class="rounded-lg border border-primary bg-primary/20 p-4 text-center text-sm">
+          <div class="rounded-lg border border-primary bg-primary-tint/20 p-4 text-center text-sm">
             {{ fluid ? 'Fluid: ocupa todo el ancho disponible' : 'Contenido: max-width responsivo centrado' }}
           </div>
         </KunContainer>

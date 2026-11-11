@@ -9,7 +9,7 @@
           </slot>
         </div>
 
-      <div data-kun-input-box class="flex flex-row items-center w-full border border-transparent relative" :class="[bgInputClass, rounded, containerDensity,
+      <div data-kun-input-box class="flex flex-row items-center w-full border border-transparent relative" :class="[bgInputClass, solidInk, rounded, containerDensity,
         disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'
       ]">
         <!-- Borde nativo completo (respeta cualquier `rounded`, pill incluido)
@@ -51,7 +51,7 @@
           :readonly="readonly" :inputmode="(inputmode as any)" :minlength="(minlength as number)" :maxlength="(maxlength as number)"
           :pattern="(pattern as string)" :spellcheck="(spellcheck as any)"
           class="min-w-12 flex-1 bg-transparent focus:outline-none leading-normal" :aria-invalid="hasError ? 'true' : 'false'"
-          :class="[inputDensity, inputTextSizeClass, inputWeightClass, 'text-default placeholder:text-muted', placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
+          :class="[inputDensity, inputTextSizeClass, inputWeightClass, solidInk ?? 'text-default', 'placeholder:text-muted', placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           :aria-describedby="hasError ? `error-${uid}` : undefined" 
           @input="handleInput" @change="handleChange" @animationstart="handleAnimationStart" @blur="handleBlur" @focus="focusInput" 
           @click.stop="emits('handleClick')" 
@@ -111,6 +111,7 @@ import { icons } from '@/icons'
 import inputProps from '../composables/KunTextFieldProps.js';
 import useKunTextField from '../composables/useKunTextFieldComposable.js';
 import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js';
+import { kunOnSurfaceTextFromBg } from '../../../../theme/kunVariants.js';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 
 defineOptions({
@@ -203,7 +204,12 @@ const labelLeftClass = computed(() => {
   return 'left-2';
 });
 
+// Sobre una superficie semántica sólida (`bgInput="bg-error"`) valor, prefijo
+// y label usan la tinta `text-on-*` del slot (AA en ambos modos); el label en
+// error sigue en `text-error` salvo que el fondo ya sea sólido.
+const solidInk = computed(() => kunOnSurfaceTextFromBg(props.bgInput));
 const labelColorClass = computed(() => {
+  if (solidInk.value) return solidInk.value;
   if (hasError.value) return 'text-error';
   return isFloating.value ? 'text-primary' : 'text-muted';
 });
@@ -262,7 +268,7 @@ const containerDensity = computed(() => props.density === "compact" ? "min-h-[32
 
 // Fondo del contenedor. `bgInput` (clase Tailwind) gana si existe: permite
 // resaltar estados por el consumidor (ej. cajas de cobro). Sin ella:
-// `bg-default`, con `bg-error/10` automático en estado de error.
-const bgInputClass = computed(() => props.bgInput ?? (hasError.value ? 'bg-error/10' : 'bg-default'));
+// `bg-default`, con `bg-error-tint/10` automático en estado de error.
+const bgInputClass = computed(() => props.bgInput ?? (hasError.value ? 'bg-error-tint/10' : 'bg-default'));
 </script>
 

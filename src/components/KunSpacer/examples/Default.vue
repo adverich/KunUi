@@ -16,7 +16,7 @@ const vertical = ref(false)
 
       <div :class="['flex gap-2 rounded-lg border border-default p-3', vertical ? 'flex-col h-56' : 'flex-row items-center']">
         <div class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white">A</div>
-        <KunSpacer :class="guides ? 'rounded-lg border border-dashed border-primary bg-primary/10' : ''" />
+        <KunSpacer :class="guides ? 'rounded-lg border border-dashed border-primary bg-primary-tint/10' : ''" />
         <div class="rounded-md bg-success px-4 py-2 text-sm font-medium text-white">B</div>
       </div>
 

@@ -42,13 +42,13 @@ const colsProp = computed(() => (colsRaw.value === '' ? undefined : Number(colsR
       <div class="rounded-lg border border-default p-3">
         <KunRow :align="align" :justify="justify" :no-gutters="noGutters" :dense="dense" :cols="colsProp">
           <KunCol :cols="3">
-            <div class="flex h-10 items-center justify-center rounded-md bg-primary/20 border border-primary text-sm font-medium">A</div>
+            <div class="flex h-10 items-center justify-center rounded-md bg-primary-tint/20 border border-primary text-sm font-medium">A</div>
           </KunCol>
           <KunCol :cols="3">
-            <div class="flex h-20 items-center justify-center rounded-md bg-success/20 border border-success text-sm font-medium">B</div>
+            <div class="flex h-20 items-center justify-center rounded-md bg-success-tint/20 border border-success text-sm font-medium">B</div>
           </KunCol>
           <KunCol :cols="3">
-            <div class="flex h-14 items-center justify-center rounded-md bg-warning/20 border border-warning text-sm font-medium">C</div>
+            <div class="flex h-14 items-center justify-center rounded-md bg-warning-tint/20 border border-warning text-sm font-medium">C</div>
           </KunCol>
         </KunRow>
       </div>

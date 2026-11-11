@@ -35,16 +35,16 @@ export default {
   // Estilo y diseño
   /** Redondeo del contenedor (clase de escala, `rounded-md` por defecto). */
   rounded: { type: String, default: 'rounded-md' },
-  /** Color de fondo del contenedor (clase Tailwind, p. ej. `bg-success/20`). `null` = `bg-default`, con `bg-error/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error). */
+  /** Color de fondo del contenedor (clase Tailwind: `bg-success` sólido o un tinte `bg-success-tint/20`). `null` = `bg-default`, con `bg-error-tint/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error). Con una superficie semántica sólida (`bg-{color}`) el valor, el prefijo y el label pasan a la tinta `text-on-{color}`. */
   bgInput: { type: String as PropType<string | null>, default: null },
   /** Tamaño del label en reposo. */
   labelSize: { type: String, default: 'text-sm' },
   /** Tamaño del label flotando. */
   floatingLabelSize: { type: String, default: 'text-xs' },
-  /** Opacidad del label en reposo. */
-  labelOpacity: { type: String, default: 'opacity-60' },
-  /** Opacidad del label flotando. */
-  floatingLabelOpacity: { type: String, default: 'opacity-80' },
+  /** Opacidad del label en reposo (clase Tailwind). Default `opacity-100`: el color `text-muted` ya marca la jerarquía; atenuar más rompe el contraste AA. */
+  labelOpacity: { type: String, default: 'opacity-100' },
+  /** Opacidad del label flotando (clase Tailwind). Default `opacity-100`: el label flotante usa el tono `text-primary` (tonal, AA sobre `bg-default`). */
+  floatingLabelOpacity: { type: String, default: 'opacity-100' },
   /** Offset izquierdo del label en reposo (null = automático según iconos). */
   labelLeft: { type: String as PropType<string | null>, default: null },
   /** Offset izquierdo del label flotando. */

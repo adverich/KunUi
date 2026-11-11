@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import KunBtn from '../src/components/KunBtn.vue'
 import type { KunBtnSize, KunBtnType, KunBtnRounded } from '../src/composables/kunBtnProps.js'
-import type { KunColor, KunVariant } from '../../../theme/kunVariants.js'
+import { KUN_COLORS, KUN_VARIANTS, type KunColor, type KunVariant } from '../../../theme/kunVariants.js'
 import { KUN_SIZE_ORDER } from '../../../theme/kunSizes.js'
 import KunAvatar from '../../KunAvatar/src/components/KunAvatar.vue'
 import KunIcon from '../../KunIcon/src/components/KunIcon.vue'
@@ -181,6 +181,20 @@ function handleClick(event: MouseEvent): void {
         @keyup="logEvent('keyup', ($event as KeyboardEvent).key)"
         @keypress="logEvent('keypress', ($event as KeyboardEvent).key)"
       />
+
+      <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Contraste color × variante (superficie / tonal / tint; alternar light-dark)</div>
+        <div class="overflow-x-auto">
+          <div class="grid grid-cols-[auto_repeat(6,minmax(0,1fr))] gap-2 items-center min-w-[640px]">
+            <span />
+            <span v-for="v in KUN_VARIANTS" :key="v" class="text-[10px] text-muted text-center">{{ v }}</span>
+            <template v-for="c in KUN_COLORS" :key="c">
+              <span class="text-[10px] text-muted">{{ c }}</span>
+              <KunBtn v-for="v in KUN_VARIANTS" :key="`${c}-${v}`" :color="c" :variant="v" size="sm" text="Ver eliminados" />
+            </template>
+          </div>
+        </div>
+      </div>
 
       <div class="rounded-lg border border-default p-3">
         <div class="text-muted text-xs mb-2">Consistencia (mismo size = mismo px)</div>

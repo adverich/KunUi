@@ -15,12 +15,12 @@
         </span>
         <template v-if="paginatedItems.length !== filteredItems.length">
           <span v-if="!allFilteredSelected" @click="selectCompleteAll"
-            class="bg-secondary hover:bg-primary rounded-md cursor-pointer px-2 ml-2"
+            class="bg-secondary text-on-secondary hover:bg-primary hover:text-on-primary rounded-md cursor-pointer px-2 ml-2"
           >
             Seleccionar todo
           </span>
           <span v-else @click="clearSelection"
-            class="bg-secondary hover:bg-primary rounded-md cursor-pointer px-2 ml-2"
+            class="bg-secondary text-on-secondary hover:bg-primary hover:text-on-primary rounded-md cursor-pointer px-2 ml-2"
           >
             Anular selección
           </span>

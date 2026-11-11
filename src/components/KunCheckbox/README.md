@@ -40,7 +40,7 @@ import { KunCheckbox } from 'adverich-kun-ui'
 | `ripple` | `Boolean \| Object` | `true` | Efecto ripple al hacer click. |
 | `density` | `KunCheckboxDensity` | `'default'` | Densidad del padding (escala el tamaño como KunAvatar: comfortable/compact reducen).<br/>Valores · Values: `default` `comfortable` `compact` |
 | `direction` | `KunCheckboxDirection` | `'horizontal'` | Dirección del layout (label al lado o debajo).<br/>Valores · Values: `horizontal` `vertical` |
-| `color` | `KunColor \| null` | `null` | Color semántico de la caja activa; `null` usa el default (`bg-primary text-highlighted`). |
+| `color` | `KunColor \| null` | `null` | Color semántico de la caja activa; `null` usa el default (`bg-primary text-on-primary`). |
 | `iconColor` | `KunColor \| null` | `null` | Color semántico del glifo (✓) sobre la caja; gana sobre el texto heredado de `color`. |
 | `baseColor` | `KunColor \| null` | `null` | Color semántico de la caja inactiva (tinte suave); `null` usa `bg-elevated`. |
 | `trueIcon` | `string \| Record<string, unknown> \| Function \| null` | `-` | Ícono personalizado para el estado activo. Acepta alias `$`, componente o clase CSS. |

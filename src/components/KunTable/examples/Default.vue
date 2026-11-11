@@ -150,7 +150,7 @@ const effectiveNoDataText = computed(() => (showLoading.value ? loadingText.valu
         <template #item.active="{ value }">
           <span
             class="rounded-full px-2 py-0.5 text-xs"
-            :class="value ? 'bg-success/15 text-success' : 'bg-error/15 text-error'"
+            :class="value ? 'bg-success-tint/15 text-success' : 'bg-error-tint/15 text-error'"
           >
             {{ value ? 'Activo' : 'Inactivo' }}
           </span>

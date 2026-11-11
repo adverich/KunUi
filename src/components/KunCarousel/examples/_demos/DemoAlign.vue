@@ -24,7 +24,7 @@ const slides = ref([
         :class="[
           'rounded-lg border px-3 py-1.5 text-sm transition',
           align === a
-            ? 'border-primary bg-primary/20 font-semibold'
+            ? 'border-primary bg-primary-tint/20 font-semibold'
             : 'border-muted bg-muted hover:bg-muted',
         ]"
         @click="align = a"

@@ -123,6 +123,8 @@ export {
     isKunColor,
     isKunVariant,
     kunVariantClasses,
+    KUN_ON_SURFACE_TEXT,
+    kunOnSurfaceText,
     resolveKunColor,
     resolveKunVariant,
 } from './theme/kunVariants.js';
