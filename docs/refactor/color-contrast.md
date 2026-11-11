@@ -8,7 +8,7 @@ el generador `scripts/generate-color-compat.ts`.
 | Rol | Token | Light | Dark | Utilidades |
 |---|---|---|---|---|
 | Superficie | `--kun-{slot}` | 400 | 700 | `bg-{slot}`, `hover:bg-{slot}/75` |
-| Tonal | `--kun-{slot}-tonal` | 700 | 300 | `text-{slot}`, `ring-{slot}/NN`, `border-{slot}`, `outline-{slot}`, `divide-{slot}` |
+| Tonal | `--kun-{slot}-tonal` | 800 | 200 | `text-{slot}`, `ring-{slot}/NN`, `border-{slot}`, `outline-{slot}`, `divide-{slot}` |
 | Tint | `--kun-{slot}-tint` | 400 | 300 | `bg-{slot}-tint/NN` (soft, subtle, hovers, seleccionado, error de campo) |
 | Tinta | `--kun-text-on-{slot}` | neutral-950 | white | `text-on-{slot}` sobre `bg-{slot}` |
 
@@ -39,21 +39,23 @@ sólida, texto tonal sobre `bg-default`, texto tonal sobre tint /10 (soft) y /20
 
 | Paleta | Modo | on/superficie | tonal/bg | tonal/tint10 | tonal/tint20 |
 |---|---|---|---|---|---|
-| sky | light | 9.3 | 5.9 | 5.4 | 4.9 |
-| sky | dark | 5.9 | 10.7 | 8.7 | 6.7 |
-| blue | light | 7.6 | 6.8 | 6.3 | 5.7 |
-| blue | dark | 6.8 | 9.8 | 8.1 | 6.3 |
-| green | light | 11.3 | 4.9 | 4.6 | 4.3 |
-| green | dark | 4.9 | 12.7 | 10.2 | 7.6 |
-| amber | light | 11.7 | 5.0 | 4.7 | 4.5 |
-| amber | dark | 5.0 | 12.3 | 10.0 | 7.7 |
-| red | light | 7.0 | 6.4 | 5.8 | 5.2 |
-| red | dark | 6.4 | 9.3 | 7.8 | 6.2 |
+| sky | light | 9.3 | 7.5 | 6.9 | 6.3 |
+| sky | dark | 5.9 | 13.4 | 10.9 | 8.4 |
+| blue | light | 7.6 | 8.8 | 8.1 | 7.3 |
+| blue | dark | 6.8 | 12.5 | 10.3 | 8.1 |
+| green | light | 11.3 | 7.1 | 6.6 | 6.2 |
+| green | dark | 4.9 | 14.8 | 11.8 | 8.9 |
+| amber | light | 11.7 | 7.1 | 6.7 | 6.3 |
+| amber | dark | 5.0 | 14.3 | 11.6 | 8.9 |
+| red | light | 7.0 | 8.4 | 7.5 | 6.8 |
+| red | dark | 6.4 | 12.3 | 10.3 | 8.2 |
+| neopos (marca) | light | 7.6 | 10.7 | 9.7 | 8.9 |
+| neopos (marca) | dark | 5.5 | 10.9 | 9.1 | 7.4 |
 
 Antes (500 light / 400 dark, un solo rol): label flotante primary sobre blanco
 2.7 (con `opacity-80` ~2.3), `bg-error` + `text-default` 2.7 (light) / 2.3 (dark).
 
-Límite conocido: el estado seleccionado (tint /20) con `green`/`orange` en light
-queda en 4.3–4.4, porque su stop 700 ya da apenas 4.9 sobre blanco. Las paletas
-de marca con escala comprimida (p. ej. un 300 oscuro) pueden quedar por debajo
-en dark: conviene que su 300 tenga L oklch ≥ 0.72.
+Tonal en 800/200 (antes 700/300): los labels flotantes se apoyan sobre el fondo
+de la página, que en apps puede ser tintado (NeoPos: celeste `#c3dcf3`). Con 700
+el label primary quedaba en 3.9:1 ahí; con 800 sube a 7.6:1. Todos los pares de
+la tabla superan 4.9:1, incluido el seleccionado (tint /20).

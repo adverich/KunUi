@@ -158,8 +158,8 @@ function writeAlphaCss(palettes: Record<string, Record<number, string>>): void {
   // Superficie (`bg-{slot}/75`, hovers solidos) y tonal (texto/trazo/tintes):
   // mismos stops que theme.css capa 2.
   const STOP = {
-    light: { surface: 400, tonal: 700, tint: 400 },
-    dark: { surface: 700, tonal: 300, tint: 300 },
+    light: { surface: 400, tonal: 800, tint: 400 },
+    dark: { surface: 700, tonal: 200, tint: 300 },
   } as const;
   const pushSlotAlphas = (mode: 'light' | 'dark') => {
     for (const [slot, pal] of Object.entries(DEFAULTS)) {

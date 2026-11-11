@@ -10,7 +10,7 @@
  * - Capa 2 separa tres roles por slot (contraste WCAG AA >= 4.5 en todo el
  *   catalogo Tailwind + paletas de marca tipicas):
  *     superficie `--kun-{slot}`        light 400 / dark 700  -> `bg-{slot}` solido
- *     tonal      `--kun-{slot}-tonal`  light 700 / dark 300  -> texto, ring, borde,
+ *     tonal      `--kun-{slot}-tonal`  light 800 / dark 200  -> texto, ring, borde,
  *                                      outline, divide
  *     tint       `--kun-{slot}-tint`   light 400 / dark 300  -> fondos translucidos
  *                                      (`bg-{slot}-tint/10`); claro en light para
@@ -276,24 +276,25 @@
     --kun-color-neutral-950: var(--color-slate-950);
 
     /* Capa 2: semantica (light). Superficie 400 (clara, tinta oscura
-       >= 6:1), tonal 700 (texto sobre blanco >= 4.9:1), tint 400. */
+       >= 6:1), tonal 800 (texto/labels >= 7:1 sobre blanco y >= 5:1
+       sobre fondos tintados de la app), tint 400. */
     --kun-primary: var(--kun-color-primary-400);
     --kun-secondary: var(--kun-color-secondary-400);
     --kun-success: var(--kun-color-success-400);
     --kun-info: var(--kun-color-info-400);
     --kun-warning: var(--kun-color-warning-400);
     --kun-error: var(--kun-color-error-400);
-    --kun-primary-tonal: var(--kun-color-primary-700);
+    --kun-primary-tonal: var(--kun-color-primary-800);
     --kun-primary-tint: var(--kun-color-primary-400);
-    --kun-secondary-tonal: var(--kun-color-secondary-700);
+    --kun-secondary-tonal: var(--kun-color-secondary-800);
     --kun-secondary-tint: var(--kun-color-secondary-400);
-    --kun-success-tonal: var(--kun-color-success-700);
+    --kun-success-tonal: var(--kun-color-success-800);
     --kun-success-tint: var(--kun-color-success-400);
-    --kun-info-tonal: var(--kun-color-info-700);
+    --kun-info-tonal: var(--kun-color-info-800);
     --kun-info-tint: var(--kun-color-info-400);
-    --kun-warning-tonal: var(--kun-color-warning-700);
+    --kun-warning-tonal: var(--kun-color-warning-800);
     --kun-warning-tint: var(--kun-color-warning-400);
-    --kun-error-tonal: var(--kun-color-error-700);
+    --kun-error-tonal: var(--kun-color-error-800);
     --kun-error-tint: var(--kun-color-error-400);
     /* Alias legacy del tonal de warning. */
     --kun-text-warning-tonal: var(--kun-warning-tonal);
@@ -334,24 +335,24 @@
     color-scheme: dark;
 
     /* Capa 2: semantica (dark). Superficie 700 (oscura, tinta blanca
-       >= 4.9:1), tonal 300 (texto sobre neutral-900 >= 8:1), tint 300. */
+       >= 4.9:1), tonal 200 (texto sobre neutral-900 >= 10:1), tint 300. */
     --kun-primary: var(--kun-color-primary-700);
     --kun-secondary: var(--kun-color-secondary-700);
     --kun-success: var(--kun-color-success-700);
     --kun-info: var(--kun-color-info-700);
     --kun-warning: var(--kun-color-warning-700);
     --kun-error: var(--kun-color-error-700);
-    --kun-primary-tonal: var(--kun-color-primary-300);
+    --kun-primary-tonal: var(--kun-color-primary-200);
     --kun-primary-tint: var(--kun-color-primary-300);
-    --kun-secondary-tonal: var(--kun-color-secondary-300);
+    --kun-secondary-tonal: var(--kun-color-secondary-200);
     --kun-secondary-tint: var(--kun-color-secondary-300);
-    --kun-success-tonal: var(--kun-color-success-300);
+    --kun-success-tonal: var(--kun-color-success-200);
     --kun-success-tint: var(--kun-color-success-300);
-    --kun-info-tonal: var(--kun-color-info-300);
+    --kun-info-tonal: var(--kun-color-info-200);
     --kun-info-tint: var(--kun-color-info-300);
-    --kun-warning-tonal: var(--kun-color-warning-300);
+    --kun-warning-tonal: var(--kun-color-warning-200);
     --kun-warning-tint: var(--kun-color-warning-300);
-    --kun-error-tonal: var(--kun-color-error-300);
+    --kun-error-tonal: var(--kun-color-error-200);
     --kun-error-tint: var(--kun-color-error-300);
     --kun-text-on-primary: var(--kun-on-primary-dark, white);
     --kun-text-on-secondary: var(--kun-on-secondary-dark, white);

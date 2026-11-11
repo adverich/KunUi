@@ -301,8 +301,8 @@ const ALPHA_PCTS = [10, 15, 20, 25, 30, 40, 50, 75, 90] as const;
  * (`bg-{slot}`), rol tonal (texto y trazo) y tint (`bg-{slot}-tint/NN`).
  */
 const SEMANTIC_STOPS = {
-    light: { surface: 400, tonal: 700, tint: 400 },
-    dark: { surface: 700, tonal: 300, tint: 300 },
+    light: { surface: 400, tonal: 800, tint: 400 },
+    dark: { surface: 700, tonal: 200, tint: 300 },
 } as const;
 
 /**

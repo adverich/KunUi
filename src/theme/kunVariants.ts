@@ -12,7 +12,7 @@
  * Roles de color (ver `theme.css`, capa 2):
  * - `solid`: superficie `bg-{color}` + tinta `text-on-{color}` (AA por modo).
  * - texto/ring/outline (`text-{color}`, `ring-{color}/NN`): rol tonal por
- *   override de namespace (700 light / 300 dark).
+ *   override de namespace (800 light / 200 dark).
  * - tintes translucidos: siempre `bg-{color}-tint/NN`, nunca `bg-{color}/NN`
  *   (la superficie dark es 700 y un tinte de ella seria invisible; el tint
  *   es 400 en light y 300 en dark). Seleccionado: tint /20 + ring /50.
