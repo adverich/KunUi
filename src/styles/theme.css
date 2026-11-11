@@ -316,7 +316,9 @@
     --kun-text-dimmed: var(--kun-color-neutral-400);
     --kun-text-muted: var(--kun-color-neutral-500);
     --kun-text-toned: var(--kun-color-neutral-600);
-    --kun-text: var(--kun-color-neutral-700);
+    /* Texto base: 800 (no 700 como Nuxt) para leerse firme sobre fondos
+       tintados de la app; `highlighted` (900) conserva la jerarquia. */
+    --kun-text: var(--kun-color-neutral-800);
     --kun-text-highlighted: var(--kun-color-neutral-900);
     --kun-text-inverted: white;
     --kun-border: var(--kun-color-neutral-200);

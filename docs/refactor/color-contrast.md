@@ -22,6 +22,12 @@ el generador `scripts/generate-color-compat.ts`.
   blanco o `neutral-950` por luminancia WCAG contra la superficie de cada modo
   (cubre paletas custom/HEX). Son independientes del modo activo.
 - Alias legacy: `text-warning-tonal` == `text-warning`.
+- **No forzar `color` sobre `bg-{slot}`** (p. ej. una clase propia de la app con
+  `color: var(--kun-text)`): CSS sin capa le gana a la utilidad `text-on-{slot}`
+  y deja texto gris sobre rojo (3.6:1). Usar `text-on-{slot}` o
+  `kunOnSurfaceTextFromBg(clases)` para fondos dinámicos.
+- Texto base (`--kun-text`): light `neutral-800` (14.6:1 sobre blanco; antes
+  700 = 10.4), dark `neutral-200`. `text-highlighted` queda en 900 / white.
 - Helpers: `KUN_ON_SURFACE_TEXT` / `kunOnSurfaceText(color)` y
   `kunOnSurfaceTextFromBg(classes)` en `src/theme/kunVariants.ts`.
 

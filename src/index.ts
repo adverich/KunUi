@@ -125,6 +125,7 @@ export {
     kunVariantClasses,
     KUN_ON_SURFACE_TEXT,
     kunOnSurfaceText,
+    kunOnSurfaceTextFromBg,
     resolveKunColor,
     resolveKunVariant,
 } from './theme/kunVariants.js';
