@@ -1,18 +1,29 @@
 <template>
+  <Teleport to="body" :disabled="absolute">
+  <!-- Scrim (primero en el DOM: misma capa que el contenido, queda debajo) -->
+  <Transition name="kun-scrim">
+    <div
+      v-if="(scrim || temporary) && (modelValue || isDragging) && !permanent && !persistent"
+      class="fixed inset-0 bg-overlay"
+      :style="{ opacity: 0.4 * (1 - openProgress), transition: scrimTransition, zIndex: zIndexVar('overlay') }"
+      @click="close"
+    />
+  </Transition>
+
   <!-- Drawer -->
   <component
+    v-bind="attrs"
     v-show="modelValue || permanent || isDragging"
     :is="tag"
     ref="drawerEl"
-    class="z-[2001] flex flex-col select-none will-change-transform"
+    class="flex flex-col select-none will-change-transform"
     :class="[
       computedClass,
       absolute ? 'absolute' : 'fixed',
-      floating ? 'border-none' : '',
       isDragging ? 'transition-none' : swipeTransition,
       'touch-pan-y'
     ]"
-    :style="drawerStyle"
+    :style="[drawerStyle, zIndexStyle('overlay')]"
     @click.stop
     @touchstart.passive="onTouchStart"
     @touchmove="onTouchMove"
@@ -31,27 +42,26 @@
     <div
       v-if="swipeable && (isStart || isEnd)"
       aria-hidden="true"
-      class="pointer-events-none absolute top-1/2 -translate-y-1/2 rounded-full bg-surface-light opacity-60"
+      class="pointer-events-none absolute top-1/2 -translate-y-1/2 rounded-full bg-accented opacity-60"
       :class="[isStart ? 'right-1' : 'left-1']"
       :style="{ width: `${swipeHandleSize}px`, height: `${swipeHandleSize}px` }"
     />
   </component>
-
-  <!-- Scrim -->
-  <Transition name="kun-scrim">
-    <div
-      v-if="(scrim || temporary) && (modelValue || isDragging) && !permanent && !persistent"
-      class="fixed inset-0 bg-black"
-      :style="{ opacity: 0.4 * (1 - openProgress), transition: scrimTransition }"
-      @click="close"
-    />
-  </Transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch, type Ref } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch, useAttrs, type Ref } from 'vue'
 import { useAppbarHeight } from '@/utils/useLayout.js'
+import { zIndexStyle, zIndexVar } from '@/theme/kunZIndex.js'
 import { kunDrawerProps } from '../composables/kunDrawerProps.js'
+
+defineOptions({ inheritAttrs: false })
+
+/* Fallthrough attrs: la raíz es un Teleport, Vue no hace auto-fallthrough,
+   se reenvian manualmente al panel interno (v-bind primero: los bindings
+   explicitos del componente ganan ante conflictos). */
+const attrs = useAttrs()
 
 /* Emits */
 const emits = defineEmits([
@@ -104,13 +114,14 @@ const positionClass = computed(() => {
 })
 const borderClass = computed(() => {
   if (!props.border) return ''
-  if (typeof props.border === 'string') return `border-${props.border}`
-  return 'border'
+  if (props.floating) return 'ring ring-default'
+  if (isStart.value) return 'border-e border-default'
+  if (isEnd.value) return 'border-s border-default'
+  if (props.location === 'top') return 'border-b border-default'
+  return 'border-t border-default'
 })
 const roundedClass = computed(() => {
-  if (props.rounded === true) return isStart.value ? 'rounded-r' : 'rounded-l'
-  if (typeof props.rounded === 'string') return props.rounded
-  if (typeof props.rounded === 'number') return `rounded-[${props.rounded}px]`
+  if (props.rounded === true) return isStart.value ? 'rounded-e-lg' : 'rounded-s-lg'
   return ''
 })
 const computedClass = computed(() => ([
@@ -119,7 +130,7 @@ const computedClass = computed(() => ([
   borderClass.value,
   props.elevation ? `shadow-${props.elevation}` : '',
   roundedClass.value,
-  props.color ?? 'bg-surface-dark',
+  'bg-default text-default',
   props.scrollable ? 'overflow-auto' : ''
 ]))
 

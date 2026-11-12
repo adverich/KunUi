@@ -23,24 +23,20 @@ export const KunNumberFieldProps = {
   placeholder: { type: [String, Number], default: '' },
   /** Etiqueta flotante (mismo sistema que KunTextField). */
   label: { type: String, default: '' },
-  /** Color del label en reposo. */
-  labelColor: { type: String, default: 'text-ui' },
-  /** Color del label flotando (null = usa `labelColor`). */
-  floatingLabelColor: { type: String as PropType<string | null>, default: null },
   /** Tamaño del label en reposo. */
   labelSize: { type: String, default: 'text-sm' },
   /** Tamaño del label flotando. */
   floatingLabelSize: { type: String, default: 'text-xs' },
-  /** Opacidad del label en reposo. */
-  labelOpacity: { type: String, default: 'opacity-60' },
-  /** Opacidad del label flotando. */
-  floatingLabelOpacity: { type: String, default: 'opacity-80' },
+  /** Opacidad del label en reposo (clase Tailwind). Default `opacity-100`: el color `text-muted` ya marca la jerarquía; atenuar más rompe el contraste AA. */
+  labelOpacity: { type: String, default: 'opacity-100' },
+  /** Opacidad del label flotando (clase Tailwind). Default `opacity-100`: el label flotante usa el tono `text-primary` (tonal, AA sobre `bg-default`). */
+  floatingLabelOpacity: { type: String, default: 'opacity-100' },
   /** Offset izquierdo en reposo (null = automático según iconos). */
   labelLeft: { type: String as PropType<string | null>, default: null },
   /** Offset izquierdo flotando. */
   floatingLabelLeft: { type: String, default: 'left-2' },
-  /** Posición superior flotando. */
-  floatingLabelTop: { type: String, default: '-top-2' },
+  /** Posición superior flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). */
+  floatingLabelTop: { type: String, default: 'top-[-2px]' },
   /** Clase libre para el label. */
   labelClass: { type: String, default: '' },
   /** Marca el campo como tocado (flota el label). */
@@ -65,24 +61,18 @@ export const KunNumberFieldProps = {
   appendInnerClass: String,
 
   // Estilo y diseño
-  /** Redondeo del contenedor. */
-  rounded: { type: String, default: 'rounded' },
-  /** Color del borde. */
-  borderColor: { type: String, default: 'border-ui' },
-  /** Color del texto del valor. */
-  textColor: { type: String, default: 'text-ui' },
+  /** Redondeo del contenedor (clase de escala, `rounded-md` por defecto). */
+  rounded: { type: String, default: 'rounded-md' },
+  /** Color de fondo del contenedor (clase Tailwind: `bg-success` sólido o un tinte `bg-success-tint/20`). `null` = `bg-default`, con `bg-error-tint/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error). Con una superficie semántica sólida (`bg-{color}`) el valor, el prefijo y el label pasan a la tinta `text-on-{color}`. */
+  bgInput: { type: String as PropType<string | null>, default: null },
   /** Tamaño del texto del valor (null = 'text-sm'). */
   inputTextSize: { type: String as PropType<string | null>, default: null },
   /** Peso del texto del valor (null = hereda). */
   inputWeight: { type: String as PropType<string | null>, default: null },
-  /** Color del placeholder. */
-  placeholderColor: { type: String, default: 'placeholder-ui' },
   /** Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). */
   placeholderTextSize: { type: String as PropType<string | null>, default: null },
   /** Clase libre para el input. */
   inputStyle: { type: String, default: '' },
-  /** Color de fondo del contenedor. */
-  bgInput: { type: String, default: 'bg-field-background' },
   /** Centra el texto del valor. */
   textCenter: { type: Boolean, default: false },
   /** Variante de botones de incremento: 'default' | 'stacked' | 'split'. */
@@ -174,4 +164,6 @@ export const KunNumberFieldProps = {
     default: 'natural',
     validator: (v: unknown) => ['natural', 'bank'].includes(v as string),
   },
+  /** Oculta el cero en reposo y muestra el placeholder/label en su lugar (el v-model sigue siendo `0`). Sin placeholder ni label en reposo (o con `dirty`), muestra el `0` formateado (fallback automático). */
+  hideZero: { type: Boolean, default: true },
 };

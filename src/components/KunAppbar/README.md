@@ -22,7 +22,6 @@ import { KunAppbar } from 'adverich-kun-ui'
 
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
-| `bgColor` | `String` | `'bg-transparent'` | Color de fondo. |
 | `title` | `String` | `-` | Título (texto). |
 | `titleImage` | `String` | `-` | URL de imagen/logo junto al título. |
 | `titleSize` | `String` | `'text-base'` | Tamaño del título (clase Tailwind). |
@@ -31,14 +30,13 @@ import { KunAppbar } from 'adverich-kun-ui'
 | `density` | `KunAppbarDensity` | `'default'` | Densidad visual.<br/>Valores · Values: `default` `comfortable` `compact` |
 | `height` | `String` | `-` | Altura (clase Tailwind). |
 | `elevation` | `KunAppbarElevation` | `'md'` | Elevación/sombra.<br/>Valores · Values: `sm` `md` `lg` `xl` `2xl` `none` |
-| `bordered` | `Boolean` | `false` | Muestra borde inferior (usa `borderColor`). |
-| `borderColor` | `String` | `'border-b border-ui'` | Clases del borde inferior. |
+| `bordered` | `Boolean` | `true` | Muestra borde inferior (`border-b border-default`). Por defecto `true` (igual que el header de Nuxt UI). |
 | `showDrawerButton` | `Boolean` | `true` | Muestra el botón para abrir/cerrar el drawer. |
-| `buttonClass` | `String` | `'px-2'` | Clase extra del botón del drawer. |
-| `buttonBg` | `String` | `'bg-button-disabled opacity-75'` | Fondo del botón del drawer. |
+| `buttonClass` | `String` | `''` | Clase extra del botón del drawer. |
+| `buttonColor` | `KunColor \| null` | `null` | Color del botón del drawer. `null` delega al theme global. |
+| `buttonVariant` | `KunVariant \| null` | `null` | Variante del botón del drawer. `null` delega al theme global. |
 | `leftSectionClass` | `String` | `'flex items-center gap-2'` | Clase de la sección izquierda (slot `left`). |
 | `rightSectionClass` | `String` | `'flex items-center gap-2 justify-end ml-auto'` | Clase de la sección derecha (slot `right`). |
-| `zIndex` | `String` | `'z-1000'` | Z-index. |
 | `fixed` | `Boolean` | `false` | Fija arriba con `fixed top-0 left-0 right-0`. |
 | `sticky` | `Boolean` | `false` | Fija arriba con `sticky top-0`. |
 | `glass` | `Boolean` | `false` | Efecto cristal (`backdrop-blur-md`). |
@@ -62,6 +60,25 @@ import { KunAppbar } from 'adverich-kun-ui'
 ## Métodos expuestos · Exposed
 
 - `el()`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- Superficie `bg-default` (antes `bg-elevated`), como el `header` de Nuxt UI.
+- `bordered` pasa a **default `true`**: el header va siempre con
+  `border-b border-default`. Con `bg-default` el borde es visible en light y dark
+  (antes el borde quedaba sobre `bg-elevated`: en dark
+  `--kun-border == --kun-bg-elevated == neutral-800` ⇒ invisible).
+- `elevation` sigue opt-in; un header con sombra sobre `bg-default` puede verse
+  redundante (Nuxt no la usa).
+
+## Botón del drawer (default)
+
+- Pasó de slot interno con `KunIcon size-6` a la prop `icon="$menuRounded"` de
+  `KunBtn`: con ícono-only el botón es cuadrado automático y el ícono toma la
+  escala canónica del `size` (50% del cuadrado; xs → 14px, no 24px). Antes el
+  ícono casi tocaba el borde del círculo.
 
 ---
 

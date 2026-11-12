@@ -35,8 +35,8 @@ const labelPositionOptions = ref([
 ])
 
 const onColor = ref('bg-success')
-const offColor = ref('bg-surface-light')
-const iconColor = ref('bg-ui-surface-raised')
+const offColor = ref('bg-muted')
+const iconColor = ref('bg-elevated')
 
 const trueValueRaw = ref('true')
 const falseValueRaw = ref('false')
@@ -95,26 +95,26 @@ function logEvent(name: string, detail: unknown): void {
         @update:model-value="logEvent('update:modelValue', $event)"
       />
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
-        <div>{{ JSON.stringify(value) }} <span class="text-ui-muted">({{ typeof value }})</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
+        <div>{{ JSON.stringify(value) }} <span class="text-muted">({{ typeof value }})</span></div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Interactuá con el campo para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Interactuá con el campo para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el field) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="label" label="Label" density="compact" />

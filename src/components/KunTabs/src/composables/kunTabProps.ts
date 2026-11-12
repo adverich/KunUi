@@ -19,7 +19,7 @@ export const kunTabProps = {
   /** Color cuando no está seleccionado. */
   baseColor: {
     type: String,
-    default: 'text-ui-muted',
+    default: 'text-muted',
   },
   /** Clase extra de color. */
   colorClass: {

@@ -12,7 +12,7 @@
       ref="textFieldRef"
       autocomplete="off"
       class="kun-select-field"
-      :rounded="menuModel ? 'rounded-t' : 'rounded'"
+      :rounded="menuModel ? 'rounded-md rounded-b-none' : 'rounded-md'"
       :placeholder="props.multiple && isArray(modelValue) && (modelValue as unknown[]).length ? '' : placeholder"
       :error="!!internalError"
       :error-messages="internalError"
@@ -28,15 +28,14 @@
           @click="!disabled && !readonly && toggleMenu()"
         >
           <template v-for="(item, idx) in (modelValue as unknown[])" :key="typeof item === 'object' && item !== null ? ((item as any).id ?? (item as any).name ?? idx) : ((item as string) ?? idx)">
-            <KunChip v-show="idx < visibleCount" :data-chip="idx" size="small" variant="pill" class="shrink-0">
+            <KunChip v-show="idx < visibleCount" :data-chip="idx" size="small" pill class="shrink-0">
               <div class="flex items-center">
                 {{ getArrayText(item) }}
                 <KunIcon
                   v-if="!disabled && !readonly"
-                  color="error"
-                  :icon="icons.close"
-                  size="small"
-                  class="ml-1"
+                  :icon="'$close'"
+                  size="size-4"
+                  class="ml-1 text-error"
                   @click.stop="removeItem(item)"
                 />
               </div>
@@ -45,7 +44,7 @@
           <KunChip
             v-if="hiddenCount > 0"
             size="small"
-            variant="pill"
+            pill
             class="shrink-0"
             :title="hiddenNames"
           >
@@ -55,23 +54,23 @@
       </template>
 
       <template v-if="hasIcons" v-slot:append-inner>
-        <KunIcon v-if="clearable && hasValue && !disabled && !readonly" @click.stop="clearSelection" size="small" color="error" :icon="icons.close"
-          class="mr-1 mt-1" />
-        <KunIcon :color="iconColor" size="large" class="cursor-pointer"
-          :icon="menuModel ? icons.menuUpOutline : icons.menuDownOutline" @click.stop="toggleMenu" />
-        <KunIcon v-if="required" :color="requiredIconColor" size="x-small" class="mb-4" :icon="icons.asterisk" />
+        <KunIcon v-if="clearable && hasValue && !disabled && !readonly" @click.stop="clearSelection" size="size-4" :icon="'$close'"
+          class="mr-1 mt-1 text-error" />
+        <KunIcon :class="[iconColor, 'cursor-pointer']" size="size-5"
+          :icon="menuModel ? '$menuUpOutline' : '$menuDownOutline'" @click.stop="toggleMenu" />
+        <KunIcon v-if="required" :class="[requiredIconColor, 'mb-4']" size="size-3" :icon="'$asterisk'" />
       </template>
 
-      <KunMenu transition="fade" @click:outside="closeMenu" v-model="menuModel" activator="parent" :z-index="zIndex"
-        :parent-ref="(parentRef as any)" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor"
-        :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
+      <KunMenu transition="fade" @click:outside="closeMenu" v-model="menuModel" activator="parent"
+        :parent-ref="(parentRef as any)" :origin="menuOrigin" @handleEscape="handleEscape"
+        :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight ?? undefined" :hide-details="hideDetails"
       >
-        <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b bg-select-background">
-          <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass">
+        <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b border-muted bg-muted">
+          <KunBtn @click="createItem" :color="btnCreateColor" :class="btnCreateClass">
             {{ btnCreateText }}
           </KunBtn>
         </div>
-        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false">
+        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false" color="neutral" variant="link">
           <template v-if="items.length">
             <KunListItem
               v-for="(item, index) in items"
@@ -79,13 +78,11 @@
               :id="`kun-item-${index + 1}`"
               :value="(item as any)"
               :disabled="checkDisabled(item)"
-              :bg-items="bgItemListColor"
-              :hover-bg="hoverItemListColor"
-              :activeClass="selectedItemListColor"
               :density="density"
               :selectable="true"
               :active="isItemSelected(item)"
-              rounded="none"
+              :rounded="false"
+              color="neutral"
             >
               <KunListItemTitle class="text-wrap">
                 {{ itemToString(item, itemTitle ?? textArr, 'hasDefault') }}
@@ -108,7 +105,6 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick, type Ref } from 'vue';
-import { icons } from '@/icons/index.js';
 import { isNotEmpty, isArray } from '../../../../utils/utils.js';
 
 import KunList from '../../../KunList/src/components/KunList.vue';

@@ -25,8 +25,8 @@ import { KunListGroup } from 'adverich-kun-ui'
 | `modelValue` | `Boolean` | `false` | Expansión del grupo (v-model). |
 | `id` | `string \| null` | `null` | Id para aria-controls. Se genera uno si se omite. |
 | `title` | `String` | `''` | Título del activador (alternativa al slot). |
-| `expandIcon` | `String` | `'$mdi-chevron-up'` | Ícono cuando está expandido. |
-| `collapseIcon` | `String` | `'$mdi-chevron-down'` | Ícono cuando está colapsado. |
+| `expandIcon` | `String` | `'$menuUpOutline'` | Ícono cuando está expandido. Acepta alias `$` del set bundleado, clase CSS o SVG. |
+| `collapseIcon` | `String` | `'$menuDownOutline'` | Ícono cuando está colapsado. Acepta alias `$` del set bundleado, clase CSS o SVG. |
 | `disabled` | `Boolean` | `false` | Deshabilita el toggle. |
 
 ## Eventos · Events

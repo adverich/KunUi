@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import KunTableServerSide from '../src/components/KunTableServerSide.vue';
+import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue';
 
 const loading = ref(false);
 const selected = ref([]);
 const search = ref('');
+
+const showSelect = ref(true);
+const hideSelected = ref(false);
 
 const query = reactive({
   page: 1,
@@ -44,13 +48,19 @@ function handleQuery(nextQuery: Record<string, any>): void {
 </script>
 
 <template>
-  <div class="p-4 h-[480px]">
+  <div class="p-4 h-[480px] grid gap-4">
+    <div class="flex flex-wrap gap-6 items-center">
+      <KunSwitch v-model="showSelect" label="Show select" />
+      <KunSwitch v-model="hideSelected" label="Hide selected (aviso)" />
+    </div>
     <KunTableServerSide
       :result="result"
       :headers="headers"
       :loading="loading"
       searchable
       v-model:selectedItems="selected"
+      :show-select="showSelect"
+      :hide-selected="hideSelected"
       :search="search"
       :page="query.page"
       :items-per-page="query.per_page"

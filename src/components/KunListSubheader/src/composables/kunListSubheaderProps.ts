@@ -9,11 +9,6 @@ export const kunListSubheaderProps = {
     type: String,
     default: 'text-xs'
   },
-  /** Color del texto. */
-  textColor: {
-    type: String,
-    default: 'text-ui-muted'
-  },
   /** Peso del texto. */
   fontWeight: {
     type: String,

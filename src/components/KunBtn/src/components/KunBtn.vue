@@ -16,16 +16,16 @@
       <template v-if="loading">
         <slot name="loader">
           <div class="absolute inset-0 flex items-center justify-center z-10">
-            <KunLoaderCircular size="20" width="5" />
+            <KunLoaderCircular :size="loaderSize" :width="loaderWidth" />
           </div>
         </slot>
       </template>
 
       <!-- Contenido del botón con opacidad -->
-      <div :class="{ 'opacity-50': loading }" class="flex items-center justify-center w-full h-full">
+      <div :class="[{ 'opacity-50': loading }, controlGap]" class="flex items-center justify-center w-full h-full">
         <!-- Prepend -->
         <template v-if="$slots.prepend || prependIcon">
-          <span class="mr-2 flex items-center">
+          <span class="flex items-center">
             <slot name="prepend" />
             <component :is="renderIcon(prependIcon)" />
           </span>
@@ -43,7 +43,7 @@
 
         <!-- Append -->
         <template v-if="$slots.append || appendIcon">
-          <span class="ml-2 flex items-center">
+          <span class="flex items-center">
             <slot name="append" />
             <component :is="renderIcon(appendIcon)" />
           </span>
@@ -54,11 +54,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useAttrs, useSlots, h, type Ref } from 'vue'
+import { computed, ref, useAttrs, useSlots, h, isVNode, Comment, Text, Fragment, type Ref, type VNode } from 'vue'
 import { RouterLink } from 'vue-router'
 import KunLoaderCircular from '@/components/KunLoaderCircular/src/components/KunLoaderCircular.vue';
 import KunIcon from '@/components/KunIcon/src/components/KunIcon.vue'
 import { kunBtnProps } from '../composables/kunBtnProps.js'
+import { kunVariantClasses, resolveKunColor, resolveKunVariant, type KunColor } from '../../../../theme/kunVariants.js'
+import {
+  resolveKunSize,
+  KUN_CONTROL_HEIGHT,
+  KUN_CONTROL_PADDING,
+  KUN_CONTROL_GAP,
+  KUN_ICON_SIZE,
+  KUN_ICON_PX,
+  KUN_LOADER_WIDTH,
+  KUN_SQUARE_SIZE,
+  KUN_TEXT_SIZE,
+  hasExplicitWidthClass,
+  hasExplicitHeightClass,
+} from '../../../../theme/kunSizes.js'
 
 const slots = useSlots()
 const attrs = useAttrs()
@@ -76,6 +90,17 @@ const componentTag = computed(() => {
   return 'button'
 })
 
+const resolvedColor = computed<KunColor>(() => resolveKunColor(props.color ?? null))
+const resolvedVariant = computed(() => resolveKunVariant(props.variant ?? null))
+const resolvedSize = computed(() => resolveKunSize(props.size))
+
+/** Redondeo: 'full' | 'none' propios, o `rounded-md` (escala global). */
+const roundedClass = computed(() => {
+  if (props.rounded === 'full') return 'rounded-full'
+  if (props.rounded === 'none') return 'rounded-none'
+  return 'rounded-md'
+})
+
 const renderIcon = (icon: unknown) => {
   if (!icon || icon === false) return null;
   if (icon === true && !props.icon) return null;
@@ -83,7 +108,6 @@ const renderIcon = (icon: unknown) => {
   return h(KunIcon, {
     icon,
     size: resolvedIconSize.value,
-    color: props.textColor ?? 'text-font-color',
     disabled: props.disabled,
   });
 };
@@ -108,71 +132,60 @@ const componentAttrs = computed(() => {
   }
 })
 
-const buttonSize = (size: unknown) => {
-  switch (size) {
-    case 'xxs': return 'px-1 py-1 text-xs'
-    case 'xs': return 'px-2 py-2 text-xs'
-    case 'sm': return 'px-2 py-1 text-sm'
-    case 'md': return 'px-3 py-2 text-sm'
-    case 'lg': return 'px-4 py-2 text-base'
-    case 'xl': return 'px-5 py-3 text-lg'
-    case 'xxl': return 'px-6 py-4 text-xl'
-    default: return 'px-3 py-2 text-sm'
-  }
-}
+const hasCustomWidth = computed(() => hasExplicitWidthClass(attrs.class));
 
-const resolvedIconSize = computed(() => {
-  if (props.iconSize) return props.iconSize
-  switch (props.size) {
-    case 'xxs': return 'text-xs'
-    case 'xs':  return 'text-xs'
-    case 'sm':  return 'text-sm'
-    case 'md':  return 'text-base'
-    case 'lg':  return 'text-lg'
-    case 'xl':  return 'text-xl'
-    case 'xxl': return 'text-2xl'
-    default:    return 'text-base'
-  }
-})
+const hasCustomHeight = computed(() => hasExplicitHeightClass(attrs.class));
 
-const variantClasses = computed(() => {
-  const bg = props.bgColor
-  const text = props.textColor
+const buttonSize = computed(() =>
+  [
+    hasCustomHeight.value ? '' : KUN_CONTROL_HEIGHT[resolvedSize.value],
+    KUN_CONTROL_PADDING[resolvedSize.value],
+  ].filter(Boolean).join(' '),
+)
 
-  switch (props.variant) {
-    case 'default': return `${bg} ${text} shadow hover:brightness-95`
-    case 'tonal':   return `${bg} ${text} shadow-sm hover:shadow-md`
-    case 'soft':    return `${bg} ${text} hover:bg-opacity-30 shadow-sm`
-    case 'outlined':return `bg-transparent ${text} border ${bg} border-opacity-40 hover:bg-ui-hover`
-    case 'plain':   return `bg-transparent ${text} hover:bg-ui-hover active:bg-ui-hover`
-    case 'text':    return `${bg} ${text} hover:bg-opacity-10 active:bg-ui-hover`
-    default:        return `${bg} ${text}`
-  }
-})
+const resolvedIconSize = computed(() => props.iconSize || KUN_ICON_SIZE[resolvedSize.value])
+
+const loaderSize = computed(() => KUN_ICON_PX[resolvedSize.value])
+const loaderWidth = computed(() => KUN_LOADER_WIDTH[resolvedSize.value])
+
+const controlGap = computed(() => KUN_CONTROL_GAP[resolvedSize.value])
+
+const variantClasses = computed(() => kunVariantClasses(resolvedColor.value, resolvedVariant.value))
 
 const hasText = computed(() => !!props.text)
 
-const hasCustomWidth = computed(() => {
-  const cls = attrs.class as string | undefined;
-  return cls?.includes('w-') || cls?.includes('min-w-') || cls?.includes('max-w-');
-})
+function meaningfulSlotNodes(nodes: VNode[]): VNode[] {
+  return nodes.flatMap((node) => {
+    if (node.type === Comment) return [];
+    if (node.type === Text) return String(node.children ?? '').trim() ? [node] : [];
+    if (node.type === Fragment) return meaningfulSlotNodes((node.children as VNode[]) ?? []);
+    return [node];
+  });
+}
 
-const hasCustomHeight = computed(() => {
-  const cls = attrs.class as string | undefined;
-  return cls?.includes('h-') || cls?.includes('min-h-') || cls?.includes('max-h-');
-})
+const hasSingleIconSlot = computed(() => {
+  const content = slots.default?.();
+  if (!content) return false;
+  const nodes = meaningfulSlotNodes(content);
+  return nodes.length === 1 && nodes[0]?.type === KunIcon;
+});
 
 const isIconOnly = computed(() => {
   const isSingleCharText = props.text?.length === 1 && !slots.default && !props.icon;
-  return (!!props.icon && !props.text && !slots.default) || isSingleCharText;
-})
+  const isIconPropOnly = !!props.icon && !props.text && !slots.default;
+  return isIconPropOnly || hasSingleIconSlot.value || isSingleCharText;
+});
+
+/** Modo cuadrado: heredado automático de `isIconOnly` o forzado por la prop `square`. */
+const isSquare = computed(() => props.square || isIconOnly.value)
 
 const computedClass = computed(() => {
   const base = [
     'inline-flex items-center justify-center break-keep transition-all whitespace-nowrap',
-    !isIconOnly.value ? buttonSize(props.size) : '',
+    !isSquare.value ? buttonSize.value : '',
+    KUN_TEXT_SIZE[resolvedSize.value],
     props.fontWeight,
-    props.rounded,
+    roundedClass.value,
     props.textAlign,
     variantClasses.value,
     'relative'
@@ -180,18 +193,13 @@ const computedClass = computed(() => {
 
   if (attrs.class) base.push(attrs.class as string);
 
-  if (isIconOnly.value) {
-    base.push('aspect-square justify-center items-center');
-    switch (props.size) {
-      case 'xxs': base.push('p-1'); break;
-      case 'xs':  base.push('p-1.5'); break;
-      case 'sm':  base.push('p-2'); break;
-      case 'md':  base.push('p-2.5'); break;
-      case 'lg':  base.push('p-3'); break;
-      case 'xl':  base.push('p-3.5'); break;
-      case 'xxl': base.push('p-4'); break;
-      default:    base.push('p-2.5');
-    }
+  if (isSquare.value) {
+    base.push(
+      hasCustomWidth.value || hasCustomHeight.value
+        ? 'aspect-square'
+        : KUN_SQUARE_SIZE[resolvedSize.value],
+      'shrink-0',
+    );
   }
 
   if (!props.loading && !props.disabled) {
@@ -202,15 +210,14 @@ const computedClass = computed(() => {
       'active:scale-[.98]',
       'transition duration-100 ease-in-out',
       'cursor-pointer',
-      props.focusColor ? `${props.focusColor}` : '',
     );
   } else {
     base.push('pointer-events-none');
     if (props.disabled) base.push('opacity-50 cursor-not-allowed');
   }
 
-  // Solo aplicar minWidth si no hay clase de ancho personalizada
-  if (hasText.value && !isIconOnly.value && !hasCustomWidth.value) {
+  // Solo aplicar minWidth si no hay clase de ancho personalizada ni modo cuadrado
+  if (hasText.value && !isSquare.value && !hasCustomWidth.value) {
     base.push(props.minWidth);
   }
 

@@ -1,3 +1,4 @@
+<!-- theme-exempt: demo (KunClock.color acepta cualquier valor CSS; el HEX es dato de demo) -->
 <script setup lang="ts">
 import { ref } from 'vue'
 import KunClock from '../src/components/KunClock.vue'
@@ -19,16 +20,16 @@ const size = ref('1.5rem')
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunClock</h2>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <p class="text-ui-muted text-xs">El reloj flota fijo arriba a la derecha del viewport (miralo ahí ☝).</p>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <p class="text-muted text-xs">El reloj flota fijo arriba a la derecha del viewport (miralo ahí ☝).</p>
       </div>
 
       <KunClock v-if="show" :color="color" :size="size" />
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra la vista previa) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunSwitch v-model="show" label="Mostrar" />

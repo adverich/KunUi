@@ -3,7 +3,7 @@
     :class="[
       'kun-list-item-subtitle',
       'truncate',
-      textColor, fontSize, fontWeight
+      'text-muted', fontSize, fontWeight
     ]"
     v-bind="$attrs"
   >

@@ -27,20 +27,16 @@ import { KunCard } from 'adverich-kun-ui'
 | `subtitle` | `string \| null` | `null` | Subtítulo (atajo). |
 | `subTitleSize` | `string \| null` | `null` | Reservado. Actualmente sin efecto (no se propaga a KunCardTitle). |
 | `text` | `string \| null` | `null` | Texto del cuerpo (atajo; equivale al slot default). |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
-| `bgColor` | `String` | `'bg-transparent'` | Color de fondo. |
-| `flat` | `Boolean` | `false` | Sin sombra. |
 | `rounded` | `KunCardRounded` | `true` | Redondeo: boolean o tamaño. |
-| `outlined` | `Boolean` | `false` | Con borde (usa `outlineColor`). |
-| `outlineColor` | `String` | `'border-ui'` | Color del borde en modo `outlined`. |
 | `elevation` | `KunCardElevation` | `1` | Nivel de sombra (0-5, como string o número).<br/>Valores · Values: `0` `1` `2` `3` `4` `5` `` |
 | `to` | `String \| Object` | `-` | Ruta Vue Router (renderiza router-link). |
 | `href` | `String` | `-` | URL externa (renderiza <a>). |
 | `replace` | `Boolean` | `-` | Navegación con replace (solo con `to`). |
 | `tag` | `String` | `'div'` | Tag del contenedor. |
+| `color` | `KunColor \| null` | `null` | Color semántico de la superficie; `null` hereda `kunTheme.configure({ defaults: { card } })` (fallback `neutral`). |
+| `variant` | `KunVariant \| null` | `null` | Variante estándar de superficie (`KunVariant`); `null` hereda theme (`card`, fallback `solid`). |
 | `disabled` | `Boolean` | `false` | Deshabilita interacción. |
 | `ripple` | `Boolean` | `true` | Efecto ripple al hacer click. |
-| `variant` | `KunCardVariant` | `'elevated'` | Variante visual.<br/>Valores · Values: `elevated` `outlined` `flat` `tonal` `text` `plain` |
 | `height` | `string \| null` | `null` | Altura fija (clase Tailwind). |
 | `width` | `string \| null` | `null` | Ancho fijo (clase Tailwind). |
 | `maxHeight` | `string \| null` | `null` | Altura máxima. |
@@ -66,6 +62,37 @@ import { KunCard } from 'adverich-kun-ui'
 - `#default`
 - `#append`
 - `#actions`
+
+## Notas · Notes
+
+## Bordes y superficies
+
+- Superficie `bg-default` (antes `bg-elevated`), como la `card` de Nuxt UI.
+- El borde siempre es `variant="outline"` (`ring` con el color resuelto):
+  sobre `bg-elevated` un `border` era invisible en dark
+  (`--kun-border == --kun-bg-elevated == neutral-800`).
+
+## Color y variante (alineado a `KunColor` × `KunVariant`)
+
+- `color`: `KunColor | null` (prop > `theme.defaults.card` > `neutral`); alterna
+  la superficie tinta/plena vía `KUN_SURFACE_BG` (literal, en
+  `src/theme/kunVariants.ts`).
+- `variant`: estándar `KunVariant` (`null` hereda theme, fallback `solid`).
+  La sombra es propia de `solid` ( máxima recrea el antiguo `elevated`);
+  `soft/subtle/outline/ghost/link` renderizan `shadow-none` y `hover` sigue
+  sumando `hover:shadow-md`.
+- Caso especial `solid × neutral` conserva `bg-default` (el `bg-inverted` de la
+  matriz es de controles, no de páginas/tarjetas).
+- Mapeo histórico de la migración previa (los valores viejos son error de
+  validación):
+  - `elevated` → `solid` (default: `bg-default` + `shadow-elevation`)
+  - `outlined` → `outline` (`ring`, con el color resuelto)
+  - `tonal` → `soft` (`bg-${color}/10`, antes `bg-muted`)
+  - `text` / `plain` → `ghost` (`bg-transparent` + `shadow-none`)
+- Props booleanas `flat` y `outlined` **eliminadas** (fin de la migración):
+  sin reemplazo a nivel prop; `flat` → `variant="solid"` + `elevation="0"`;
+  `outlined` → `variant="outline"`. Pasarlas es un attr DOM anodino, no
+  comportamiento.
 
 ---
 

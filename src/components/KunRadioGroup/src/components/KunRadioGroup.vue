@@ -27,7 +27,7 @@ provide('kun-radio-group', {
 </script>
 
 <template>
-  <div class="w-full" :class="{ 'text-ui-error': props.error }" role="radiogroup" :aria-invalid="props.error || undefined">
+  <div class="w-full" :class="{ 'text-error': props.error }" role="radiogroup" :aria-invalid="props.error || undefined">
     <slot name="label">
       <div v-if="label" class="block mb-1 text-sm font-medium">{{ label }}</div>
     </slot>

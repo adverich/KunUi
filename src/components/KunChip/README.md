@@ -26,9 +26,10 @@ import { KunChip } from 'adverich-kun-ui'
 | `label` | `string \| null` | `null as string \| null` | Texto principal (alternativa al slot). |
 | `closeLabel` | `String` | `'Cerrar'` | Etiqueta accesible del botón cerrar. |
 | `text` | `string \| null` | `null as string \| null` | Texto secundario (alias de `label`). |
-| `color` | `String` | `'bg-button'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
-| `variant` | `KunChipVariant` | `'default' as KunChipVariant` | Variante visual: 'default' \| 'outlined' \| 'flat' \| 'pill'. |
+| `color` | `KunColor \| null` | `null` | Color semántico. `null` delega al theme global. |
+| `variant` | `KunVariant \| null` | `null` | Variante visual: 'solid' \| 'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'link'. `null` delega al theme global. |
+| `pill` | `Boolean` | `false` | Reservado. El chip es siempre `rounded-full` (forma píldora), sin efecto. |
+| `rounded` | `KunChipRounded \| null` | `null` | `full` = círculo 1:1; `none` = esquinas rectas; `null` = píldora por defecto. |
 | `clickable` | `Boolean` | `true` | Clickable (cursor pointer y hover). |
 | `closable` | `Boolean` | `false` | Muestra botón de cierre (emite `update:modelValue` y `click:close`). |
 | `disabled` | `Boolean` | `false` | Deshabilita el chip. |
@@ -51,6 +52,28 @@ import { KunChip } from 'adverich-kun-ui'
 - `#default`
 - `#append`
 - `#close`
+
+## Notas · Notes
+
+# KunChip
+
+## Bordes y radio
+
+- Default: `rounded-full` (píldora).
+- `rounded="full"`: círculo 1:1. Sin dimensiones custom el lado se calcula
+  según contenido y densidad; con `w-*`/`h-*` se agrega `aspect-square`.
+- `rounded="none"`: esquinas rectas.
+
+La prop `pill` queda reservada y sin efecto: usar `rounded` para elegir forma.
+El vocabulario de `variant` es el global
+(`solid|outline|soft|subtle|ghost|link`).
+
+Migración: `variant="pill"` -> `variant="solid"`; el redondeo píldora sigue
+siendo el default.
+## Color
+
+`color` + `textColor` se reemplazaron por `color`
+(`primary|secondary|...|neutral`) + `variant`, resueltos con `kunVariantClasses`.
 
 ---
 

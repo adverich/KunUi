@@ -2,17 +2,17 @@
     <div class="p-4 space-y-4">
         <h3>Ejemplo básico de KunCardActions</h3>
 
-        <KunCardActions justify="justify-between" align="items-center" class="bg-gray-100 rounded-lg">
-            <KunBtn text="Cancelar" variant="outlined" textColor="text-red-600" />
-            <KunBtn text="Guardar" bgColor="bg-blue-600" textColor="text-white" />
+        <KunCardActions justify="justify-between" align="items-center" class="bg-muted rounded-lg">
+            <KunBtn text="Cancelar" variant="outline" color="error" />
+            <KunBtn text="Guardar" color="secondary" />
         </KunCardActions>
 
         <h3>Ejemplo con wrap y acciones múltiples</h3>
 
-        <KunCardActions gap="gap-3" wrap dense class="bg-gray-50">
-            <KunBtn text="Editar" icon="$mdi-pencil" size="sm" />
-            <KunBtn text="Eliminar" icon="$mdi-delete" size="sm" />
-            <KunBtn text="Compartir" icon="$mdi-share" size="sm" />
+        <KunCardActions gap="gap-3" wrap dense class="bg-muted">
+            <KunBtn text="Editar" icon="$pencil" size="sm" />
+            <KunBtn text="Eliminar" icon="$delete" size="sm" />
+            <KunBtn text="Compartir" icon="$star" size="sm" />
         </KunCardActions>
     </div>
 </template>

@@ -6,17 +6,17 @@ import KunCarouselSlide from '../../../KunCarouselSlide/src/components/KunCarous
 const progress = ref(0)
 
 const slides = ref([
-  { id: 1, title: '1', bg: 'bg-red-500' },
-  { id: 2, title: '2', bg: 'bg-blue-500' },
-  { id: 3, title: '3', bg: 'bg-green-500' },
-  { id: 4, title: '4', bg: 'bg-amber-500' },
+  { id: 1, title: '1', bg: 'bg-error' },
+  { id: 2, title: '2', bg: 'bg-info' },
+  { id: 3, title: '3', bg: 'bg-success' },
+  { id: 4, title: '4', bg: 'bg-warning' },
 ])
 </script>
 
 <template>
   <div class="space-y-3">
     <div class="flex items-center gap-3">
-      <div class="h-2 flex-1 overflow-hidden rounded-full bg-surface-light">
+      <div class="h-2 flex-1 overflow-hidden rounded-full bg-muted">
         <div
           class="h-full rounded-full bg-primary transition-[width]"
           :style="{ width: `${Math.round(progress * 100)}%` }"
@@ -26,7 +26,7 @@ const slides = ref([
     </div>
     <KunCarousel align="start" @scroll="(p) => (progress = p)">
       <KunCarouselSlide v-for="s in slides" :key="s.id">
-        <div :class="['flex h-56 items-center justify-center rounded-xl text-2xl font-bold text-white', s.bg]">
+        <div :class="['flex h-56 items-center justify-center rounded-lg text-2xl font-bold text-highlighted', s.bg]">
           {{ s.title }}
         </div>
       </KunCarouselSlide>

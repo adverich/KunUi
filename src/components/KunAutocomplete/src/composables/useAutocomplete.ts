@@ -8,6 +8,7 @@ export interface AutocompletePropsLike {
     returnObject?: boolean;
     multiple?: boolean;
     disabled?: boolean;
+    readonly?: boolean;
     clearSearchOnSelect?: boolean;
     clearOnSelect?: boolean;
     focusOnSelect?: boolean;
@@ -150,7 +151,7 @@ export function useAutocomplete(
     }
 
     function getSelectedItem(item: unknown): void {
-        if (props.disabled || checkDisabled(item)) return;
+        if (props.disabled || props.readonly || checkDisabled(item)) return;
 
         try {
             let updated: unknown = null;
@@ -293,7 +294,7 @@ export function useAutocomplete(
     }
 
     function openMenu(): void {
-        if (props.disabled) return;
+        if (props.disabled || props.readonly) return;
         if (!menuModel.value) menuModel.value = true;
     }
 
@@ -302,7 +303,7 @@ export function useAutocomplete(
     }
 
     function toggleMenu(): void {
-        if (props.disabled) return;
+        if (props.disabled || props.readonly) return;
         menuModel.value = !menuModel.value;
     }
 
@@ -352,33 +353,34 @@ export function useAutocomplete(
 
     // FUNCION PARA EMITIR EVENTO DE CREACION DE NUEVO ITEM
     function createItem(): void {
-        if (props.disabled) return;
+        if (props.disabled || props.readonly) return;
         menuModel.value = false;
         emits("createItem");
     }
 
     function removeItem(item: unknown): void {
-        if (props.disabled) return;
+        if (props.disabled || props.readonly) return;
         if (!isArray(modelValue.value)) return;
-        const arr = modelValue.value as unknown[];
+        const arr = [...(modelValue.value as unknown[])];
         const index = arr.indexOf(item);
         if (index === -1) return;
         arr.splice(index, 1);
-        // Sincronización explícita: el watcher también lo hace, pero así no quedan
-        // valores fantasma si la mutación in-place no dispara el watch a tiempo.
+        // Reasignar (no mutar in-place): `defineModel` solo emite `update:modelValue` al asignar.
+        modelValue.value = arr;
         selectedItem.value = findItemByValue(modelValue.value);
     }
 
     function clearSelection(): void {
-        if (props.disabled) return;
+        if (props.disabled || props.readonly) return;
         if (search.value !== "") search.value = "";
 
-        if (modelValue.value !== null) {
-            modelValue.value = null;
+        const empty: unknown = props.multiple ? [] : null;
+        if (modelValue.value !== empty) {
+            modelValue.value = empty;
         }
 
-        if (selectedItem.value !== null) {
-            selectedItem.value = null;
+        if (selectedItem.value !== empty) {
+            selectedItem.value = empty;
         }
 
         emits("cleared");

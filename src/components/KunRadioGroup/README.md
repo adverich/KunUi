@@ -31,8 +31,8 @@ import { KunRadioGroup } from 'adverich-kun-ui'
 | `direction` | `KunRadioGroupDirection` | `'vertical'` | Dirección del layout: 'vertical' \| 'horizontal'.<br/>Valores · Values: `vertical` `horizontal` |
 | `inline` | `Boolean` | `-` | Opciones en línea (atajo de direction='horizontal'). |
 | `error` | `Boolean` | `-` | Estado de error visual. |
-| `trueIcon` | `String \| Object` | `'mdi-radiobox-marked'` | Ícono por defecto para el estado activo. |
-| `falseIcon` | `String \| Object` | `'mdi-radiobox-blank'` | Ícono por defecto para el estado inactivo. |
+| `trueIcon` | `String \| Object` | `'$radioboxMarked'` | Ícono por defecto para el estado activo. Acepta alias `$` del set bundleado, componente o clase CSS. |
+| `falseIcon` | `String \| Object` | `'$radioboxBlank'` | Ícono por defecto para el estado inactivo. Acepta alias `$` del set bundleado, componente o clase CSS. |
 | `label` | `String` | `-` | Etiqueta del grupo. |
 
 ## Eventos · Events

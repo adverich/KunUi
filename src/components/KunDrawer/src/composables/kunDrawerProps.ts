@@ -7,10 +7,8 @@ export const kunDrawerProps = {
   modelValue: Boolean,
   /** Posicionamiento absoluto dentro del contenedor. */
   absolute: Boolean,
-  /** Borde (boolean o clase de color). */
-  border: [Boolean, String, Number],
-  /** Color de fondo. */
-  color: String,
+  /** Borde del lado interior (`border-e/s/t/b border-default`); flotante → `ring ring-default`. Por defecto `true`. */
+  border: { type: Boolean, default: true },
   /** Nivel de sombra. */
   elevation: [String, Number],
   /** Sin bordes ni fondo (flotante). */
@@ -27,8 +25,8 @@ export const kunDrawerProps = {
   rail: Boolean,
   /** Ancho en modo rail. */
   railWidth: { type: String, default: 'w-[56px]' },
-  /** Redondeo de bordes. */
-  rounded: [Boolean, String, Number],
+  /** Redondeo lateral según el lado (`rounded-e-lg` / `rounded-s-lg`). */
+  rounded: Boolean,
   /** Muestra scrim (overlay) al abrir. */
   scrim: { type: [Boolean, String], default: true },
   /** Tag del contenedor. */

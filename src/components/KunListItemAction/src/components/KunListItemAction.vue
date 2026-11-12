@@ -1,7 +1,7 @@
 <template>
   <span
     :class="[
-      textColor,
+      'text-default',
       fontSize,
       fontWeight
     ]"

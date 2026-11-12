@@ -93,7 +93,8 @@ function onFieldChange() {
   }
 }
 
-// Proveer API a hijos
+// Proveer API a hijos (`kunForm` para campos custom externos;
+// `registerField`/`unregisterField` sueltas para los campos propios).
 provide('kunForm', {
   registerField,
   unregisterField,

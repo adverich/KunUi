@@ -2,7 +2,7 @@
     <div class="p-4 space-y-6">
         <h3>Ejemplo básico de KunCardItem</h3>
 
-        <KunCardItem dense class="bg-gray-100 rounded-lg">
+        <KunCardItem dense class="bg-muted rounded-lg">
             <KunCardTitle title="Título Principal" subtitle="Subtítulo descriptivo" />
         </KunCardItem>
 

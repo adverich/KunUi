@@ -42,7 +42,6 @@ const directionOptions = ref([
 // ------------------------------------------------------------------
 // Colores, clases e iconos de flechas (String: directo)
 // ------------------------------------------------------------------
-const bgColor = ref('')
 const sliderColor = ref('bg-primary')
 const selectedClass = ref('text-primary font-medium')
 const nextIcon = ref('ri-arrow-right-s-line')
@@ -114,7 +113,6 @@ const activeDetail = computed(() => {
         :model-value="multiple ? multiValue : singleValue"
         :align-tabs="alignTabs"
         :direction="direction"
-        :bg-color="bgColor"
         :slider-color="sliderColor"
         :selected-class="selectedClass"
         :grow="grow"
@@ -152,34 +150,34 @@ const activeDetail = computed(() => {
         />
       </KunTabs>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Contenido del tab activo</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Contenido del tab activo</div>
         <p>{{ activeDetail }}</p>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
         <div>{{ JSON.stringify(multiple ? multiValue : singleValue) }}</div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Cambiá de tab para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Cambiá de tab para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra los tabs) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Barra</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Barra</p>
         <KunSelect
           v-model="alignTabs"
           v-model:items="alignTabsOptions"
@@ -196,14 +194,13 @@ const activeDetail = computed(() => {
           item-title="name"
           density="compact"
         />
-        <KunTextField v-model="bgColor" label="Background color" density="compact" />
         <KunTextField v-model="sliderColor" label="Slider color" density="compact" />
         <KunTextField v-model="selectedClass" label="Selected class" density="compact" />
         <KunTextField v-model="heightRaw" label="Height (vacío = auto)" density="compact" inputmode="decimal" />
         <KunTextField v-model="nextIcon" label="Next icon" density="compact" />
         <KunTextField v-model="prevIcon" label="Prev icon" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Comportamiento</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Comportamiento</p>
         <KunSwitch v-model="grow" label="Grow" />
         <KunSwitch v-model="centerActive" label="Center active" />
         <KunSwitch v-model="hideSlider" label="Hide slider" />
@@ -211,7 +208,7 @@ const activeDetail = computed(() => {
         <KunSwitch v-model="multiple" label="Multiple" />
         <KunSwitch v-model="mandatory" label="Mandatory" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Tabs (hijos KunTab)</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Tabs (hijos KunTab)</p>
         <KunTextField v-model="tabPrependIcon" label="Prepend icon (vacío = sin icono)" density="compact" />
         <KunTextField v-model="tabAppendIcon" label="Append icon (vacío = sin icono)" density="compact" />
         <KunSwitch v-model="disableBanana" label="Deshabilitar Banana" />

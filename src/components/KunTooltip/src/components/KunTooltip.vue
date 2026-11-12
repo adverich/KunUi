@@ -12,8 +12,7 @@
         v-show="isVisible"
         ref="tooltipRef"
         :class="mergedClass"
-        :style="tooltipStyle"
-        style="z-index: 9999;"
+        :style="[tooltipStyle, zIndexStyle('overlay')]"
         role="tooltip"
         :aria-hidden="!isVisible"
         @mouseenter="onTooltipEnter"
@@ -29,6 +28,7 @@
 import { ref, computed, onBeforeUnmount, nextTick, useId, type Ref } from 'vue'
 import { kunTooltipProps } from '../composables/kunTooltipProps.js'
 import { useTooltipPosition, type TooltipLocation, type TooltipDist } from '../composables/useTooltipPosition.js'
+import { zIndexStyle } from '@/theme/kunZIndex.js'
 
 const props = defineProps(kunTooltipProps)
 
@@ -127,7 +127,7 @@ const activatorProps = computed(() => {
 
 // Clases
 const baseClass = 'fixed px-3 py-2 shadow'
-const mergedClass = computed(() => [baseClass, props.textColor, props.bgColor, props.textSize, props.rounded, props.class])
+const mergedClass = computed(() => ['bg-default text-highlighted ring ring-default', baseClass, props.textSize, props.rounded, props.class])
 
 onBeforeUnmount(() => {
   clearTimer(openTimer)

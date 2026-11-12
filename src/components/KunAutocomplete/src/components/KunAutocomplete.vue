@@ -1,7 +1,8 @@
 <template>
   <div class="w-full h-fit" ref="parentRef">
-    <KunTextField v-model="search" v-bind="textFieldProps" :label="label" :disabled="disabled" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
-      autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-t' : 'rounded'"
+    <KunTextField v-model="search" v-bind="textFieldProps" :label="label" :disabled="disabled" :readonly="readonly" dirty :hide-details="hideDetails" :density="density" ref="textFieldRef"
+      :input-text-size="resolvedInputTextSize"
+      autocomplete="off" @update:modelValue="txtUpdated" @focusInput="txtFocused" @handleClick="toggleMenu" :rounded="menuModel ? 'rounded-md rounded-b-none' : 'rounded-md'"
       @blur="textFieldBlur" @keyDown="textKeyDown" @keyDown.enter.prevent="handleEnter"
       :placeholder="props.multiple && isArray(modelValue) && (modelValue as unknown[]).length ? '' : placeholder"
       :error="!!internalError" :error-messages="internalError"
@@ -14,14 +15,13 @@
           @click="!disabled && toggleMenu()"
         >
           <template v-for="(item, idx) in (modelValue as unknown[])" :key="typeof item === 'object' && item !== null ? ((item as any).id ?? (item as any).name ?? idx) : ((item as string) ?? idx)">
-            <KunChip v-show="idx < visibleCount" :data-chip="idx" size="small" variant="pill" class="shrink-0">
+            <KunChip v-show="idx < visibleCount" :data-chip="idx" size="small" pill class="shrink-0">
               <div class="flex items-center">
                 {{ getArrayText(item) }}
                 <KunIcon
-                  color="error"
                   :icon="icons.close"
-                  size="small"
-                  class="ml-1"
+                  size="size-4"
+                  class="ml-1 text-error"
                   @click.stop="removeItem(item)"
                 />
               </div>
@@ -30,7 +30,7 @@
           <KunChip
             v-if="hiddenCount > 0"
             size="small"
-            variant="pill"
+            pill
             class="shrink-0"
             :title="hiddenNames"
           >
@@ -40,44 +40,45 @@
       </template>
 
       <template v-if="hasIcons" v-slot:append-inner>
-        <KunIcon v-if="clearable && modelValue" @click="clearSelection" size="small" color="error" :icon="icons.close"
-          class="mr-1 mt-1" />
-        <KunIcon :color="iconColor" size="large" class="cursor-pointer"
+        <KunIcon v-if="clearable && modelValue" @click="clearSelection" size="size-4" :icon="icons.close"
+          class="mr-1 mt-1 text-error" />
+        <KunIcon :class="[iconColor, 'cursor-pointer']" size="size-5"
           :icon="menuModel ? icons.menuUpOutline : icons.menuDownOutline" @click.stop="openMenu" />
-        <KunIcon v-if="required" :color="requiredIconColor" size="x-small" class="mb-4" :icon="icons.asterisk" />
+        <KunIcon v-if="required" :class="[requiredIconColor, 'mb-4']" size="size-3" :icon="icons.asterisk" />
       </template>
 
-      <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent" :z-index="zIndex"
-        :parent-ref="(parentRef as any)" :origin="menuOrigin" @handleEscape="handleEscape" :bgColor="bgMenuColor"
-        :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight" :hide-details="hideDetails"
+      <KunMenu transition="fade" @click:outside="lightReset" v-model="menuModel" activator="parent"
+        :parent-ref="(parentRef as any)" :origin="menuOrigin" @handleEscape="handleEscape"
+        :close-on-content-click="props.multiple ? false : closeOnSelect" width="w-full" :max-height="maxHeight ?? undefined" :hide-details="hideDetails"
       >
-        <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b bg-select-background">
-          <KunBtn @click="createItem" :bgColor="btnCreateBg" :class="btnCreateClass" >
+        <div v-if="hasCreateItem" class="sticky top-0 z-10 p-2 border-b border-muted bg-muted">
+          <KunBtn ref="createBtnRef" @click="createItem" @keydown="handleCreateBtnKeydown" :color="btnCreateColor" :class="btnCreateClass" >
             {{ btnCreateText }}
           </KunBtn>
         </div>
-        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false">
+        <div @keydown.capture="handleListCapture">
+        <KunList @click:select="getSelectedItem" ref="listRef" @keyDown="handleKeyList" :selectable="false" :font-size="itemFontSize" color="neutral" variant="link">
           <KunInfiniteScroll :items="items" :search="search" :searchable-keys="props.searchableKeys" :virtual="false"
             :items-per-intersection="10" :enabled="menuModel" :item-height="48" v-slot="sp">
             <template v-if="!(sp as any).empty && ((sp as any).item !== undefined && (sp as any).item !== null)">
               <KunListItem :value="(sp as any).item" :key="`kun-list-${(sp as any).index + 1}`" :id="`kun-item-${(sp as any).index + 1}`" :disabled="checkDisabled((sp as any).item)"
-              :bg-items="bgItemListColor" :hover-bg="hoverItemListColor" :activeClass="selectedItemListColor"
-              :density="density" :selectable="true" :active="isItemSelected((sp as any).item)" rounded="none">
-                <KunListItemTitle class="text-wrap">
+              :density="density" :selectable="true" :active="isItemSelected((sp as any).item)" :rounded="false" color="neutral">
+                <KunListItemTitle class="text-wrap" :font-size="itemFontSize">
                   {{ itemToString((sp as any).item, itemTitle ?? textArr, 'hasDefault') }}
                 </KunListItemTitle>
-                <KunListItemSubtitle :text="itemSubtitle ? itemToString((sp as any).item, itemSubtitle) : ''" />
+                <KunListItemSubtitle :text="itemSubtitle ? itemToString((sp as any).item, itemSubtitle) : ''" :font-size="subtitleFontSize" />
               </KunListItem>
             </template>
             <template v-else>
           <KunListItem disabled>
-                <KunListItemTitle :class="['text-center w-full', emptyTextClass]">
+                <KunListItemTitle :class="['text-center w-full', emptyTextClass, itemFontSize]">
                   {{ textNoItems }}
                 </KunListItemTitle>
               </KunListItem>
             </template>
           </KunInfiniteScroll>
         </KunList>
+        </div>
       </KunMenu>
     </KunTextField>
   </div>
@@ -106,7 +107,7 @@ import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 // any intencional: los tipos de Vue exigen default no-null para T=unknown;
 // el modelo acepta cualquier cosa (objeto, array, primitivo, null).
 const modelValue = defineModel<any>({ default: null });
-const items = defineModel<unknown[]>('items', { default: (() => []) as () => unknown[], required: true });
+const items = defineModel<unknown[]>('items', { default: (() => []) as () => unknown[] });
 
 const props = defineProps(KunAutocompleteProps);
 const emits = defineEmits<{
@@ -120,6 +121,48 @@ const { textFieldRef, listRef, menuModel, search, selectedItem, removeItem, clea
   getSelectedItem, textArr, getArrayText, isAlphanumeric, checkIfValueExist, extractValueKey,
   createItem, checkDisabled, itemToString, placeholder,
 } = useAutocomplete(props, emits, modelValue, items);
+
+// Tamaño del input: `textFieldProps` explícito tiene prioridad sobre `fontSize`.
+const resolvedInputTextSize = computed(() => {
+  const tfp = (props.textFieldProps ?? {}) as Record<string, unknown>;
+  return (tfp.inputTextSize ?? tfp['input-text-size'] ?? props.fontSize) as string | null;
+});
+
+// Ref al botón crear (hasCreateItem): participa del ciclo de foco con flechas.
+const createBtnRef: Ref<{ focus?: () => void } | null> = ref(null);
+
+function focusCreateButton(): void {
+  createBtnRef.value?.focus?.();
+}
+
+function focusTextInput(): void {
+  textFieldRef.value?.inputField?.focus();
+}
+
+// Ítems focuseables reales del menú (excluye el "sin elementos" disabled).
+function getFocusableListItems(): HTMLElement[] {
+  try {
+    const root = (listRef.value as unknown as { $el?: unknown })?.$el as HTMLElement | undefined;
+    if (!root || typeof root.querySelectorAll !== 'function') return [];
+    return Array.from(root.querySelectorAll('[role="option"]')).filter((el) => {
+      const node = el as HTMLElement;
+      if (!node.isConnected) return false;
+      return node.getAttribute('aria-disabled') !== 'true';
+    }) as HTMLElement[];
+  } catch {
+    return [];
+  }
+}
+
+function focusFirstListItem(): boolean {
+  const items = getFocusableListItems();
+  const el = items[0];
+  if (el) {
+    el.focus?.();
+    return true;
+  }
+  return false;
+}
 
 function isItemSelected(item: unknown): boolean {
   try {
@@ -251,7 +294,73 @@ function textKeyDown(e: KeyboardEvent): void {
     e.preventDefault();
     if (!menuModel.value) openMenu();
 
+    // Con botón crear visible, ArrowDown desde el input va al botón
+    // (no al primer ítem) para no omitirlo del ciclo de teclado.
+    if (key === 'ArrowDown' && props.hasCreateItem) {
+      nextTick(() => focusCreateButton());
+      return;
+    }
+
     focusListWithKey(key);
+  }
+}
+
+function handleCreateBtnKeydown(e: KeyboardEvent): void {
+  if (props.disabled || props.readonly) return;
+  const key = e.key;
+  if (key === 'ArrowDown') {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!focusFirstListItem()) focusTextInput();
+    return;
+  }
+  if (key === 'ArrowUp') {
+    e.preventDefault();
+    e.stopPropagation();
+    focusTextInput();
+    return;
+  }
+  if (key === 'Escape') {
+    e.stopPropagation();
+    handleEscape();
+    return;
+  }
+  if (key === 'Tab') {
+    closeMenu();
+  }
+}
+
+// Intercepta (fase capture, antes que KunList) los bordes de la lista:
+// primer ítem + ArrowUp y último ítem + ArrowDown redirigen al botón crear
+// en vez del wrap circular interno de KunList.
+function handleListCapture(e: KeyboardEvent): void {
+  if (!props.hasCreateItem || props.disabled || props.readonly) return;
+  const key = e.key;
+  if (key !== 'ArrowUp' && key !== 'ArrowDown') return;
+
+  const items = getFocusableListItems();
+  if (!items.length) {
+    // Sin ítems focuseables: las flechas desde la lista vuelven al botón.
+    const active = document.activeElement as HTMLElement | null;
+    const root = (listRef.value as unknown as { $el?: unknown })?.$el as HTMLElement | undefined;
+    if (active && root?.contains(active)) {
+      e.preventDefault();
+      e.stopPropagation();
+      focusCreateButton();
+    }
+    return;
+  }
+
+  const active = document.activeElement as HTMLElement | null;
+  const idx = items.findIndex((el) => el === active);
+  if (idx === -1) return;
+
+  const atFirst = idx === 0 && key === 'ArrowUp';
+  const atLast = idx === items.length - 1 && key === 'ArrowDown';
+  if (atFirst || atLast) {
+    e.preventDefault();
+    e.stopPropagation();
+    focusCreateButton();
   }
 }
 

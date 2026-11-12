@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import KunAvatar from '../src/components/KunAvatar.vue'
-import type { KunAvatarDensity, KunAvatarVariant } from '../src/composables/kunAvatarProps.js'
+import { KUN_COLORS, KUN_VARIANTS, type KunColor, type KunVariant } from '../../../theme/kunVariants.js'
+import type { KunAvatarBorder, KunAvatarDensity, KunAvatarSize } from '../src/composables/kunAvatarProps.js'
+import KunBtn from '../../KunBtn/src/components/KunBtn.vue'
+import KunIcon from '../../KunIcon/src/components/KunIcon.vue'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import { KUN_SIZE_ORDER } from '../../../theme/kunSizes.js'
 
-// ------------------------------------------------------------------
-// Tipos locales para controles sin unión exportada en props
-// (size acepta strings libres y números; rounded se mapea abajo).
-// ------------------------------------------------------------------
-type KunAvatarSize = 'x-small' | 'small' | 'default' | 'large' | 'x-large'
-type RoundedMode = 'default' | 'circular' | 'off'
+type RoundedMode = 'default' | 'circular' | 'off' | 'lg'
 
 // ------------------------------------------------------------------
 // Controles del playground (strings crudos -> computed undefined)
@@ -22,34 +21,50 @@ const iconRaw = ref('')
 const textRaw = ref('KU')
 const altRaw = ref('Avatar de ejemplo')
 const colorRaw = ref('')
+const colorOptions = ref([{ id: '', name: '(default: neutral · soft)' }, ...KUN_COLORS.map(c => ({ id: c, name: c }))])
+const colorProp = computed<KunColor | null>(() => (colorRaw.value === '' ? null : colorRaw.value as KunColor))
 const themeRaw = ref('')
 const tagRaw = ref('div')
 const borderRaw = ref('')
+const borderOptions = ref([
+  { id: '', name: '(sin borde)' },
+  { id: 'true', name: 'true (border-default)' },
+  { id: 'muted', name: 'muted' },
+  { id: 'accented', name: 'accented' },
+  { id: 'inverted', name: 'inverted' },
+])
+const borderProp = computed<KunAvatarBorder>(() => {
+  if (borderRaw.value === '') return false
+  if (borderRaw.value === 'true') return true
+  return borderRaw.value as KunAvatarBorder
+})
 
-const variant = ref<KunAvatarVariant>('flat')
+const variant = ref<KunVariant | null>(null)
 const variantOptions = ref([
-  { id: 'flat', name: 'flat (fondo pleno)' },
-  { id: 'outlined', name: 'outlined (transparente con borde)' },
-  { id: 'tonal', name: 'tonal (fondo suave)' },
-  { id: 'text', name: 'text (transparente)' },
+  { id: '', name: '(default: soft · neutral)' },
+  ...KUN_VARIANTS.map(v => ({ id: v, name: v })),
 ])
 
 const imageProp = computed(() => (imageRaw.value === '' ? undefined : imageRaw.value))
 const iconProp = computed(() => (iconRaw.value === '' ? undefined : iconRaw.value))
 const textProp = computed(() => (textRaw.value === '' ? undefined : textRaw.value))
 const altProp = computed(() => (altRaw.value === '' ? undefined : altRaw.value))
-const colorProp = computed(() => (colorRaw.value === '' ? undefined : colorRaw.value))
 const themeProp = computed(() => (themeRaw.value === '' ? undefined : themeRaw.value))
 const tagProp = computed(() => (tagRaw.value === '' ? 'div' : tagRaw.value))
-const borderProp = computed((): string | boolean => (borderRaw.value === '' ? false : borderRaw.value))
 
-const size = ref<KunAvatarSize>('default')
+const size = ref<KunAvatarSize>('md')
 const sizeOptions = ref([
-  { id: 'x-small', name: 'x-small' },
-  { id: 'small', name: 'small' },
-  { id: 'default', name: 'default' },
-  { id: 'large', name: 'large' },
-  { id: 'x-large', name: 'x-large' },
+  { id: 'xxs', name: 'xxs (24px)' },
+  { id: 'xs', name: 'xs (28px)' },
+  { id: 'sm', name: 'sm (32px)' },
+  { id: 'md', name: 'md (36px)' },
+  { id: 'lg', name: 'lg (40px)' },
+  { id: 'xl', name: 'xl (48px)' },
+  { id: 'xxl', name: 'xxl (56px)' },
+  { id: '3xs', name: '3xs legacy (32px)' },
+  { id: '2xs', name: '2xs legacy (36px)' },
+  { id: '2xl', name: '2xl legacy (72px)' },
+  { id: '3xl', name: '3xl legacy (80px)' },
 ])
 
 const density = ref<KunAvatarDensity>('default')
@@ -61,12 +76,19 @@ const densityOptions = ref([
 
 const roundedMode = ref<RoundedMode>('default')
 const roundedOptions = ref([
-  { id: 'default', name: 'default (undefined)' },
+  { id: 'default', name: 'default (rounded-full)' },
   { id: 'circular', name: 'circular (true)' },
   { id: 'off', name: 'off (false)' },
+  { id: 'lg', name: 'lg (escala)' },
 ])
 const roundedProp = computed((): string | number | boolean | undefined =>
-  roundedMode.value === 'circular' ? true : roundedMode.value === 'off' ? false : undefined,
+  roundedMode.value === 'circular'
+    ? true
+    : roundedMode.value === 'off'
+      ? false
+      : roundedMode.value === 'lg'
+        ? 'lg'
+        : undefined,
 )
 
 const end = ref(false)
@@ -133,47 +155,88 @@ function logEvent(name: string, detail: unknown): void {
         />
         <div class="min-w-0 text-sm">
           <div class="font-medium">Demo interactiva</div>
-          <p class="text-ui-muted text-xs">Prioridad: imagen &gt; icono &gt; texto &gt; slot.</p>
+          <p class="text-muted text-xs">Prioridad: imagen &gt; icono &gt; texto &gt; slot.</p>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-3">
-        <KunAvatar :image="demoImage" alt="Imagen" size="small" />
-        <KunAvatar icon="★" size="small" />
-        <KunAvatar :icon="demoSvgIcon" size="small" />
-        <KunAvatar text="JD" size="small" />
-        <KunAvatar size="small">S</KunAvatar>
-        <span class="text-xs text-ui-muted">imagen · icono (texto) · icono (SVG) · texto · slot</span>
+        <KunAvatar :image="demoImage" alt="Imagen" size="xs" />
+        <KunAvatar icon="★" size="xs" />
+        <KunAvatar :icon="demoSvgIcon" size="xs" />
+        <KunAvatar text="JD" size="xs" />
+        <KunAvatar size="xs">S</KunAvatar>
+        <span class="text-xs text-muted">imagen · icono (texto) · icono (SVG) · texto · slot</span>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Fallback activo: {{ activeFallback }}</div>
+      <div class="flex flex-wrap items-center gap-3">
+        <KunAvatar icon="$star" size="xxs" />
+        <KunAvatar icon="$star" size="md" />
+        <KunAvatar icon="$star" size="xxl" />
+        <span class="text-xs text-muted">ícono xxs · md · xxl</span>
+      </div>
+
+      <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Override de una dimensión (sigue circular)</div>
+        <div class="flex flex-wrap items-center gap-3">
+          <KunAvatar icon="$star" size="md" class="w-16" />
+          <KunAvatar icon="$star" size="md" class="h-16" />
+          <KunAvatar icon="$star" size="md" class="h-14 w-14" />
+          <span class="text-xs text-muted">w-16 / h-16 / h-14 w-14</span>
+        </div>
+      </div>
+      <div class="rounded-lg border border-default p-3">
+        <div class="text-muted text-xs mb-2">Consistencia (mismo size = mismo px)</div>
+        <div class="flex flex-wrap items-end gap-3">
+          <div v-for="s in KUN_SIZE_ORDER" :key="s" class="flex flex-col items-center gap-1">
+            <div class="flex items-center gap-1">
+              <KunAvatar icon="$star" :size="s" />
+              <KunBtn :size="s" square color="primary">
+                <KunIcon icon="$star" :size="s" />
+              </KunBtn>
+            </div>
+            <span class="text-[10px] text-muted">{{ s }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Fallback activo: {{ activeFallback }}</div>
         <div class="font-mono text-xs">size={{ JSON.stringify(size) }} density={{ JSON.stringify(density) }} rounded={{ JSON.stringify(roundedProp) }}</div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Hacé click o hover sobre el avatar para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Hacé click o hover sobre el avatar para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el avatar) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="imageRaw" label="Image src (vacío = sin imagen)" density="compact" />
         <KunTextField v-model="altRaw" label="Alt" density="compact" />
         <KunTextField v-model="iconRaw" label="Icon (vacío = sin icono)" density="compact" />
         <KunTextField v-model="textRaw" label="Text (vacío = slot)" density="compact" />
-        <KunTextField v-model="colorRaw" label="Color (bg-*, vacío = default)" density="compact" />
-        <KunTextField v-model="borderRaw" label="Border (vacío = false)" density="compact" />
+        <KunSelect
+          v-model="colorRaw"
+          v-model:items="colorOptions"
+          label="Color"
+          density="compact"
+        />
+        <KunSelect
+          v-model="borderRaw"
+          v-model:items="borderOptions"
+          label="Border (rol de token)"
+          density="compact"
+        />
         <KunTextField v-model="tagRaw" label="Tag" density="compact" />
         <KunSelect
           v-model="variant"

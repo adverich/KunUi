@@ -8,9 +8,9 @@
     <header
       v-show="isVisible"
       ref="el"
-      class="w-full flex transition-all duration-300"
+      class="w-full flex transition-all duration-300 px-2"
       :class="mergedClass"
-      :style="{ zIndex }"
+      :style="appbarZIndex"
       v-bind="$attrs"
     >
       <!-- IZQUIERDA -->
@@ -19,15 +19,13 @@
           <KunBtn
             v-if="showDrawerButton"
             :class="buttonClass"
-            :bgColor="buttonBg"
-            minWidth="fit-content"
-            rounded="rounded-full"
-            textColor="text-ui"
-
+            :color="buttonColor"
+            :variant="buttonVariant"
+            icon="$menuRounded"
+            size="sm"
+            rounded="full"
             @click="$emit('toggle-drawer')"
-          >
-            <KunIcon :icon="IconMenuRounded" size="text-3xl" />
-          </KunBtn>
+          />
         </slot>
 
         <slot name="prepend" />
@@ -82,14 +80,15 @@
 import { computed, ref, onMounted, onUpdated, nextTick, onBeforeUnmount, type Ref } from 'vue';
 import KunAppbarTitle from '../../../KunAppbarTitle/src/components/KunAppbarTitle.vue';
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue';
-import KunIcon from '../../../KunIcon/src/components/KunIcon.vue';
-import IconMenuRounded from '../../../../icons/IconMenuRounded.vue';
 import { setAppbarHeight } from '@/utils/useLayout.js';
+import { zIndexStyle } from '@/theme/kunZIndex.js';
 import { kunAppbarProps } from '../composables/kunAppbarProps.js'
 
 const props = defineProps(kunAppbarProps)
 defineEmits(['toggle-drawer'])
 defineOptions({ inheritAttrs: false });
+
+const appbarZIndex = computed(() => zIndexStyle('docked'));
 
 const el: Ref<HTMLElement | null> = ref(null);
 const isVisible = ref(true);
@@ -163,9 +162,9 @@ const elevationClass = computed(() => {
 
 const mergedClass = computed(() => [
   heightClass.value,
-  props.bgColor,
+  'bg-default text-default',
   elevationClass.value,
-  props.bordered ? props.borderColor : '',
+  props.bordered ? 'border-b border-default' : '',
   props.fixed ? 'fixed top-0 left-0 right-0' : '',
   props.sticky ? 'sticky top-0' : '',
   props.glass ? 'backdrop-blur-md' : '',

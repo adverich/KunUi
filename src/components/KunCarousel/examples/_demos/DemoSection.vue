@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-  <section :id="id" class="scroll-mt-24 rounded-xl border border-surface bg-surface-dark p-4 sm:p-5">
+  <section :id="id" class="scroll-mt-24 rounded-lg border border-muted bg-elevated p-4 sm:p-5">
     <h3 class="text-base font-semibold">{{ title }}</h3>
     <p v-if="description" class="mt-1 text-sm opacity-70">{{ description }}</p>
     <div class="mt-3">

@@ -1,9 +1,10 @@
 import type { PropType } from 'vue';
+import { isKunColor, isKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js';
 
 export type KunCardRounded = boolean | 'sm' | 'md' | 'lg' | 'xl';
 export type KunCardElevation = '' | '0' | '1' | '2' | '3' | '4' | '5' | 0 | 1 | 2 | 3 | 4 | 5;
 export type KunCardDensity = 'default' | 'comfortable' | 'compact';
-export type KunCardVariant = 'elevated' | 'outlined' | 'flat' | 'tonal' | 'text' | 'plain';
+export type KunCardVariant = KunVariant;
 
 export const kunCardProps = {
     /** Título (atajo; equivale al slot de título). */
@@ -16,22 +17,12 @@ export const kunCardProps = {
     subTitleSize: { type: String as PropType<string | null>, default: null },
     /** Texto del cuerpo (atajo; equivale al slot default). */
     text: { type: String as PropType<string | null>, default: null },
-    /** Color del texto. */
-    textColor: { type: String, default: 'text-ui' },
-    /** Color de fondo. */
-    bgColor: { type: String, default: 'bg-transparent' },
-    /** Sin sombra. */
-    flat: { type: Boolean, default: false },
     /** Redondeo: boolean o tamaño. */
     rounded: {
         type: [Boolean, String] as PropType<KunCardRounded>,
         default: true,
         validator: (v: unknown) => typeof v === 'boolean' || ['sm', 'md', 'lg', 'xl'].includes(v as string)
     },
-    /** Con borde (usa `outlineColor`). */
-    outlined: { type: Boolean, default: false },
-    /** Color del borde en modo `outlined`. */
-    outlineColor: { type: String, default: 'border-ui' },
     /** Nivel de sombra (0-5, como string o número). */
     elevation: {
         type: [String, Number] as PropType<KunCardElevation>,
@@ -48,16 +39,18 @@ export const kunCardProps = {
     // Nuevos props
     /** Tag del contenedor. */
     tag: { type: String, default: 'div' },
+    /** Color semántico de la superficie; `null` hereda `kunTheme.configure({ defaults: { card } })` (fallback `neutral`). */
+    color: { type: String as PropType<KunColor | null>, default: null, validator: (v: unknown) => v === null || isKunColor(v) },
+    /** Variante estándar de superficie (`KunVariant`); `null` hereda theme (`card`, fallback `solid`). */
+    variant: {
+        type: String as PropType<KunVariant | null>,
+        default: null,
+        validator: (v: unknown) => v === null || isKunVariant(v),
+    },
     /** Deshabilita interacción. */
     disabled: { type: Boolean, default: false },
     /** Efecto ripple al hacer click. */
     ripple: { type: Boolean, default: true },
-    /** Variante visual. */
-    variant: {
-        type: String as PropType<KunCardVariant>,
-        default: 'elevated',
-        validator: (v: unknown) => ['elevated', 'outlined', 'flat', 'tonal', 'text', 'plain'].includes(v as string)
-    },
     /** Altura fija (clase Tailwind). */
     height: { type: String as PropType<string | null>, default: null },
     /** Ancho fijo (clase Tailwind). */

@@ -27,8 +27,6 @@ import { KunCardTitle } from 'adverich-kun-ui'
 | `subtitle` | `String` | `-` | Subtítulo (alternativa al slot). |
 | `prepend` | `String \| Object \| Function` | `-` | Contenido al inicio (componente o icono). |
 | `append` | `String \| Object \| Function` | `-` | Contenido al final (componente o icono). |
-| `bgColor` | `String` | `'bg-transparent'` | Color de fondo. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
 | `dense` | `Boolean` | `false` | Reduce el padding. |
 | `flat` | `Boolean` | `false` | Sin sombra. |
 | `rounded` | `boolean \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `false` | Redondeo: boolean o tamaño. |

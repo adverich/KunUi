@@ -19,7 +19,7 @@
           :ripple="false"
           :true-value="true"
           :false-value="false"
-          :color="someSelected && !allSelected && !moreThanPaginated ? 'text-warning' : allSelected || moreThanPaginated ? 'text-success' : ''"
+          :color="(someSelected && !allSelected && !moreThanPaginated ? 'warning' : (allSelected || moreThanPaginated) ? 'success' : null)"
           hide-details
         />
       </th>
@@ -47,7 +47,7 @@
           <slot :name="`header.${header.key}`" :header="header">
             <span>{{ header.label ?? header.text }}</span>
             <span v-if="header.sortable" class="inline-flex items-center gap-1 ml-1 print:hidden">
-              <component :is="getSortIcon(header)" class="w-4 h-4 text-ui-muted" />
+              <KunIcon :icon="getSortIcon(header)" class="w-4 h-4 text-muted" />
             </span>
           </slot>
         </template>
@@ -72,9 +72,7 @@
  * - Expansión/Colapso global (si aplica)
  */
 import { ref, watch, onMounted, type Ref } from 'vue';
-import arrowUp from '@/icons/IconArrowUp.vue'
-import arrowDown from '@/icons/IconArrowDown.vue'
-import arrowDownUp from '@/icons/IconArrowDownUp.vue'
+import KunIcon from "@/components/KunIcon/src/components/KunIcon.vue"
 import KunCheckbox from "@/components/KunCheckbox/src/components/KunCheckbox.vue"
 import { kunTableHeadersProps } from '../composables/kunTableHeadersProps.js'
 import type { KunTableHeader } from '@/utils/tableFormatters.js'
@@ -119,18 +117,18 @@ function getSortOrder(header: KunTableHeader): string | undefined {
 // Retorna el ícono correcto según estado de orden
 const getSortIcon = (header: KunTableHeader) => {
   const order = getSortOrder(header);
-  if (!order) return arrowDownUp;
-  return order === 'asc' ? arrowUp : arrowDown;
+  if (!order) return '$arrowDownUp';
+  return order === 'asc' ? '$arrowUp' : '$arrowDown';
 }
 
 // --- Clases Base ---
-const baseTheadClass = 'bg-surface sticky top-0 z-5';
+const baseTheadClass = 'bg-elevated border-b border-muted sticky top-0 z-5';
 const mergedTheadClass = [baseTheadClass, props.theadClass];
 
 const baseTrClass = '';
 const mergedTrClass = [baseTrClass, props.trClass];
 
-const baseThClass = 'px-3 py-2 text-xs font-medium text-ui-muted uppercase tracking-wider';
+const baseThClass = 'px-3 py-2 text-xs font-medium text-muted uppercase tracking-wider';
 const mergedThClass = [baseThClass, props.thClass];
 
 // --- Control de Checkbox Indeterminado ---

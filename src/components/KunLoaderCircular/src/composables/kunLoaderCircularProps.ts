@@ -17,6 +17,6 @@ export const kunLoaderCircularProps = {
   /** Gradiente cónico del anillo. */
   gradient: {
     type: String,
-    default: 'conic-gradient(from 0deg, var(--surface-raised), var(--primary))',
+    default: 'conic-gradient(from 0deg, var(--kun-bg-elevated), var(--kun-primary))',
   },
 };

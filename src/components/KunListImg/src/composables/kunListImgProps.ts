@@ -8,10 +8,5 @@ export const kunListImgProps = {
   alt: {
     type: String,
     default: ''
-  },
-  /** Color de fondo mientras carga. */
-  bgColor: {
-    type: String,
-    default: 'bg-surface'
   }
 }

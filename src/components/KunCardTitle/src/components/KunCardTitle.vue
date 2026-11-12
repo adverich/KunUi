@@ -40,8 +40,7 @@ const computedClass = computed(() => [
   props.dense ? 'py-1 px-2 text-sm' : 'py-3 px-4 text-base',
   props.flat ? 'shadow-none' : 'shadow',
   props.rounded === true ? 'rounded-md' : props.rounded ? `rounded-${props.rounded}` : '',
-  props.bgColor,
-  props.textColor
+  'bg-transparent text-default'
 ].filter(Boolean))
 
 const computedStyle = computed(() => ({

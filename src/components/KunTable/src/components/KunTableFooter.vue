@@ -119,7 +119,7 @@ watch(() => totalPages.value, (newVal, oldVal) => {
 </script>
 
 <template>
-  <div class="flex items-center justify-between p-2 text-sm border-t border-ui bg-surface-dark">
+  <div class="flex items-center justify-between p-2 text-sm border-t border-default bg-default">
     <div>
       Mostrando {{ start }} - {{ end }} de {{ itemsLength }}
     </div>
@@ -128,7 +128,7 @@ watch(() => totalPages.value, (newVal, oldVal) => {
       <!-- itemsPerPage -->
       <details ref="ippDetailsRef" class="relative inline-block">
         <summary
-          class="px-3 py-1 border border-ui rounded cursor-pointer text-ui select-none"
+          class="px-3 py-1 ring ring-inset ring-accented bg-default rounded-md cursor-pointer text-default select-none"
           aria-haspopup="listbox"
         >
           {{ itemsPerPage }} por página
@@ -136,14 +136,14 @@ watch(() => totalPages.value, (newVal, oldVal) => {
 
         <div
           class="absolute bottom-full right-0 min-w-full max-h-56 overflow-y-auto 
-          bg-menu border rounded shadow z-20 p-1"
+          bg-default ring ring-default rounded-md shadow z-20 p-1"
         >
           <div class="flex flex-col gap-1">
             <button
               v-for="opt in pageOptions"
               :key="String(opt)"
-              class="text-center px-2 py-1 rounded hover:bg-ui-hover w-full cursor-pointer"
-              :class="{'font-semibold bg-ui-hover': opt === Number(itemsPerPage)}"
+              class="text-center px-2 py-1 rounded-md hover:bg-accented w-full cursor-pointer"
+              :class="{'font-semibold bg-accented': opt === Number(itemsPerPage)}"
               @click="onItemsPerPageSelect(opt as number | string)"
             >
               {{ opt }} items
@@ -154,7 +154,7 @@ watch(() => totalPages.value, (newVal, oldVal) => {
 
       <!-- prev -->
       <button
-        class="px-2 py-1 border border-ui rounded text-ui hover:bg-button-hover disabled:opacity-50"
+        class="px-2 py-1 ring ring-inset ring-accented bg-default rounded-md text-default hover:bg-accented disabled:opacity-50"
         :disabled="currentPage <= 1"
         @click="prev"
       >←</button>
@@ -162,7 +162,7 @@ watch(() => totalPages.value, (newVal, oldVal) => {
       <!-- Página selector: usa <details> para desplegar lista de páginas -->
       <details ref="detailsRef" class="relative inline-block">
         <summary
-          class="px-3 py-1 border border-ui rounded cursor-pointer text-ui select-none"
+          class="px-3 py-1 ring ring-inset ring-accented bg-default rounded-md cursor-pointer text-default select-none"
           aria-haspopup="listbox"
         >
           Página {{ currentPage }} de {{ totalPages }}
@@ -170,20 +170,20 @@ watch(() => totalPages.value, (newVal, oldVal) => {
 
         <div
           class="absolute bottom-full right-0 min-w-full max-h-56 overflow-y-auto 
-          bg-menu border rounded shadow z-20 p-1"
+          bg-default ring ring-default rounded-md shadow z-20 p-1"
         >
           <div class="flex flex-col gap-1">
             <template v-for="p in pagesToShow" :key="String(p)">
               <div
                 v-if="p === 'start-ellipsis' || p === 'end-ellipsis'"
-                class="px-2 py-1 text-center text-ui-muted"
+                class="px-2 py-1 text-center text-muted"
               >
                 …
               </div>
               <button
                 v-else
-                class="text-center px-2 py-1 rounded hover:bg-ui-hover w-full cursor-pointer"
-                :class="{'font-semibold bg-ui-hover': p === currentPage}"
+                class="text-center px-2 py-1 rounded-md hover:bg-accented w-full cursor-pointer"
+                :class="{'font-semibold bg-accented': p === currentPage}"
                 @click="goToPage(p)"
               >
                 Página {{ p }} 
@@ -195,7 +195,7 @@ watch(() => totalPages.value, (newVal, oldVal) => {
 
       <!-- next -->
       <button
-        class="px-2 py-1 border border-ui rounded text-ui hover:bg-button-hover disabled:opacity-50"
+        class="px-2 py-1 ring ring-inset ring-accented bg-default rounded-md text-default hover:bg-accented disabled:opacity-50"
         :disabled="currentPage >= totalPages || totalPages === 0"
         @click="next"
       >→</button>

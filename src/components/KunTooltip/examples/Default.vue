@@ -36,9 +36,7 @@ const closeDelayRaw = ref('100')
 const delayProp = computed(() => (delayRaw.value === '' ? 0 : Number(delayRaw.value)))
 const closeDelayProp = computed(() => (closeDelayRaw.value === '' ? 100 : Number(closeDelayRaw.value)))
 
-const textColor = ref('text-ui')
-const bgColor = ref('bg-surface-dark')
-const rounded = ref('rounded')
+const rounded = ref('rounded-sm')
 const textSize = ref('text-sm')
 
 const distXRaw = ref('0')
@@ -63,7 +61,7 @@ const hint = computed(() =>
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunTooltip</h2>
 
-      <div class="flex items-center justify-center rounded-lg bg-surface p-10">
+      <div class="flex items-center justify-center rounded-lg bg-muted p-10">
         <KunTooltip
           :text="text"
           :location="location"
@@ -71,8 +69,6 @@ const hint = computed(() =>
           :transition="transition"
           :delay="delayProp"
           :close-delay="closeDelayProp"
-          :text-color="textColor"
-          :bg-color="bgColor"
           :rounded="rounded"
           :text-size="textSize"
           :dist="distProp"
@@ -85,12 +81,12 @@ const hint = computed(() =>
         </KunTooltip>
       </div>
 
-      <p class="text-xs text-ui-muted">{{ hint }}</p>
+      <p class="text-xs text-muted">{{ hint }}</p>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el demo) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="text" label="Text" density="compact" />
@@ -116,8 +112,6 @@ const hint = computed(() =>
         <KunTextField v-model="delayRaw" label="Delay (ms)" density="compact" inputmode="numeric" />
         <KunTextField v-model="closeDelayRaw" label="Close delay (ms)" density="compact" inputmode="numeric" />
 
-        <KunTextField v-model="textColor" label="Text color" density="compact" />
-        <KunTextField v-model="bgColor" label="Bg color" density="compact" />
         <KunTextField v-model="rounded" label="Rounded" density="compact" />
         <KunTextField v-model="textSize" label="Text size" density="compact" />
 

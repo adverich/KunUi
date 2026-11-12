@@ -25,10 +25,10 @@ export const kunRadioGroupProps = {
   inline: Boolean,
   /** Estado de error visual. */
   error: Boolean,
-  /** Ícono por defecto para el estado activo. */
-  trueIcon: { type: [String, Object], default: 'mdi-radiobox-marked' },
-  /** Ícono por defecto para el estado inactivo. */
-  falseIcon: { type: [String, Object], default: 'mdi-radiobox-blank' },
+  /** Ícono por defecto para el estado activo. Acepta alias `$` del set bundleado, componente o clase CSS. */
+  trueIcon: { type: [String, Object], default: '$radioboxMarked' },
+  /** Ícono por defecto para el estado inactivo. Acepta alias `$` del set bundleado, componente o clase CSS. */
+  falseIcon: { type: [String, Object], default: '$radioboxBlank' },
   /** Etiqueta del grupo. */
   label: String,
 }

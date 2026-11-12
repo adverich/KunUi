@@ -27,7 +27,7 @@ const isDisabled = computed(() => props.disabled || radioGroup?.disabled?.value 
 const isReadonly = computed(() => props.readonly || radioGroup?.readonly?.value || false)
 const effectiveName = computed(() => props.name ?? radioGroup?.name?.value)
 const effectiveColor = computed(() => props.color || radioGroup?.color?.value || 'text-primary')
-const effectiveBaseColor = computed(() => props.baseColor || radioGroup?.baseColor?.value || 'text-ui-muted')
+const effectiveBaseColor = computed(() => props.baseColor || radioGroup?.baseColor?.value || 'text-muted')
 
 const onValue = computed(() => props.value ?? props.trueValue)
 const isError = computed(() => props.error || radioGroup?.error?.value || false)
@@ -44,9 +44,9 @@ const icon = computed(() =>
 
 const colorClass = computed(() =>
   isDisabled.value
-    ? 'text-ui-disabled'
+    ? 'text-disabled'
     : isError.value
-    ? 'text-ui-error'
+    ? 'text-error'
     : isSelected.value
     ? effectiveColor.value
     : effectiveBaseColor.value

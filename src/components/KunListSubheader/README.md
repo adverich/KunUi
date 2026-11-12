@@ -24,7 +24,6 @@ import { KunListSubheader } from 'adverich-kun-ui'
 |---|---|---|---|
 | `text` | `String \| Number` | `''` | Texto del subheader. |
 | `fontSize` | `String` | `'text-xs'` | Tamaño del texto. |
-| `textColor` | `String` | `'text-ui-muted'` | Color del texto. |
 | `fontWeight` | `String` | `'font-semibold'` | Peso del texto. |
 
 ## Slots

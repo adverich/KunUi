@@ -7,10 +7,10 @@ export const kunListGroupProps = {
   id: { type: String as PropType<string | null>, default: null },
   /** Título del activador (alternativa al slot). */
   title: { type: String, default: '' },
-  /** Ícono cuando está expandido. */
-  expandIcon: { type: String, default: '$mdi-chevron-up' },
-  /** Ícono cuando está colapsado. */
-  collapseIcon: { type: String, default: '$mdi-chevron-down' },
+  /** Ícono cuando está expandido. Acepta alias `$` del set bundleado, clase CSS o SVG. */
+  expandIcon: { type: String, default: '$menuUpOutline' },
+  /** Ícono cuando está colapsado. Acepta alias `$` del set bundleado, clase CSS o SVG. */
+  collapseIcon: { type: String, default: '$menuDownOutline' },
   /** Deshabilita el toggle. */
   disabled: { type: Boolean, default: false },
 }

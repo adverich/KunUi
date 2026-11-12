@@ -40,8 +40,8 @@
             'kun-carousel__arrow kun-carousel__arrow--prev',
             'absolute top-1/2 -translate-y-1/2 left-2 z-10',
             'flex items-center justify-center w-9 h-9 rounded-full',
-            'bg-surface-dark/80 text-ui border border-surface shadow-md cursor-pointer',
-            'transition hover:bg-surface disabled:opacity-30 disabled:cursor-not-allowed',
+            'bg-elevated/80 text-default border border-muted shadow-md cursor-pointer',
+            'transition hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed',
             (props.arrowClass as string),
           ]"
           :aria-label="prevLabel"
@@ -85,8 +85,8 @@
             'kun-carousel__arrow kun-carousel__arrow--next',
             'absolute top-1/2 -translate-y-1/2 right-2 z-10',
             'flex items-center justify-center w-9 h-9 rounded-full',
-            'bg-surface-dark/80 text-ui border border-surface shadow-md cursor-pointer',
-            'transition hover:bg-surface disabled:opacity-30 disabled:cursor-not-allowed',
+            'bg-elevated/80 text-default border border-muted shadow-md cursor-pointer',
+            'transition hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed',
             (props.arrowClass as string),
           ]"
           :aria-label="nextLabel"
@@ -141,8 +141,8 @@
           :class="[
             'kun-carousel__arrow kun-carousel__arrow--prev',
             'flex items-center justify-center w-8 h-8 rounded-full',
-            'bg-surface-dark text-ui border border-surface cursor-pointer',
-            'transition hover:bg-surface disabled:opacity-30 disabled:cursor-not-allowed',
+            'bg-elevated text-default border border-muted cursor-pointer',
+            'transition hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed',
             (props.arrowClass as string),
           ]"
           :aria-label="prevLabel"
@@ -184,7 +184,7 @@
               'h-2 rounded-full transition-all cursor-pointer',
               i === selectedIndex
                 ? 'w-6 bg-primary'
-                : 'w-2 bg-surface-light hover:bg-surface',
+                : 'w-2 bg-muted hover:bg-muted',
             ]"
             @click="handleGoTo(i)"
           />
@@ -204,8 +204,8 @@
           :class="[
             'kun-carousel__arrow kun-carousel__arrow--next',
             'flex items-center justify-center w-8 h-8 rounded-full',
-            'bg-surface-dark text-ui border border-surface cursor-pointer',
-            'transition hover:bg-surface disabled:opacity-30 disabled:cursor-not-allowed',
+            'bg-elevated text-default border border-muted cursor-pointer',
+            'transition hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed',
             (props.arrowClass as string),
           ]"
           :aria-label="nextLabel"

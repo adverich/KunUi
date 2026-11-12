@@ -1,6 +1,8 @@
 import type { PropType } from 'vue';
+import { isKunColor, isKunVariant, type KunColor, type KunVariant } from '../../../../theme/kunVariants.js';
 
-export type KunListItemVariant = 'text' | 'outlined' | 'elevated' | 'tonal' | 'flat' | 'plain';
+export type KunListItemColor = KunColor | null;
+export type KunListItemVariant = KunVariant;
 export type KunListItemDensity = 'default' | 'comfortable' | 'compact';
 
 export const kunListItemProps = {
@@ -12,33 +14,26 @@ export const kunListItemProps = {
   href: String,
   /** Navegación con replace (solo con `to`). */
   replace: Boolean,
-  /** Coincidencia exacta de ruta activa. */
   /** Tag del contenedor. */
   tag: { type: String, default: 'li' },
   /** Deshabilita el ítem. */
   disabled: Boolean,
   /** Marca el ítem como activo. */
   active: Boolean,
-  /** Clase cuando está activo o seleccionado. */
-  activeClass: { type: String, default: 'bg-surface-light' },
   /** Permite selección (emite toggle al contexto KunList). */
   selectable: { type: Boolean, default: false },
-  /** Variante visual. */
-  variant: { type: String as PropType<KunListItemVariant>, default: 'text', validator: (v: unknown) => ['text', 'outlined', 'elevated', 'tonal', 'flat', 'plain'].includes(v as string) },
+  /** Color semántico del item. `null` hereda el color resuelto de la KunList contenedora. */
+  color: { type: String as PropType<KunListItemColor>, default: null, validator: (v: unknown) => v === null || isKunColor(v) },
+  /** Variante visual (matriz `KunColor x KunVariant` de `kunVariants.ts`). */
+  variant: { type: String as PropType<KunListItemVariant>, default: 'ghost', validator: (v: unknown) => isKunVariant(v) },
   /** Densidad del padding vertical. */
   density: { type: String as PropType<KunListItemDensity>, default: 'default', validator: (v: unknown) => ['default', 'comfortable', 'compact'].includes(v as string) },
-  /** Redondeo (true = default, string = clase). */
-  rounded: { type: [Boolean, String], default: true },
+  /** Redondeo de escala (`rounded-md`). `tile` lo anula. */
+  rounded: { type: Boolean, default: true },
   /** Sin redondeo. */
   tile: Boolean,
   /** Efecto ripple al hacer click. */
   ripple: { type: [Boolean, Object], default: true },
-  /** Color de fondo. */
-  bgItems: { type: String, default: 'bg-transparent' },
-  /** Color del texto. */
-  textColor: { type: String, default: 'text-ui' },
-  /** Fondo al pasar el mouse (solo si `selectable`). */
-  hoverBg: { type: String, default: 'hover:bg-surface-light' },
   /** Sin padding horizontal. */
   noGutters: Boolean,
   /** Alineación vertical del contenido. */
@@ -62,7 +57,7 @@ export const kunListItemProps = {
   /** Subtítulo (alternativa al slot). */
   subtitle: [String, Number, Boolean],
   /** Clase del subtítulo. */
-  subtitleClass: { type: String, default: 'text-sm text-ui-muted' },
+  subtitleClass: { type: String, default: 'text-sm text-muted' },
   /** Clase extra del contenedor. */
   containerClass: { type: [String, Array, Object], default: '' },
   /** Id del ítem (se genera uno si se omite). */

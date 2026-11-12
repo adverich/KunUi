@@ -1,3 +1,4 @@
+<!-- theme-exempt: demo (los HEX son valores del picker, no theme) -->
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import KunColorPicker from '../src/components/KunColorPicker.vue'
@@ -77,33 +78,33 @@ function logEvent(name: string, detail: unknown): void {
 
       <div class="flex items-center gap-3">
         <span
-          class="inline-block w-10 h-10 rounded border border-ui"
+          class="inline-block w-10 h-10 rounded-lg border border-default"
           :style="{ backgroundColor: color }"
         />
         <code class="text-sm">{{ color }}</code>
         <KunBtn text="Volver a rojo" size="xs" @click="color = '#EF4444'" />
       </div>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
-        <div>{{ JSON.stringify(color) }} <span class="text-ui-muted">({{ typeof color }})</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
+        <div>{{ JSON.stringify(color) }} <span class="text-muted">({{ typeof color }})</span></div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Interactuá con el picker para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Interactuá con el picker para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el picker) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="label" label="Label" density="compact" />

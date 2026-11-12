@@ -5,7 +5,7 @@ export type KunToasterPosition =
   | 'bottom-left' | 'bottom-center' | 'bottom-right';
 
 export const kunToasterProps = {
-  // Posición del toaster en el viewport
+  /** Posición de los toasts en el viewport. */
   position: {
     type: String as PropType<KunToasterPosition>,
     default: 'bottom-right',
@@ -14,19 +14,22 @@ export const kunToasterProps = {
       'bottom-left', 'bottom-center', 'bottom-right'
     ].includes(v as string)
   },
-  
-  // Duración global por defecto en ms
+
+  /** Duración global por defecto (ms) para toasts creados sin `duration` propio. Reactiva: reconfigura el sistema en caliente. */
   duration: { type: Number, default: 5000 },
-  
-  // Máximo número de toasts visibles simultáneamente
+
+  /** Máximo de toasts retenidos simultáneamente. Reactiva. */
   max: { type: Number, default: 5 },
-  
-  // Modo expandible (stacked)
-  expand: { type: Boolean, default: false },
-  
-  // Z-index del contenedor
-  zIndex: { type: [String, Number], default: 3000 },
-  
-  // Clase personalizada del contenedor
+
+  /** Muestra todos los toasts apilados. Si es `false`, se colapsa al más nuevo y se expande al hacer hover (patrón Nuxt UI). */
+  expand: { type: Boolean, default: true },
+
+  /** Valor por defecto de la barra de progreso para toasts creados sin `progress` propio. Reactiva. */
+  progress: { type: Boolean, default: true },
+
+  /** Renderiza los toasts en un portal. `true` = `<body>`, `false` = en su lugar, o un selector/HTMLElement destino. */
+  portal: { type: [Boolean, String, Object] as PropType<boolean | string | HTMLElement>, default: true },
+
+  /** Clase personalizada del contenedor. */
   containerClass: { type: String, default: '' }
 }

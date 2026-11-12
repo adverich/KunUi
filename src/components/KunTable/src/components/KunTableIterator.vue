@@ -36,11 +36,11 @@
         :key="header.value"
         class="flex justify-between text-sm"
       >
-        <div class="font-semibold text-ui-muted">
+        <div class="font-semibold text-muted">
           {{ header.label ?? header.text }}
         </div>
         <div
-          class="text-right text-ui"
+          class="text-right text-default"
           :class="{
             'text-right': header.align === 'right',
             'text-center': header.align === 'center',
@@ -73,7 +73,7 @@
 
     <!-- Acciones -->
     <div v-if="hasActions" class="flex justify-between items-start mt-4 text-sm">
-      <div class="font-semibold text-ui-muted">
+      <div class="font-semibold text-muted">
         Acciones
       </div>
       <div class="text-right">
@@ -102,7 +102,7 @@ function resolveTdClass(item: TableItem | undefined, index: number | undefined):
 }
 
 const defaultContainerClass = 'p-4 shadow-sm';
-const baseRowClass = 'bg-surface-dark';
+const baseRowClass = 'bg-elevated';
 const rowClass = computed(() => props.rowClass || baseRowClass);
 const conditionalRowClass = computed(() => resolveTdClass(props.item, props.index));
 

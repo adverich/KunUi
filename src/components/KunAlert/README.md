@@ -27,15 +27,12 @@ import { KunAlert } from 'adverich-kun-ui'
 | `message` | `String` | `-` | Mensaje descriptivo bajo el título. |
 | `position` | `KunAlertPosition` | `'br'` | Posición en pantalla: t(op)/c(enter)/b(ottom) + l(eft)/c(enter)/r(ight).<br/>Valores · Values: `tl` `tc` `tr` `cl` `cc` `cr` `bl` `bc` `br` |
 | `icon` | `string \| null` | `null` | Ícono a mostrar (clase o nombre con `$`). |
-| `iconSize` | `String` | `'text-2xl'` | Tamaño del ícono (clase Tailwind de texto). |
-| `iconBgColor` | `String` | `'bg-error'` | Color de fondo del contenedor del ícono. |
-| `bgColor` | `String` | `'bg-error'` | Color de fondo de la alerta. |
-| `textColor` | `String` | `'text-ui-inverse'` | Color del texto. |
-| `borderColor` | `String` | `''` | Color del borde (vacío = sin borde visible). |
+| `iconSize` | `String` | `'size-6'` | Tamaño del ícono (clase Tailwind, `size-6`). |
+| `color` | `KunColor` | `'error' as KunColor` | Color semántico de la alerta. |
+| `variant` | `KunVariant` | `'solid' as KunVariant` | Variante visual: 'solid' \| 'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'link'. |
 | `titleClass` | `String` | `'text-2xl font-bold'` | Clases del título. |
 | `messageClass` | `String` | `'text-base font-normal'` | Clases del mensaje. |
 | `closable` | `Boolean` | `false` | Muestra botón de cierre. |
-| `zIndex` | `String \| Number` | `2500` | Z-index del contenedor flotante. |
 | `transition` | `String` | `'transition-opacity duration-300 ease-in-out'` | Clases de transición de entrada/salida. |
 | `alertClass` | `String` | `'relative w-fit rounded-lg shadow-md'` | Clases del contenedor de la alerta. |
 | `paddingContainer` | `String` | `'p-2'` | Padding interno del contenedor. |
@@ -50,6 +47,38 @@ import { KunAlert } from 'adverich-kun-ui'
 
 - `update:modelValue`
 - `action`
+
+## Notas · Notes
+
+## Auto-cierre por `timeout`
+
+El temporizador es **reactivo**, no de montaje. Un `watch` sobre
+`[modelValue, timeout, persistent]` (con `immediate`) arma/cancela el `setTimeout`:
+
+- `modelValue` pasa a `true` → se arma el timer con `timeout` ms.
+- `modelValue` pasa a `false` (cierre por cruz, self-click, Esc o el propio timer)
+  → se cancela.
+- `timeout` o `persistent` cambian en vivo → se reinicia/limpia.
+- `onBeforeUnmount` → `clearTimeout` (sin emits fantasma).
+- `timeout: 0` o `persistent: true` → sin auto-cierre.
+
+Antes el timer se armaba en `onMounted`, es decir **una sola vez** al montar el
+componente. Como el componente suele quedar montado y solo se conmuta el
+`v-model`, el timer disparaba una vez (a veces con la alerta oculta) y nunca se
+re-armaba → el auto-cierre no volvía a funcionar.
+
+## Sin apilado (por diseño)
+
+Cada `KunAlert` teleporta su propio `div` `fixed` (`<Teleport to="body">`) en la
+posición elegida (`position` + `margin`). **No hay** manager, grupo, contenedor ni
+`useAlert` global: dos alertas visibles en la misma `position` se **superponen**
+(la última montada queda encima por orden de DOM). No es una regresión; siempre
+fue así. Para notificaciones apilables usar `KunToast` / `useToast`.
+
+## Capa z-index
+
+Se monta en la capa `notification` (`zIndexStyle('notification')`), la misma que
+`KunToaster`, por encima de `overlay` (menús/selects/modales) y `docked` (appbar).
 
 ---
 

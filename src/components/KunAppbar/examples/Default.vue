@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import KunAppbar from '../src/components/KunAppbar.vue'
 import type { KunAppbarTitlePosition, KunAppbarDensity, KunAppbarElevation, KunAppbarTransition } from '../src/composables/kunAppbarProps.js'
+import type { KunColor, KunVariant } from '../../../theme/kunVariants.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
@@ -23,7 +24,6 @@ const titlePositionOptions = ref([
 // ------------------------------------------------------------------
 // Apariencia
 // ------------------------------------------------------------------
-const bgColor = ref('bg-surface')
 const density = ref<KunAppbarDensity>('default')
 const densityOptions = ref([
   { id: 'default', name: 'default (64px)' },
@@ -41,21 +41,29 @@ const elevationOptions = ref([
   { id: 'none', name: 'none' },
 ])
 const bordered = ref(false)
-const borderColor = ref('border-b border-ui')
 
 // ------------------------------------------------------------------
 // Botón drawer
 // ------------------------------------------------------------------
 const showDrawerButton = ref(true)
-const buttonClass = ref('px-2')
-const buttonBg = ref('bg-button-disabled opacity-75')
+const buttonClass = ref('')
+const buttonColorRaw = ref<KunColor>('neutral')
+const buttonColorOptions = ref([
+  { id: 'primary', name: 'primary' },
+  { id: 'secondary', name: 'secondary' },
+  { id: 'neutral', name: 'neutral' },
+])
+const buttonVariantRaw = ref<KunVariant>('ghost')
+const buttonVariantOptions = ref([
+  { id: 'solid', name: 'solid' },
+  { id: 'ghost', name: 'ghost' },
+])
 
 // ------------------------------------------------------------------
 // Secciones / posición
 // ------------------------------------------------------------------
 const leftSectionClass = ref('flex items-center gap-2')
 const rightSectionClass = ref('flex items-center gap-2 justify-end ml-auto')
-const zIndex = ref('z-1000')
 const fixed = ref(false)
 const sticky = ref(false)
 const glass = ref(false)
@@ -109,25 +117,23 @@ function logEvent(name: string, detail: unknown): void {
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunAppbar</h2>
 
-      <div class="overflow-hidden rounded-xl border border-ui">
+      <div class="overflow-hidden rounded-lg border border-default">
         <KunAppbar
           :title="title || undefined"
           :title-image="titleImage || undefined"
           :title-size="titleSize"
           :title-weight="titleWeight"
           :title-position="titlePosition"
-          :bg-color="bgColor"
           :density="density"
           :height="height || undefined"
           :elevation="elevation"
           :bordered="bordered"
-          :border-color="borderColor"
           :show-drawer-button="showDrawerButton"
           :button-class="buttonClass"
-          :button-bg="buttonBg"
+          :button-color="buttonColorRaw"
+          :button-variant="buttonVariantRaw"
           :left-section-class="leftSectionClass"
           :right-section-class="rightSectionClass"
-          :z-index="zIndex"
           :fixed="fixed"
           :sticky="sticky"
           :glass="glass"
@@ -139,14 +145,14 @@ function logEvent(name: string, detail: unknown): void {
           @toggle-drawer="logEvent('toggle-drawer', 'click')"
         >
           <template v-if="useAppbarButtonSlot" #appbarButton>
-            <button type="button" class="rounded bg-field-background px-2 py-1 text-sm" @click="logEvent('toggle-drawer', 'slot #appbarButton')">☰ menú</button>
+            <button type="button" class="rounded-md bg-muted px-2 py-1 text-sm" @click="logEvent('toggle-drawer', 'slot #appbarButton')">☰ menú</button>
           </template>
 
           <template v-if="showPrepend" #prepend>
             <nav class="hidden items-center gap-3 text-sm sm:flex">
               <span class="font-medium">Inicio</span>
-              <span class="text-ui-muted">Docs</span>
-              <span class="text-ui-muted">Blog</span>
+              <span class="text-muted">Docs</span>
+              <span class="text-muted">Blog</span>
             </nav>
           </template>
 
@@ -155,40 +161,40 @@ function logEvent(name: string, detail: unknown): void {
           </template>
 
           <template v-if="showActions" #actions>
-            <button type="button" class="rounded bg-field-background px-2 py-1 text-xs">Buscar</button>
-            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-field-background text-xs">AD</span>
+            <button type="button" class="rounded-md bg-muted px-2 py-1 text-xs">Buscar</button>
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs">AD</span>
           </template>
         </KunAppbar>
       </div>
 
-      <p class="text-xs text-ui-muted">
+      <p class="text-xs text-muted">
         El botón ☰ emite <code>toggle-drawer</code>. El slot <code>#appbarButton</code> reemplaza ese botón.
         <code>fixed</code>/<code>sticky</code> y <code>autoHideOnScroll</code> solo se aprecian en página con scroll.
       </p>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">props en crudo</div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">props en crudo</div>
         <div>{{ JSON.stringify(title || null) }} · {{ titlePosition }} · {{ density }} · {{ elevation }} · {{ transition }}</div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Pulsá el botón del drawer para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Pulsá el botón del drawer para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Título</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Título</p>
         <KunTextField v-model="title" label="Title (vacío = sin título)" density="compact" />
         <KunTextField v-model="titleImage" label="Title image URL (vacío = texto)" density="compact" />
         <KunTextField v-model="titleSize" label="Title size" density="compact" />
@@ -202,8 +208,7 @@ function logEvent(name: string, detail: unknown): void {
           density="compact"
         />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Apariencia</p>
-        <KunTextField v-model="bgColor" label="Bg color" density="compact" />
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Apariencia</p>
         <KunSelect
           v-model="density"
           v-model:items="densityOptions"
@@ -222,22 +227,35 @@ function logEvent(name: string, detail: unknown): void {
           density="compact"
         />
         <KunSwitch v-model="bordered" label="Bordered" />
-        <KunTextField v-model="borderColor" label="Border color" density="compact" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Botón drawer</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Botón drawer</p>
         <KunSwitch v-model="showDrawerButton" label="Show drawer button" />
         <KunTextField v-model="buttonClass" label="Button class" density="compact" />
-        <KunTextField v-model="buttonBg" label="Button bg" density="compact" class="col-span-2" />
+        <KunSelect
+          v-model="buttonColorRaw"
+          v-model:items="buttonColorOptions"
+          label="Button color"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="buttonVariantRaw"
+          v-model:items="buttonVariantOptions"
+          label="Button variant"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Secciones / posición</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Secciones / posición</p>
         <KunTextField v-model="leftSectionClass" label="Left section class" density="compact" class="col-span-2" />
         <KunTextField v-model="rightSectionClass" label="Right section class" density="compact" class="col-span-2" />
-        <KunTextField v-model="zIndex" label="Z index" density="compact" />
         <KunSwitch v-model="fixed" label="Fixed" />
         <KunSwitch v-model="sticky" label="Sticky" />
         <KunSwitch v-model="glass" label="Glass" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Comportamiento</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Comportamiento</p>
         <KunSwitch v-model="autoHideOnScroll" label="Auto hide on scroll" />
         <KunSwitch v-model="responsiveCollapse" label="Responsive collapse" />
         <KunTextField v-model="collapseBreakpointRaw" label="Collapse breakpoint px (vacío = 768)" density="compact" inputmode="decimal" />
@@ -251,7 +269,7 @@ function logEvent(name: string, detail: unknown): void {
         />
         <KunTextField v-model="animationClass" label="Animation class" density="compact" class="col-span-2" />
 
-        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-ui-muted">Slots demo</p>
+        <p class="col-span-2 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Slots demo</p>
         <KunSwitch v-model="showPrepend" label="#prepend (nav)" />
         <KunSwitch v-model="useTitleSlot" label="#title (reemplaza prop)" />
         <KunSwitch v-model="showActions" label="#actions" />

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, defineEmits } from 'vue'
 import { kunSwitchProps } from '../composables/kunSwitchProps.js'
+import { resolveKunSize, KUN_TEXT_SIZE } from '../../../../theme/kunSizes.js'
 
 const props = defineProps(kunSwitchProps)
 
@@ -20,7 +21,6 @@ const toggle = () => {
 const vertical = computed(() =>
   props.labelPosition === 'top' || props.labelPosition === 'bottom'
 )
-
 // Tamaños predefinidos
 interface KunSwitchSize {
   outer: string;
@@ -29,52 +29,48 @@ interface KunSwitchSize {
   translate: string;
 }
 
-const sizeClasses: Record<string, KunSwitchSize> = {
+const sizeClasses: Record<string, Omit<KunSwitchSize, 'icon'>> = {
   xxs: {
     outer: 'w-6 h-3',
     thumb: 'w-3 h-3',
-    icon: 'text-[10px]',
     translate: 'translate-x-3',
   },
   xs: {
     outer: 'w-8 h-4',
     thumb: 'w-4 h-4',
-    icon: 'text-xs',
     translate: 'translate-x-4',
   },
   sm: {
     outer: 'w-9 h-5',
     thumb: 'w-4 h-4',
-    icon: 'text-sm',
     translate: 'translate-x-4.5',
   },
   md: {
     outer: 'w-10 h-6',
     thumb: 'w-6 h-6',
-    icon: 'text-base',
     translate: 'translate-x-4.25',
   },
   lg: {
     outer: 'w-12 h-7',
     thumb: 'w-7 h-7',
-    icon: 'text-lg',
     translate: 'translate-x-5',
   },
   xl: {
     outer: 'w-14 h-8',
     thumb: 'w-8 h-8',
-    icon: 'text-xl',
     translate: 'translate-x-6',
   },
   xxl: {
     outer: 'w-16 h-9',
     thumb: 'w-9 h-9',
-    icon: 'text-2xl',
     translate: 'translate-x-7',
   },
 }
 
-const currentSize = computed<KunSwitchSize>(() => sizeClasses[props.size as string] || sizeClasses.md)
+const currentSize = computed<KunSwitchSize>(() => {
+  const size = resolveKunSize(props.size)
+  return { ...(sizeClasses[size] || sizeClasses.md), icon: KUN_TEXT_SIZE[size] }
+})
 </script>
 
 <template>
@@ -86,7 +82,7 @@ const currentSize = computed<KunSwitchSize>(() => sizeClasses[props.size as stri
     <!-- Vertical -->
     <template v-if="vertical">
       <label class="flex flex-col items-center gap-1 cursor-pointer">
-        <span v-if="label && labelPosition === 'top'" class="text-sm text-ui">
+        <span v-if="label && labelPosition === 'top'" class="text-sm text-default">
           {{ label }}
         </span>
 
@@ -116,7 +112,7 @@ const currentSize = computed<KunSwitchSize>(() => sizeClasses[props.size as stri
           </div>
         </div>
 
-        <span v-if="label && labelPosition === 'bottom'" class="text-sm text-ui">
+        <span v-if="label && labelPosition === 'bottom'" class="text-sm text-default">
           {{ label }}
         </span>
       </label>
@@ -154,14 +150,14 @@ const currentSize = computed<KunSwitchSize>(() => sizeClasses[props.size as stri
             </div>
         </div>
 
-        <div v-if="label" class="text-sm text-ui">
+        <div v-if="label" class="text-sm text-default">
           {{ label }}
         </div>
       </label>
     </template>
 
     <!-- Details -->
-    <div v-if="!hideDetails" class="text-xs text-ui-muted mt-1 ml-14" v-bind="$attrs">
+    <div v-if="!hideDetails" class="text-xs text-muted mt-1 ml-14" v-bind="$attrs">
       <slot name="details" />
     </div>
   </div>

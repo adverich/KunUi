@@ -24,7 +24,6 @@ import { KunListImg } from 'adverich-kun-ui'
 |---|---|---|---|
 | `src` | `String` | `-` | URL de la imagen (requerido). |
 | `alt` | `String` | `''` | Texto alternativo. |
-| `bgColor` | `String` | `'bg-surface'` | Color de fondo mientras carga. |
 
 ---
 

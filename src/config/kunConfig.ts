@@ -17,6 +17,8 @@ export interface KunConfig {
     precision: number;
     currency: KunCurrencyConfig;
     date: KunDateConfig;
+    /** Overrides globales de íconos: alias semántico (`$nombre`) → nombre Iconify. */
+    icons: Record<string, string>;
 }
 
 export type KunConfigOptions = Partial<{
@@ -24,6 +26,7 @@ export type KunConfigOptions = Partial<{
     precision: number;
     currency: Partial<KunCurrencyConfig> | string;
     date: Partial<KunDateConfig>;
+    icons: Record<string, string>;
 }> & Record<string, unknown>;
 
 // Valores por defecto de la librería
@@ -53,6 +56,7 @@ const defaultConfig: KunConfig = {
             hourCycle: 'h23',
         },
     },
+    icons: {},
 };
 
 // Deep merge helper
@@ -110,6 +114,10 @@ export const kunConfig = {
         return configState.date;
     },
 
+    get icons(): Record<string, string> {
+        return configState.icons;
+    },
+
     // Configurar (merge profundo)
     configure(options: KunConfigOptions = {}): void {
         const merged = deepMerge(configState as unknown as Record<string, unknown>, options as Record<string, unknown>);
@@ -136,6 +144,16 @@ export const kunConfig = {
         } else if (typeof currency === 'object') {
             Object.assign(configState.currency, currency);
         }
+    },
+
+    /** Override global de un ícono por alias (`$nombre` → nombre Iconify). */
+    setIcon(name: string, value: string): void {
+        configState.icons[name] = value;
+    },
+
+    /** Override global de varios íconos por alias. */
+    setIcons(icons: Record<string, string>): void {
+        Object.assign(configState.icons, icons);
     },
 };
 

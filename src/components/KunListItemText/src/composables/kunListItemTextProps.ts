@@ -11,11 +11,6 @@ export const kunListItemTextProps = {
     type: String,
     default: 'text-sm'
   },
-  /** Color del texto. */
-  textColor: {
-    type: String,
-    default: 'text-ui-muted'
-  },
   /** Peso del texto. */
   fontWeight: {
     type: String,

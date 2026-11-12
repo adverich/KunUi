@@ -25,21 +25,25 @@
       />
     </div>
 
-    <!-- Collapsible Content with auto height transition -->
+    <!-- Contenido colapsable (animación por grid-rows, sin JS) -->
     <div
-      ref="contentRef"
-      v-show="modelValue"
-      class="kun-list-group__content pl-4 overflow-hidden transition-[height] duration-300 ease-in-out"
+      class="kun-list-group__content grid transition-[grid-template-rows] duration-300 ease-in-out"
+      :class="modelValue ? '[grid-template-rows:1fr]' : '[grid-template-rows:0fr]'"
       :id="contentId"
       role="region"
+      :inert="!modelValue"
     >
-      <slot />
+      <div class="overflow-hidden min-h-0">
+        <div class="pl-4">
+          <slot />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick, useId, type Ref } from 'vue'
+import { computed, useId } from 'vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { kunListGroupProps } from '../composables/kunListGroupProps.js'
 
@@ -47,62 +51,11 @@ const props = defineProps(kunListGroupProps)
 
 const emit = defineEmits(['update:modelValue'])
 
-const contentRef: Ref<HTMLElement | null> = ref(null)
-const height = ref(0)
-
 const generatedId = useId()
 const contentId = computed(() => props.id ? `${props.id}-content` : `kun-list-group-content-${generatedId}`)
 
 const toggle = () => {
   emit('update:modelValue', !props.modelValue)
 }
-
-// Handle height transitions manually using ResizeObserver
-let observerCleanup: (() => void) | undefined
-const updateHeight = (): void => {
-  if (!contentRef.value) return
-  const el: HTMLElement = contentRef.value
-  el.style.height = 'auto'
-  const fullHeight = `${el.scrollHeight}px`
-  el.style.height = '0px' // reset before transition
-  void el.offsetHeight // trigger reflow
-  el.style.height = fullHeight
-}
-
-watch(() => props.modelValue, async (val) => {
-  await nextTick()
-  if (val) updateHeight()
-  else if (contentRef.value) contentRef.value.style.height = '0px'
-})
-
-let resizeObserver: ResizeObserver | null = null
-
-function observeResize(el: Element | null, callback: () => void): void {
-  if (!el || typeof ResizeObserver === 'undefined') return
-
-  resizeObserver = new ResizeObserver(() => {
-    callback()
-  })
-  resizeObserver.observe(el)
-}
-
-function unobserveResize() {
-  if (resizeObserver) {
-    resizeObserver.disconnect()
-    resizeObserver = null
-  }
-}
-
-onMounted(() => {
-  if (contentRef.value) {
-    observeResize(contentRef.value, () => {
-      if (props.modelValue) updateHeight()
-    })
-  }
-})
-
-onBeforeUnmount(() => {
-  unobserveResize()
-})
 </script>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import KunListItemAvatar from '../src/components/KunListItemAvatar.vue'
 import type { KunListItemAvatarSize } from '../src/composables/kunListItemAvatarProps.js'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
@@ -12,14 +12,23 @@ const text = ref('AB')
 
 const size = ref<KunListItemAvatarSize>('md')
 const sizeOptions = ref([
-  { id: 'sm', name: 'sm' },
-  { id: 'md', name: 'md' },
-  { id: 'lg', name: 'lg' },
+  { id: 'xxs', name: 'xxs (24px)' },
+  { id: 'xs', name: 'xs (28px)' },
+  { id: 'sm', name: 'sm (32px)' },
+  { id: 'md', name: 'md (36px)' },
+  { id: 'lg', name: 'lg (40px)' },
+  { id: 'xl', name: 'xl (48px)' },
+  { id: 'xxl', name: 'xxl (56px)' },
 ])
 
-const rounded = ref('rounded-full')
-const bgColor = ref('bg-surface-light')
-const textColor = ref('text-ui-inverse')
+const roundedRaw = ref('__circle')
+const roundedOptions = ref([
+  { id: '__circle', name: 'circular (null)' },
+  { id: 'none', name: 'none' },
+])
+const roundedProp = computed<'full' | 'none' | null>(() =>
+  roundedRaw.value === 'none' ? 'none' : null,
+)
 const fontWeight = ref('font-medium')
 </script>
 
@@ -29,31 +38,36 @@ const fontWeight = ref('font-medium')
     <div class="space-y-3 min-w-0 lg:sticky lg:top-4">
       <h2 class="text-lg font-semibold">KunListItemAvatar</h2>
 
-      <div class="flex items-center gap-3 rounded-lg bg-surface p-3">
+      <div class="flex items-center gap-3 rounded-lg bg-muted p-3">
         <KunListItemAvatar
           :text="text || null"
           :size="size"
-          :rounded="rounded"
-          :bg-color="bgColor"
-          :text-color="textColor"
+          :rounded="roundedProp"
           :font-weight="fontWeight"
         />
         <div class="min-w-0">
           <p class="truncate font-medium">Ada Lovelace</p>
-          <p class="truncate text-sm text-ui-muted">Ingeniera de software</p>
+          <p class="truncate text-sm text-muted">Ingeniera de software</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 rounded-lg bg-surface p-3">
-        <KunListItemAvatar text="SM" size="sm" :rounded="rounded" :bg-color="bgColor" />
-        <KunListItemAvatar text="MD" size="md" :rounded="rounded" :bg-color="bgColor" />
-        <KunListItemAvatar text="LG" size="lg" :rounded="rounded" :bg-color="bgColor" />
+      <div class="flex items-center gap-3 rounded-lg bg-muted p-3">
+        <KunListItemAvatar text="XXS" size="xxs" :rounded="roundedProp" />
+        <KunListItemAvatar text="MD" size="md" :rounded="roundedProp" />
+        <KunListItemAvatar text="XXL" size="xxl" :rounded="roundedProp" />
+      </div>
+
+      <div class="flex items-center gap-3 rounded-lg bg-muted p-3">
+        <KunListItemAvatar text="W" size="md" class="w-16" />
+        <KunListItemAvatar text="H" size="md" class="h-16" />
+        <KunListItemAvatar text="WH" size="md" class="h-14 w-14" />
+        <span class="text-xs text-muted">w-16 / h-16 / h-14 w-14</span>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="text" label="Text (vacío = sin texto)" density="compact" />
@@ -65,9 +79,14 @@ const fontWeight = ref('font-medium')
           item-title="name"
           density="compact"
         />
-        <KunTextField v-model="rounded" label="Rounded" density="compact" />
-        <KunTextField v-model="bgColor" label="Background color" density="compact" />
-        <KunTextField v-model="textColor" label="Text color" density="compact" />
+        <KunSelect
+          v-model="roundedRaw"
+          v-model:items="roundedOptions"
+          label="Rounded"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
         <KunTextField v-model="fontWeight" label="Font weight" density="compact" />
       </div>
     </div>

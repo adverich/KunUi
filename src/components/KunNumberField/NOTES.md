@@ -1,3 +1,13 @@
+## Muesca del label flotante + desplazamiento por `rounded`
+
+Igual que `KunTextField`, vía el composable compartido `useKunFieldNotch`
+(`src/utils/useKunFieldNotch.ts`): el overlay dibuja el borde nativo
+completo (respeta cualquier `rounded`, pill incluida) y la muesca se recorta
+con `mask` sobre la caja real del label (medida por JS + `ResizeObserver`).
+Hueco real en cualquier fondo, sin `fieldset`/`legend`. El label flotante se
+desplaza 2px por escalón de `rounded` (`margin-left`; `margin-right` si flota
+anclado a la derecha con `floatingLabelLeft: 'right-*'`).
+
 ## Input siempre `type="text"`
 
 La prop `type` está declarada pero **sin efecto**: el formateo custom es
@@ -40,3 +50,31 @@ sigue recto.
   text-center
 />
 ```
+
+## `hideZero` (default `true`) con fallback automático
+
+El **v-model nunca cambia**: el vacío se normaliza a `0` al blurear y los
+cálculos en tiempo real siguen operando sobre `0`. Solo cambia el **display**:
+en reposo, el cero se muestra vacío (`inputValue = ''`) para dejar ver el
+`placeholder` o el label en reposo.
+
+Fallback: si no hay nada que mostrar (sin `placeholder` y sin label en
+reposo, o con `dirty` que flota el label al borde), se muestra el `0`
+formateado para no dejar una caja fantasma. Con `hideZero: false` siempre
+se muestra el `0` formateado (comportamiento histórico).
+
+## Bordes y radio
+
+- Default `'rounded-md'` (antes `'rounded'` pelado, 4px fijos).
+- El `<input>` ya no lleva un `rounded` pelado redundante: el radio lo aplica la
+  prop del contenedor.
+- Lados lógicos: `border-e` / `border-s` y `rounded-s/e-[inherit]` en los botones
+  split (antes `border-l/r` físicos).
+- Contorno por rol: contenedor `bg-default` y notch `border-accented` (antes
+  `bg-muted` + `border-default`, invisible en dark).
+- Contraste (ver `docs/refactor/color-contrast.md`): labels a `opacity-100` por
+  defecto (`labelOpacity` / `floatingLabelOpacity`; antes 60/80, que llevaba el
+  label flotante a ~2.3:1). Con `bgInput` sólido semántico (`bg-error`,
+  `bg-success`, … sin `/NN`) el valor, el prefijo y el label usan la tinta
+  `text-on-{color}` del slot (detector `kunOnSurfaceTextFromBg`). Los tintes van
+  con `bg-{color}-tint/NN`; el error automático es `bg-error-tint/10`.

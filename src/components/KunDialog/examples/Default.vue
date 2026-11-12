@@ -36,7 +36,6 @@ const persistent = ref(false)
 
 const dialogClass = ref('')
 const contentClass = ref('')
-const bgColor = ref('bg-surface-dark')
 const minHeight = ref('h-fit')
 const height = ref('h-fit')
 const maxHeight = ref('max-h-dvh')
@@ -86,7 +85,6 @@ function onUpdateModelValue(value: boolean): void {
         :x-position="xPosition"
         :y-position="yPosition"
         :content-class="contentClass"
-        :bg-color="bgColor"
         :min-height="minHeight"
         :height="height"
         :max-height="maxHeight"
@@ -97,11 +95,11 @@ function onUpdateModelValue(value: boolean): void {
       >
         <div class="p-6 space-y-3">
           <h3 class="text-lg font-semibold">Título del diálogo</h3>
-          <p class="text-sm text-ui-muted">
+          <p class="text-sm text-muted">
             Este es un texto genérico de ejemplo para mostrar el contenido del diálogo.
           </p>
           <div class="flex justify-end gap-2">
-            <KunBtn variant="tonal" @click="open = false">
+            <KunBtn variant="subtle" @click="open = false">
               Cerrar
             </KunBtn>
             <KunBtn @click="open = false">
@@ -111,21 +109,21 @@ function onUpdateModelValue(value: boolean): void {
         </div>
       </KunDialog>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Abrí el diálogo para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Abrí el diálogo para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el diálogo) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunSelect
@@ -145,7 +143,6 @@ function onUpdateModelValue(value: boolean): void {
           density="compact"
         />
 
-        <KunTextField v-model="bgColor" label="Bg color" density="compact" />
         <KunTextField v-model="dialogClass" label="Dialog class" density="compact" />
         <KunTextField v-model="contentClass" label="Content class" density="compact" />
 

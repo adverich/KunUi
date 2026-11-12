@@ -1,4 +1,4 @@
-import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick, type Ref, type ComputedRef } from 'vue'
+import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick, type Ref, type ComputedRef } from 'vue'
 
 export interface KunCarouselEngineProps {
   align?: unknown;
@@ -105,7 +105,8 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef }:
   let mutationObserver: MutationObserver | null = null
   let inViewObserver: IntersectionObserver | null = null
   let breakpointCleanups: (() => void)[] = []
-  let breakpointActive: Record<string, Record<string, unknown>> = {}
+  // Reactivo: `effectiveOptions` (computed) debe invalidarse cuando un matchMedia cambia.
+  const breakpointActive: Record<string, Record<string, unknown>> = reactive({})
   let dragState: {
     pointerId: number;
     startPoint: number;
@@ -151,7 +152,7 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef }:
         : (props.startSnap ?? 0)
     const draggable =
       props.watchDrag !== undefined && props.watchDrag !== null
-        ? !!props.watchDrag && (typeof props.watchDrag !== 'function' || true)
+        ? !!props.watchDrag
         : props.draggable
     return {
       align: (props.align ?? 'center') as KunCarouselEngineOptions['align'],
@@ -189,7 +190,7 @@ export function useKunCarouselEngine({ props, emit, viewportRef, containerRef }:
   function setupBreakpoints(): void {
     breakpointCleanups.forEach((fn) => fn && fn())
     breakpointCleanups = []
-    breakpointActive = {}
+    for (const key of Object.keys(breakpointActive)) delete breakpointActive[key]
     if (typeof window === 'undefined' || !props.breakpoints) return
     const entries = Object.entries(props.breakpoints || {})
     if (!entries.length) return

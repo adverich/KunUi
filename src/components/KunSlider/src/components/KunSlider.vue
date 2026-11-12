@@ -8,7 +8,7 @@
     ]"
     :style="props.style"
   >
-    <div v-if="label" class="mb-2 text-sm font-medium text-ui">
+    <div v-if="label" class="mb-2 text-sm font-medium text-default">
       <slot name="label">{{ label }}</slot>
     </div>
 
@@ -21,7 +21,7 @@
         :class="[
           'relative select-none cursor-pointer',
           vertical ? 'w-2 h-full' : 'h-1.5 w-full',
-          'bg-surface-light rounded-full'
+          'bg-muted rounded-full'
         ]"
         @pointerdown="onTrackClick"
       >
@@ -110,7 +110,7 @@
       <slot name="append" />
     </div>
 
-    <div class="flex justify-between text-xs text-ui-muted mt-1 w-full">
+    <div class="flex justify-between text-xs text-muted mt-1 w-full">
       <span>{{ min }}</span>
       <span>{{ max }}</span>
     </div>

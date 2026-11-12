@@ -1,0 +1,388 @@
+/**
+ * KunUI theme tokens (fuente).
+ *
+ * - `@theme default inline`: puente variable -> utilidad. `inline` hace que la
+ *   utilidad guarde `var(...)` para que un cambio en runtime repinte sin rebuild.
+ *   `default` deja que la app consumidora lo pise despues.
+ * - `:root` / `:root.dark, :root[data-theme="dark"]`: valores compilados.
+ * - Capas: 1 primitiva (alias a paleta Tailwind) / 2 semantica / 3 roles neutros
+ *   + `on-*` + overlay.
+ * - Capa 2 separa tres roles por slot (contraste WCAG AA >= 4.5 en todo el
+ *   catalogo Tailwind + paletas de marca tipicas):
+ *     superficie `--kun-{slot}`        light 400 / dark 700  -> `bg-{slot}` solido
+ *     tonal      `--kun-{slot}-tonal`  light 800 / dark 200  -> texto, ring, borde,
+ *                                      outline, divide
+ *     tint       `--kun-{slot}-tint`   light 400 / dark 300  -> fondos translucidos
+ *                                      (`bg-{slot}-tint/10`); claro en light para
+ *                                      que el texto tonal encima siga >= 4.5:1
+ *     tinta      `--kun-text-on-{slot}` sobre la superficie (oscura en light,
+ *                                      blanca en dark; kunTheme la recalcula por
+ *                                      luminancia para paletas custom).
+ *   `text-{slot}`, `ring-{slot}`, `border-{slot}`, `outline-{slot}` y
+ *   `divide-{slot}` resuelven al tonal por override de namespace
+ *   (`--text-color-*` gana sobre `--color-*` en Tailwind v4); `bg-{slot}`
+ *   resuelve a la superficie.
+ * - Ningun componente consume capa 1 ni HEX directos.
+ * - Compat navegadores sin oklch/color-mix: ver compat-oklch.css + compat-alpha.css.
+ */
+
+@import "./compat-oklch.css";
+@import "./compat-alpha.css";
+
+/* === Catalogo completo (22 paletas x 11 paradas) ===
+ * `setPrimary`/`setNeutral` alias a `var(--color-{paleta}-{stop})`, asi que la
+ * var de cada parada debe existir en el CSS efectivo. `@source inline` genera
+ * las utilidades y, con ellas, emite las vars, tanto en el dist como en el
+ * build de una app que compila este archivo. Sin esto, Tailwind v4 solo emite
+ * las paletas ya referenciadas (tree-shaking de `--color-*`). */
+@source inline("bg-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone}-{50,100,200,300,400,500,600,700,800,900,950}");
+
+/* === Puente a utilidades (nombres Nuxt, sin prefijo) === */
+@theme default inline {
+    --color-primary: var(--kun-primary);
+    --color-secondary: var(--kun-secondary);
+    --color-success: var(--kun-success);
+    --color-info: var(--kun-info);
+    --color-warning: var(--kun-warning);
+    --color-error: var(--kun-error);
+
+    /* Rol tonal (texto/trazo) y tint (fondos translucidos `bg-*-tint/NN`). */
+    --color-primary-tonal: var(--kun-primary-tonal);
+    --color-primary-tint: var(--kun-primary-tint);
+    --color-secondary-tonal: var(--kun-secondary-tonal);
+    --color-secondary-tint: var(--kun-secondary-tint);
+    --color-success-tonal: var(--kun-success-tonal);
+    --color-success-tint: var(--kun-success-tint);
+    --color-info-tonal: var(--kun-info-tonal);
+    --color-info-tint: var(--kun-info-tint);
+    --color-warning-tonal: var(--kun-warning-tonal);
+    --color-warning-tint: var(--kun-warning-tint);
+    --color-error-tonal: var(--kun-error-tonal);
+    --color-error-tint: var(--kun-error-tint);
+
+    --text-color-default: var(--kun-text);
+    --text-color-dimmed: var(--kun-text-dimmed);
+    --text-color-muted: var(--kun-text-muted);
+    --text-color-toned: var(--kun-text-toned);
+    --text-color-highlighted: var(--kun-text-highlighted);
+    /* Tinta sobre superficie solida `bg-{slot}`. */
+    --text-color-on-primary: var(--kun-text-on-primary);
+    --text-color-on-secondary: var(--kun-text-on-secondary);
+    --text-color-on-success: var(--kun-text-on-success);
+    --text-color-on-info: var(--kun-text-on-info);
+    --text-color-on-warning: var(--kun-text-on-warning);
+    --text-color-on-error: var(--kun-text-on-error);
+    /* Alias legacy: `text-warning-tonal` == `text-warning` (ambos tonales). */
+    --text-color-warning-tonal: var(--kun-text-warning-tonal);
+    --text-color-inverted: var(--kun-text-inverted);
+
+    --background-color-default: var(--kun-bg);
+    --background-color-muted: var(--kun-bg-muted);
+    --background-color-elevated: var(--kun-bg-elevated);
+    --background-color-accented: var(--kun-bg-accented);
+    --background-color-inverted: var(--kun-bg-inverted);
+    --background-color-overlay: var(--kun-overlay);
+    --background-color-border: var(--kun-border);
+
+    --border-color-default: var(--kun-border);
+    --border-color-muted: var(--kun-border-muted);
+    --border-color-accented: var(--kun-border-accented);
+    --border-color-inverted: var(--kun-border-inverted);
+
+    --ring-color-default: var(--kun-border);
+    --ring-color-muted: var(--kun-border-muted);
+    --ring-color-accented: var(--kun-border-accented);
+    --ring-color-inverted: var(--kun-border-inverted);
+    --ring-color-bg: var(--kun-bg);
+    --ring-offset-color-default: var(--kun-border);
+    --ring-offset-color-muted: var(--kun-border-muted);
+    --ring-offset-color-accented: var(--kun-border-accented);
+    --ring-offset-color-inverted: var(--kun-border-inverted);
+    --ring-offset-color-bg: var(--kun-bg);
+    --outline-color-default: var(--kun-border);
+    --outline-color-inverted: var(--kun-border-inverted);
+    --divide-color-default: var(--kun-border);
+    --divide-color-muted: var(--kun-border-muted);
+    --divide-color-accented: var(--kun-border-accented);
+    --divide-color-inverted: var(--kun-border-inverted);
+    --divide-color-bg: var(--kun-bg);
+    --stroke-bg: var(--kun-bg);
+    --stroke-default: var(--kun-border);
+    --stroke-inverted: var(--kun-border-inverted);
+    --fill-bg: var(--kun-bg);
+    --fill-default: var(--kun-border);
+    --fill-inverted: var(--kun-border-inverted);
+
+    --font-sans: var(--kun-font-sans);
+    --font-mono: var(--kun-font-mono);
+    --ease-out: var(--kun-ease-out);
+
+    /* Override de namespace: utilidades de trazo de un slot semantico usan el
+       rol tonal (legible sobre bg-default), no la superficie. */
+    --text-color-primary: var(--kun-primary-tonal);
+    --text-color-secondary: var(--kun-secondary-tonal);
+    --text-color-success: var(--kun-success-tonal);
+    --text-color-info: var(--kun-info-tonal);
+    --text-color-warning: var(--kun-warning-tonal);
+    --text-color-error: var(--kun-error-tonal);
+
+    --ring-color-primary: var(--kun-primary-tonal);
+    --ring-color-secondary: var(--kun-secondary-tonal);
+    --ring-color-success: var(--kun-success-tonal);
+    --ring-color-info: var(--kun-info-tonal);
+    --ring-color-warning: var(--kun-warning-tonal);
+    --ring-color-error: var(--kun-error-tonal);
+
+    --border-color-primary: var(--kun-primary-tonal);
+    --border-color-secondary: var(--kun-secondary-tonal);
+    --border-color-success: var(--kun-success-tonal);
+    --border-color-info: var(--kun-info-tonal);
+    --border-color-warning: var(--kun-warning-tonal);
+    --border-color-error: var(--kun-error-tonal);
+
+    --outline-color-primary: var(--kun-primary-tonal);
+    --outline-color-secondary: var(--kun-secondary-tonal);
+    --outline-color-success: var(--kun-success-tonal);
+    --outline-color-info: var(--kun-info-tonal);
+    --outline-color-warning: var(--kun-warning-tonal);
+    --outline-color-error: var(--kun-error-tonal);
+
+    --divide-color-primary: var(--kun-primary-tonal);
+    --divide-color-secondary: var(--kun-secondary-tonal);
+    --divide-color-success: var(--kun-success-tonal);
+    --divide-color-info: var(--kun-info-tonal);
+    --divide-color-warning: var(--kun-warning-tonal);
+    --divide-color-error: var(--kun-error-tonal);
+
+    --radius-xs: calc(var(--kun-radius) * 0.5);
+    --radius-sm: var(--kun-radius);
+    --radius-md: calc(var(--kun-radius) * 1.5);
+    --radius-lg: calc(var(--kun-radius) * 2);
+    --radius-xl: calc(var(--kun-radius) * 3);
+    --radius-2xl: calc(var(--kun-radius) * 4);
+    --radius-3xl: calc(var(--kun-radius) * 6);
+}
+
+:root {
+    color-scheme: light;
+
+    /* Base */
+    --kun-radius: 0.25rem;
+    --kun-container: 80rem;
+    --kun-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --kun-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --kun-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Cursor de texto propio ("I" negra con borde blanco). La "I" nativa de
+       Windows invierte los colores del fondo: sobre tonos medios y por acceso
+       remoto (AnyDesk/RDP) queda invisible. Fallback `text`.
+       Para volver al nativo en una app: --kun-cursor-text: text; */
+    --kun-cursor-text: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='24' viewBox='0 0 16 24'%3E%3Cpath d='M5 3h6M8 3v18M5 21h6' fill='none' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M5 3h6M8 3v18M5 21h6' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") 8 12, text;
+
+    /* Escala z-index unica (patron Nuxt/Reka).
+       Todo overlay flotante se TELETRANSPORTA a <body> y usa la MISMA capa
+       `overlay`; el orden de anidamiento lo resuelve el orden de montaje en
+       el DOM (lo montado despues queda arriba), no un numero por componente.
+       Asi un menu dentro de un modal, o un modal abierto desde un menu,
+       siempre queda encima de su disparador.
+       Alert y toast NO son overlays interactivos: van en `notification`,
+       por encima de cualquier menu/modal/drawer/tooltip. */
+    --kun-z-docked: 1000;       /* appbar / sidebar / elementos anclados */
+    --kun-z-overlay: 2000;      /* menu/select/autocomplete/tooltip/popover/date-picker/color-picker/dialog/drawer -> misma capa, orden por montaje */
+    --kun-z-notification: 2100; /* alert + toast (nunca debajo de un overlay; empate por orden de montaje) */
+    --kun-z-loader: 2200;       /* loader fullscreen / drag preview */
+
+    /* Capa 1: primitiva = alias a paleta Tailwind completa */
+    --kun-color-primary-50: var(--color-sky-50);
+    --kun-color-primary-100: var(--color-sky-100);
+    --kun-color-primary-200: var(--color-sky-200);
+    --kun-color-primary-300: var(--color-sky-300);
+    --kun-color-primary-400: var(--color-sky-400);
+    --kun-color-primary-500: var(--color-sky-500);
+    --kun-color-primary-600: var(--color-sky-600);
+    --kun-color-primary-700: var(--color-sky-700);
+    --kun-color-primary-800: var(--color-sky-800);
+    --kun-color-primary-900: var(--color-sky-900);
+    --kun-color-primary-950: var(--color-sky-950);
+
+    --kun-color-secondary-50: var(--color-blue-50);
+    --kun-color-secondary-100: var(--color-blue-100);
+    --kun-color-secondary-200: var(--color-blue-200);
+    --kun-color-secondary-300: var(--color-blue-300);
+    --kun-color-secondary-400: var(--color-blue-400);
+    --kun-color-secondary-500: var(--color-blue-500);
+    --kun-color-secondary-600: var(--color-blue-600);
+    --kun-color-secondary-700: var(--color-blue-700);
+    --kun-color-secondary-800: var(--color-blue-800);
+    --kun-color-secondary-900: var(--color-blue-900);
+    --kun-color-secondary-950: var(--color-blue-950);
+
+    --kun-color-success-50: var(--color-green-50);
+    --kun-color-success-100: var(--color-green-100);
+    --kun-color-success-200: var(--color-green-200);
+    --kun-color-success-300: var(--color-green-300);
+    --kun-color-success-400: var(--color-green-400);
+    --kun-color-success-500: var(--color-green-500);
+    --kun-color-success-600: var(--color-green-600);
+    --kun-color-success-700: var(--color-green-700);
+    --kun-color-success-800: var(--color-green-800);
+    --kun-color-success-900: var(--color-green-900);
+    --kun-color-success-950: var(--color-green-950);
+
+    --kun-color-info-50: var(--color-blue-50);
+    --kun-color-info-100: var(--color-blue-100);
+    --kun-color-info-200: var(--color-blue-200);
+    --kun-color-info-300: var(--color-blue-300);
+    --kun-color-info-400: var(--color-blue-400);
+    --kun-color-info-500: var(--color-blue-500);
+    --kun-color-info-600: var(--color-blue-600);
+    --kun-color-info-700: var(--color-blue-700);
+    --kun-color-info-800: var(--color-blue-800);
+    --kun-color-info-900: var(--color-blue-900);
+    --kun-color-info-950: var(--color-blue-950);
+
+    /* Warning = amber: el hue yellow es perceptualmente demasiado luminoso
+       al mismo stop que el resto de los semanticos (yellow-400 ~ L 0.93 en
+       oklch vs sky-400 ~ 0.79); amber conserva el matiz de alerta pero entra
+       en la misma escala visual. */
+    --kun-color-warning-50: var(--color-amber-50);
+    --kun-color-warning-100: var(--color-amber-100);
+    --kun-color-warning-200: var(--color-amber-200);
+    --kun-color-warning-300: var(--color-amber-300);
+    --kun-color-warning-400: var(--color-amber-400);
+    --kun-color-warning-500: var(--color-amber-500);
+    --kun-color-warning-600: var(--color-amber-600);
+    --kun-color-warning-700: var(--color-amber-700);
+    --kun-color-warning-800: var(--color-amber-800);
+    --kun-color-warning-900: var(--color-amber-900);
+    --kun-color-warning-950: var(--color-amber-950);
+
+    --kun-color-error-50: var(--color-red-50);
+    --kun-color-error-100: var(--color-red-100);
+    --kun-color-error-200: var(--color-red-200);
+    --kun-color-error-300: var(--color-red-300);
+    --kun-color-error-400: var(--color-red-400);
+    --kun-color-error-500: var(--color-red-500);
+    --kun-color-error-600: var(--color-red-600);
+    --kun-color-error-700: var(--color-red-700);
+    --kun-color-error-800: var(--color-red-800);
+    --kun-color-error-900: var(--color-red-900);
+    --kun-color-error-950: var(--color-red-950);
+
+    --kun-color-neutral-50: var(--color-slate-50);
+    --kun-color-neutral-100: var(--color-slate-100);
+    --kun-color-neutral-200: var(--color-slate-200);
+    --kun-color-neutral-300: var(--color-slate-300);
+    --kun-color-neutral-400: var(--color-slate-400);
+    --kun-color-neutral-500: var(--color-slate-500);
+    --kun-color-neutral-600: var(--color-slate-600);
+    --kun-color-neutral-700: var(--color-slate-700);
+    --kun-color-neutral-800: var(--color-slate-800);
+    --kun-color-neutral-900: var(--color-slate-900);
+    --kun-color-neutral-950: var(--color-slate-950);
+
+    /* Capa 2: semantica (light). Superficie 400 (clara, tinta oscura
+       >= 6:1), tonal 800 (texto/labels >= 7:1 sobre blanco y >= 5:1
+       sobre fondos tintados de la app), tint 400. */
+    --kun-primary: var(--kun-color-primary-400);
+    --kun-secondary: var(--kun-color-secondary-400);
+    --kun-success: var(--kun-color-success-400);
+    --kun-info: var(--kun-color-info-400);
+    --kun-warning: var(--kun-color-warning-400);
+    --kun-error: var(--kun-color-error-400);
+    --kun-primary-tonal: var(--kun-color-primary-800);
+    --kun-primary-tint: var(--kun-color-primary-400);
+    --kun-secondary-tonal: var(--kun-color-secondary-800);
+    --kun-secondary-tint: var(--kun-color-secondary-400);
+    --kun-success-tonal: var(--kun-color-success-800);
+    --kun-success-tint: var(--kun-color-success-400);
+    --kun-info-tonal: var(--kun-color-info-800);
+    --kun-info-tint: var(--kun-color-info-400);
+    --kun-warning-tonal: var(--kun-color-warning-800);
+    --kun-warning-tint: var(--kun-color-warning-400);
+    --kun-error-tonal: var(--kun-color-error-800);
+    --kun-error-tint: var(--kun-color-error-400);
+    /* Alias legacy del tonal de warning. */
+    --kun-text-warning-tonal: var(--kun-warning-tonal);
+    /* Tinta sobre superficie (400 en light => oscura). kunTheme publica
+       `--kun-on-{slot}-light|dark` (por luminancia) para paletas custom;
+       sin ellas aplica el fallback. Independiente del modo activo. */
+    --kun-text-on-primary: var(--kun-on-primary-light, var(--kun-color-neutral-950));
+    --kun-text-on-secondary: var(--kun-on-secondary-light, var(--kun-color-neutral-950));
+    --kun-text-on-success: var(--kun-on-success-light, var(--kun-color-neutral-950));
+    --kun-text-on-info: var(--kun-on-info-light, var(--kun-color-neutral-950));
+    --kun-text-on-warning: var(--kun-on-warning-light, var(--kun-color-neutral-950));
+    --kun-text-on-error: var(--kun-on-error-light, var(--kun-color-neutral-950));
+
+    /* Capa 3: roles neutros (cuelgan de capa 1, nunca de --color-slate-* directo) */
+    --kun-bg: white;
+    --kun-bg-muted: var(--kun-color-neutral-50);
+    --kun-bg-elevated: var(--kun-color-neutral-100);
+    --kun-bg-accented: var(--kun-color-neutral-200);
+    --kun-bg-inverted: var(--kun-color-neutral-900);
+    --kun-text-dimmed: var(--kun-color-neutral-400);
+    --kun-text-muted: var(--kun-color-neutral-500);
+    --kun-text-toned: var(--kun-color-neutral-600);
+    /* Texto base: 800 (no 700 como Nuxt) para leerse firme sobre fondos
+       tintados de la app; `highlighted` (900) conserva la jerarquia. */
+    --kun-text: var(--kun-color-neutral-800);
+    --kun-text-highlighted: var(--kun-color-neutral-900);
+    --kun-text-inverted: white;
+    --kun-border: var(--kun-color-neutral-200);
+    --kun-border-muted: var(--kun-color-neutral-200);
+    --kun-border-accented: var(--kun-color-neutral-300);
+    --kun-border-inverted: var(--kun-color-neutral-900);
+
+    --kun-overlay: rgba(9, 13, 28, .5);
+}
+
+:root.dark,
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    /* Capa 2: semantica (dark). Superficie 700 (oscura, tinta blanca
+       >= 4.9:1), tonal 200 (texto sobre neutral-900 >= 10:1), tint 300. */
+    --kun-primary: var(--kun-color-primary-700);
+    --kun-secondary: var(--kun-color-secondary-700);
+    --kun-success: var(--kun-color-success-700);
+    --kun-info: var(--kun-color-info-700);
+    --kun-warning: var(--kun-color-warning-700);
+    --kun-error: var(--kun-color-error-700);
+    --kun-primary-tonal: var(--kun-color-primary-200);
+    --kun-primary-tint: var(--kun-color-primary-300);
+    --kun-secondary-tonal: var(--kun-color-secondary-200);
+    --kun-secondary-tint: var(--kun-color-secondary-300);
+    --kun-success-tonal: var(--kun-color-success-200);
+    --kun-success-tint: var(--kun-color-success-300);
+    --kun-info-tonal: var(--kun-color-info-200);
+    --kun-info-tint: var(--kun-color-info-300);
+    --kun-warning-tonal: var(--kun-color-warning-200);
+    --kun-warning-tint: var(--kun-color-warning-300);
+    --kun-error-tonal: var(--kun-color-error-200);
+    --kun-error-tint: var(--kun-color-error-300);
+    --kun-text-on-primary: var(--kun-on-primary-dark, white);
+    --kun-text-on-secondary: var(--kun-on-secondary-dark, white);
+    --kun-text-on-success: var(--kun-on-success-dark, white);
+    --kun-text-on-info: var(--kun-on-info-dark, white);
+    --kun-text-on-warning: var(--kun-on-warning-dark, white);
+    --kun-text-on-error: var(--kun-on-error-dark, white);
+
+    /* Capa 3: roles neutros en dark */
+    --kun-bg: var(--kun-color-neutral-900);
+    --kun-bg-muted: var(--kun-color-neutral-800);
+    --kun-bg-elevated: var(--kun-color-neutral-800);
+    --kun-bg-accented: var(--kun-color-neutral-700);
+    --kun-bg-inverted: white;
+    --kun-text-dimmed: var(--kun-color-neutral-500);
+    --kun-text-muted: var(--kun-color-neutral-400);
+    --kun-text-toned: var(--kun-color-neutral-300);
+    --kun-text: var(--kun-color-neutral-200);
+    --kun-text-highlighted: white;
+    --kun-text-inverted: var(--kun-color-neutral-900);
+    --kun-border: var(--kun-color-neutral-800);
+    --kun-border-muted: var(--kun-color-neutral-700);
+    --kun-border-accented: var(--kun-color-neutral-700);
+    --kun-border-inverted: white;
+
+    --kun-overlay: rgba(0, 0, 0, .6);
+}

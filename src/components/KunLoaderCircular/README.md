@@ -25,7 +25,7 @@ import { KunLoaderCircular } from 'adverich-kun-ui'
 | `fullscreen` | `Boolean` | `false` | Overlay de pantalla completa (teleport a body). |
 | `size` | `Number \| String` | `24` | Diámetro en px. |
 | `width` | `Number \| String` | `4` | Grosor del anillo en px. |
-| `gradient` | `String` | `'conic-gradient(from 0deg, var(--surface-raised), var(--primary))'` | Gradiente cónico del anillo. |
+| `gradient` | `String` | `'conic-gradient(from 0deg, var(--kun-bg-elevated), var(--kun-primary))'` | Gradiente cónico del anillo. |
 
 ---
 

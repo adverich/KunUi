@@ -26,7 +26,7 @@ export const kunTableIteratorProps = {
   /** Clase cuando está seleccionada. */
   selectedClass: String,
   /** Borde de la tarjeta. */
-  border: { type: String, default: 'border border-ui' },
+  border: { type: String, default: 'border border-default' },
   /** Redondeo de la tarjeta. */
   rounded: { type: String, default: 'rounded-sm' },
   /** Clase condicional por ítem (string o `(item) => clase|false`). */

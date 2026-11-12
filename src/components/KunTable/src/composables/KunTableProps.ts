@@ -27,6 +27,7 @@ export default () => ({
     /** Alineación de acciones: 'left' | 'center' | 'right'. */
     actionsAlign: {
         type: String as PropType<KunTableActionsAlign>,
+        default: 'center' as KunTableActionsAlign,
         validator: (v: unknown) => ['left', 'center', 'right'].includes(v as string),
     },
     /** Mapa de loading por rowKey para la columna de acciones. */
@@ -47,11 +48,13 @@ export default () => ({
     page: { type: [Number, String], default: 1 },
     /** Criterio de orden (v-model): string, objeto o array. */
     sortBy: {
-        type: [Array, String] as PropType<string | { key: string; order: string }[]>,
-        default: () => [] as { key: string; order: string }[]
+        type: [Array, String, Object] as PropType<string | string[] | Record<string, unknown> | { key: string; order: string }[]>,
+        default: () => [] as unknown[]
     },
     /** Habilita ordenar por múltiples columnas. */
     mutliSort: Boolean,
+    /** Alias de `mutliSort` (nombre corregido). Usar este en código nuevo. */
+    multiSort: Boolean,
     /** Opciones del selector de ítems por página. */
     pageOptions: { type: Array as PropType<number[]>, default: () => [5, 10, 25, 50, 100] },
 
@@ -110,7 +113,7 @@ export default () => ({
     /** Clase de las celdas (string o `(item) => clase`). */
     tdClass: { type: [String, Function] as PropType<string | ((item: TableItem) => string)>, default: '' },
     /** Clase de filas seleccionadas. */
-    selectedClass: { type: String, default: 'bg-ui-selection text-ui-selection' },
+    selectedClass: { type: String, default: 'bg-accented text-default' },
     /** Clase de filas alternas. */
     stripedClass: { type: String, default: '' },
     /** Clase del `<tfoot>`. */

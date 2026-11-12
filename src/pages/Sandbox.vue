@@ -1,5 +1,5 @@
 <template>
-  <KunRow class="h-full flex flex-col overflow-auto bg-blue-700">
+  <KunRow class="h-full flex flex-col overflow-auto bg-muted">
     <KunCol cols="4">
       <KunAutocomplete
         v-model="selectedColumns"
@@ -12,7 +12,6 @@
         multiple
         clearable
         placeholder-text="Seleccionar columnas"
-        z-index="z-250"
       />
 
       <div class="w-1/3">

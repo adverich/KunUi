@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import KunFileInput from '../src/components/KunFileInput.vue'
-import type { KunFileInputVariant } from '../src/composables/kunFileInputProps.js'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import { KUN_COLORS, KUN_VARIANTS, type KunColor, type KunVariant } from '../../../theme/kunVariants.js'
 
 // ------------------------------------------------------------------
 // v-model principal: NO se puede pre-fijar (File solo existe vía
@@ -22,12 +22,14 @@ const errorMessagesProp = computed(() => (errorMessagesRaw.value === '' ? undefi
 const counterStringRaw = ref('')
 const counterSizeStringRaw = ref('')
 
-const variant = ref<KunFileInputVariant>('filled')
+const variant = ref<KunVariant>('subtle')
 const variantOptions = ref([
-  { id: 'filled', name: 'filled' },
-  { id: 'outlined', name: 'outlined' },
-  { id: 'solo', name: 'solo' },
+  ...KUN_VARIANTS.map((v) => ({ id: v, name: v })),
 ])
+
+const color = ref('')
+const colorOptions = ref([{ id: '', name: '(default: primary)' }, ...KUN_COLORS.map((c: KunColor) => ({ id: c, name: c }))])
+const colorProp = computed<KunColor | null>(() => (color.value === '' ? null : color.value as KunColor))
 
 const showSize = ref<boolean | number>(false)
 const showSizeOptions = ref<Array<{ id: boolean | number; name: string }>>([
@@ -36,7 +38,7 @@ const showSizeOptions = ref<Array<{ id: boolean | number; name: string }>>([
   { id: 1024, name: 'Base 1024' },
 ])
 
-const iconSize = ref('text-base')
+const iconSize = ref('size-4')
 
 // Iconos como string; vacío = sin icono
 const prependIcon = ref('')
@@ -136,6 +138,7 @@ function describeChange(e: unknown): string {
         :clear-icon="clearIcon || undefined"
         :icon-size="iconSize"
         :variant="variant"
+        :color="colorProp"
         @update:model-value="logEvent('update:modelValue', describeFiles($event))"
         @click:clear="logEvent('click:clear', '')"
         @click:control="logEvent('click:control', '')"
@@ -143,26 +146,26 @@ function describeChange(e: unknown): string {
         @change="logEvent('change', describeChange($event))"
       />
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo (nombres/cuenta — File no es serializable)</div>
-        <div>{{ JSON.stringify(fileSummary) }} <span class="text-ui-muted">({{ Array.isArray(model) ? 'array' : model === null ? 'null' : 'File' }})</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo (nombres/cuenta — File no es serializable)</div>
+        <div>{{ JSON.stringify(fileSummary) }} <span class="text-muted">({{ Array.isArray(model) ? 'array' : model === null ? 'null' : 'File' }})</span></div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Seleccioná archivos para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Seleccioná archivos para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el field) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="label" label="Label" density="compact" />
@@ -175,7 +178,15 @@ function describeChange(e: unknown): string {
         <KunSelect
           v-model="variant"
           v-model:items="variantOptions"
-          label="Variant"
+          label="Variant (KunVariant)"
+          item-value="id"
+          item-title="name"
+          density="compact"
+        />
+        <KunSelect
+          v-model="color"
+          v-model:items="colorOptions"
+          label="Color"
           item-value="id"
           item-title="name"
           density="compact"

@@ -5,8 +5,6 @@ export const kunDialogContentProps = {
   scrollable: Boolean,
   /** Clase extra del contenido. */
   contentClass: String,
-  /** Color de fondo del diálogo. */
-  bgColor: String,
   /** Ancho mínimo. */
   minWidth: String,
   /** Ancho. */

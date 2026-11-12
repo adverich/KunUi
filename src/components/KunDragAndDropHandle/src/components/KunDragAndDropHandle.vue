@@ -5,7 +5,7 @@
     :aria-label="label"
     :aria-disabled="disabled ? 'true' : 'false'"
     :class="[
-      'inline-flex items-center justify-center select-none text-ui-muted px-1',
+      'inline-flex items-center justify-center select-none text-muted px-1',
       sizeClass,
       disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-grab active:cursor-grabbing',
       wrapperClass,
@@ -23,20 +23,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { kunDragAndDropHandleProps } from '../composables/kunDragAndDropHandleProps.js'
+import { resolveKunSize, KUN_SQUARE_SIZE, KUN_TEXT_SIZE } from '../../../../theme/kunSizes.js'
 
 const props = defineProps(kunDragAndDropHandleProps)
 
 const sizeClass = computed(() => {
-  const map: Record<string, string> = {
-    xxs: 'text-[10px] min-h-4 min-w-4',
-    xs: 'text-xs min-h-5 min-w-5',
-    sm: 'text-sm min-h-6 min-w-6',
-    md: 'text-base min-h-8 min-w-8',
-    lg: 'text-lg min-h-9 min-w-9',
-    xl: 'text-xl min-h-10 min-w-10',
-    xxl: 'text-2xl min-h-12 min-w-12',
-  }
-  return map[props.size as string] || map.xs
+  const size = resolveKunSize(props.size, 'xs')
+  return `${KUN_SQUARE_SIZE[size]} ${KUN_TEXT_SIZE[size]}`
 })
 </script>
 

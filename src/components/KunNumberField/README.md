@@ -25,15 +25,13 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `modelValue` | `number \| string \| null` | `null` | Valor numérico (v-model). `null` = vacío (también lo emite `onClear`). |
 | `placeholder` | `String \| Number` | `''` | Placeholder. Si existe, el label flota siempre. |
 | `label` | `String` | `''` | Etiqueta flotante (mismo sistema que KunTextField). |
-| `labelColor` | `String` | `'text-ui'` | Color del label en reposo. |
-| `floatingLabelColor` | `string \| null` | `null` | Color del label flotando (null = usa `labelColor`). |
 | `labelSize` | `String` | `'text-sm'` | Tamaño del label en reposo. |
 | `floatingLabelSize` | `String` | `'text-xs'` | Tamaño del label flotando. |
-| `labelOpacity` | `String` | `'opacity-60'` | Opacidad del label en reposo. |
-| `floatingLabelOpacity` | `String` | `'opacity-80'` | Opacidad del label flotando. |
+| `labelOpacity` | `String` | `'opacity-100'` | Opacidad del label en reposo (clase Tailwind). Default `opacity-100`: el color `text-muted` ya marca la jerarquía; atenuar más rompe el contraste AA. |
+| `floatingLabelOpacity` | `String` | `'opacity-100'` | Opacidad del label flotando (clase Tailwind). Default `opacity-100`: el label flotante usa el tono `text-primary` (tonal, AA sobre `bg-default`). |
 | `labelLeft` | `string \| null` | `null` | Offset izquierdo en reposo (null = automático según iconos). |
 | `floatingLabelLeft` | `String` | `'left-2'` | Offset izquierdo flotando. |
-| `floatingLabelTop` | `String` | `'-top-2'` | Posición superior flotando. |
+| `floatingLabelTop` | `String` | `'top-[-2px]'` | Posición superior flotando ('top-[-2px]' + `-translate-y-1/2` = centrado sobre el borde). |
 | `labelClass` | `String` | `''` | Clase libre para el label. |
 | `dirty` | `Boolean` | `false` | Marca el campo como tocado (flota el label). |
 | `prefix` | `String` | `''` | Texto fijo al inicio. |
@@ -44,15 +42,12 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `appendInnerIcon` | `string \| Record<string, any> \| Function \| unknown[] \| null` | `null` | Ícono interno al final. |
 | `prependInnerClass` | `String` | `-` | Clase del contenedor del ícono interno inicial. |
 | `appendInnerClass` | `String` | `-` | Clase del contenedor del ícono interno final. |
-| `rounded` | `String` | `'rounded'` | Redondeo del contenedor. |
-| `borderColor` | `String` | `'border-ui'` | Color del borde. |
-| `textColor` | `String` | `'text-ui'` | Color del texto del valor. |
+| `rounded` | `String` | `'rounded-md'` | Redondeo del contenedor (clase de escala, `rounded-md` por defecto). |
+| `bgInput` | `string \| null` | `null` | Color de fondo del contenedor (clase Tailwind: `bg-success` sólido o un tinte `bg-success-tint/20`). `null` = `bg-default`, con `bg-error-tint/10` automático en estado de error. Si se define, reemplaza el fondo (y el automático de error). Con una superficie semántica sólida (`bg-{color}`) el valor, el prefijo y el label pasan a la tinta `text-on-{color}`. |
 | `inputTextSize` | `string \| null` | `null` | Tamaño del texto del valor (null = 'text-sm'). |
 | `inputWeight` | `string \| null` | `null` | Peso del texto del valor (null = hereda). |
-| `placeholderColor` | `String` | `'placeholder-ui'` | Color del placeholder. |
 | `placeholderTextSize` | `string \| null` | `null` | Tamaño del placeholder ('text-lg' o 'placeholder:text-lg'). |
 | `inputStyle` | `String` | `''` | Clase libre para el input. |
-| `bgInput` | `String` | `'bg-field-background'` | Color de fondo del contenedor. |
 | `textCenter` | `Boolean` | `false` | Centra el texto del valor. |
 | `controlVariant` | `KunNumberFieldControlVariant` | `'default'` | Variante de botones de incremento: 'default' \| 'stacked' \| 'split'.<br/>Valores · Values: `default` `stacked` `split` |
 | `noArrows` | `Boolean` | `false` | Oculta los botones ▲▼ (quedan `onIncrement`/`onDecrement` por slot). |
@@ -86,6 +81,7 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `useGrouping` | `Boolean` | `true` | Agrupa miles al mostrar. |
 | `precision` | `Number \| String` | `2` | Decimales de formato y edición. |
 | `formatMode` | `KunNumberFieldFormatMode` | `'natural'` | Modo de entrada: 'natural' (libre) \| 'bank' (estricto, cursor controlado).<br/>Valores · Values: `natural` `bank` |
+| `hideZero` | `Boolean` | `true` | Oculta el cero en reposo y muestra el placeholder/label en su lugar (el v-model sigue siendo `0`). Sin placeholder ni label en reposo (o con `dirty`), muestra el `0` formateado (fallback automático). |
 
 ## Eventos · Events
 
@@ -100,9 +96,11 @@ import { KunNumberField } from 'adverich-kun-ui'
 
 ## Slots
 
+- `#prepend`
 - `#prepend-icon`
 - `#prepend-inner`
 - `#append-inner`
+- `#append`
 - `#append-icon`
 
 ## Métodos expuestos · Exposed
@@ -112,6 +110,16 @@ import { KunNumberField } from 'adverich-kun-ui'
 - `focus()`
 
 ## Notas · Notes
+
+## Muesca del label flotante + desplazamiento por `rounded`
+
+Igual que `KunTextField`, vía el composable compartido `useKunFieldNotch`
+(`src/utils/useKunFieldNotch.ts`): el overlay dibuja el borde nativo
+completo (respeta cualquier `rounded`, pill incluida) y la muesca se recorta
+con `mask` sobre la caja real del label (medida por JS + `ResizeObserver`).
+Hueco real en cualquier fondo, sin `fieldset`/`legend`. El label flotante se
+desplaza 2px por escalón de `rounded` (`margin-left`; `margin-right` si flota
+anclado a la derecha con `floatingLabelLeft: 'right-*'`).
 
 ## Input siempre `type="text"`
 
@@ -155,6 +163,34 @@ sigue recto.
   text-center
 />
 ```
+
+## `hideZero` (default `true`) con fallback automático
+
+El **v-model nunca cambia**: el vacío se normaliza a `0` al blurear y los
+cálculos en tiempo real siguen operando sobre `0`. Solo cambia el **display**:
+en reposo, el cero se muestra vacío (`inputValue = ''`) para dejar ver el
+`placeholder` o el label en reposo.
+
+Fallback: si no hay nada que mostrar (sin `placeholder` y sin label en
+reposo, o con `dirty` que flota el label al borde), se muestra el `0`
+formateado para no dejar una caja fantasma. Con `hideZero: false` siempre
+se muestra el `0` formateado (comportamiento histórico).
+
+## Bordes y radio
+
+- Default `'rounded-md'` (antes `'rounded'` pelado, 4px fijos).
+- El `<input>` ya no lleva un `rounded` pelado redundante: el radio lo aplica la
+  prop del contenedor.
+- Lados lógicos: `border-e` / `border-s` y `rounded-s/e-[inherit]` en los botones
+  split (antes `border-l/r` físicos).
+- Contorno por rol: contenedor `bg-default` y notch `border-accented` (antes
+  `bg-muted` + `border-default`, invisible en dark).
+- Contraste (ver `docs/refactor/color-contrast.md`): labels a `opacity-100` por
+  defecto (`labelOpacity` / `floatingLabelOpacity`; antes 60/80, que llevaba el
+  label flotante a ~2.3:1). Con `bgInput` sólido semántico (`bg-error`,
+  `bg-success`, … sin `/NN`) el valor, el prefijo y el label usan la tinta
+  `text-on-{color}` del slot (detector `kunOnSurfaceTextFromBg`). Los tintes van
+  con `bg-{color}-tint/NN`; el error automático es `bg-error-tint/10`.
 
 ---
 

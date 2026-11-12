@@ -1,28 +1,27 @@
 import type { Component, PropType } from 'vue';
+import type { KunSize } from '../../../../theme/kunSizes.js';
 
 export type KunIconInput = string | Record<string, any> | Function | unknown[] | Component | boolean;
+export type KunIconSize = KunSize | string | number;
+/** Forma del contenedor del icono: `full` = caja 1:1 circular. */
+export type KunIconRounded = 'none' | 'sm' | 'md' | 'lg' | 'full';
 
 export const kunIconProps = {
-  /** Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente o `[icono, tamaño]`. */
+  /** Ícono a renderizar: clase CSS, SVG inline, alias `$nombre`, componente, nombre Iconify (`i-mdi-home`, `mdi:home`) o `[icono, tamaño]`. */
   icon: {
-    type: [String, Object, Function] as PropType<KunIconInput>,
+    type: [String, Object, Function, Array] as PropType<KunIconInput>,
     required: false as const,
     default: undefined,
   },
-  /** Aliases `$nombre` → icono/clase. Pisan el set bundleado (`$star`, ...). */
+  /** Aliases `$nombre` → icono/clase/componente. Máxima prioridad: pisan a `kunConfig.icons` y al set bundleado (`$star`, ...). */
   aliases: {
-    type: Object as PropType<Record<string, string>>,
-    default: (): Record<string, string> => ({}),
+    type: Object as PropType<Record<string, unknown>>,
+    default: (): Record<string, unknown> => ({}),
   },
-  /** Tamaño (clase de texto o número → px). */
+  /** Tamaño: paso de la escala (`xxs`…`xxl`), clase Tailwind (`size-5`, `text-xl`) o número → px. Vacío = hereda el contexto. */
   size: {
-    type: String,
-    default: 'text-md',
-  },
-  /** Color del ícono. */
-  color: {
-    type: String,
-    default: 'text-font-color',
+    type: [String, Number] as PropType<KunIconSize>,
+    default: '',
   },
   /** Atenúa el ícono y bloquea el click. */
   disabled: {
@@ -36,4 +35,10 @@ export const kunIconProps = {
   },
   /** Clase extra del contenido del ícono. */
   contentClass: [String, Array, Object] as PropType<string | unknown[] | Record<string, unknown>>,
+  /** Forma del contenedor: `full` fuerza caja 1:1 circular; `sm|md|lg` caja cuadrada con ese radio; `none`/`null` deja el icono suelto. */
+  rounded: {
+    type: String as PropType<KunIconRounded | null>,
+    default: null,
+    validator: (v: unknown) => v === null || ['none', 'sm', 'md', 'lg', 'full'].includes(v as string),
+  },
 };

@@ -23,7 +23,6 @@ import { KunListItemTitle } from 'adverich-kun-ui'
 | Propiedad · Prop | Tipo · Type | Defecto · Default | Descripción · Description |
 |---|---|---|---|
 | `title` | `string \| number \| null` | `null` | Título a mostrar. |
-| `textColor` | `String` | `'text-ui'` | Color del texto. |
 | `fontSize` | `String` | `'text-lg'` | Tamaño del texto. |
 | `fontWeight` | `String` | `'font-medium'` | Peso del texto. |
 

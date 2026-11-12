@@ -85,7 +85,7 @@ Top-level imports also work: `import { KunBtn } from 'adverich-kun-ui'`. Require
 - [KunDrawer](./src/components/KunDrawer/README.md): Swipeable side navigation drawer.
 - [KunFileInput](./src/components/KunFileInput/README.md): Single/multiple file input with chips.
 - [KunForm](./src/components/KunForm/README.md): Form container with aggregate validation.
-- [KunIcon](./src/components/KunIcon/README.md): SVG icon from the KunUI set.
+- [KunIcon](./src/components/KunIcon/README.md): Icon from Iconify (`$alias`, offline `lucide` collection), class, SVG or component.
 - [KunInfiniteScroll](./src/components/KunInfiniteScroll/README.md): Infinite scroll with threshold loading.
 - [KunList](./src/components/KunList/README.md): List with selection, keyboard navigation and groups.
 - [KunListGroup](./src/components/KunListGroup/README.md): Collapsible group inside KunList.
@@ -99,7 +99,6 @@ Top-level imports also work: `import { KunBtn } from 'adverich-kun-ui'`. Require
 - [KunListSubheader](./src/components/KunListSubheader/README.md): Subheader for list groups.
 - [KunLoaderCircular](./src/components/KunLoaderCircular/README.md): Circular loading indicator.
 - [KunMenu](./src/components/KunMenu/README.md): Dropdown menu anchored to an activator.
-- [KunModalFooter](./src/components/KunModalFooter/README.md): Modal/dialog footer with actions.
 - [KunNumberField](./src/components/KunNumberField/README.md): Localized numeric input (natural/bank modes).
 - [KunRadio](./src/components/KunRadio/README.md): Single radio button (use with KunRadioGroup).
 - [KunRadioGroup](./src/components/KunRadioGroup/README.md): Radio button group with v-model.

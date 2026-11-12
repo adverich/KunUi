@@ -3,7 +3,7 @@
     :class="[
       'kun-list-img',
       'overflow-hidden rounded-md',
-      bgColor,
+      'bg-muted',
     ]"
     v-bind="$attrs"
   >

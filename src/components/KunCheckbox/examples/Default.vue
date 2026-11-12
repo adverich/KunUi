@@ -4,6 +4,7 @@ import KunCheckbox from '../src/components/KunCheckbox.vue'
 import KunSwitch from '../../KunSwitch/src/components/KunSwitch.vue'
 import KunSelect from '../../KunSelect/src/components/KunSelect.vue'
 import KunTextField from '../../KunTextField/src/components/KunTextField.vue'
+import { KUN_COLORS, type KunColor } from '../../../theme/kunVariants.js'
 
 // ------------------------------------------------------------------
 // kunCheckboxProps.ts no exporta tipos union: tipos locales para
@@ -21,6 +22,10 @@ type CheckboxHideDetailsSel = 'visible' | 'hidden' | 'auto'
 // ------------------------------------------------------------------
 const value = ref<boolean | null>(true)
 const groupValue = ref<unknown[]>(['opcion-1'])
+
+// Preset indicador on/off con iconColor: caja neutra + glifo coloreado.
+const indicatorOn = ref(true)
+const indicatorOff = ref(false)
 
 // ------------------------------------------------------------------
 // Controles del playground (demo single)
@@ -75,9 +80,13 @@ const maxErrorsOptions = ref([
 const color = ref('')
 const baseColor = ref('')
 const iconColor = ref('')
-const colorProp = computed(() => (color.value === '' ? undefined : color.value))
-const baseColorProp = computed(() => (baseColor.value === '' ? undefined : baseColor.value))
-const iconColorProp = computed(() => (iconColor.value === '' ? undefined : iconColor.value))
+const colorOptions = ref([
+  { id: '', name: '(default: primary)' },
+  ...KUN_COLORS.map(c => ({ id: c, name: c })),
+])
+const colorProp = computed<KunColor | null>(() => (color.value === '' ? null : color.value as KunColor))
+const baseColorProp = computed<KunColor | null>(() => (baseColor.value === '' ? null : baseColor.value as KunColor))
+const iconColorProp = computed<KunColor | null>(() => (iconColor.value === '' ? null : iconColor.value as KunColor))
 
 const prependIcon = ref('')
 const appendIcon = ref('')
@@ -172,43 +181,65 @@ function logEvent(name: string, detail: unknown): void {
         @click:append="logEvent('click:append', '')"
       />
 
-      <div class="space-y-2 rounded-lg border border-ui p-3">
-        <div class="text-ui-muted text-xs">Grupo múltiple (array v-model compartido)</div>
+      <div class="space-y-2 rounded-lg border border-default p-3">
+        <div class="text-muted text-xs">Indicador on/off con iconColor (caja neutra + glifo)</div>
+        <KunCheckbox v-model="indicatorOn" label="Activo" icon-color="success" hide-details />
+        <KunCheckbox v-model="indicatorOff" label="Inactivo" icon-color="error" hide-details />
+        <div class="font-mono text-xs">{{ indicatorOn }} / {{ indicatorOff }}</div>
+      </div>
+
+      <div class="space-y-2 rounded-lg border border-default p-3">
+        <div class="text-muted text-xs">Grupo múltiple (array v-model compartido)</div>
         <KunCheckbox v-model="groupValue" multiple value="opcion-1" label="Opción 1" />
         <KunCheckbox v-model="groupValue" multiple value="opcion-2" label="Opción 2" />
         <KunCheckbox v-model="groupValue" multiple value="opcion-3" label="Opción 3" />
         <div class="font-mono text-xs">{{ JSON.stringify(groupValue) }}</div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 font-mono text-sm">
-        <div class="text-ui-muted text-xs mb-1">v-model en crudo</div>
-        <div>{{ JSON.stringify(value) }} <span class="text-ui-muted">({{ typeof value }})</span></div>
+      <div class="rounded-lg bg-muted p-3 font-mono text-sm">
+        <div class="text-muted text-xs mb-1">v-model en crudo</div>
+        <div>{{ JSON.stringify(value) }} <span class="text-muted">({{ typeof value }})</span></div>
       </div>
 
-      <div class="rounded-lg bg-surface p-3 text-sm">
-        <div class="text-ui-muted text-xs mb-1">Últimos eventos</div>
+      <div class="rounded-lg bg-muted p-3 text-sm">
+        <div class="text-muted text-xs mb-1">Últimos eventos</div>
         <ul v-if="eventLog.length" class="space-y-1 font-mono text-xs">
           <li v-for="e in eventLog" :key="e.id">
             <span class="font-semibold">{{ e.name }}</span>
-            <span v-if="e.detail" class="text-ui-muted"> — {{ e.detail }}</span>
+            <span v-if="e.detail" class="text-muted"> — {{ e.detail }}</span>
           </li>
         </ul>
-        <p v-else class="text-xs text-ui-muted">Interactuá con el checkbox para ver eventos…</p>
+        <p v-else class="text-xs text-muted">Interactuá con el checkbox para ver eventos…</p>
       </div>
     </div>
 
     <!-- Panel de configuración (scroll propio: no arrastra el checkbox) -->
-    <div class="space-y-4 rounded-xl border border-ui p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-wide text-ui-muted">Configuración</h3>
+    <div class="space-y-4 rounded-lg border border-default p-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-muted">Configuración</h3>
 
       <div class="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         <KunTextField v-model="label" label="Label" density="compact" />
         <KunTextField v-model="hint" label="Hint" density="compact" />
         <KunTextField v-model="name" label="Name (input nativo)" density="compact" />
         <KunTextField v-model="errorText" label="Error externo (vacío = sin error)" density="compact" />
-        <KunTextField v-model="color" label="Color (vacío = default)" density="compact" />
-        <KunTextField v-model="baseColor" label="Base color (vacío = default)" density="compact" />
-        <KunTextField v-model="iconColor" label="Icon color (vacío = default)" density="compact" />
+        <KunSelect
+          v-model="color"
+          v-model:items="colorOptions"
+          label="Color (caja activa)"
+          density="compact"
+        />
+        <KunSelect
+          v-model="iconColor"
+          v-model:items="colorOptions"
+          label="Icon color (glifo)"
+          density="compact"
+        />
+        <KunSelect
+          v-model="baseColor"
+          v-model:items="colorOptions"
+          label="Base color (caja inactiva)"
+          density="compact"
+        />
         <KunTextField v-model="prependIcon" label="Prepend icon (ej. $star)" density="compact" />
         <KunTextField v-model="appendIcon" label="Append icon (ej. $star)" density="compact" />
         <KunTextField v-model="trueValueRaw" label="True value" density="compact" />
