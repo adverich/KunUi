@@ -173,6 +173,12 @@
     --kun-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     --kun-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
+    /* Cursor de texto propio ("I" negra con borde blanco). La "I" nativa de
+       Windows invierte los colores del fondo: sobre tonos medios y por acceso
+       remoto (AnyDesk/RDP) queda invisible. Fallback `text`.
+       Para volver al nativo en una app: --kun-cursor-text: text; */
+    --kun-cursor-text: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='24' viewBox='0 0 16 24'%3E%3Cpath d='M5 3h6M8 3v18M5 21h6' fill='none' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M5 3h6M8 3v18M5 21h6' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") 8 12, text;
+
     /* Escala z-index unica (patron Nuxt/Reka).
        Todo overlay flotante se TELETRANSPORTA a <body> y usa la MISMA capa
        `overlay`; el orden de anidamiento lo resuelve el orden de montaje en

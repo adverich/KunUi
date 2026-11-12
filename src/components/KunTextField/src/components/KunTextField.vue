@@ -10,7 +10,7 @@
         </div>
 
       <div data-kun-input-box class="flex flex-row items-center w-full border border-transparent relative" :class="[bgInputClass, solidInk, rounded, containerDensity,
-        disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'
+        disabled ? 'opacity-60 cursor-not-allowed' : 'kun-cursor-text'
       ]">
         <!-- Borde nativo completo (respeta cualquier `rounded`, pill incluido)
              con la muesca del label recortada vía mask: hueco real en cualquier

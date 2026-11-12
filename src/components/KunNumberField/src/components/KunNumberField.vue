@@ -4,7 +4,7 @@
       <div
         class="flex items-center w-full h-full border border-transparent relative"
         :class="[bgInputClass, solidInk, rounded, containerDensity,
-          disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'
+          disabled ? 'opacity-60 cursor-not-allowed' : 'kun-cursor-text'
         ]"
       >
         <!-- Borde nativo completo (respeta cualquier `rounded`, pill incluido)

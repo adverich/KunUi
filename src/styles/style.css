@@ -7,6 +7,20 @@
     body {
         @apply antialiased font-sans text-default bg-default scheme-light dark:scheme-dark;
     }
+
+    /* Inputs de texto y textareas nativos usan la "I" visible (ver
+       --kun-cursor-text en theme.css). Los deshabilitados conservan el
+       cursor del navegador / `cursor-not-allowed` del contenedor. */
+    input:where(:not([type=checkbox], [type=radio], [type=range], [type=color], [type=file], [type=button], [type=submit], [type=reset], [type=image], [type=hidden])):not(:disabled),
+    textarea:not(:disabled) {
+        cursor: var(--kun-cursor-text);
+    }
+}
+
+/* Contenedor de los fields (KunTextField, KunNumberField): misma "I" visible
+   en el padding alrededor del input. */
+@utility kun-cursor-text {
+    cursor: var(--kun-cursor-text);
 }
 
 .ripple {
