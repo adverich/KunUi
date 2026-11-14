@@ -6,6 +6,7 @@ import { isAutofillAnimation, readNativeValue } from '../../../../utils/kunAutof
 export interface KunNumberFieldPropsLike {
     modelValue?: unknown;
     precision?: unknown;
+    displayPrecision?: unknown;
     min?: unknown;
     max?: unknown;
     step?: unknown;
@@ -38,6 +39,10 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
 
     // Solo usado en modo bank
     let rawNumberString = '';
+
+    // Texto mostrado al terminar el focus (modo natural). Si al blur no cambió,
+    // el usuario no editó y el modelo conserva su valor real.
+    let focusText = '';
 
     // Mensaje de validación interna (reglas). '' = válido / sin reglas.
     const internalError: Ref<string> = ref('');
@@ -98,6 +103,16 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         }
         internalError.value = '';
         return true;
+    }
+
+    // Decimales del texto en reposo: `displayPrecision` o, si no se define, `precision`.
+    function restPrecision(): number {
+        const dp = props.displayPrecision;
+        return dp === null || dp === undefined || dp === '' ? Number(props.precision) : Number(dp);
+    }
+
+    function hasDisplayPrecision(): boolean {
+        return restPrecision() !== Number(props.precision);
     }
 
     const minLen = computed(() => {
@@ -282,10 +297,16 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         // edita sobre él (cubre uso sin v-model, donde props.modelValue nunca
         // se actualiza y Number(null) daría 0 → borrado fantasma).
         // Solo si está vacío se recurre al modelValue externo.
+        // Con `displayPrecision` el texto en reposo está redondeado: se edita
+        // el valor real del modelo.
         const shown = (inputValue.value ?? '').toString().trim();
-        const num = shown ? parseFormattedToNumber(shown) : Number(props.modelValue);
+        const modelNum = Number(props.modelValue);
+        const num = hasDisplayPrecision() && !isEmptyModel(props.modelValue) && !isNaN(modelNum)
+            ? modelNum
+            : (shown ? parseFormattedToNumber(shown) : Number(props.modelValue));
 
         if (isNaN(num)) {
+            focusText = '';
             clearDisplayNative();
             emits('focus');
             return;
@@ -293,6 +314,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
 
         // Si es cero exacto → limpiar el input (display + DOM nativo, mismo tick)
         if (num === 0) {
+            focusText = '';
             clearDisplayNative();
             emits('focus');
             return;
@@ -313,6 +335,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
             (num < 0 ? '-' : '') +
             intRaw +
             (decRaw.length ? separators().decimal + decRaw : '');
+        focusText = inputValue.value;
 
         nextTick(() => {
             try {
@@ -326,6 +349,18 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
 
     function handleBlurNatural(_e?: unknown): void {
         isActive.value = false;
+
+        // Sin edición: el modelo conserva su valor real y sólo se restaura el texto en reposo.
+        if (focusText !== '' && inputValue.value === focusText) {
+            focusText = '';
+            const current = Number(props.modelValue ?? 0);
+            inputValue.value = formatNumberForDisplay(isNaN(current) ? 0 : current, restPrecision(), false);
+            runRules(current);
+            emits('blur');
+            return;
+        }
+        focusText = '';
+
         let val = (inputValue.value ?? '').toString().trim();
         if (!val) val = '0';
 
@@ -339,8 +374,8 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         if (shouldHideZero() && num === 0) {
             inputValue.value = '';
         } else {
-            // Formatear determinísticamente con todos los decimales según precision
-            inputValue.value = formatNumberForDisplay(num, Number(props.precision), false);
+            // Formatear determinísticamente con los decimales de reposo
+            inputValue.value = formatNumberForDisplay(num, restPrecision(), false);
         }
         runRules(num);
         emits('update:modelValue', num);
@@ -587,7 +622,8 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
     // ----------------------------
     watch(
         [() => props.modelValue, () => props.precision, () => props.formatMode,
-            () => props.hideZero, () => props.placeholder, () => props.label, () => props.dirty],
+            () => props.hideZero, () => props.placeholder, () => props.label, () => props.dirty,
+            () => props.displayPrecision],
         ([newVal, newPrecision, mode]: unknown[]) => {
             if (mode !== 'bank') {
                 if (isActive.value) {
@@ -605,8 +641,8 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
                     if (shouldHideZero() && isBlankDisplay(newVal)) {
                         inputValue.value = '';
                     } else {
-                        // 👇 con miles y ceros completos
-                        inputValue.value = formatNumberForDisplay(Number(newVal ?? 0), Number(newPrecision), false, true);
+                        // 👇 con miles y ceros completos, a los decimales de reposo
+                        inputValue.value = formatNumberForDisplay(Number(newVal ?? 0), restPrecision(), false, true);
                     }
                 }
                 return;

@@ -79,7 +79,8 @@ import { KunNumberField } from 'adverich-kun-ui'
 | `locale` | `string \| null` | `null` | Locale de formato (null = global, default 'es-AR'). |
 | `separator` | `String` | `','` | Separador decimal de entrada. |
 | `useGrouping` | `Boolean` | `true` | Agrupa miles al mostrar. |
-| `precision` | `Number \| String` | `2` | Decimales de formato y edición. |
+| `precision` | `Number \| String` | `2` | Decimales de edición y del valor emitido (valor real del v-model). |
+| `displayPrecision` | `number \| string \| null` | `null` | Decimales al mostrar en reposo (modo `natural`). `null` = `precision`. Sólo cambia el texto visible: el v-model conserva `precision` decimales y al enfocar se edita el valor real. |
 | `formatMode` | `KunNumberFieldFormatMode` | `'natural'` | Modo de entrada: 'natural' (libre) \| 'bank' (estricto, cursor controlado).<br/>Valores · Values: `natural` `bank` |
 | `hideZero` | `Boolean` | `true` | Oculta el cero en reposo y muestra el placeholder/label en su lugar (el v-model sigue siendo `0`). Sin placeholder ni label en reposo (o con `dirty`), muestra el `0` formateado (fallback automático). |
 

@@ -155,8 +155,10 @@ export const KunNumberFieldProps = {
   separator: { type: String, default: ',' },
   /** Agrupa miles al mostrar. */
   useGrouping: { type: Boolean, default: true },
-  /** Decimales de formato y edición. */
+  /** Decimales de edición y del valor emitido (valor real del v-model). */
   precision: { type: [Number, String], default: 2 },
+  /** Decimales al mostrar en reposo (modo `natural`). `null` = `precision`. Sólo cambia el texto visible: el v-model conserva `precision` decimales y al enfocar se edita el valor real. */
+  displayPrecision: { type: [Number, String] as PropType<number | string | null>, default: null },
 
   /** Modo de entrada: 'natural' (libre) | 'bank' (estricto, cursor controlado). */
   formatMode: {

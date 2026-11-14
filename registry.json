@@ -1,6 +1,6 @@
 {
   "name": "adverich-kun-ui",
-  "version": "0.1.693",
+  "version": "0.1.695",
   "generatedBy": "scripts/generate-docs.ts",
   "components": [
     {
@@ -6111,7 +6111,15 @@
           "type": "Number | String",
           "default": "2",
           "values": [],
-          "description": "Decimales de formato y edición.",
+          "description": "Decimales de edición y del valor emitido (valor real del v-model).",
+          "source": "/var/www/kun-ui/src/components/KunNumberField/src/composables/KunNumberFieldProps.ts"
+        },
+        {
+          "name": "displayPrecision",
+          "type": "number | string | null",
+          "default": "null",
+          "values": [],
+          "description": "Decimales al mostrar en reposo (modo `natural`). `null` = `precision`. Sólo cambia el texto visible: el v-model conserva `precision` decimales y al enfocar se edita el valor real.",
           "source": "/var/www/kun-ui/src/components/KunNumberField/src/composables/KunNumberFieldProps.ts"
         },
         {
