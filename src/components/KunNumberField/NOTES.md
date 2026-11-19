@@ -78,3 +78,12 @@ se muestra el `0` formateado (comportamiento histórico).
   `bg-success`, … sin `/NN`) el valor, el prefijo y el label usan la tinta
   `text-on-{color}` del slot (detector `kunOnSurfaceTextFromBg`). Los tintes van
   con `bg-{color}-tint/NN`; el error automático es `bg-error-tint/10`.
+
+## Caret al hacer click en el padding vertical
+
+Igual que `KunTextField`: `@mousedown` usa `handlePaddingMouseDown`
+(`src/utils/useKunInputPaddingCaret.ts`) para que un click en el padding
+superior/inferior ubique el caret según la X en vez del inicio/final nativo
+de Chromium (Linux/macOS). El caret se fija en `nextTick`, después del
+reformateo del focus (`3.500,00` → `3500`), así que se mide sobre el texto
+editable.

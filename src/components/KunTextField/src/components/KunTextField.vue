@@ -54,7 +54,7 @@
           :class="[inputDensity, inputTextSizeClass, inputWeightClass, solidInk ?? 'text-default', 'placeholder:text-muted', placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           :aria-describedby="hasError ? `error-${uid}` : undefined" 
           @input="handleInput" @change="handleChange" @animationstart="handleAnimationStart" @blur="handleBlur" @focus="focusInput" 
-          @click.stop="emits('handleClick')" 
+          @mousedown="handlePaddingMouseDown" @click.stop="emits('handleClick')"
           @keydown="handleKeyDown" @keyup="emits('keyUp', $event)" 
         />
 
@@ -111,6 +111,7 @@ import { icons } from '@/icons'
 import inputProps from '../composables/KunTextFieldProps.js';
 import useKunTextField from '../composables/useKunTextFieldComposable.js';
 import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js';
+import { handlePaddingMouseDown } from '@/utils/useKunInputPaddingCaret.js';
 import { kunOnSurfaceTextFromBg } from '../../../../theme/kunVariants.js';
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 

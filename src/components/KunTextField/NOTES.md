@@ -75,3 +75,13 @@ desborda la caja se comporta como pill → último escalón).
   `bg-success`, … sin `/NN`) el valor, el prefijo y el label usan la tinta
   `text-on-{color}` del slot (detector `kunOnSurfaceTextFromBg`). Los tintes van
   con `bg-{color}-tint/NN`; el error automático es `bg-error-tint/10`.
+
+## Caret al hacer click en el padding vertical
+
+El `<input>` tiene padding vertical amplio (`py-3` en density default) y la
+línea de texto ocupa solo una banda centrada. Chromium en Linux/macOS manda
+el caret al **inicio** si el click cae por encima de esa banda (y al final si
+cae por debajo), ignorando la X. El `@mousedown` del input usa
+`handlePaddingMouseDown` (`src/utils/useKunInputPaddingCaret.ts`): dentro de
+la banda deja el comportamiento nativo; fuera de ella enfoca y ubica el caret
+según la X del click (medida con canvas sobre la fuente computada).

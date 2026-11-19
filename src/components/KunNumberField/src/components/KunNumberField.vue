@@ -92,6 +92,7 @@
           :class="[inputDensity, inputTextSizeClass, inputWeightClass, solidInk ?? 'text-default', 'placeholder:text-muted', placeholderTextSizeClass, rounded, textCenter ? 'text-center' : '', inputStyle]"
           @blur="handleBlur"
           @focus="handleFocus"
+          @mousedown="handlePaddingMouseDown"
           @input="handleInput"
           @change="handleChange"
           @animationstart="handleAnimationStart"
@@ -215,6 +216,7 @@ import { useKunNumberField } from '../composables/useKunNumberFieldComposable.js
 import KunBtn from '../../../KunBtn/src/components/KunBtn.vue'
 import KunIcon from '../../../KunIcon/src/components/KunIcon.vue'
 import { useKunFieldNotch } from '@/utils/useKunFieldNotch.js';
+import { handlePaddingMouseDown } from '@/utils/useKunInputPaddingCaret.js';
 import { kunOnSurfaceTextFromBg } from '../../../../theme/kunVariants.js';
 
 const props = defineProps(KunNumberFieldProps);
