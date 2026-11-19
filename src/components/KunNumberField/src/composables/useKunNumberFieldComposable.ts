@@ -212,7 +212,9 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
 
             // 🔹 NUEVO: actualizar modelValue en tiempo real
             const parsed = parseFormattedToNumber(newVal);
-            if (!isNaN(parsed)) {
+            if (isNaN(parsed)) {
+                emitModelValue.cancel();
+            } else {
                 emitModelValue(parsed);
             }
 
@@ -251,7 +253,9 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         emits('input', val);
         // Parsear provisionalmente a número para v-model con debounce
         const parsed = parseFormattedToNumber(val);
-        if (!isNaN(parsed)) {
+        if (isNaN(parsed)) {
+            emitModelValue.cancel();
+        } else {
             emitModelValue(parsed);
         }
         if (!props.validateOnBlur) {
@@ -259,12 +263,19 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         }
     }
 
-    function useDebounce<T extends (...args: never[]) => void>(fn: T, delay = 250): (...args: Parameters<T>) => void {
+    function useDebounce<T extends (...args: never[]) => void>(fn: T, delay = 250): ((...args: Parameters<T>) => void) & { cancel: () => void } {
         let timeout: ReturnType<typeof setTimeout> | undefined;
-        return (...args: Parameters<T>) => {
+        const debounced = (...args: Parameters<T>) => {
             clearTimeout(timeout);
             timeout = setTimeout(() => fn(...args), delay);
         };
+        // Descarta una emisión pendiente: sin esto, un valor viejo (ej. el último
+        // dígito antes de vaciar el input) pisa el estado actual al vencer el timer.
+        debounced.cancel = () => {
+            clearTimeout(timeout);
+            timeout = undefined;
+        };
+        return debounced;
     }
 
     function syncInputDom() {
@@ -348,6 +359,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
     }
 
     function handleBlurNatural(_e?: unknown): void {
+        emitModelValue.cancel();
         isActive.value = false;
 
         // Sin edición: el modelo conserva su valor real y sólo se restaura el texto en reposo.
@@ -578,6 +590,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
             emits('update:modelValue', current);
             emits('input', current);
         } else {
+            emitModelValue.cancel();
             current = Number(props.modelValue ?? 0) || 0;
             current = nf.clamp(current + Number(props.step), props.min, props.max);
             inputValue.value = formatNumberForDisplay(current, Number(props.precision), false);
@@ -596,6 +609,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
             emits('update:modelValue', current);
             emits('input', current);
         } else {
+            emitModelValue.cancel();
             current = Number(props.modelValue ?? 0) || 0;
             current = nf.clamp(current - Number(props.step), props.min, props.max);
             inputValue.value = formatNumberForDisplay(current, Number(props.precision), false);
@@ -611,6 +625,7 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
             updateValue();
             nextTick(() => numberInput.value?.focus?.());
         } else {
+            emitModelValue.cancel();
             inputValue.value = '';
             emits('update:modelValue', null);
             nextTick(() => numberInput.value?.focus?.());
@@ -689,7 +704,8 @@ export function useKunNumberField(props: KunNumberFieldPropsLike, emits: KunNumb
         inputValue.value = native;
         emits('input', native);
         const parsed = parseFormattedToNumber(native);
-        if (!isNaN(parsed)) emitModelValue(parsed);
+        if (isNaN(parsed)) emitModelValue.cancel();
+        else emitModelValue(parsed);
         return true;
     }
 
